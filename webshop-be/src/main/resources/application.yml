@@ -1,0 +1,89 @@
+server:
+  port: 8080
+  ssl:
+    enabled: false
+spring:
+  security:
+    admin:
+      username: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:admin}
+    monitoring:
+      username: ${MONITORING_USERNAME:monitoring}
+      password: ${MONITORING_PASSWORD:monitoring}
+    swagger:
+      username: ${MONITORING_USERNAME:swagger}
+      password: ${MONITORING_PASSWORD:swagger}
+    cors:
+      enabled:
+        paths: "*"
+  application:
+    name: webshop-be-service
+  mail:
+    port: 1025
+    host: ${SMTP_HOST:0.0.0.0}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+            required: false
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog-app.xml
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/webshop
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: ${DB_POOL_SIZE:4}
+      catalog: ${DB_CATALOG:spring_webshop}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 10MB
+
+management:
+  endpoint:
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+application:
+  jwt:
+    expiration: 1000000000
+    refresh-expiration: 1000000000
+  email:
+    new-password: http://localhost:4200/home?forgotPassword=true&id={id}
+    verify: http://localhost:4200/home?emailVerification=true&id={id}
+    more-info: http://localhost:4200/order?id={id} # todo from frontend
+    unsubscribe: http://localhost:8080/api/user/unsubscribe/{id} # todo from frontend
+    from: noreply@${WEBSHOP_NAME:webshop}.hu
+  image:
+    folder-name: images
+  stripe:
+    use-test-token: true
+    public-key: ${STRIPE_PUBLIC_KEY:MUST_BE_SPECIFIED}
+    private-key: ${STRIPE_PRIVATE_KEY:MUST_BE_SPECIFIED}
+  schedule:
+    out-of-stock-product:
+      cron: "* 0 0 * * *" #every midnight
+    recurring-email:
+      cron: "* 0 14 * * 4" #every thursday 14:00
+    promotion-email:
+      cron: "* 0,30 * * * *" # every 30 minutes

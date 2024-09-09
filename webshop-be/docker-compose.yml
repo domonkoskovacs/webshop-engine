@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: webshop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-db:/data/postgres
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres-db:
+    driver: local

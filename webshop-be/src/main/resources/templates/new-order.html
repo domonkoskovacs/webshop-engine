@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+    <title>New Order Placed</title>
+
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 24px;
+        }
+
+        a {
+            color: #090909;
+            padding: 0.4em 1.2em;
+            font-size: 20px;
+            border-radius: 0.5em;
+            background: #7CB9E8;
+            border: 1px solid #7CB9E8;
+            transition: all .3s;
+            box-shadow: 6px 6px 12px #c5c5c5,
+            -6px -6px 12px #ffffff;
+        }
+
+        a:active {
+            color: #666;
+            box-shadow: inset 4px 4px 12px #c5c5c5,
+            inset -4px -4px 12px #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<p th:text="${'Dear ' + fullName}"></p>
+
+<p>
+    Thank you for choosing our webshop! Your order has been successfully placed.
+</p>
+
+<p>
+    Order Details:
+</p>
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+    <tr style="background-color: #6CB4EE; color: #fff;">
+        <th style="padding: 10px; text-align: left;">Product</th>
+        <th style="padding: 10px; text-align: left;">Quantity</th>
+        <th style="padding: 10px; text-align: left;">Total Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr style="border-bottom: 1px solid #ddd;" th:each="product : ${products}">
+        <td style="padding: 10px;">Product: <span th:text="${product.name}"></span></td>
+        <td style="padding: 10px;">Quantity: <span th:text="${product.quantity}"></span></td>
+        <td style="padding: 10px;">Total Amount: <span th:text="${product.totalAmount}"></span></td>
+    </tr>
+    </tbody>
+</table>
+<p>
+    To get more information about your order, please visit our <a th:href="${moreInfoUrl}">Order Details Page</a>.
+</p>
+
+<p>
+    Thank you for shopping with us!
+</p>
+</body>
+</html>

@@ -1,0 +1,12 @@
+WEBSHOP_USER:
+  - ID: "b7f86506-8ea8-4908-b8f4-668c5ec6a7ee"
+    EMAIL: "test@test.com"
+    FIRSTNAME: "test"
+    LASTNAME: "test"
+    USER_PASSWORD: "$2a$10$kAupE0qUankvOBULauk1cugE2JGkMzzvfdXRn/nsQ2UbWJtnNeEzu"
+    USER_ROLE: "ROLE_USER"
+    VERIFIED: false
+    PHONE_NUMBER: 123
+    GENDER: MALE
+    SUBSCRIBED_TO_EMAIL: false
+    CREATION_TIME: 2023-09-10 17:28:26.411442
