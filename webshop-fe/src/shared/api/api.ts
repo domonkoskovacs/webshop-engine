@@ -802,13 +802,13 @@ export interface PageableObject {
      * @type {number}
      * @memberof PageableObject
      */
-    'pageSize'?: number;
+    'pageNumber'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'pageSize'?: number;
     /**
      * 
      * @type {boolean}
@@ -1099,18 +1099,6 @@ export interface RegistrationRequest {
      * @memberof RegistrationRequest
      */
     'subscribedToEmail'?: boolean;
-    /**
-     * 
-     * @type {AddressRequest}
-     * @memberof RegistrationRequest
-     */
-    'shippingAddress'?: AddressRequest;
-    /**
-     * 
-     * @type {AddressRequest}
-     * @memberof RegistrationRequest
-     */
-    'billingAddress'?: AddressRequest;
 }
 
 export const RegistrationRequestGenderEnum = {

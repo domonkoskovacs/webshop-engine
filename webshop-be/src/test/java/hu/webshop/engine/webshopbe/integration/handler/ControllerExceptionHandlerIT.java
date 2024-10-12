@@ -25,7 +25,7 @@ class ControllerExceptionHandlerIT extends IntegrationTest {
     @DisplayName("bad argument exception is handled")
     void badArgumentExceptionIsHandled() throws Exception {
         //Given
-        RegistrationRequest userRequest = new RegistrationRequest("bad email address", "test", "test", "pass", "123", Gender.MALE, true, null, null);
+        RegistrationRequest userRequest = new RegistrationRequest("bad email address", "test", "test", "pass", "123", Gender.MALE, true);
 
         //When
         ResultActions resultActions = performPost(USER_BASE_URL + "/register", userRequest);

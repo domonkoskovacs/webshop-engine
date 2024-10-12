@@ -16,8 +16,6 @@ public record RegistrationRequest(
         @NotBlank
         String phoneNumber,
         Gender gender,
-        boolean subscribedToEmail,
-        AddressRequest shippingAddress,
-        AddressRequest billingAddress
+        boolean subscribedToEmail
 ) {
 }

@@ -1,17 +1,15 @@
 import React from 'react';
-import {Routes, Route } from 'react-router-dom';
-import Home from './components/Home.component';
-import NotFound from './components/NotFound.component';
+import AppRouter from "./AppRouter";
+import {ThemeProvider} from "./contexts/theme-provider";
 
 function App() {
-  return (
-      <div className="min-h-screen bg-gray-100">
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="*" element={<NotFound/>}/>
-        </Routes>
-      </div>
-  );
+    return (
+        <div>
+            <ThemeProvider>
+                <AppRouter/>
+            </ThemeProvider>
+        </div>
+    );
 }
 
 export default App;

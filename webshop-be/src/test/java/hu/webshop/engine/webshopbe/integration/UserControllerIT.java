@@ -43,7 +43,7 @@ class UserControllerIT extends IntegrationTest {
     void userCanSuccessfullyRegister() throws Exception {
         //Given
         String email = "email@email.com";
-        RegistrationRequest userRequest = new RegistrationRequest(email, "test", "test", "pass", "123", Gender.MALE, true, null, null);
+        RegistrationRequest userRequest = new RegistrationRequest(email, "test", "test", "pass", "123", Gender.MALE, true);
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/register", userRequest);
@@ -63,7 +63,7 @@ class UserControllerIT extends IntegrationTest {
     void userCannotRegisterIfEmailIsTaken() throws Exception {
         //Given
         String email = "test@test.com";
-        RegistrationRequest userRequest = new RegistrationRequest(email, "test", "test", "pass", "123", Gender.MALE, false, null, null);
+        RegistrationRequest userRequest = new RegistrationRequest(email, "test", "test", "pass", "123", Gender.MALE, false);
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/register", userRequest);
