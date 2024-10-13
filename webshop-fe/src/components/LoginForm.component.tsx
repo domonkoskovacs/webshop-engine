@@ -5,8 +5,11 @@ import {z} from "zod"
 import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
-import React from "react";
-import {AuthServiceApi, AuthServiceApiLoginRequest, Configuration} from "../shared/api";
+import React, {useState} from "react";
+import {apiService} from "../shared/ApiService";
+import {useAuth} from "../hooks/UseAuth";
+import {useNavigate} from "react-router-dom";
+import {useToast} from "../hooks/UseToast";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -18,6 +21,11 @@ const FormSchema = z.object({
 })
 
 const LoginForm: React.FC = () => {
+    const {setAccessToken, setRole} = useAuth();
+    const [wrongPassword, setWrongPassword] = useState<boolean>(false)
+    const navigate = useNavigate();
+    const {toast} = useToast()
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -27,21 +35,41 @@ const LoginForm: React.FC = () => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        /*const config = new Configuration({
-            basePath: 'http://localhost:8080',
-        });*/
-        const api = new AuthServiceApi();
-        const req: AuthServiceApiLoginRequest = {
-            loginRequest: {
-                email: data.email,
-                password: data.password,
-            }
-        }
         try {
-            const response = await api.login(req);
-            console.log(response)
+            const response = await apiService.login({
+                email: data.email,
+                password: data.password
+            });
+            const {accessToken, role} = response
+            if (accessToken) {
+                setAccessToken(accessToken);
+            }
+            if (role) {
+                setRole(role);
+            }
+            //todo refresh token logic
+            if (role === "ROLE_ADMIN") {
+                navigate("/admin/dashboard")
+            } else {
+
+            }
+            toast({
+                description: "You are successfully logged in.",
+            })
+            setWrongPassword(false)
         } catch (error) {
-            console.error('Login failed:', error);
+            // @ts-ignore
+            const errorData = error.response.data;
+            setWrongPassword(true)
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: (
+                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
+                    </pre>
+                ),
+            })
         }
     }
 
@@ -75,6 +103,11 @@ const LoginForm: React.FC = () => {
                             </FormItem>
                         )}
                     />
+                    {wrongPassword && (
+                        <FormMessage>
+                            <span className="text-red-600">Wrong password or email. Please try again.</span>
+                        </FormMessage>
+                    )}
                     <Button type="submit">Login</Button>
                 </form>
             </Form>

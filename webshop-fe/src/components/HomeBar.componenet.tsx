@@ -6,11 +6,13 @@ import {HoverCard, HoverCardContent, HoverCardTrigger,} from "src/components/ui/
 import DarkModeToggle from "./ui/DarkModeToggle";
 import AuthDialogComponent from "./AuthDialog.component";
 import {Gender} from "../shared/types";
+import {useToast} from "../hooks/UseToast";
 
 const HomeBar: React.FC = () => {
     const [gender, setGender] = useState<Gender>('men');
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(true);
+    const {toast} = useToast()
 
     const handleGenderChange = (selectedGender: Gender) => {
         setGender(selectedGender);
@@ -56,7 +58,7 @@ const HomeBar: React.FC = () => {
             <div className="flex space-x-3">
                 <HoverCard>
                     <HoverCardTrigger>
-                        <Button variant="ghost" size="icon" onClick={handleLogin}>
+                        <Button variant="ghost" size="icon">
                             <User/>
                         </Button>
                     </HoverCardTrigger>
