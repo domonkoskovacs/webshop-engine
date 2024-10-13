@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {Dialog, DialogContent, DialogTrigger,} from "src/components/ui/Dialog"
+import React from 'react';
+import {Dialog, DialogContent, DialogDescription, DialogTitle,} from "src/components/ui/Dialog"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "src/components/ui/Tabs"
-import {useSearchParams} from "react-router-dom";
-import {AuthType} from "../shared/types";
 import LoginForm from "./LoginForm.component";
 import RegistrationForm from "./RegistrationForm.component";
 import {ScrollArea} from "./ui/ScrollArea";
@@ -10,40 +8,32 @@ import {ScrollArea} from "./ui/ScrollArea";
 interface AuthDialogProps {
     open: boolean;
     setOpen: (open: boolean) => void;
+    isLogin: boolean
+    setIsLogin: (isLogin: boolean) => void;
 }
 
-const AuthDialogComponent: React.FC<AuthDialogProps> = ({open, setOpen}) => {
-    const [authType, setAuthType] = useState<AuthType>('registration');
-    const [searchParams, setSearchParams] = useSearchParams();
+const AuthDialogComponent: React.FC<AuthDialogProps> = ({open, setOpen, isLogin, setIsLogin}) => {
 
-    useEffect(() => {
-        const params = new URLSearchParams(searchParams.toString());
-        const authParam = params.get("auth");
-        if (authParam === 'registration') {
-            setAuthType("registration");
+    const handleTabChange = (value: string) => {
+        if (value === "login") {
+            setIsLogin(true)
         } else {
-            setAuthType("login");
+            setIsLogin(false)
         }
-    }, []);
-
-    const handleTabChange = (authType: AuthType) => {
-        setAuthType(authType);
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("auth", authType);
-        setSearchParams(params);
     }
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger/>
             <DialogContent>
                 <ScrollArea className="max-h-96 m-1">
-                    <Tabs defaultValue={authType} className="w-[400px]">
+                    <DialogTitle>{isLogin ? "Login" : "Registration"}</DialogTitle>
+                    <DialogDescription>{isLogin ?
+                        "Please use your email and password to authenticate yourself." :
+                        "Please fill the form with your data to register."}</DialogDescription>
+                    <Tabs defaultValue={isLogin ? "login" : "registration"} onValueChange={handleTabChange}
+                          className="w-[400px]">
                         <TabsList className="flex content-center bg-background">
-                            <TabsTrigger value="registration"
-                                         onClick={() => handleTabChange("registration")}>Registration</TabsTrigger>
-                            <TabsTrigger value="login"
-                                         onClick={() => handleTabChange("login")}>Login</TabsTrigger>
+                            <TabsTrigger value="registration">Registration</TabsTrigger>
+                            <TabsTrigger value="login">Login</TabsTrigger>
                         </TabsList>
                         <TabsContent value="registration">
                             <RegistrationForm/>

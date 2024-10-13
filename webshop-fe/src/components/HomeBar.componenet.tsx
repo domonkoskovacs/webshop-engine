@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from 'src/components/ui/Button';
 import {Heart, ShoppingCart, User} from 'lucide-react';
-import {Link, useSearchParams} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {HoverCard, HoverCardContent, HoverCardTrigger,} from "src/components/ui/HoverCard"
 import DarkModeToggle from "./ui/DarkModeToggle";
 import AuthDialogComponent from "./AuthDialog.component";
@@ -10,32 +10,21 @@ import {Gender} from "../shared/types";
 const HomeBar: React.FC = () => {
     const [gender, setGender] = useState<Gender>('men');
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [isLogin, setIsLogin] = useState<boolean>(true);
 
     const handleGenderChange = (selectedGender: Gender) => {
         setGender(selectedGender);
     };
 
     const handleLogin = () => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("auth", "login");
-        setSearchParams(params);
+        setIsLogin(true)
         setDialogOpen(true)
     };
 
     const handleRegister = () => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("auth", "registration");
-        setSearchParams(params);
+        setIsLogin(false)
         setDialogOpen(true)
     };
-
-    const handleDialogClose = () => {
-        setDialogOpen(false)
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete("auth");
-        setSearchParams(params);
-    }
 
     return (
         <div className="flex justify-between items-center py-4 px-8 bg-background shadow-md">
@@ -77,7 +66,11 @@ const HomeBar: React.FC = () => {
                             <Button onClick={handleLogin}>Login</Button>
                             <Button onClick={handleRegister}>Register</Button>
                             <h1>Join us today!</h1>
-                            <AuthDialogComponent open={dialogOpen} setOpen={handleDialogClose}></AuthDialogComponent>
+                            <AuthDialogComponent
+                                open={dialogOpen}
+                                setOpen={setDialogOpen}
+                                isLogin={isLogin}
+                                setIsLogin={setIsLogin}></AuthDialogComponent>
                         </div>
                     </HoverCardContent>
                 </HoverCard>
