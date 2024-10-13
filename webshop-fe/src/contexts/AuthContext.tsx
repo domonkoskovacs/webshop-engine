@@ -5,6 +5,8 @@ interface AuthContextType {
     setAccessToken: (token: string | null) => void;
     role: string | null;
     setRole: (role: string | null) => void;
+    loggedIn: boolean;
+    setLoggedIn: (open: boolean) => void;
 }
 
 export const AuthContext =
@@ -13,9 +15,10 @@ export const AuthContext =
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [role, setRole] = useState<string | null>(null);
+    const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
     return (
-        <AuthContext.Provider value={{accessToken, setAccessToken, role, setRole}}>
+        <AuthContext.Provider value={{accessToken, setAccessToken, role, setRole, loggedIn, setLoggedIn}}>
             {children}
         </AuthContext.Provider>
     );

@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
             if (role === "ROLE_ADMIN") {
                 navigate("/admin/dashboard")
             } else {
-
+                //todo user navigate
             }
             toast({
                 description: "You are successfully logged in.",
@@ -60,16 +60,20 @@ const LoginForm: React.FC = () => {
         } catch (error) {
             // @ts-ignore
             const errorData = error.response.data;
-            setWrongPassword(true)
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+
+            if (errorData.error[0].reasonCode === "WRONG_PASSWORD") {
+                setWrongPassword(true);
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: (
+                        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
                         <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
                     </pre>
-                ),
-            })
+                    ),
+                })
+            }
         }
     }
 

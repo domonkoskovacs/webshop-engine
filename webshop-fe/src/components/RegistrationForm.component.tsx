@@ -5,30 +5,41 @@ import {z} from "zod"
 import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
-import React from "react";
+import React, {useState} from "react";
 import {RadioGroup, RadioGroupItem} from "src/components/ui/RadioGroup"
 import {Switch} from "./ui/Switch"
+import {apiService} from "../shared/ApiService";
+import {useToast} from "../hooks/UseToast";
 
 const FormSchema = z.object({
     email: z.string().email({
         message: "Invalid email address.",
     }),
-    firstname: z.string(),
-    lastname: z.string(),
+    firstname: z.string().min(1, {
+        message: "Please add your firstname."
+    }),
+    lastname: z.string().min(1, {
+        message: "Please add your lastname."
+    }),
     password: z.string().min(6, {
         message: "Password must be at least 6 characters.",
     }),
     passwordAgain: z.string().min(6, {
         message: "Password must be at least 6 characters.",
     }),
-    phoneNumber: z.string(),
+    phoneNumber: z.string().min(1, {
+        message: "Please add your phone number.",
+    }),
     gender: z.enum(["men", "women"], {
         required_error: "You need to select your gender.",
-    }),
+    }).optional(),
     subscribe: z.boolean().default(false).optional()
 })
 
 const RegistrationForm: React.FC = () => {
+    const [emailTaken, setEmailTaken] = useState<boolean>(false)
+    const {toast} = useToast()
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -41,8 +52,41 @@ const RegistrationForm: React.FC = () => {
         },
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        try {
+            const gender = data.gender == "men" ? "MALE" :
+                data.gender == "women" ? "FEMALE" : null
+            const response = await apiService.register({
+                email: data.email,
+                firstname: data.firstname,
+                lastname: data.lastname,
+                password: data.password,
+                phoneNumber: data.phoneNumber,
+                ...(gender && {gender}),
+                subscribedToEmail: data.subscribe,
+            })
+            toast({
+                description: "Successful registration.",
+            })
+            setEmailTaken(false)
+        } catch (error) {
+            // @ts-ignore
+            const errorData = error.response.data;
 
+            if (errorData.error[0].reasonCode === "EMAIL_TAKEN") {
+                setEmailTaken(true);
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: (
+                        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
+                    </pre>
+                    ),
+                })
+            }
+        }
     }
 
     return (
@@ -196,6 +240,11 @@ const RegistrationForm: React.FC = () => {
                             </FormItem>
                         )}
                     />
+                    {emailTaken && (
+                        <FormMessage>
+                            <span className="text-red-600">Email is already taken. Please try again.</span>
+                        </FormMessage>
+                    )}
                     <Button type="submit">Register</Button>
                 </form>
             </Form>

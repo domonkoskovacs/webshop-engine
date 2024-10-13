@@ -6,17 +6,12 @@ import {HoverCard, HoverCardContent, HoverCardTrigger,} from "src/components/ui/
 import DarkModeToggle from "./ui/DarkModeToggle";
 import AuthDialogComponent from "./AuthDialog.component";
 import {Gender} from "../shared/types";
-import {useToast} from "../hooks/UseToast";
+import GenderSelector from "./GenderSelector.component";
 
 const HomeBar: React.FC = () => {
     const [gender, setGender] = useState<Gender>('men');
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(true);
-    const {toast} = useToast()
-
-    const handleGenderChange = (selectedGender: Gender) => {
-        setGender(selectedGender);
-    };
 
     const handleLogin = () => {
         setIsLogin(true)
@@ -30,26 +25,7 @@ const HomeBar: React.FC = () => {
 
     return (
         <div className="flex justify-between items-center py-4 px-8 bg-background shadow-md">
-            <div className="flex">
-                <Button
-                    variant="ghost"
-                    className={`${
-                        gender === 'men' ? 'font-bold text-lg' : 'text-lg opacity-50'
-                    }`}
-                    onClick={() => handleGenderChange('men')}
-                >
-                    Men
-                </Button>
-                <Button
-                    variant="ghost"
-                    className={`${
-                        gender === 'women' ? 'font-bold text-lg' : 'text-lg opacity-50'
-                    }`}
-                    onClick={() => handleGenderChange('women')}
-                >
-                    Women
-                </Button>
-            </div>
+            <GenderSelector gender={gender} setGender={setGender}/>
 
             <Link to="/" className="text-xl font-semibold">
                 <span className="cursor-pointer">Webshop Name</span>
