@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeBar from "../components/HomeBar.componenet";
+import HomeBar from "../components/homebar/HomeBar.componenet";
 
 const Home: React.FC = () => {
     return (

@@ -7,9 +7,9 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
 import {RadioGroup, RadioGroupItem} from "src/components/ui/RadioGroup"
-import {Switch} from "./ui/Switch"
-import {apiService} from "../shared/ApiService";
-import {useToast} from "../hooks/UseToast";
+import {Switch} from "../ui/Switch"
+import {apiService} from "../../shared/ApiService";
+import {useToast} from "../../hooks/UseToast";
 
 const FormSchema = z.object({
     email: z.string().email({

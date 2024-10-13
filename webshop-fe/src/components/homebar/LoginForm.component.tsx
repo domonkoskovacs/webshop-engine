@@ -6,10 +6,10 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
-import {apiService} from "../shared/ApiService";
-import {useAuth} from "../hooks/UseAuth";
+import {apiService} from "../../shared/ApiService";
+import {useAuth} from "../../hooks/UseAuth";
 import {useNavigate} from "react-router-dom";
-import {useToast} from "../hooks/UseToast";
+import {useToast} from "../../hooks/UseToast";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -21,7 +21,7 @@ const FormSchema = z.object({
 })
 
 const LoginForm: React.FC = () => {
-    const {setAccessToken, setRole} = useAuth();
+    const {setAccessToken, setRole, setLoggedIn} = useAuth();
     const [wrongPassword, setWrongPassword] = useState<boolean>(false)
     const navigate = useNavigate();
     const {toast} = useToast()
@@ -47,6 +47,7 @@ const LoginForm: React.FC = () => {
             if (role) {
                 setRole(role);
             }
+            setLoggedIn(true)
             //todo refresh token logic
             if (role === "ROLE_ADMIN") {
                 navigate("/admin/dashboard")

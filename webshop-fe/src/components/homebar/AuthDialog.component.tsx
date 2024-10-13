@@ -3,7 +3,7 @@ import {Dialog, DialogContent, DialogDescription, DialogTitle,} from "src/compon
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "src/components/ui/Tabs"
 import LoginForm from "./LoginForm.component";
 import RegistrationForm from "./RegistrationForm.component";
-import {ScrollArea} from "./ui/ScrollArea";
+import {ScrollArea} from "../ui/ScrollArea";
 
 interface AuthDialogProps {
     open: boolean;
