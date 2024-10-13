@@ -4,6 +4,7 @@ import {Button} from "../ui/Button";
 import {Settings, ShoppingBag, User, UserPen} from "lucide-react";
 import AuthDialogComponent from "./AuthDialog.component";
 import {useAuth} from "../../hooks/UseAuth";
+import {Separator} from "../ui/Separator";
 
 const AccountHoverIcon: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -39,6 +40,7 @@ const AccountHoverIcon: React.FC = () => {
                         <Button variant="ghost" className="flex items-center justify-start">
                             <Settings className="mr-2"/>Settings
                         </Button>
+                        <Separator  className="my-4"/>
                         <Button onClick={() => logout()}>
                             Log out
                         </Button>
