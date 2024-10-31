@@ -1,10 +1,41 @@
 import React from "react";
+import {ScrollArea} from "../ui/ScrollArea";
+import AccountCard from "./AccountCard.component";
+import {Button} from "../ui/Button";
+import {ChartLine, Mail, Newspaper, Shirt, ShoppingBag, Store, UserCog} from "lucide-react";
+import {Link} from "react-router-dom";
 
-const Sidebar : React.FC = () => {
+const menuItems = [
+    { icon: Newspaper, label: "Articles", path: "/admin/dashboard/article" },
+    { icon: ShoppingBag, label: "Categories", path: "/admin/dashboard/category" },
+    { icon: Mail, label: "Promotions", path: "/admin/dashboard/promotion-email" },
+    { icon: ShoppingBag, label: "Orders", path: "/admin/dashboard/orders" },
+    { icon: Shirt, label: "Products", path: "/admin/dashboard/products" },
+    { icon: ChartLine, label: "Statistics", path: "/admin/dashboard/statistics" },
+    { icon: Store, label: "Store", path: "/admin/dashboard/store" },
+];
+
+const Sidebar: React.FC = () => {
 
     return (
-        <div>
-            sidebar
+        <div className="bg-background shadow-md h-screen flex flex-col mr-2">
+            <AccountCard/>
+            <ScrollArea className="flex-grow my-2">
+                {menuItems.map((item, index) => (
+                    <Link key={index} to={item.path} className="w-full">
+                        <Button variant="ghost" size="sm" className="flex w-full items-center justify-start p-2 text-sm">
+                            <item.icon className="ml-4 mr-2 w-4 h-4" />
+                            {item.label}
+                        </Button>
+                    </Link>
+                ))}
+            </ScrollArea>
+            <Link to="/admin/dashboard/settings" className="w-full">
+                <Button variant="ghost" className="flex w-full items-center justify-start p-2 text-sm mt-4">
+                    <UserCog className="ml-4 mr-2 w-4 h-4" />
+                    Settings
+                </Button>
+            </Link>
         </div>
     )
 }
