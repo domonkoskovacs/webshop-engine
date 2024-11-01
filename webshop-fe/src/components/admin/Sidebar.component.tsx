@@ -3,6 +3,7 @@ import {ScrollArea} from "../ui/ScrollArea";
 import AccountCard from "./AccountCard.component";
 import {Button} from "../ui/Button";
 import {ChartLine, Mail, Newspaper, Shirt, ShoppingBag, Store, UserCog} from "lucide-react";
+import { LogOut } from 'lucide-react';
 import {Link} from "react-router-dom";
 
 const menuItems = [
@@ -23,19 +24,28 @@ const Sidebar: React.FC = () => {
             <ScrollArea className="flex-grow my-2">
                 {menuItems.map((item, index) => (
                     <Link key={index} to={item.path} className="w-full">
-                        <Button variant="ghost" size="sm" className="flex w-full items-center justify-start p-2 text-sm">
-                            <item.icon className="ml-4 mr-2 w-4 h-4" />
+                        <Button variant="ghost" size="sm"
+                                className="flex w-full items-center justify-start p-2 text-sm">
+                            <item.icon className="ml-4 mr-2 w-4 h-4"/>
                             {item.label}
                         </Button>
                     </Link>
                 ))}
             </ScrollArea>
-            <Link to="/admin/dashboard/settings" className="w-full">
-                <Button variant="ghost" className="flex w-full items-center justify-start p-2 text-sm mt-4">
-                    <UserCog className="ml-4 mr-2 w-4 h-4" />
-                    Settings
-                </Button>
-            </Link>
+            <div className="mt-2">
+                <Link to="/admin/dashboard/settings" className="w-full">
+                    <Button variant="ghost" className="flex w-full items-center justify-start pl-2 pr-2 text-sm">
+                        <UserCog className="ml-4 mr-2 w-4 h-4"/>
+                        Settings
+                    </Button>
+                </Link>
+                <Link to="/" className="w-full">
+                    <Button variant="ghost" className="flex w-full items-center justify-start pl-2 pr-2 text-sm">
+                        <LogOut className="ml-4 mr-2 w-4 h-4"/>
+                        Logout
+                    </Button>
+                </Link>
+            </div>
         </div>
     )
 }
