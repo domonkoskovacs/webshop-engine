@@ -1,6 +1,6 @@
 import {
     AuthServiceApi,
-    CategoryResponse, CategoryServiceApi,
+    CategoryServiceApi,
     Configuration,
     LoginRequest,
     RegistrationRequest,

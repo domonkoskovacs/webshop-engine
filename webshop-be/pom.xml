@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.3</version>
+        <version>3.3.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>hu.webshop.engine</groupId>
@@ -28,7 +28,7 @@
     </scm>
     <properties>
         <version.archunit>1.1.0</version.archunit>
-        <version.java>17</version.java>
+        <version.java>23</version.java>
         <version.mapstruct>1.5.3.Final</version.mapstruct>
         <version.lombok-mapstruct-binding>0.2.0</version.lombok-mapstruct-binding>
         <version.spring-boot>3.1.0</version.spring-boot>

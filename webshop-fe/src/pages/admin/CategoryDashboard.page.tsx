@@ -46,9 +46,6 @@ const CategoryDashboard: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            <Button variant="ghost" size="icon">
-                <Plus/>
-            </Button>
             <Table>
                 <TableCaption>A list of your recent invoices.</TableCaption>
                 <TableHeader>

@@ -143,7 +143,11 @@ public class SecurityConfig {
         config.setAllowedHeaders(List.of(
                 HttpHeaders.CONTENT_TYPE,
                 HttpHeaders.AUTHORIZATION,
-                HttpHeaders.ACCEPT));
+                HttpHeaders.ACCEPT,
+                HttpHeaders.SET_COOKIE
+        ));
+
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

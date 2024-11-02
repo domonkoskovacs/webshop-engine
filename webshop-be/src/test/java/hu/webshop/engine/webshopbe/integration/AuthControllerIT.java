@@ -1,7 +1,11 @@
 package hu.webshop.engine.webshopbe.integration;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Objects;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +19,7 @@ import hu.webshop.engine.webshopbe.domain.auth.JwtService;
 import hu.webshop.engine.webshopbe.domain.auth.properties.JwtProperties;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.TokenRequest;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 
 @DisplayName("Authentication controller integration tests")
@@ -67,14 +72,17 @@ class AuthControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void userCanUseARefreshTokenSuccessfully() throws Exception {
         //Given
-        MvcResult mvcResult = performPost(BASE_URL + "/login", createLoginRequest("pass")).andExpect(status().isOk()).andReturn();
-        String refreshToken = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("refreshToken").asText();
+        MvcResult loginResult = performPost(BASE_URL + "/login", createLoginRequest("pass"))
+                .andExpect(cookie().exists("refreshToken"))
+                .andExpect(status().isOk()).andReturn();
+        Cookie refreshToken = loginResult.getResponse().getCookie("refreshToken");
+        assertNotNull(refreshToken);
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/refreshToken", new TokenRequest(refreshToken));
+        ResultActions resultActions = performPost(BASE_URL + "/refreshToken", null, refreshToken);
 
         //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.accessToken").exists()).andExpect(jsonPath("$.refreshToken").exists());
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.accessToken").exists());
     }
 
     @Test
@@ -97,8 +105,10 @@ class AuthControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void successfulRefreshTokenAuthorization() throws Exception {
         //Given
-        MvcResult mvcResult = performPost(BASE_URL + "/login", createLoginRequest("pass")).andExpect(status().isOk()).andReturn();
-        String refreshToken = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("refreshToken").asText();
+        MvcResult loginResult = performPost(BASE_URL + "/login", createLoginRequest("pass"))
+                .andExpect(cookie().exists("refreshToken"))
+                .andExpect(status().isOk()).andReturn();
+        String refreshToken = Objects.requireNonNull(loginResult.getResponse().getCookie("refreshToken")).getValue();
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/authorize", new TokenRequest(refreshToken));

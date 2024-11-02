@@ -15,7 +15,7 @@ spring:
       password: ${MONITORING_PASSWORD:swagger}
     cors:
       enabled:
-        paths: "*"
+        paths: "http://localhost:3000"
   application:
     name: webshop-be-service
   mail:

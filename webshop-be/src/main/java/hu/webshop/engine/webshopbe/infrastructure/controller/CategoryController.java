@@ -115,7 +115,7 @@ public class CategoryController {
     @DeleteMapping(value = "/subCategory/{id}")
     @Admin
     public ResponseEntity<Void> deleteSubCategory(@PathVariable UUID id) {
-        log.info("delete > id: [{}]", id);
+        log.info("deleteSubCategory > id: [{}]", id);
         categoryAdapter.deleteSubcategory(id);
         return ResponseEntity.ok().build();
     }

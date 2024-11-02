@@ -59,6 +59,7 @@ import hu.webshop.engine.webshopbe.domain.order.StripeService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.config.InitDataConfig;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
+import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -181,6 +182,11 @@ public abstract class IntegrationTest {
     protected ResultActions performPost(String url, Object body, String token) throws Exception {
         return mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)).header(AUTHORIZATION, token));
+    }
+
+    protected ResultActions performPost(String url, Object body, Cookie cookie) throws Exception {
+        return mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(body)).cookie(cookie));
     }
 
     protected ResultActions performPost(String url, Object body, Role role) throws Exception {

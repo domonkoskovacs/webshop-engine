@@ -1,53 +1,168 @@
-import React from "react";
-import {ScrollArea} from "../ui/ScrollArea";
-import AccountCard from "./AccountCard.component";
-import {Button} from "../ui/Button";
-import {ChartLine, Mail, Newspaper, Shirt, ShoppingBag, Store, UserCog} from "lucide-react";
-import { LogOut } from 'lucide-react';
+import {ChartLine, LogOut, Mail, Newspaper, Plus, Shirt, ShoppingBag, Store, UserCog} from "lucide-react"
 import {Link} from "react-router-dom";
 
-const menuItems = [
-    { icon: Newspaper, label: "Articles", path: "/admin/dashboard/article" },
-    { icon: ShoppingBag, label: "Categories", path: "/admin/dashboard/category" },
-    { icon: Mail, label: "Promotions", path: "/admin/dashboard/promotion-email" },
-    { icon: ShoppingBag, label: "Orders", path: "/admin/dashboard/orders" },
-    { icon: Shirt, label: "Products", path: "/admin/dashboard/products" },
-    { icon: ChartLine, label: "Statistics", path: "/admin/dashboard/statistics" },
-    { icon: Store, label: "Store", path: "/admin/dashboard/store" },
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuAction,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarSeparator,
+} from "src/components/ui/Sidebar"
+import {useAuth} from "../../hooks/UseAuth";
+import {Avatar, AvatarFallback} from "../ui/Avatar";
+import React from "react";
+import {ScrollArea} from "../ui/ScrollArea";
+
+// Menu items.
+const storefront = [
+    {icon: Newspaper, label: "Articles", path: "/admin/dashboard/article"},
+    {icon: ShoppingBag, label: "Categories", path: "/admin/dashboard/category"},
+    {icon: Shirt, label: "Products", path: "/admin/dashboard/products"},
+    {icon: Store, label: "Store", path: "/admin/dashboard/store"},
+];
+const salesOperations = [
+    {icon: Mail, label: "Promotions", path: "/admin/dashboard/promotion-email"},
+    {icon: ShoppingBag, label: "Orders", path: "/admin/dashboard/orders"},
+    {icon: ChartLine, label: "Statistics", path: "/admin/dashboard/statistics"},
 ];
 
-const Sidebar: React.FC = () => {
+export function AppSidebar() {
+    const {logout} = useAuth()
 
     return (
-        <div className="bg-background shadow-md h-screen flex flex-col mr-2">
-            <AccountCard/>
-            <ScrollArea className="flex-grow my-2">
-                {menuItems.map((item, index) => (
-                    <Link key={index} to={item.path} className="w-full">
-                        <Button variant="ghost" size="sm"
-                                className="flex w-full items-center justify-start p-2 text-sm">
-                            <item.icon className="ml-4 mr-2 w-4 h-4"/>
-                            {item.label}
-                        </Button>
+        <Sidebar collapsible="icon" variant="floating">
+            <SidebarHeader>
+                <SidebarMenu>
+                    <Link to={"/admin/dashboard"}>
+                        <SidebarMenuButton
+                            size="lg"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        >
+                            <Avatar className="h-8 w-8 rounded-lg">
+                                {/*<AvatarImage
+                                src={data.user.avatar}
+                                alt={data.user.name}
+                            />*/}
+                                <AvatarFallback className="rounded-lg">AD</AvatarFallback>
+                            </Avatar>
+                            <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">
+                        {"admin"}
+                      </span>
+                                <span className="truncate text-xs">
+                        {"admin@admin.com"}
+                      </span>
+                            </div>
+                        </SidebarMenuButton>
                     </Link>
-                ))}
-            </ScrollArea>
-            <div className="mt-2">
-                <Link to="/admin/dashboard/settings" className="w-full">
-                    <Button variant="ghost" className="flex w-full items-center justify-start pl-2 pr-2 text-sm">
-                        <UserCog className="ml-4 mr-2 w-4 h-4"/>
-                        Settings
-                    </Button>
-                </Link>
-                <Link to="/" className="w-full">
-                    <Button variant="ghost" className="flex w-full items-center justify-start pl-2 pr-2 text-sm">
-                        <LogOut className="ml-4 mr-2 w-4 h-4"/>
-                        Logout
-                    </Button>
-                </Link>
-            </div>
-        </div>
+                </SidebarMenu>
+            </SidebarHeader>
+            <SidebarSeparator/>
+            <SidebarContent>
+                <ScrollArea>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Storefront Setup</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={storefront[0].path}>
+                                            <Newspaper/>
+                                            <span>{storefront[0].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={storefront[1].path}>
+                                            <ShoppingBag/>
+                                            <span>{storefront[1].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                    <SidebarMenuAction>
+                                        <Plus/>
+                                    </SidebarMenuAction>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={storefront[2].path}>
+                                            <Shirt/>
+                                            <span>{storefront[2].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={storefront[3].path}>
+                                            <Store/>
+                                            <span>{storefront[3].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Sales Operations</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={salesOperations[0].path}>
+                                            <Mail/>
+                                            <span>{salesOperations[0].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={salesOperations[1].path}>
+                                            <ShoppingBag/>
+                                            <span>{salesOperations[1].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link to={salesOperations[2].path}>
+                                            <ChartLine/>
+                                            <span>{salesOperations[2].label}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                </ScrollArea>
+            </SidebarContent>
+            <SidebarSeparator/>
+            <SidebarFooter>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link to="/admin/dashboard/settings">
+                                <UserCog/>
+                                Settings
+                            </Link>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton asChild onClick={() => logout()}>
+                            <div>
+                                <LogOut/>
+                                <span>Logout</span>
+                            </div>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
+        </Sidebar>
     )
 }
 
-export default Sidebar;
+
