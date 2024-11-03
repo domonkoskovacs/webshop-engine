@@ -17,8 +17,9 @@ import {
 } from "src/components/ui/Sidebar"
 import {useAuth} from "../../hooks/UseAuth";
 import {Avatar, AvatarFallback} from "../ui/Avatar";
-import React from "react";
+import React, {useState} from "react";
 import {ScrollArea} from "../ui/ScrollArea";
+import CreateCategoryDialog from "./CreateCategoryDialog.component";
 
 // Menu items.
 const storefront = [
@@ -35,6 +36,7 @@ const salesOperations = [
 
 export function AppSidebar() {
     const {logout} = useAuth()
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <Sidebar collapsible="icon" variant="floating">
@@ -87,7 +89,8 @@ export function AppSidebar() {
                                         </Link>
                                     </SidebarMenuButton>
                                     <SidebarMenuAction>
-                                        <Plus/>
+                                        <Plus onClick={() => setIsOpen(true)}/>
+                                        <CreateCategoryDialog isOpen={isOpen} setIsOpen={setIsOpen} />
                                     </SidebarMenuAction>
                                 </SidebarMenuItem>
                                 <SidebarMenuItem>

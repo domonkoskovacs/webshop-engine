@@ -1,6 +1,8 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "../hooks/UseToast";
+import axios from "axios";
+import {apiService} from "../shared/ApiService";
 
 interface AuthContextType {
     accessToken: string | null;
@@ -30,6 +32,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
         })
         navigate("/");
     };
+
+    const refreshAccessToken = async () => {
+        try {
+            const data = await apiService.refresh();
+            const {accessToken} = data
+            setAccessToken(accessToken ?? null);
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "failed to refresh token",
+            })
+            logout();
+        }
+    };
+
+    useEffect(() => {
+        const requestInterceptor = axios.interceptors.request.use(
+            (config) => {
+                if (accessToken && config.headers) {
+                    config.headers.Authorization = `Bearer ${accessToken}`;
+                }
+                return config;
+            },
+            (error) => Promise.reject(error)
+        );
+
+        const responseInterceptor = axios.interceptors.response.use(
+            (response) => response,
+            async (error) => {
+                const originalRequest = error.config;
+
+                if (error.response.status === 401 && !originalRequest._retry) {
+                    originalRequest._retry = true;
+                    await refreshAccessToken();
+                    return axios(originalRequest);
+                }
+
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            axios.interceptors.request.eject(requestInterceptor);
+            axios.interceptors.response.eject(responseInterceptor);
+        };
+    }, [accessToken]);
 
     return (
         <AuthContext.Provider value={{accessToken, setAccessToken, role, setRole, loggedIn, setLoggedIn, logout}}>

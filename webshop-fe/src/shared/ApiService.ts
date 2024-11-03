@@ -1,5 +1,6 @@
 import {
     AuthServiceApi,
+    CategoryRequest,
     CategoryServiceApi,
     Configuration,
     LoginRequest,
@@ -33,6 +34,15 @@ class ApiService {
         }
     }
 
+    async refresh() {
+        try {
+            const response = await this.authApi.refreshToken({}, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async register(registrationRequest: RegistrationRequest) {
         try {
             const response = await this.userApi.register({
@@ -44,7 +54,7 @@ class ApiService {
         }
     }
 
-    async getAllCategories()  {
+    async getAllCategories() {
         try {
             const response = await this.categoryApi.getAll3();
             return response.data;
@@ -53,10 +63,21 @@ class ApiService {
         }
     }
 
-    async deleteCategory(id: string)  {
+    async deleteCategory(id: string) {
         try {
             const response = await this.categoryApi.delete2({
                 id: id
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async createCategory(categoryRequest: CategoryRequest) {
+        try {
+            const response = await this.categoryApi.create3({
+                categoryRequest: categoryRequest
             });
             return response.data;
         } catch (error) {
