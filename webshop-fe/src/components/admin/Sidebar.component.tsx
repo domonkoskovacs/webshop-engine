@@ -19,7 +19,7 @@ import {useAuth} from "../../hooks/UseAuth";
 import {Avatar, AvatarFallback} from "../ui/Avatar";
 import React, {useState} from "react";
 import {ScrollArea} from "../ui/ScrollArea";
-import CreateCategoryDialog from "./CreateCategoryDialog.component";
+import CreateCategoryDialog from "./category/CreateCategoryDialog.component";
 
 // Menu items.
 const storefront = [

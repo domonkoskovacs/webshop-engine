@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "../hooks/UseToast";
 import axios from "axios";
@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const logout = () => {
+    const logout = useCallback(() => {
         setAccessToken(null);
         setRole(null);
         setLoggedIn(false);
@@ -31,11 +31,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             description: "Logged out, sad to see you go."
         })
         navigate("/");
-    };
+    }, [navigate]);
 
-    const refreshAccessToken = async () => {
+    const refreshAccessToken =  useCallback(async () => {
         try {
             const data = await apiService.refresh();
+            console.log(data)
             const {accessToken} = data
             setAccessToken(accessToken ?? null);
         } catch (error) {
@@ -46,13 +47,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             })
             logout();
         }
-    };
+    }, [logout]);
+
+    const accessTokenRef = useRef(accessToken);
+
+    useEffect(() => {
+        accessTokenRef.current = accessToken;
+    }, [accessToken]);
 
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(
             (config) => {
                 if (accessToken && config.headers) {
-                    config.headers.Authorization = `Bearer ${accessToken}`;
+                    config.headers.Authorization = `Bearer ${accessTokenRef.current}`;
                 }
                 return config;
             },
@@ -64,9 +71,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             async (error) => {
                 const originalRequest = error.config;
 
-                if (error.response.status === 401 && !originalRequest._retry) {
+                console.log(error)
+                if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
                     originalRequest._retry = true;
+                    console.log("hello")
                     await refreshAccessToken();
+                    originalRequest.headers.Authorization = `Bearer ${accessTokenRef.current}`;
                     return axios(originalRequest);
                 }
 
@@ -78,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             axios.interceptors.request.eject(requestInterceptor);
             axios.interceptors.response.eject(responseInterceptor);
         };
-    }, [accessToken]);
+    }, [accessToken, refreshAccessToken]);
 
     return (
         <AuthContext.Provider value={{accessToken, setAccessToken, role, setRole, loggedIn, setLoggedIn, logout}}>

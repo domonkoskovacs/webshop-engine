@@ -1,6 +1,7 @@
 import {FC} from "react";
-import {Dialog, DialogContent} from "src/components/ui/Dialog";
-import CategoryForm from "./category/CategoryForm.component";
+import {Dialog, DialogContent, DialogDescription, DialogTitle} from "src/components/ui/Dialog";
+import CategoryForm from "./CategoryForm.component";
+import {VisuallyHidden} from "@radix-ui/react-visually-hidden";
 
 interface CreateCategoryDialogProps {
     isOpen: boolean;
@@ -14,8 +15,10 @@ const CreateCategoryDialog: FC<CreateCategoryDialogProps> = ({isOpen, setIsOpen}
 
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+            <VisuallyHidden><DialogTitle>Create a new category</DialogTitle></VisuallyHidden>
             <DialogContent>
                 <CategoryForm setIsOpen={setIsOpen}/>
+                <VisuallyHidden><DialogDescription>Enter the name of the category</DialogDescription></VisuallyHidden>
             </DialogContent>
         </Dialog>
     );
