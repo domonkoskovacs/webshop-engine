@@ -10,6 +10,7 @@ import {RadioGroup, RadioGroupItem} from "src/components/ui/RadioGroup"
 import {Switch} from "../../ui/Switch"
 import {apiService} from "../../../shared/ApiService";
 import {useToast} from "../../../hooks/UseToast";
+import {Link} from "react-router-dom";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -33,7 +34,13 @@ const FormSchema = z.object({
     gender: z.enum(["men", "women"], {
         required_error: "You need to select your gender.",
     }).optional(),
-    subscribe: z.boolean().default(false).optional()
+    subscribe: z.boolean().default(false).optional(),
+    privacyPolicy: z.boolean().default(false).refine(value => value, {
+        message: "You must accept the privacy policy.",
+    }),
+    termsAndConditions: z.boolean().default(false).refine(value => value, {
+        message: "You must accept the terms and conditions.",
+    }),
 })
 
 interface RegistrationFormProps {
@@ -233,7 +240,56 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({setOpen}) => {
                                         Marketing emails
                                     </FormLabel>
                                     <FormDescription>
-                                        Receive emails about new products, features, and more.
+                                        Receive emails about new products, features, and more. If you don't accept this
+                                        you will still get emails based on your orders.
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="privacyPolicy"
+                        render={({field}) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                        <Link to={"/privacy-policy"}>
+                                            Privacy Policy
+                                        </Link>
+                                    </FormLabel>
+                                    <FormDescription>
+                                        Accept the <Link to={"/privacy-policy"}>privacy policy</Link>.
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="termsAndConditions"
+                        render={({field}) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div className="space-y-0.5">
+                                    <FormLabel className="text-base">
+                                        <Link to={"/terms-and-conditions"}>
+                                            Terms and Conditions
+                                        </Link>
+                                    </FormLabel>
+                                    <FormDescription>
+                                        Accept the <Link to={"/terms-and-conditions"}>terms and conditions</Link>.
                                     </FormDescription>
                                 </div>
                                 <FormControl>

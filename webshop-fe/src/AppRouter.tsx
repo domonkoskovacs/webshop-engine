@@ -17,6 +17,8 @@ import StorefrontLayout from "./components/storefront/Storefront.layout";
 import ForgotPassword from "./pages/storefront/ForgotPassword.page";
 import NewPassword from "./pages/storefront/NewPassword.page";
 import VerifyEmail from "./pages/storefront/VerifyEmail.page";
+import PrivacyPolicy from "./pages/storefront/PrivacyPolicy.page";
+import TermsAndConditions from "./pages/storefront/TermsAndConditions.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -33,6 +35,8 @@ const AppRouter: React.FC = () => {
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/new-password" element={<NewPassword/>}/>
                 <Route path="/verify-email" element={<VerifyEmail/>}/>
+                <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
+                <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Route>
