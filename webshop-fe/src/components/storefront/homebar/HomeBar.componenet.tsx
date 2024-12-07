@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {Button} from 'src/components/ui/Button';
 import {Heart, ShoppingCart} from 'lucide-react';
 import {Link} from 'react-router-dom';
-import DarkModeToggle from "../ui/DarkModeToggle";
-import {Gender} from "../../shared/types";
+import DarkModeToggle from "../../ui/DarkModeToggle";
+import {Gender} from "../../../shared/types";
 import GenderSelector from "./GenderSelector.component";
 import AccountHoverIcon from "./AccountHoverIcon.component";
 

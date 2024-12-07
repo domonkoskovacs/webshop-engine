@@ -7,9 +7,9 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
 import {RadioGroup, RadioGroupItem} from "src/components/ui/RadioGroup"
-import {Switch} from "../ui/Switch"
-import {apiService} from "../../shared/ApiService";
-import {useToast} from "../../hooks/UseToast";
+import {Switch} from "../../ui/Switch"
+import {apiService} from "../../../shared/ApiService";
+import {useToast} from "../../../hooks/UseToast";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -54,8 +54,8 @@ const RegistrationForm: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const gender = data.gender == "men" ? "MALE" :
-                data.gender == "women" ? "FEMALE" : null
+            const gender = data.gender === "men" ? "MALE" :
+                data.gender === "women" ? "FEMALE" : null
             const response = await apiService.register({
                 email: data.email,
                 firstname: data.firstname,

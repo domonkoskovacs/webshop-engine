@@ -6,7 +6,7 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
-import {useAuth} from "../../hooks/UseAuth";
+import {useAuth} from "../../../hooks/UseAuth";
 
 const FormSchema = z.object({
     email: z.string().email({

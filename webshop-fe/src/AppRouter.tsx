@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Routes} from 'react-router-dom';
+import {Outlet, Route, Routes} from 'react-router-dom';
 import Forbidden from './pages/Forbidden.page';
 import Home from './pages/Home.page';
 import NotFound from './pages/NotFound.page';
@@ -13,32 +13,44 @@ import ProductsDashboard from "./pages/admin/ProductsDashboard.page";
 import StatisticsDashboard from "./pages/admin/StatisticsDashboard.page";
 import StoreDashboard from "./pages/admin/StoreDashboard.page";
 import SettingsDashboard from "./pages/admin/SettingsDashboard.page";
+import StorefrontLayout from "./components/storefront/Storefront.layout";
 
 const AppRouter: React.FC = () => {
     return (
         <Routes>
-            <Route path="/" element={<Home/>}/>
+            <Route
+                element={
+                    <StorefrontLayout>
+                        <Outlet />
+                    </StorefrontLayout>
+                }
+            >
+                {/* Public routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/403" element={<Forbidden />} />
+                <Route path="*" element={<NotFound />} />
+            </Route>
 
-            {/*todo protect these routes*/}
             <Route
                 path="/admin/dashboard/*"
                 element={
-                    <AdminDashboardLayout>
-                        <Routes>
-                            <Route path="article" element={<ArticleDashboard />} />
-                            <Route path="category" element={<CategoryDashboard />} />
-                            <Route path="promotion-email" element={<PromotionEmailDashboard />} />
-                            <Route path="orders" element={<OrdersDashboard />} />
-                            <Route path="products" element={<ProductsDashboard />} />
-                            <Route path="statistics" element={<StatisticsDashboard />} />
-                            <Route path="store" element={<StoreDashboard />} />
-                            <Route path="settings" element={<SettingsDashboard />} />
-                        </Routes>
-                    </AdminDashboardLayout>
+                    <ProtectedRoute allowedRole="ROLE_ADMIN">
+                        <AdminDashboardLayout>
+                            <Outlet />
+                        </AdminDashboardLayout>
+                    </ProtectedRoute>
                 }
-            />
-            <Route path="/403" element={<Forbidden/>}/>
-            <Route path="*" element={<NotFound/>}/>
+            >
+                {/* Protected admin routes */}
+                <Route path="article" element={<ArticleDashboard />} />
+                <Route path="category" element={<CategoryDashboard />} />
+                <Route path="promotion-email" element={<PromotionEmailDashboard />} />
+                <Route path="orders" element={<OrdersDashboard />} />
+                <Route path="products" element={<ProductsDashboard />} />
+                <Route path="statistics" element={<StatisticsDashboard />} />
+                <Route path="store" element={<StoreDashboard />} />
+                <Route path="settings" element={<SettingsDashboard />} />
+            </Route>
         </Routes>
     );
 };

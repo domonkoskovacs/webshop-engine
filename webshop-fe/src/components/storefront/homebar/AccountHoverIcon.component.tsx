@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import {HoverCard, HoverCardContent, HoverCardTrigger} from "../ui/HoverCard";
-import {Button} from "../ui/Button";
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard";
+import {Button} from "../../ui/Button";
 import {Settings, ShoppingBag, User, UserPen} from "lucide-react";
 import AuthDialogComponent from "./AuthDialog.component";
-import {useAuth} from "../../hooks/UseAuth";
-import {Separator} from "../ui/Separator";
+import {useAuth} from "../../../hooks/UseAuth";
+import {Separator} from "../../ui/Separator";
 
 const AccountHoverIcon: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
