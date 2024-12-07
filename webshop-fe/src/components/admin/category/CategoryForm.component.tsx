@@ -38,18 +38,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen}) => {
                 description: "Category created successfully.",
             })
         } catch (error) {
-            // @ts-ignore
-            const errorData = error.response.data;
 
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
-                    </pre>
-                ),
-            })
         }
     }
 

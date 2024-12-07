@@ -36,7 +36,11 @@ const FormSchema = z.object({
     subscribe: z.boolean().default(false).optional()
 })
 
-const RegistrationForm: React.FC = () => {
+interface RegistrationFormProps {
+    setOpen: (open: boolean) => void;
+}
+
+const RegistrationForm: React.FC<RegistrationFormProps> = ({setOpen}) => {
     const [emailTaken, setEmailTaken] = useState<boolean>(false)
     const {toast} = useToast()
 
@@ -69,6 +73,7 @@ const RegistrationForm: React.FC = () => {
                 description: "Successful registration.",
             })
             setEmailTaken(false)
+            setOpen(false)
         } catch (error) {
             // @ts-ignore
             const errorData = error.response.data;
@@ -206,7 +211,7 @@ const RegistrationForm: React.FC = () => {
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem value="woman"/>
+                                                <RadioGroupItem value="women"/>
                                             </FormControl>
                                             <FormLabel className="font-normal">
                                                 Woman

@@ -47,17 +47,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                 throw new Error("Invalid response from the server");
             }
         } catch (error) {
-            // @ts-ignore
-            const errorData = error.response.data;
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
-                    </pre>
-                ),
-            })
             throw error;
         }
     }
@@ -68,7 +57,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             setRole(null);
             setLoggedIn(false);
             removeCookie("refreshToken", {path: "/"});
-            navigate("/authentication");
+            navigate("/");
+            toast({
+                description: "Sad to see you go!",
+            });
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -93,7 +85,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             (response) => response,
             async (error) => {
                 const originalRequest = error.config;
-                if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+                const errorData = error.response.data;
+                const newAccessTokenNeeded = error.response?.status === 401 &&
+                    errorData.error[0].reasonCode === "JWT_EXPIRED_ERROR"
+                if ((newAccessTokenNeeded || error.response?.status === 403) && !originalRequest._retry) {
                     originalRequest._retry = true;
 
                     try {
@@ -110,14 +105,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                         } else {
                             throw new Error("Refresh token not available or is not a valid string");
                         }
-
-
-
-
-
                         return axios(originalRequest);
                     } catch (refreshError) {
-                        console.error(refreshError);
                         logout();
                         return Promise.reject(refreshError);
                     }

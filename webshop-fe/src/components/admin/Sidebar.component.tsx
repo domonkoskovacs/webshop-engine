@@ -150,6 +150,12 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
+                            <Link to="/">
+                                <Store />
+                                Storefront
+                            </Link>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton asChild>
                             <Link to="/admin/dashboard/settings">
                                 <UserCog/>
                                 Settings

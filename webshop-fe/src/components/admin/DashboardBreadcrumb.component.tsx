@@ -1,5 +1,12 @@
-import {Link, useLocation} from "react-router-dom";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/Breadcrumb";
+import {useLocation} from "react-router-dom";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator
+} from "../ui/Breadcrumb";
 import React from "react";
 
 const DashboardBreadcrumb: React.FC = () => {
@@ -15,13 +22,13 @@ const DashboardBreadcrumb: React.FC = () => {
 
                     return (
                         <React.Fragment key={pathToSegment}>
-                            {index > 0 && <BreadcrumbSeparator />}
+                            {index > 0 && <BreadcrumbSeparator/>}
                             <BreadcrumbItem>
                                 {isLast ? (
                                     <BreadcrumbPage>{segment}</BreadcrumbPage>
                                 ) : (
-                                    <BreadcrumbLink>
-                                        <Link to={pathToSegment}>{segment}</Link>
+                                    <BreadcrumbLink href={pathToSegment}>
+                                        {segment}
                                     </BreadcrumbLink>
                                 )}
                             </BreadcrumbItem>

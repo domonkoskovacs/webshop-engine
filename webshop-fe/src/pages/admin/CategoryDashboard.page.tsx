@@ -17,7 +17,7 @@ const CategoryDashboard: React.FC = () => {
                 const response = await apiService.getAllCategories()
                 setCategories(response);
             } catch (error) {
-                console.error(error);
+
             }
         };
 
@@ -31,15 +31,7 @@ const CategoryDashboard: React.FC = () => {
                 prevCategories.filter((category) => category.id !== id)
             );
         } catch (error) {
-            const errorMessage =
-                error instanceof Error ? error.message : "An unexpected error occurred.";
 
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: errorMessage,
-                duration: 5000,
-            });
         }
 
     }
@@ -59,10 +51,8 @@ const CategoryDashboard: React.FC = () => {
                         <TableRow key={category.id}>
                             <TableCell className="font-medium">{category.name}</TableCell>
                             <TableCell className="text-right">
-                                {/* Placeholder for actions, add buttons as needed */}
                                 <Button variant="ghost"><FolderPen/></Button>
-                                <Button variant="ghost"><Trash2
-                                    onClick={() => deleteCategory(category.id ?? '')}/></Button>
+                                <Button variant="ghost"><Trash2 onClick={() => deleteCategory(category.id ?? '')}/></Button>
                             </TableCell>
                         </TableRow>
                     ))}

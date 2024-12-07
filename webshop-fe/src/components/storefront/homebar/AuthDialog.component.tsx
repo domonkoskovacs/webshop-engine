@@ -36,10 +36,10 @@ const AuthDialogComponent: React.FC<AuthDialogProps> = ({open, setOpen, isLogin,
                             <TabsTrigger value="login">Login</TabsTrigger>
                         </TabsList>
                         <TabsContent value="registration">
-                            <RegistrationForm/>
+                            <RegistrationForm setOpen={setOpen}/>
                         </TabsContent>
                         <TabsContent value="login">
-                            <LoginForm/>
+                            <LoginForm setOpen={setOpen}/>
                         </TabsContent>
                     </Tabs>
                 </ScrollArea>

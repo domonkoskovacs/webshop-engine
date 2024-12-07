@@ -3,10 +3,11 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
 import {useAuth} from "../../../hooks/UseAuth";
+import {Link} from "react-router-dom";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -17,7 +18,11 @@ const FormSchema = z.object({
     })
 })
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+    setOpen: (open: boolean) => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({setOpen}) => {
     const {login} = useAuth();
     const [wrongPassword, setWrongPassword] = useState<boolean>(false)
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -32,9 +37,8 @@ const LoginForm: React.FC = () => {
         try {
             await login(data.email,data.password)
             setWrongPassword(false)
-        } catch (error) {
-            // @ts-ignore
-            const errorData = error.response.data;
+        } catch (error: any) {
+            const errorData = error?.response?.data;
             if (errorData.error[0].reasonCode === "WRONG_PASSWORD") {
                 setWrongPassword(true);
             }
@@ -67,6 +71,11 @@ const LoginForm: React.FC = () => {
                                 <FormControl>
                                     <Input type="password" placeholder="*****" {...field} />
                                 </FormControl>
+                                <FormDescription>
+                                    <Link to="/forgot-password" onClick={() => setOpen(false)}>
+                                        I forgot my password!
+                                    </Link>
+                                </FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )}

@@ -2,11 +2,13 @@ import {
     AuthServiceApi,
     CategoryRequest,
     CategoryServiceApi,
-    Configuration,
-    LoginRequest,
-    RegistrationRequest, TokenRequest,
-    UserServiceApi
+    Configuration, ForgottenPasswordRequest,
+    LoginRequest, NewPasswordRequest,
+    RegistrationRequest,
+    TokenRequest,
+    UserServiceApi, VerificationRequest
 } from "./api";
+import {toast} from "../hooks/UseToast";
 
 class ApiService {
     private authApi: AuthServiceApi;
@@ -23,69 +25,77 @@ class ApiService {
         this.categoryApi = new CategoryServiceApi(this.config);
     }
 
-    async login(loginRequest: LoginRequest) {
+    private handleError(error: any) {
+        const errorData = error?.response?.data;
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: JSON.stringify(errorData ?? "An unexpected error occurred.", null, 2),
+            duration: 5000,
+        });
+    }
+
+    private async makeApiCall<T>(apiCall: () => Promise<T>): Promise<T> {
         try {
-            const response = await this.authApi.login({
-                loginRequest: loginRequest
-            }, { withCredentials: true });
-            console.log(response)
-            return response.data;
+            return await apiCall();
         } catch (error) {
+            this.handleError(error);
             throw error;
         }
+    }
+
+    async login(loginRequest: LoginRequest) {
+        return this.makeApiCall(() =>
+            this.authApi.login({loginRequest}, {withCredentials: true}).then((res) => res.data)
+        );
     }
 
     async refresh(tokenRequest: TokenRequest) {
-        try {
-            const response = await this.authApi.refreshToken({
-                tokenRequest: tokenRequest
-            }, { withCredentials: true });
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        return this.makeApiCall(() =>
+            this.authApi.refreshToken({tokenRequest}, {withCredentials: true}).then((res) => res.data)
+        );
     }
 
     async register(registrationRequest: RegistrationRequest) {
-        try {
-            const response = await this.userApi.register({
-                registrationRequest: registrationRequest
-            });
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        return this.makeApiCall(() =>
+            this.userApi.register({registrationRequest}).then((res) => res.data)
+        );
     }
 
     async getAllCategories() {
-        try {
-            const response = await this.categoryApi.getAll3();
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        return this.makeApiCall(() =>
+            this.categoryApi.getAll3().then((res) => res.data)
+        );
     }
 
     async deleteCategory(id: string) {
-        try {
-            const response = await this.categoryApi.delete2({
-                id: id
-            });
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        return this.makeApiCall(() =>
+            this.categoryApi.delete2({id}).then((res) => res.data)
+        );
     }
 
     async createCategory(categoryRequest: CategoryRequest) {
-        try {
-            const response = await this.categoryApi.create3({
-                categoryRequest: categoryRequest
-            });
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        return this.makeApiCall(() =>
+            this.categoryApi.create3({categoryRequest}).then((res) => res.data)
+        );
+    }
+
+    async sendForgotPasswordEmail(forgottenPasswordRequest: ForgottenPasswordRequest) {
+        return this.makeApiCall(() =>
+            this.userApi.forgottenPassword({forgottenPasswordRequest}).then((res) => res.data)
+        );
+    }
+
+    async newPassword(newPasswordRequest: NewPasswordRequest) {
+        return this.makeApiCall(() =>
+            this.userApi.newPassword({newPasswordRequest}).then((res) => res.data)
+        );
+    }
+
+    async verifyEmail(verificationRequest: VerificationRequest) {
+        return this.makeApiCall(() =>
+            this.userApi.verify({verificationRequest}).then((res) => res.data)
+        );
     }
 }
 

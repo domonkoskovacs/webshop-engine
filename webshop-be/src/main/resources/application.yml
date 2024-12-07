@@ -69,8 +69,8 @@ application:
     expiration: 1000000000
     refresh-expiration: 1000000000
   email:
-    new-password: http://localhost:4200/home?forgotPassword=true&id={id}
-    verify: http://localhost:4200/home?emailVerification=true&id={id}
+    new-password: http://localhost:3000/new-password?id={id}
+    verify: http://localhost:3000/verify-email?id={id}
     more-info: http://localhost:4200/order?id={id} # todo from frontend
     unsubscribe: http://localhost:8080/api/user/unsubscribe/{id} # todo from frontend
     from: noreply@${WEBSHOP_NAME:webshop}.hu
