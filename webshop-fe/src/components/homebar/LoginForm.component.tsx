@@ -6,10 +6,7 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
-import {apiService} from "../../shared/ApiService";
 import {useAuth} from "../../hooks/UseAuth";
-import {useNavigate} from "react-router-dom";
-import {useToast} from "../../hooks/UseToast";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -21,11 +18,8 @@ const FormSchema = z.object({
 })
 
 const LoginForm: React.FC = () => {
-    const {setAccessToken, setRole, setLoggedIn} = useAuth();
+    const {login} = useAuth();
     const [wrongPassword, setWrongPassword] = useState<boolean>(false)
-    const navigate = useNavigate();
-    const {toast} = useToast()
-
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -36,44 +30,13 @@ const LoginForm: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const response = await apiService.login({
-                email: data.email,
-                password: data.password
-            });
-            const {accessToken, role} = response
-            if (accessToken) {
-                setAccessToken(accessToken);
-            }
-            if (role) {
-                setRole(role);
-            }
-            setLoggedIn(true)
-            //todo refresh token logic
-            if (role === "ROLE_ADMIN") {
-                navigate("/admin/dashboard")
-            } else {
-                //todo user navigate
-            }
-            toast({
-                description: "You are successfully logged in.",
-            })
+            await login(data.email,data.password)
             setWrongPassword(false)
         } catch (error) {
             // @ts-ignore
             const errorData = error.response.data;
-
             if (errorData.error[0].reasonCode === "WRONG_PASSWORD") {
                 setWrongPassword(true);
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
-                    description: (
-                        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
-                    </pre>
-                    ),
-                })
             }
         }
     }

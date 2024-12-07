@@ -8,9 +8,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRole }) => {
-    const { accessToken, role } = useAuth();
+    const { loggedIn, role } = useAuth();
 
-    if (!accessToken || role !== allowedRole) {
+    if (!loggedIn || role !== allowedRole) {
         return <Navigate to="/403" />;
     }
 

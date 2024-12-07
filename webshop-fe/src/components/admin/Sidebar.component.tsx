@@ -155,7 +155,7 @@ export function AppSidebar() {
                                 Settings
                             </Link>
                         </SidebarMenuButton>
-                        <SidebarMenuButton asChild onClick={() => logout()}>
+                        <SidebarMenuButton asChild onClick={() => logout()} className="hover:cursor-pointer">
                             <div>
                                 <LogOut/>
                                 <span>Logout</span>

@@ -4,7 +4,7 @@ import {
     CategoryServiceApi,
     Configuration,
     LoginRequest,
-    RegistrationRequest,
+    RegistrationRequest, TokenRequest,
     UserServiceApi
 } from "./api";
 
@@ -27,16 +27,19 @@ class ApiService {
         try {
             const response = await this.authApi.login({
                 loginRequest: loginRequest
-            });
+            }, { withCredentials: true });
+            console.log(response)
             return response.data;
         } catch (error) {
             throw error;
         }
     }
 
-    async refresh() {
+    async refresh(tokenRequest: TokenRequest) {
         try {
-            const response = await this.authApi.refreshToken({}, { withCredentials: true });
+            const response = await this.authApi.refreshToken({
+                tokenRequest: tokenRequest
+            }, { withCredentials: true });
             return response.data;
         } catch (error) {
             throw error;

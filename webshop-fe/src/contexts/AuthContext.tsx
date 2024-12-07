@@ -1,16 +1,14 @@
-import React, {createContext, useCallback, useEffect, useRef, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "../hooks/UseToast";
 import axios from "axios";
 import {apiService} from "../shared/ApiService";
+import {useCookies} from "react-cookie";
 
 interface AuthContextType {
-    accessToken: string | null;
-    setAccessToken: (token: string | null) => void;
     role: string | null;
-    setRole: (role: string | null) => void;
     loggedIn: boolean;
-    setLoggedIn: (open: boolean) => void;
+    login: (token: string, role: string) => Promise<void>;
     logout: () => void;
 }
 
@@ -21,45 +19,70 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [role, setRole] = useState<string | null>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
+    const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
 
     const navigate = useNavigate();
-    const logout = useCallback(() => {
-        setAccessToken(null);
-        setRole(null);
-        setLoggedIn(false);
-        toast({
-            description: "Logged out, sad to see you go."
-        })
-        navigate("/");
-    }, [navigate]);
 
-    const refreshAccessToken =  useCallback(async () => {
+    const login = async (email: string, password: string) => {
         try {
-            const data = await apiService.refresh();
-            console.log(data)
-            const {accessToken} = data
-            setAccessToken(accessToken ?? null);
+            const response = await apiService.login({email, password});
+            const {accessToken, role, refreshToken, refreshTokenTimeout} = response;
+            if (accessToken && role && refreshToken && refreshTokenTimeout) {
+                setAccessToken(accessToken);
+                setRole(role);
+                setLoggedIn(true);
+                setCookie("refreshToken", refreshToken, {
+                    maxAge: refreshTokenTimeout,
+                    path: "/",
+                });
+                if (role === "ROLE_ADMIN") {
+                    navigate("/admin/dashboard")
+                } else {
+                    navigate("/")
+                }
+                toast({
+                    description: "You are successfully logged in.",
+                })
+            } else {
+                throw new Error("Invalid response from the server");
+            }
+        } catch (error) {
+            // @ts-ignore
+            const errorData = error.response.data;
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: (
+                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
+                    </pre>
+                ),
+            })
+            throw error;
+        }
+    }
+
+    const logout = () => {
+        try {
+            setAccessToken(null);
+            setRole(null);
+            setLoggedIn(false);
+            removeCookie("refreshToken", {path: "/"});
+            navigate("/authentication");
         } catch (error) {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "failed to refresh token",
-            })
-            logout();
+                description: "Something went wrong while logging out. Please try again.",
+            });
         }
-    }, [logout]);
-
-    const accessTokenRef = useRef(accessToken);
-
-    useEffect(() => {
-        accessTokenRef.current = accessToken;
-    }, [accessToken]);
+    }
 
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(
             (config) => {
                 if (accessToken && config.headers) {
-                    config.headers.Authorization = `Bearer ${accessTokenRef.current}`;
+                    config.headers.Authorization = `Bearer ${accessToken}`;
                 }
                 return config;
             },
@@ -70,14 +93,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             (response) => response,
             async (error) => {
                 const originalRequest = error.config;
-
-                console.log(error)
                 if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
                     originalRequest._retry = true;
-                    console.log("hello")
-                    await refreshAccessToken();
-                    originalRequest.headers.Authorization = `Bearer ${accessTokenRef.current}`;
-                    return axios(originalRequest);
+
+                    try {
+                        const refreshToken = cookies.refreshToken;
+                        if (refreshToken && typeof refreshToken === 'string') {
+                            const response = await apiService.refresh({token: refreshToken});
+                            const { accessToken } = response;
+                            if(accessToken) {
+                                setAccessToken(accessToken);
+                                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                            } else {
+                                throw new Error("Bad refresh token response");
+                            }
+                        } else {
+                            throw new Error("Refresh token not available or is not a valid string");
+                        }
+
+
+
+
+
+                        return axios(originalRequest);
+                    } catch (refreshError) {
+                        console.error(refreshError);
+                        logout();
+                        return Promise.reject(refreshError);
+                    }
                 }
 
                 return Promise.reject(error);
@@ -85,13 +128,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
         );
 
         return () => {
-            axios.interceptors.request.eject(requestInterceptor);
+            axios.interceptors.request.eject(requestInterceptor)
             axios.interceptors.response.eject(responseInterceptor);
         };
-    }, [accessToken, refreshAccessToken]);
+    }, [accessToken, setAccessToken]);
 
     return (
-        <AuthContext.Provider value={{accessToken, setAccessToken, role, setRole, loggedIn, setLoggedIn, logout}}>
+        <AuthContext.Provider value={{role, loggedIn, login, logout}}>
             {children}
         </AuthContext.Provider>
     );
