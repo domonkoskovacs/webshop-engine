@@ -19,6 +19,7 @@ import NewPassword from "./pages/storefront/NewPassword.page";
 import VerifyEmail from "./pages/storefront/VerifyEmail.page";
 import PrivacyPolicy from "./pages/storefront/PrivacyPolicy.page";
 import TermsAndConditions from "./pages/storefront/TermsAndConditions.page";
+import Authentication from "./pages/storefront/Authentication.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -32,6 +33,7 @@ const AppRouter: React.FC = () => {
             >
                 {/* Public routes */}
                 <Route path="/" element={<Home/>}/>
+                <Route path="/authentication" element={<Authentication/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/new-password" element={<NewPassword/>}/>
                 <Route path="/verify-email" element={<VerifyEmail/>}/>

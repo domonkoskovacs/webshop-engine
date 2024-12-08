@@ -18,11 +18,7 @@ const FormSchema = z.object({
     })
 })
 
-interface LoginFormProps {
-    setOpen: (open: boolean) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({setOpen}) => {
+const LoginForm: React.FC = () => {
     const {login} = useAuth();
     const [wrongPassword, setWrongPassword] = useState<boolean>(false)
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -72,7 +68,7 @@ const LoginForm: React.FC<LoginFormProps> = ({setOpen}) => {
                                     <Input type="password" placeholder="*****" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    <Link to="/forgot-password" onClick={() => setOpen(false)}>
+                                    <Link to="/forgot-password">
                                         I forgot my password!
                                     </Link>
                                 </FormDescription>

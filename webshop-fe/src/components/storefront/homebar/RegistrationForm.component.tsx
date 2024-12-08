@@ -43,11 +43,7 @@ const FormSchema = z.object({
     }),
 })
 
-interface RegistrationFormProps {
-    setOpen: (open: boolean) => void;
-}
-
-const RegistrationForm: React.FC<RegistrationFormProps> = ({setOpen}) => {
+const RegistrationForm: React.FC = () => {
     const [emailTaken, setEmailTaken] = useState<boolean>(false)
     const {toast} = useToast()
 
@@ -80,7 +76,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({setOpen}) => {
                 description: "Successful registration.",
             })
             setEmailTaken(false)
-            setOpen(false)
         } catch (error) {
             // @ts-ignore
             const errorData = error.response.data;

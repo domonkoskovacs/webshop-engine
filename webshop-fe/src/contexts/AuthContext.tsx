@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             setRole(null);
             setLoggedIn(false);
             removeCookie("refreshToken", {path: "/"});
-            navigate("/");
+            navigate("/authentication?type=login");
             toast({
                 description: "Sad to see you go!",
             });
