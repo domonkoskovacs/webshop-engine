@@ -6,7 +6,7 @@ const TermsAndConditions: React.FC = () => {
         <ScrollArea className="scroll-content h-full overflow-y-auto scrollbar-hide p-4">
             <div className="flex items-center justify-center h-full p-6">
                 <div className="max-w-4xl text-left">
-                    <h1 className="text-3xl font-bold mb-4">Terms and Conditions</h1>
+                    <h1 className="text-3xl font-bold mb-4 text-center">Terms and Conditions</h1>
                     <p className="mb-4">
                         Welcome to Webshop! By accessing and using our platform, you agree to comply with the following
                         terms and conditions. Please read these terms carefully before proceeding.

@@ -11,7 +11,7 @@ const HomeBar: React.FC = () => {
     const [gender, setGender] = useState<Gender>('men');
 
     return (
-        <div className="flex justify-between items-center py-4 px-8 bg-muted shadow-md">
+        <div className="flex justify-between items-center py-4 px-8 shadow-md">
             <GenderSelector gender={gender} setGender={setGender}/>
 
             <Link to="/" className="text-xl font-semibold">

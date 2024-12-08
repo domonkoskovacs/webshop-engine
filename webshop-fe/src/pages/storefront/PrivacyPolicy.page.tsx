@@ -6,7 +6,7 @@ const PrivacyPolicy: React.FC = () => {
         <ScrollArea className="scroll-content h-full overflow-y-auto scrollbar-hide p-4">
             <div className="flex items-center justify-center h-full p-6">
                 <div className="max-w-4xl text-left">
-                    <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
+                    <h1 className="text-3xl font-bold mb-4 text-center">Privacy Policy</h1>
                     <p className="mb-4">
                         At Webshop, we value your privacy and are committed to protecting your personal data. This
                         Privacy

@@ -1,25 +1,26 @@
 import React from 'react';
 import {Outlet, Route, Routes} from 'react-router-dom';
-import Forbidden from './pages/storefront/Forbidden.page';
-import Home from './pages/storefront/Home.page';
-import NotFound from './pages/storefront/NotFound.page';
+import Forbidden from '../pages/storefront/Forbidden.page';
+import Home from '../pages/storefront/Home.page';
+import NotFound from '../pages/storefront/NotFound.page';
 import ProtectedRoute from './ProtectedRoute';
-import AdminDashboardLayout from "./components/admin/AdminDashboard.layout";
-import ArticleDashboard from "./pages/admin/ArticleDashboard.page";
-import CategoryDashboard from "./pages/admin/CategoryDashboard.page";
-import PromotionEmailDashboard from "./pages/admin/PromotionEmailDashboard.page";
-import OrdersDashboard from "./pages/admin/OrdersDashboard.page";
-import ProductsDashboard from "./pages/admin/ProductsDashboard.page";
-import StatisticsDashboard from "./pages/admin/StatisticsDashboard.page";
-import StoreDashboard from "./pages/admin/StoreDashboard.page";
-import SettingsDashboard from "./pages/admin/SettingsDashboard.page";
-import StorefrontLayout from "./components/storefront/Storefront.layout";
-import ForgotPassword from "./pages/storefront/ForgotPassword.page";
-import NewPassword from "./pages/storefront/NewPassword.page";
-import VerifyEmail from "./pages/storefront/VerifyEmail.page";
-import PrivacyPolicy from "./pages/storefront/PrivacyPolicy.page";
-import TermsAndConditions from "./pages/storefront/TermsAndConditions.page";
-import Authentication from "./pages/storefront/Authentication.page";
+import AdminDashboardLayout from "../components/admin/AdminDashboard.layout";
+import ArticleDashboard from "../pages/admin/ArticleDashboard.page";
+import CategoryDashboard from "../pages/admin/CategoryDashboard.page";
+import PromotionEmailDashboard from "../pages/admin/PromotionEmailDashboard.page";
+import OrdersDashboard from "../pages/admin/OrdersDashboard.page";
+import ProductsDashboard from "../pages/admin/ProductsDashboard.page";
+import StatisticsDashboard from "../pages/admin/StatisticsDashboard.page";
+import StoreDashboard from "../pages/admin/StoreDashboard.page";
+import SettingsDashboard from "../pages/admin/SettingsDashboard.page";
+import StorefrontLayout from "../components/storefront/Storefront.layout";
+import ForgotPassword from "../pages/storefront/ForgotPassword.page";
+import NewPassword from "../pages/storefront/NewPassword.page";
+import VerifyEmail from "../pages/storefront/VerifyEmail.page";
+import PrivacyPolicy from "../pages/storefront/PrivacyPolicy.page";
+import TermsAndConditions from "../pages/storefront/TermsAndConditions.page";
+import Authentication from "../pages/storefront/Authentication.page";
+import AboutUs from "../pages/storefront/AboutUs.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -39,6 +40,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/verify-email" element={<VerifyEmail/>}/>
                 <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
                 <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
+                <Route path="/about-us" element={<AboutUs/>}/>
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Route>

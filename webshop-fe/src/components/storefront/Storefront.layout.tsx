@@ -1,5 +1,8 @@
 import React, {ReactNode} from 'react';
 import HomeBar from "./homebar/HomeBar.componenet";
+import Footer from "./Footer.component";
+import FooterDetails from "./FooterDetails.component";
+import {Separator} from "../ui/Separator";
 
 interface LayoutProps {
     children: ReactNode;
@@ -7,18 +10,18 @@ interface LayoutProps {
 
 const StorefrontLayout: React.FC<LayoutProps> = ({children}) => {
     return (
-        <div className="flex flex-col h-screen bg-background">
-            <header className="shrink-0 border-b border-border">
+        <div className="flex flex-col min-h-screen scrollbar">
+            <header>
                 <HomeBar/>
             </header>
 
-            <main className="flex-1 overflow-y-auto px-4 py-2">
+            <main className="flex-1 px-4 py-2">
                 {children}
             </main>
 
-            <footer className="shrink-0 border-t border-border bg-muted p-4 text-center text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} Your Store. All rights reserved.
-            </footer>
+            <Separator/>
+            <FooterDetails/>
+            <Footer/>
         </div>
     );
 };
