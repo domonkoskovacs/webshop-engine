@@ -6,9 +6,9 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React from "react";
-import {apiService} from "../../shared/ApiService";
+import {apiService} from "../../../shared/ApiService";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {toast} from "../../hooks/UseToast";
+import {toast} from "../../../hooks/UseToast";
 
 const FormSchema = z.object({
     password: z.string().min(6, {

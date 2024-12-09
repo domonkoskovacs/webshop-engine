@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/Select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
 
-const Header: React.FC = () => {
+const SiteHeader: React.FC = () => {
     return (
-        <header className="flex items-center justify-between bg-muted py-1 px-4 text-xs">
+        <div className="flex items-center justify-between bg-muted py-1 px-4 text-xs">
             <div>
                 <Link to="/faq" className="text-primary hover:underline">
                     FAQ
@@ -30,8 +30,8 @@ const Header: React.FC = () => {
                     </SelectContent>
                 </Select>
             </div>
-        </header>
+        </div>
     );
 };
 
-export default Header;
+export default SiteHeader;

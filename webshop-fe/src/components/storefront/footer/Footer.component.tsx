@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Footer: React.FC = () => {
+const SiteFooter: React.FC = () => {
     return (
-        <footer className="shrink-0 border-t border-border bg-muted p-4 text-center text-sm">
+        <div className="shrink-0 border-t border-border bg-muted p-4 text-center text-sm">
             <div className="mb-2 flex justify-center space-x-4">
                 <Link to="/about-us" className="hover:underline">
                     About Us
@@ -18,8 +18,8 @@ const Footer: React.FC = () => {
             <div className="text-muted-foreground">
                 &copy; {new Date().getFullYear()} Webshop Name. All rights reserved.
             </div>
-        </footer>
+        </div>
     );
 };
 
-export default Footer;
+export default SiteFooter;

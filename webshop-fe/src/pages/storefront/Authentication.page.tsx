@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/Tabs";
-import RegistrationForm from "../../components/storefront/homebar/RegistrationForm.component";
-import LoginForm from "../../components/storefront/homebar/LoginForm.component";
+import RegistrationForm from "../../components/storefront/forms/RegistrationForm.component";
+import LoginForm from "../../components/storefront/forms/LoginForm.component";
 import {ScrollArea} from "../../components/ui/ScrollArea";
 import {useSearchParams} from "react-router-dom";
 

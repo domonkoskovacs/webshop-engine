@@ -97,6 +97,12 @@ class ApiService {
             this.userApi.verify({verificationRequest}).then((res) => res.data)
         );
     }
+
+    async getAllCategory() {
+        return this.makeApiCall(() =>
+            this.categoryApi.getAll3().then((res) => res.data)
+        );
+    }
 }
 
 export const apiService = new ApiService();

@@ -7,7 +7,7 @@ import {Gender} from "../../../shared/types";
 import GenderSelector from "./GenderSelector.component";
 import AccountHoverIcon from "./AccountHoverIcon.component";
 
-const HomeBar: React.FC = () => {
+const ActionsBar: React.FC = () => {
     const [gender, setGender] = useState<Gender>('men');
 
     return (
@@ -32,4 +32,4 @@ const HomeBar: React.FC = () => {
     );
 };
 
-export default HomeBar;
+export default ActionsBar;
