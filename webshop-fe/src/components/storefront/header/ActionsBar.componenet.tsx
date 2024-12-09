@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from 'src/components/ui/Button';
 import {Heart, ShoppingCart} from 'lucide-react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import DarkModeToggle from "../../ui/DarkModeToggle";
 import {Gender} from "../../../shared/types";
 import GenderSelector from "./GenderSelector.component";
@@ -9,6 +9,7 @@ import AccountHoverIcon from "./AccountHoverIcon.component";
 
 const ActionsBar: React.FC = () => {
     const [gender, setGender] = useState<Gender>('men');
+    const navigate = useNavigate();
 
     return (
         <div className="flex justify-between items-center py-2 px-8">
@@ -20,10 +21,10 @@ const ActionsBar: React.FC = () => {
 
             <div className="flex space-x-3">
                 <AccountHoverIcon/>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" onClick={() => navigate("/saved")}>
                     <Heart/>
                 </Button>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" onClick={() => navigate("/cart")}>
                     <ShoppingCart/>
                 </Button>
                 <DarkModeToggle/>

@@ -23,6 +23,12 @@ import Authentication from "../pages/storefront/Authentication.page";
 import AboutUs from "../pages/storefront/AboutUs.page";
 import FrequentlyAskedQuestions from 'src/pages/storefront/FrequentlyAskedQuestions.page';
 import ContactUs from "../pages/storefront/ContactUs.page";
+import Products from "../pages/storefront/Products.page";
+import Saved from "../pages/storefront/Saved.page";
+import Cart from "../pages/storefront/Cart.page";
+import Profile from "../pages/storefront/Profile.page";
+import Settings from "../pages/storefront/Settings.page";
+import PreviousOrders from "../pages/storefront/PreviousOrders.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -36,6 +42,9 @@ const AppRouter: React.FC = () => {
             >
                 {/* Public routes */}
                 <Route path="/" element={<Home/>}/>
+                <Route path="/products" element={<Products/>}/>
+                <Route path="/saved" element={<Saved/>}/>
+                <Route path="/cart" element={<Cart/>}/>
                 <Route path="/authentication" element={<Authentication/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/new-password" element={<NewPassword/>}/>
@@ -47,6 +56,19 @@ const AppRouter: React.FC = () => {
                 <Route path="/contact" element={<ContactUs/>}/>
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
+
+                {/* Protected storefront routes */}
+                <Route
+                    element={
+                        <ProtectedRoute allowedRole="ROLE_USER">
+                                <Outlet/>
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route path="/profile" element={<Profile/>}/>
+                    <Route path="/settings" element={<Settings/>}/>
+                    <Route path="/previous-orders" element={<PreviousOrders/>}/>
+                </Route>
             </Route>
 
             <Route

@@ -12,13 +12,14 @@ const AccountHoverContent: React.FC = () => {
     if (loggedIn && role === "ROLE_USER") {
         return <div className="flex flex-col text-center space-y-1">
             <h1>Welcome back!</h1>
-            <Button variant="ghost" className="flex items-center justify-start">
+            <Button variant="ghost" className="flex items-center justify-start" onClick={() => navigate("/profile")}>
                 <UserPen className="mr-2"/>Profile
             </Button>
-            <Button variant="ghost" className="flex items-center justify-start">
+            <Button variant="ghost" className="flex items-center justify-start"
+                    onClick={() => navigate("/previous-orders")}>
                 <ShoppingBag className="mr-2"/>Previous orders
             </Button>
-            <Button variant="ghost" className="flex items-center justify-start">
+            <Button variant="ghost" className="flex items-center justify-start" onClick={() => navigate("/settings")}>
                 <Settings className="mr-2"/>Settings
             </Button>
             <Separator className="my-4"/>
@@ -35,7 +36,8 @@ const AccountHoverContent: React.FC = () => {
                     onClick={() => navigate("/admin/dashboard")}>
                 <LayoutDashboard className="mr-2"/>Dashboard
             </Button>
-            <Button variant="ghost" className="flex items-center justify-start">
+            <Button variant="ghost" className="flex items-center justify-start"
+                    onClick={() => navigate("/admin/dashboard/settings")}>
                 <Settings className="mr-2"/>Settings
             </Button>
             <Separator className="my-4"/>
@@ -49,10 +51,14 @@ const AccountHoverContent: React.FC = () => {
         <h1>You are not logged in!</h1>
         <Button onClick={() => {
             navigate("/authentication?type=login")
-        }}>Login</Button>
+        }}>
+            Login
+        </Button>
         <Button onClick={() => {
             navigate("/authentication?type=registration")
-        }}>Register</Button>
+        }}>
+            Register
+        </Button>
         <h1>Join us today!</h1>
     </div>
 };

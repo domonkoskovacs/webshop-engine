@@ -1,9 +1,9 @@
 import React, {ReactNode} from 'react';
-import ActionsBar from "../components/storefront/header/HomeBar.componenet";
-import SiteFooter from "../components/storefront/footer/Footer.component";
+import ActionsBar from "../components/storefront/header/ActionsBar.componenet";
+import SiteFooter from "../components/storefront/footer/SiteFooter.component";
 import FooterDetails from "../components/storefront/footer/FooterDetails.component";
 import {Separator} from "../components/ui/Separator";
-import SiteHeader from "../components/storefront/header/Header";
+import SiteHeader from "../components/storefront/header/SiteHeader";
 import MenuBar from "../components/storefront/header/MenuBar.component";
 
 interface LayoutProps {
