@@ -3,9 +3,7 @@ import ForgotPasswordForm from "../../components/storefront/forms/ForgotPassword
 
 const ForgotPassword: React.FC = () => {
     return (
-        <div className="flex items-center justify-center h-full">
-            <ForgotPasswordForm/>
-        </div>
+        <ForgotPasswordForm/>
     );
 };
 

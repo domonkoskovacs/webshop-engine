@@ -20,8 +20,7 @@ const Authentication: React.FC = () => {
     }
 
     return (
-        <ScrollArea className="h-full p-4">
-            <div className="flex flex-col  items-center justify-center h-full p-6">
+            <div className="flex flex-col items-center justify-center h-full p-6">
                 <h1>{isLogin ? "Login" : "Registration"}</h1>
                 <p>{isLogin ?
                     "Please use your email and password to authenticate yourself." :
@@ -40,7 +39,6 @@ const Authentication: React.FC = () => {
                     </TabsContent>
                 </Tabs>
             </div>
-        </ScrollArea>
     );
 };
 

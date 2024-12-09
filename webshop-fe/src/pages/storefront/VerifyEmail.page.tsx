@@ -33,10 +33,8 @@ const VerifyEmail: React.FC = () => {
     }, [navigate, searchParams]);
 
     return (
-        <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="p-4 rounded">
-                {message}
-            </div>
+        <div>
+            {message}
         </div>
     );
 };
