@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 const AboutUs: React.FC = () => {
     return (
@@ -51,7 +52,7 @@ const AboutUs: React.FC = () => {
                 <br/>
                 <p>
                     If you have any questions or feedback about this project, feel free to reach out via
-                    the <strong>Contact</strong> page. Your input is valuable in helping me refine my work and
+                    the <strong><Link to="/contact" className="hover:underline">Contact</Link></strong> page. Your input is valuable in helping me refine my work and
                     further
                     develop my expertise.
                 </p>

@@ -21,6 +21,8 @@ import PrivacyPolicy from "../pages/storefront/PrivacyPolicy.page";
 import TermsAndConditions from "../pages/storefront/TermsAndConditions.page";
 import Authentication from "../pages/storefront/Authentication.page";
 import AboutUs from "../pages/storefront/AboutUs.page";
+import FrequentlyAskedQuestions from 'src/pages/storefront/FrequentlyAskedQuestions.page';
+import ContactUs from "../pages/storefront/ContactUs.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -41,6 +43,8 @@ const AppRouter: React.FC = () => {
                 <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
                 <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
                 <Route path="/about-us" element={<AboutUs/>}/>
+                <Route path="/faq" element={<FrequentlyAskedQuestions/>}/>
+                <Route path="/contact" element={<ContactUs/>}/>
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Route>

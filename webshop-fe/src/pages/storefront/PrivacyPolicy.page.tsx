@@ -1,5 +1,6 @@
 import React from 'react';
 import {ScrollArea} from "../../components/ui/ScrollArea";
+import {Link} from "react-router-dom";
 
 const PrivacyPolicy: React.FC = () => {
     return (
@@ -52,20 +53,7 @@ const PrivacyPolicy: React.FC = () => {
                         We reserve the right to update this Privacy Policy. Please check back periodically for updates.
                     </p>
                     <p className="mt-6">
-                        If you have any questions about this Privacy Policy, please contact us at:
-                    </p>
-                    <br/>
-                    <p>
-                        Address: 1234 Thesis City, Research Street 99, Hungary
-                    </p>
-                    <p>
-                        Email: contact@webshop.com
-                    </p>
-                    <p>
-                        Phone: +36 1 000 0000
-                    </p>
-                    <p>
-                        Website: www.example.com
+                        If you have any questions about this Privacy Policy, please <strong><Link to="/contact" className="hover:underline">contact us</Link></strong>.
                     </p>
                 </div>
             </div>
