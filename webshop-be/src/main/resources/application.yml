@@ -11,8 +11,8 @@ spring:
       username: ${MONITORING_USERNAME:monitoring}
       password: ${MONITORING_PASSWORD:monitoring}
     swagger:
-      username: ${MONITORING_USERNAME:swagger}
-      password: ${MONITORING_PASSWORD:swagger}
+      username: ${API_USERNAME:swagger}
+      password: ${API_PASSWORD:swagger}
     cors:
       enabled:
         paths: "http://localhost:3000"

@@ -18,7 +18,7 @@ class ApiService {
 
     constructor() {
         this.config = new Configuration({
-            basePath: 'http://localhost:8080',
+            basePath: process.env.REACT_APP_BACKEND_URL,
         });
         this.authApi = new AuthServiceApi(this.config);
         this.userApi = new UserServiceApi(this.config);

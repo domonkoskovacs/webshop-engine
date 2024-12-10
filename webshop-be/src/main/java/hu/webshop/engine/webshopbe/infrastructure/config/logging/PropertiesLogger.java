@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PropertiesLogger implements ApplicationListener<ApplicationPreparedEvent> {
 
     private static final String PASSWORD_PROPERTY_NAME = "password";
+    private static final String KEY_PROPERTY_NAME = "key";
     private static final String PASSWORD_PROPERTY_VALUE = "********";
     private boolean isFirstRun = true;
 
@@ -49,7 +50,7 @@ public class PropertiesLogger implements ApplicationListener<ApplicationPrepared
 
     private static Map.Entry<String, String> propertyEntry(ConfigurableEnvironment environment, String propertyName) {
         String resolvedProperty = environment.getProperty(propertyName);
-        return Map.entry(propertyName, propertyName.contains(PASSWORD_PROPERTY_NAME) ?
+        return Map.entry(propertyName, propertyName.contains(PASSWORD_PROPERTY_NAME) || propertyName.contains(KEY_PROPERTY_NAME) ?
                 PASSWORD_PROPERTY_VALUE :
                 Objects.requireNonNull(resolvedProperty));
     }

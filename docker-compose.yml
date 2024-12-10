@@ -1,1 +1,62 @@
 #main docker-compose for dev env
+version: '3.9'
+
+services:
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: webshop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-db:/data/postgres
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./webshop-be
+      dockerfile: Dockerfile
+    environment:
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+      MONITORING_USERNAME: monitoring
+      MONITORING_PASSWORD: monitoring
+      API_USERNAME: swagger
+      API_PASSWORD: swagger
+      SMTP_HOST: maildev
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      #DB_POOL_SIZE: 4
+      #DB_CATALOG: spring_webshop
+      WEBSHOP_NAME: webshop
+      STRIPE_PUBLIC_KEY: MUST_BE_SPECIFIED
+      STRIPE_PRIVATE_KEY: MUST_BE_SPECIFIED
+    depends_on:
+      - postgres
+      - maildev
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./webshop-fe
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8080
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres-db:
+    driver: local
