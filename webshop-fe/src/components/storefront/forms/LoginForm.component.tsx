@@ -23,6 +23,8 @@ const FormSchema = z.object({
 const LoginForm: React.FC = () => {
     const {login} = useAuth();
     const [wrongPassword, setWrongPassword] = useState<boolean>(false)
+    const [unverifiedUser, setUnverifiedUser] = useState<boolean>(false)
+    const [nonExistentEmail, setNonExistentEmail] = useState<boolean>(false)
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -36,11 +38,14 @@ const LoginForm: React.FC = () => {
             await login(data.email,data.password)
             setWrongPassword(false)
         } catch (error: any) {
-            if(error instanceof ApiError) {
-                const wrongPasswordError = error.error?.find((err) => err.reasonCode === ResultEntryReasonCodeEnum.WrongPassword);
-                if (wrongPasswordError) {
-                    setWrongPassword(true);
-                }
+            if(error instanceof ApiError && error.error) {
+                const errorMap = new Map(
+                    error.error.map(err => [err.reasonCode, true])
+                );
+
+                setWrongPassword(!!errorMap.get(ResultEntryReasonCodeEnum.WrongPassword));
+                setUnverifiedUser(!!errorMap.get(ResultEntryReasonCodeEnum.UnverifiedUser));
+                setNonExistentEmail(!!errorMap.get(ResultEntryReasonCodeEnum.EmailNotExists));
             }
         }
     }
@@ -58,7 +63,16 @@ const LoginForm: React.FC = () => {
                                 <FormControl>
                                     <Input placeholder="Please enter your email" {...field} />
                                 </FormControl>
-                                <FormMessage/>
+                                {unverifiedUser && (
+                                    <FormMessage>
+                                        <span className="text-red-600">Your account is not verified, please use the verification email.</span>
+                                    </FormMessage>
+                                )}
+                                {nonExistentEmail && (
+                                    <FormMessage>
+                                        <span className="text-red-600">No user is associated with this email.</span>
+                                    </FormMessage>
+                                )}
                             </FormItem>
                         )}
                     />

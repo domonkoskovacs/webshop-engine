@@ -1,9 +1,10 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "../hooks/UseToast";
 import axios from "axios";
 import {useCookies} from "react-cookie";
 import {authService} from "../services/AuthService";
+import {ResultEntryReasonCodeEnum} from "../shared/api";
 
 interface AuthContextType {
     role: string | null;
@@ -55,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
         }
     }
 
-    const logout = () => {
+    const logout = useCallback(() => {
         try {
             setAccessToken(null);
             setRole(null);
@@ -74,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                 description: "Something went wrong while logging out. Please try again.",
             });
         }
-    }
+    }, [navigate, removeCookie])
 
     useEffect(() => {
         const storedLoggedIn = cookies.loggedIn;
@@ -86,7 +87,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
         setLoading(false);
     }, [cookies.loggedIn, cookies.role]);
 
-    
+    const handleAuthError = useCallback((message: string) => {
+        logout();
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: message,
+        });
+    }, [logout]);
+
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(
             (config) => {
@@ -97,15 +106,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             },
             (error) => Promise.reject(error)
         );
-
+        
         const responseInterceptor = axios.interceptors.response.use(
             (response) => response,
             async (error) => {
+                if (!error.response) {
+                    return Promise.reject(error);
+                }
+
                 const originalRequest = error.config;
-                const errorData = error.response.data;
-                const newAccessTokenNeeded = error.response?.status === 401 &&
-                    errorData.error[0].reasonCode === "JWT_EXPIRED_ERROR"
-                if ((newAccessTokenNeeded || error.response?.status === 403) && !originalRequest._retry) {
+                const { status, data } = error.response;
+                const newAccessTokenNeeded = status === 401 &&
+                    data.error[0].reasonCode === ResultEntryReasonCodeEnum.JwtExpiredError
+                if ((newAccessTokenNeeded || status === 403) && !originalRequest._retry) {
                     originalRequest._retry = true;
 
                     try {
@@ -117,14 +130,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                                 setAccessToken(accessToken);
                                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                             } else {
-                                throw new Error("Bad refresh token response");
+                                handleAuthError("Can't renew your your authentication please login again.")
+                                return Promise.reject(error);
                             }
                         } else {
-                            throw new Error("Refresh token not available or is not a valid string");
+                            handleAuthError("Can't renew your your authentication please login again.")
+                            return Promise.reject(error);
                         }
                         return axios(originalRequest);
                     } catch (refreshError) {
-                        logout();
+                        handleAuthError("Can't renew your your authentication please login again.")
                         return Promise.reject(refreshError);
                     }
                 }
@@ -137,7 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             axios.interceptors.request.eject(requestInterceptor)
             axios.interceptors.response.eject(responseInterceptor);
         };
-    }, [accessToken, setAccessToken]);
+    }, [accessToken, setAccessToken, cookies.refreshToken, handleAuthError]);
 
     return (
         <AuthContext.Provider value={{role, loggedIn, login, logout, loading}}>
