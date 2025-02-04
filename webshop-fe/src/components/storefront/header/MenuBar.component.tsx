@@ -13,9 +13,9 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "src/components/ui/NavigationMenu"
-import {apiService} from "../../../shared/ApiService";
 import {CategoryResponse} from "../../../shared/api";
 import {Link} from "react-router-dom";
+import {categoryService} from "../../../services/CategoryService";
 
 const MenuBar: React.FC = () => {
     const [categories, setCategories] = useState<CategoryResponse[]>([]);
@@ -26,7 +26,7 @@ const MenuBar: React.FC = () => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
-                const categoryList = await apiService.getAllCategory();
+                const categoryList = await categoryService.getAll();
                 setCategories(categoryList);
             } catch (err) {
                 setError("Failed to load categories.");

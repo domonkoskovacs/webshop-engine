@@ -80,8 +80,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User create(User registration) {
-        log.info("create > registration: [{}]", registration);
-        log.info("create > registration: [{}]", registration);
+        log.info("create > registration: [{}]", registration.getId());
         registration.setVerified(false);
         registration.setRole(ROLE_USER);
         registration.setPassword(encoder.encode(registration.getPassword()));

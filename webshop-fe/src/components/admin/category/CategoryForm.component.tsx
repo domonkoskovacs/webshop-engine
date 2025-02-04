@@ -6,8 +6,8 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import {useToast} from "../../../hooks/UseToast";
-import {apiService} from "src/shared/ApiService"
 import React from "react";
+import {categoryService} from "../../../services/CategoryService";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {
@@ -30,16 +30,10 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen}) => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        try {
-            await apiService.createCategory({
-                name: data.categoryName
-            });
-            toast({
-                description: "Category created successfully.",
-            })
-        } catch (error) {
-
-        }
+        await categoryService.create(data.categoryName);
+        toast({
+            description: "Category created successfully.",
+        })
     }
 
     return (

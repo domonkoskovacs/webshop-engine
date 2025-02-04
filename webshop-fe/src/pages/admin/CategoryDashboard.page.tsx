@@ -4,7 +4,7 @@ import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Table
 import {FolderPen, Trash2} from 'lucide-react';
 import {Button} from "../../components/ui/Button";
 import {CategoryResponse} from "../../shared/api";
-import {apiService} from "../../shared/ApiService";
+import {categoryService} from "../../services/CategoryService";
 
 const CategoryDashboard: React.FC = () => {
 
@@ -13,7 +13,7 @@ const CategoryDashboard: React.FC = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await apiService.getAllCategories()
+                const response = await categoryService.getAll()
                 setCategories(response);
             } catch (error) {
 
@@ -24,15 +24,10 @@ const CategoryDashboard: React.FC = () => {
     }, []);
 
     const deleteCategory = async (id: string) => {
-        try {
-            await apiService.deleteCategory(id);
-            setCategories((prevCategories) =>
-                prevCategories.filter((category) => category.id !== id)
-            );
-        } catch (error) {
-
-        }
-
+        await categoryService.delete(id);
+        setCategories((prevCategories) =>
+            prevCategories.filter((category) => category.id !== id)
+        );
     }
 
     return (
@@ -51,7 +46,8 @@ const CategoryDashboard: React.FC = () => {
                             <TableCell className="font-medium">{category.name}</TableCell>
                             <TableCell className="text-right">
                                 <Button variant="ghost"><FolderPen/></Button>
-                                <Button variant="ghost"><Trash2 onClick={() => deleteCategory(category.id ?? '')}/></Button>
+                                <Button variant="ghost"><Trash2
+                                    onClick={() => deleteCategory(category.id ?? '')}/></Button>
                             </TableCell>
                         </TableRow>
                     ))}
