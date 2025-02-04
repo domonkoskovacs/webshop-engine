@@ -5,12 +5,14 @@ import {z} from "zod"
 import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
-import React, {useState} from "react";
+import React from "react";
 import {RadioGroup, RadioGroupItem} from "src/components/ui/RadioGroup"
 import {Switch} from "../../ui/Switch"
-import {apiService} from "../../../shared/ApiService";
-import {useToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {Link} from "react-router-dom";
+import {userService} from "../../../services/UserService";
+import {ApiError} from "../../../shared/ApiError";
+import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -41,11 +43,12 @@ const FormSchema = z.object({
     termsAndConditions: z.boolean().default(false).refine(value => value, {
         message: "You must accept the terms and conditions.",
     }),
-})
+}).refine((data) => data.password === data.passwordAgain, {
+    path: ["passwordAgain"],
+    message: "Passwords do not match",
+});
 
 const RegistrationForm: React.FC = () => {
-    const [emailTaken, setEmailTaken] = useState<boolean>(false)
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -61,37 +64,32 @@ const RegistrationForm: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const gender = data.gender === "men" ? "MALE" :
-                data.gender === "women" ? "FEMALE" : null
-            const response = await apiService.register({
-                email: data.email,
-                firstname: data.firstname,
-                lastname: data.lastname,
-                password: data.password,
-                phoneNumber: data.phoneNumber,
-                ...(gender && {gender}),
-                subscribedToEmail: data.subscribe,
-            })
+            await userService.register(
+                data.email,
+                data.firstname,
+                data.lastname,
+                data.password,
+                data.phoneNumber,
+                data.gender,
+                data.subscribe,
+            );
             toast({
                 description: "Successful registration.",
             })
-            setEmailTaken(false)
         } catch (error) {
-            // @ts-ignore
-            const errorData = error.response.data;
+            if (error instanceof ApiError && error.error) {
+                const errorMap = new Map(
+                    error.error.map(err => [err.reasonCode, true])
+                );
 
-            if (errorData.error[0].reasonCode === "EMAIL_TAKEN") {
-                setEmailTaken(true);
+                if (errorMap.get(ResultEntryReasonCodeEnum.EmailTaken)) {
+                    form.setError("email", {
+                        type: "manual",
+                        message: "Email is already taken. Please try again."
+                    }, {shouldFocus: true});
+                }
             } else {
-                toast({
-                    variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
-                    description: (
-                        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{JSON.stringify(errorData, null, 2)}</code>
-                    </pre>
-                    ),
-                })
+                unexpectedErrorToast()
             }
         }
     }
@@ -110,9 +108,6 @@ const RegistrationForm: React.FC = () => {
                                 <FormControl>
                                     <Input placeholder="email" {...field} />
                                 </FormControl>
-                                <FormDescription>
-                                    This is your email.
-                                </FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )}
@@ -152,9 +147,6 @@ const RegistrationForm: React.FC = () => {
                                 <FormControl>
                                     <Input type="password" placeholder="*****" {...field} />
                                 </FormControl>
-                                <FormDescription>
-                                    This is your password.
-                                </FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )}
@@ -168,9 +160,6 @@ const RegistrationForm: React.FC = () => {
                                 <FormControl>
                                     <Input type="password" placeholder="*****" {...field} />
                                 </FormControl>
-                                <FormDescription>
-                                    This is your password again.
-                                </FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )}
@@ -184,9 +173,6 @@ const RegistrationForm: React.FC = () => {
                                 <FormControl>
                                     <Input placeholder="0123" {...field} />
                                 </FormControl>
-                                <FormDescription>
-                                    This is your phone number.
-                                </FormDescription>
                                 <FormMessage/>
                             </FormItem>
                         )}
@@ -245,6 +231,7 @@ const RegistrationForm: React.FC = () => {
                                         onCheckedChange={field.onChange}
                                     />
                                 </FormControl>
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
@@ -252,23 +239,26 @@ const RegistrationForm: React.FC = () => {
                         control={form.control}
                         name="privacyPolicy"
                         render={({field}) => (
-                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                    <FormLabel className="text-base">
-                                        <Link to={"/privacy-policy"}>
-                                            Privacy Policy
-                                        </Link>
-                                    </FormLabel>
-                                    <FormDescription>
-                                        Accept the <Link to={"/privacy-policy"}>privacy policy</Link>.
-                                    </FormDescription>
+                            <FormItem>
+                                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
+                                        <FormLabel className="text-base">
+                                            <Link to={"/privacy-policy"}>
+                                                Privacy Policy
+                                            </Link>
+                                        </FormLabel>
+                                        <FormDescription>
+                                            Accept the <Link to={"/privacy-policy"}>privacy policy</Link>.
+                                        </FormDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
                                 </div>
-                                <FormControl>
-                                    <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
@@ -276,31 +266,29 @@ const RegistrationForm: React.FC = () => {
                         control={form.control}
                         name="termsAndConditions"
                         render={({field}) => (
-                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                    <FormLabel className="text-base">
-                                        <Link to={"/terms-and-conditions"}>
-                                            Terms and Conditions
-                                        </Link>
-                                    </FormLabel>
-                                    <FormDescription>
-                                        Accept the <Link to={"/terms-and-conditions"}>terms and conditions</Link>.
-                                    </FormDescription>
+                            <FormItem>
+                                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
+                                        <FormLabel className="text-base">
+                                            <Link to={"/terms-and-conditions"}>
+                                                Terms and Conditions
+                                            </Link>
+                                        </FormLabel>
+                                        <FormDescription>
+                                            Accept the <Link to={"/terms-and-conditions"}>terms and conditions</Link>.
+                                        </FormDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
                                 </div>
-                                <FormControl>
-                                    <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
-                    {emailTaken && (
-                        <FormMessage>
-                            <span className="text-red-600">Email is already taken. Please try again.</span>
-                        </FormMessage>
-                    )}
                     <Button type="submit">Register</Button>
                 </form>
             </Form>

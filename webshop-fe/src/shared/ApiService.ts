@@ -1,15 +1,7 @@
-import {
-    CategoryRequest,
-    CategoryServiceApi,
-    Configuration, ForgottenPasswordRequest,
-    NewPasswordRequest,
-    RegistrationRequest,
-    UserServiceApi, VerificationRequest
-} from "./api";
+import {CategoryRequest, CategoryServiceApi, Configuration} from "./api";
 import {toast} from "../hooks/UseToast";
 
 class ApiService {
-    private userApi: UserServiceApi;
     private categoryApi: CategoryServiceApi;
     private readonly config: Configuration;
 
@@ -17,7 +9,6 @@ class ApiService {
         this.config = new Configuration({
             basePath: process.env.REACT_APP_BACKEND_URL,
         });
-        this.userApi = new UserServiceApi(this.config);
         this.categoryApi = new CategoryServiceApi(this.config);
     }
 
@@ -40,12 +31,6 @@ class ApiService {
         }
     }
 
-    async register(registrationRequest: RegistrationRequest) {
-        return this.makeApiCall(() =>
-            this.userApi.register({registrationRequest}).then((res) => res.data)
-        );
-    }
-
     async getAllCategories() {
         return this.makeApiCall(() =>
             this.categoryApi.getAll3().then((res) => res.data)
@@ -61,24 +46,6 @@ class ApiService {
     async createCategory(categoryRequest: CategoryRequest) {
         return this.makeApiCall(() =>
             this.categoryApi.create3({categoryRequest}).then((res) => res.data)
-        );
-    }
-
-    async sendForgotPasswordEmail(forgottenPasswordRequest: ForgottenPasswordRequest) {
-        return this.makeApiCall(() =>
-            this.userApi.forgottenPassword({forgottenPasswordRequest}).then((res) => res.data)
-        );
-    }
-
-    async newPassword(newPasswordRequest: NewPasswordRequest) {
-        return this.makeApiCall(() =>
-            this.userApi.newPassword({newPasswordRequest}).then((res) => res.data)
-        );
-    }
-
-    async verifyEmail(verificationRequest: VerificationRequest) {
-        return this.makeApiCall(() =>
-            this.userApi.verify({verificationRequest}).then((res) => res.data)
         );
     }
 

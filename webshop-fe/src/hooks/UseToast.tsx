@@ -142,6 +142,14 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
+export function unexpectedErrorToast() {
+    toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Unexpected error occurred",
+    })
+}
+
 function toast({ ...props }: Toast) {
     const id = genId()
 

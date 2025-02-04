@@ -6,9 +6,8 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React from "react";
-import {apiService} from "../../../shared/ApiService";
-import {Link} from "react-router-dom";
 import {toast} from "../../../hooks/UseToast";
+import {userService} from "../../../services/UserService";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -25,7 +24,7 @@ const ForgotPasswordForm: React.FC = () => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await apiService.sendForgotPasswordEmail({email: data.email})
+        await userService.sendForgotPasswordEmail(data.email)
         toast({
             variant: "success",
             description: "The password renewal email will arrive shortly, please check your inbox.",

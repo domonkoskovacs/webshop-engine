@@ -6,9 +6,9 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import React from "react";
-import {apiService} from "../../../shared/ApiService";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "../../../hooks/UseToast";
+import {userService} from "../../../services/UserService";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -31,7 +31,7 @@ const NewPasswordForm: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         const id = searchParams.get("id");
         if (id) {
-            await apiService.newPassword({id: id, password: data.password});
+            await userService.newPassword(id, data.password);
             toast({
                 variant: "success",
                 description: "Password renewed.",
