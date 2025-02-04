@@ -356,6 +356,31 @@ export interface EmailRequest {
 /**
  * 
  * @export
+ * @interface ErrorResponse
+ */
+export interface ErrorResponse {
+    /**
+     * 
+     * @type {Array<ResultEntry>}
+     * @memberof ErrorResponse
+     */
+    'info'?: Array<ResultEntry>;
+    /**
+     * 
+     * @type {Array<ResultEntry>}
+     * @memberof ErrorResponse
+     */
+    'error'?: Array<ResultEntry>;
+    /**
+     * 
+     * @type {Array<ResultEntry>}
+     * @memberof ErrorResponse
+     */
+    'warning'?: Array<ResultEntry>;
+}
+/**
+ * 
+ * @export
  * @interface ForgottenPasswordRequest
  */
 export interface ForgottenPasswordRequest {
@@ -365,31 +390,6 @@ export interface ForgottenPasswordRequest {
      * @memberof ForgottenPasswordRequest
      */
     'email'?: string;
-}
-/**
- * 
- * @export
- * @interface HandlerErrorResponse
- */
-export interface HandlerErrorResponse {
-    /**
-     * 
-     * @type {Array<ResultEntry>}
-     * @memberof HandlerErrorResponse
-     */
-    'info'?: Array<ResultEntry>;
-    /**
-     * 
-     * @type {Array<ResultEntry>}
-     * @memberof HandlerErrorResponse
-     */
-    'error'?: Array<ResultEntry>;
-    /**
-     * 
-     * @type {Array<ResultEntry>}
-     * @memberof HandlerErrorResponse
-     */
-    'warning'?: Array<ResultEntry>;
 }
 /**
  * 

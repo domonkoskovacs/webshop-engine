@@ -8,6 +8,8 @@ import {Input} from "src/components/ui/Input"
 import React, {useState} from "react";
 import {useAuth} from "../../../hooks/UseAuth";
 import {Link} from "react-router-dom";
+import {ApiError} from "../../../shared/ApiError";
+import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -34,9 +36,11 @@ const LoginForm: React.FC = () => {
             await login(data.email,data.password)
             setWrongPassword(false)
         } catch (error: any) {
-            const errorData = error?.response?.data;
-            if (errorData.error[0].reasonCode === "WRONG_PASSWORD") {
-                setWrongPassword(true);
+            if(error instanceof ApiError) {
+                const wrongPasswordError = error.error?.find((err) => err.reasonCode === ResultEntryReasonCodeEnum.WrongPassword);
+                if (wrongPasswordError) {
+                    setWrongPassword(true);
+                }
             }
         }
     }
@@ -67,6 +71,11 @@ const LoginForm: React.FC = () => {
                                 <FormControl>
                                     <Input type="password" placeholder="*****" {...field} />
                                 </FormControl>
+                                {wrongPassword && (
+                                    <FormMessage>
+                                        <span className="text-red-600">Wrong password or email. Please try again.</span>
+                                    </FormMessage>
+                                )}
                                 <FormDescription>
                                     <Link to="/forgot-password">
                                         I forgot my password!
@@ -76,11 +85,6 @@ const LoginForm: React.FC = () => {
                             </FormItem>
                         )}
                     />
-                    {wrongPassword && (
-                        <FormMessage>
-                            <span className="text-red-600">Wrong password or email. Please try again.</span>
-                        </FormMessage>
-                    )}
                     <Button type="submit">Login</Button>
                 </form>
             </Form>

@@ -22,7 +22,7 @@ import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.base.value.ResultEntry;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.HandlerErrorMapper;
 import hu.webshop.engine.webshopbe.infrastructure.controller.handler.ControllerExceptionHandler;
-import hu.webshop.engine.webshopbe.infrastructure.model.response.HandlerErrorResponse;
+import hu.webshop.engine.webshopbe.infrastructure.model.response.ErrorResponse;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("exception handler unit tests")
@@ -40,17 +40,17 @@ class ControllerExceptionHandlerTest {
         ReasonCode reasonCode = ReasonCode.CSV_ERROR;
         String errorMessage = "Error message";
         CsvException exception = new CsvException(ReasonCode.CSV_ERROR, errorMessage);
-        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new HandlerErrorResponse(
+        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new ErrorResponse(
                 exception.getResponse().info(),
                 exception.getResponse().error(),
                 exception.getResponse().warning()
         ));
 
         //When
-        HandlerErrorResponse handlerErrorResponse = exceptionHandler.csvException(exception);
+        ErrorResponse errorResponse = exceptionHandler.csvException(exception);
 
         //Then
-        assertThat(handlerErrorResponse.error()).hasSizeGreaterThan(0)
+        assertThat(errorResponse.error()).hasSizeGreaterThan(0)
                 .allMatch(error -> error.reasonCode().reasonStatus() == reasonCode.reasonStatus())
                 .allMatch(error -> error.reasonCode() == reasonCode)
                 .allMatch(error -> error.message().equals(errorMessage));
@@ -63,17 +63,17 @@ class ControllerExceptionHandlerTest {
         ReasonCode reasonCode = ReasonCode.IMAGE_EXCEPTION;
         String errorMessage = "Error message";
         ImageException exception = new ImageException(reasonCode, errorMessage);
-        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new HandlerErrorResponse(
+        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new ErrorResponse(
                 exception.getResponse().info(),
                 exception.getResponse().error(),
                 exception.getResponse().warning()
         ));
 
         //When
-        HandlerErrorResponse handlerErrorResponse = exceptionHandler.imageException(exception);
+        ErrorResponse errorResponse = exceptionHandler.imageException(exception);
 
         //Then
-        assertThat(handlerErrorResponse.error()).hasSizeGreaterThan(0)
+        assertThat(errorResponse.error()).hasSizeGreaterThan(0)
                 .allMatch(error -> error.reasonCode().reasonStatus() == reasonCode.reasonStatus())
                 .allMatch(error -> error.reasonCode() == reasonCode)
                 .allMatch(error -> error.message().equals(errorMessage));
@@ -86,17 +86,17 @@ class ControllerExceptionHandlerTest {
         ReasonCode reasonCode = ReasonCode.BAD_CREDENTIALS_ERROR;
         String errorMessage = "Error message";
         BadCredentialsException exception = new BadCredentialsException(errorMessage);
-        when(errorMapper.toResponse(any())).thenReturn(new HandlerErrorResponse(
+        when(errorMapper.toResponse(any())).thenReturn(new ErrorResponse(
                 new ArrayList<>(),
                 List.of(new ResultEntry(ReasonCode.BAD_CREDENTIALS_ERROR.reasonStatus(), ReasonCode.BAD_CREDENTIALS_ERROR, errorMessage)),
                 new ArrayList<>()
         ));
 
         //When
-        HandlerErrorResponse handlerErrorResponse = exceptionHandler.badCredentialsException(exception);
+        ErrorResponse errorResponse = exceptionHandler.badCredentialsException(exception);
 
         //Then
-        assertThat(handlerErrorResponse.error()).hasSizeGreaterThan(0)
+        assertThat(errorResponse.error()).hasSizeGreaterThan(0)
                 .allMatch(error -> error.reasonCode().reasonStatus() == reasonCode.reasonStatus())
                 .allMatch(error -> error.reasonCode() == reasonCode)
                 .allMatch(error -> error.message().equals(errorMessage));
@@ -109,17 +109,17 @@ class ControllerExceptionHandlerTest {
         ReasonCode reasonCode = ReasonCode.INTERNAL_SERVER_ERROR;
         String errorMessage = "Error message";
         GenericRuntimeException exception = new GenericRuntimeException(reasonCode, errorMessage);
-        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new HandlerErrorResponse(
+        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new ErrorResponse(
                 exception.getResponse().info(),
                 exception.getResponse().error(),
                 exception.getResponse().warning()
         ));
 
         //When
-        HandlerErrorResponse handlerErrorResponse = exceptionHandler.genericRuntimeException(exception);
+        ErrorResponse errorResponse = exceptionHandler.genericRuntimeException(exception);
 
         //Then
-        assertThat(handlerErrorResponse.error()).hasSizeGreaterThan(0)
+        assertThat(errorResponse.error()).hasSizeGreaterThan(0)
                 .allMatch(error -> error.reasonCode().reasonStatus() == reasonCode.reasonStatus())
                 .allMatch(error -> error.reasonCode() == reasonCode)
                 .allMatch(error -> error.message().equals(errorMessage));

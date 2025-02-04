@@ -1,17 +1,14 @@
 import {
-    AuthServiceApi,
     CategoryRequest,
     CategoryServiceApi,
     Configuration, ForgottenPasswordRequest,
-    LoginRequest, NewPasswordRequest,
+    NewPasswordRequest,
     RegistrationRequest,
-    TokenRequest,
     UserServiceApi, VerificationRequest
 } from "./api";
 import {toast} from "../hooks/UseToast";
 
 class ApiService {
-    private authApi: AuthServiceApi;
     private userApi: UserServiceApi;
     private categoryApi: CategoryServiceApi;
     private readonly config: Configuration;
@@ -20,7 +17,6 @@ class ApiService {
         this.config = new Configuration({
             basePath: process.env.REACT_APP_BACKEND_URL,
         });
-        this.authApi = new AuthServiceApi(this.config);
         this.userApi = new UserServiceApi(this.config);
         this.categoryApi = new CategoryServiceApi(this.config);
     }
@@ -42,18 +38,6 @@ class ApiService {
             this.handleError(error);
             throw error;
         }
-    }
-
-    async login(loginRequest: LoginRequest) {
-        return this.makeApiCall(() =>
-            this.authApi.login({loginRequest}, {withCredentials: true}).then((res) => res.data)
-        );
-    }
-
-    async refresh(tokenRequest: TokenRequest) {
-        return this.makeApiCall(() =>
-            this.authApi.refreshToken({tokenRequest}, {withCredentials: true}).then((res) => res.data)
-        );
     }
 
     async register(registrationRequest: RegistrationRequest) {

@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,} from "src/components/ui/Table"
-import {FolderPen, Plus, Trash2} from 'lucide-react';
+import {FolderPen, Trash2} from 'lucide-react';
 import {Button} from "../../components/ui/Button";
 import {CategoryResponse} from "../../shared/api";
 import {apiService} from "../../shared/ApiService";
-import {toast} from "../../hooks/UseToast";
 
 const CategoryDashboard: React.FC = () => {
 
@@ -39,7 +38,7 @@ const CategoryDashboard: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-center">
             <Table>
-                <TableCaption>A list of your recent invoices.</TableCaption>
+                <TableCaption>List of categories.</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px]">Category</TableHead>

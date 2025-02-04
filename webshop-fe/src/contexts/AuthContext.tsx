@@ -2,39 +2,39 @@ import React, {createContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "../hooks/UseToast";
 import axios from "axios";
-import {apiService} from "../shared/ApiService";
 import {useCookies} from "react-cookie";
+import {authService} from "../services/AuthService";
 
 interface AuthContextType {
     role: string | null;
     loggedIn: boolean;
-    login: (token: string, role: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => void;
+    loading: boolean;
 }
 
-export const AuthContext =
-    createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [role, setRole] = useState<string | null>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
-    const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["role", "loggedIn", "refreshToken"]);
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
     const login = async (email: string, password: string) => {
         try {
-            const response = await apiService.login({email, password});
+            const response = await authService.login(email, password);
             const {accessToken, role, refreshToken, refreshTokenTimeout} = response;
             if (accessToken && role && refreshToken && refreshTokenTimeout) {
                 setAccessToken(accessToken);
                 setRole(role);
                 setLoggedIn(true);
-                setCookie("refreshToken", refreshToken, {
-                    maxAge: refreshTokenTimeout,
-                    path: "/",
-                });
+                setCookie("loggedIn", "true", {path: "/"});
+                setCookie("role", role, {path: "/"});
+                setCookie("refreshToken", refreshToken, {maxAge: refreshTokenTimeout, path: "/"});
                 if (role === "ROLE_ADMIN") {
                     navigate("/admin/dashboard")
                 } else {
@@ -44,7 +44,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                     description: "You are successfully logged in.",
                 })
             } else {
-                throw new Error("Invalid response from the server");
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: "Invalid response from the server while logging you in. Please try again.",
+                });
             }
         } catch (error) {
             throw error;
@@ -56,6 +60,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             setAccessToken(null);
             setRole(null);
             setLoggedIn(false);
+            removeCookie("loggedIn", {path: "/"});
+            removeCookie("role", {path: "/"});
             removeCookie("refreshToken", {path: "/"});
             navigate("/authentication?type=login");
             toast({
@@ -70,6 +76,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
         }
     }
 
+    useEffect(() => {
+        const storedLoggedIn = cookies.loggedIn;
+        const storedRole = cookies.role;
+        if (storedLoggedIn === true && storedRole) {
+            setRole(storedRole);
+            setLoggedIn(true);
+        }
+        setLoading(false);
+    }, [cookies.loggedIn, cookies.role]);
+
+    
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(
             (config) => {
@@ -94,9 +111,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                     try {
                         const refreshToken = cookies.refreshToken;
                         if (refreshToken && typeof refreshToken === 'string') {
-                            const response = await apiService.refresh({token: refreshToken});
-                            const { accessToken } = response;
-                            if(accessToken) {
+                            const response = await authService.refresh(refreshToken);
+                            const {accessToken} = response;
+                            if (accessToken) {
                                 setAccessToken(accessToken);
                                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                             } else {
@@ -123,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }, [accessToken, setAccessToken]);
 
     return (
-        <AuthContext.Provider value={{role, loggedIn, login, logout}}>
+        <AuthContext.Provider value={{role, loggedIn, login, logout, loading}}>
             {children}
         </AuthContext.Provider>
     );

@@ -31,7 +31,7 @@ import hu.webshop.engine.webshopbe.domain.base.value.HandlerErrorModel;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.base.value.ResultEntry;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.HandlerErrorMapper;
-import hu.webshop.engine.webshopbe.infrastructure.model.response.HandlerErrorResponse;
+import hu.webshop.engine.webshopbe.infrastructure.model.response.ErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(CsvException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public HandlerErrorResponse csvException(CsvException ce) {
+    public ErrorResponse csvException(CsvException ce) {
         return mapper.toResponse(ce.getResponse());
     }
 
@@ -68,7 +68,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(EmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HandlerErrorResponse emailException(EmailException ee) {
+    public ErrorResponse emailException(EmailException ee) {
         return mapper.toResponse(ee.getResponse());
     }
 
@@ -78,7 +78,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(ProductException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HandlerErrorResponse productException(ProductException pe) {
+    public ErrorResponse productException(ProductException pe) {
         return mapper.toResponse(pe.getResponse());
     }
 
@@ -88,7 +88,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(OrderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HandlerErrorResponse orderException(OrderException oe) {
+    public ErrorResponse orderException(OrderException oe) {
         return mapper.toResponse(oe.getResponse());
     }
 
@@ -98,7 +98,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(StripeException.class)
     @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
-    public HandlerErrorResponse stripeException(StripeException nse) {
+    public ErrorResponse stripeException(StripeException nse) {
         return mapper.toResponse(nse.getResponse());
     }
 
@@ -108,7 +108,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(ImageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HandlerErrorResponse imageException(ImageException i) {
+    public ErrorResponse imageException(ImageException i) {
         return mapper.toResponse(i.getResponse());
     }
 
@@ -118,7 +118,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public HandlerErrorResponse entityNotFoundException(EntityNotFoundException ee) {
+    public ErrorResponse entityNotFoundException(EntityNotFoundException ee) {
         HandlerErrorModel handlerErrorModel = new HandlerErrorModel();
         handlerErrorModel.addError(new ResultEntry(ReasonCode.NOT_FOUND.reasonStatus(), ReasonCode.NOT_FOUND, ee.getMessage()));
         return mapper.toResponse(handlerErrorModel);
@@ -130,7 +130,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public HandlerErrorResponse badCredentialsException(BadCredentialsException bce) {
+    public ErrorResponse badCredentialsException(BadCredentialsException bce) {
         HandlerErrorModel handlerErrorModel = new HandlerErrorModel();
         handlerErrorModel.addError(new ResultEntry(ReasonCode.BAD_CREDENTIALS_ERROR.reasonStatus(), ReasonCode.BAD_CREDENTIALS_ERROR, bce.getMessage()));
         return mapper.toResponse(handlerErrorModel);
@@ -142,7 +142,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(RegistrationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HandlerErrorResponse registrationException(RegistrationException re) {
+    public ErrorResponse registrationException(RegistrationException re) {
         return mapper.toResponse(re.getResponse());
     }
 
@@ -152,7 +152,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public HandlerErrorResponse authenticationException(AuthenticationException ae) {
+    public ErrorResponse authenticationException(AuthenticationException ae) {
         return mapper.toResponse(ae.getResponse());
     }
 
@@ -162,7 +162,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(GenericRuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public HandlerErrorResponse genericRuntimeException(GenericRuntimeException ge) {
+    public ErrorResponse genericRuntimeException(GenericRuntimeException ge) {
         log.error("generic exception", ge);
         return mapper.toResponse(ge.getResponse());
     }
@@ -172,7 +172,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public HandlerErrorResponse accessDeniedException(AccessDeniedException ade) {
+    public ErrorResponse accessDeniedException(AccessDeniedException ade) {
         log.error("access denied", ade);
         HandlerErrorModel handlerErrorModel = new HandlerErrorModel();
         handlerErrorModel.addError(new ResultEntry(ReasonCode.ACCESS_DENIED.reasonStatus(), ReasonCode.ACCESS_DENIED, ade.getMessage()));
@@ -185,7 +185,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public HandlerErrorResponse runtimeException(RuntimeException e) {
+    public ErrorResponse runtimeException(RuntimeException e) {
         log.error("unexpected error", e);
         HandlerErrorModel handlerErrorModel = new HandlerErrorModel();
         handlerErrorModel.addError(new ResultEntry(ReasonCode.INTERNAL_SERVER_ERROR.reasonStatus(), ReasonCode.INTERNAL_SERVER_ERROR, e.getMessage()));
