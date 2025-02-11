@@ -1,6 +1,6 @@
 import {AuthServiceApi} from "../shared/api";
-import {handleApiError} from "../shared/ApiError";
 import {ApiConfig} from "../shared/ApiConfig";
+import {handleApiCall} from "../shared/ApiCall";
 
 class AuthService {
     private authApi: AuthServiceApi
@@ -15,11 +15,10 @@ class AuthService {
      * @param password
      */
     async login(email: string, password: string) {
-        try {
-            return (await this.authApi.login({loginRequest: {email, password}})).data
-        } catch (error) {
-            handleApiError(error)
-        }
+        return handleApiCall(() =>
+            this.authApi.login({loginRequest: {email, password}})
+                .then(res => res?.data)
+        );
     }
 
     /**
@@ -27,11 +26,10 @@ class AuthService {
      * @param token
      */
     async refresh(token: string) {
-        try {
-            return (await this.authApi.refreshToken({tokenRequest: {token}}, {withCredentials: true})).data;
-        } catch (error) {
-            handleApiError(error);
-        }
+        return handleApiCall(() =>
+            this.authApi.refreshToken({tokenRequest: {token}}, {withCredentials: true})
+                .then(res => res?.data)
+        );
     }
 
 }

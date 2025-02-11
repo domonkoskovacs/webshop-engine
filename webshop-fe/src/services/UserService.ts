@@ -1,6 +1,6 @@
 import {RegistrationRequestGenderEnum, UserServiceApi} from "../shared/api";
-import {handleApiError} from "../shared/ApiError";
 import {ApiConfig} from "../shared/ApiConfig";
+import {handleApiCall} from "../shared/ApiCall";
 
 class UserService {
     private userApi: UserServiceApi
@@ -21,29 +21,24 @@ class UserService {
         gender: string | undefined,
         subscribedToEmail: boolean | undefined
     ) {
-        try {
-            const genderEnum = gender === "men"
-                ? RegistrationRequestGenderEnum.Male
-                : gender === "women"
-                    ? RegistrationRequestGenderEnum.Female
-                    : undefined;
-
-            return (
-                await this.userApi.register({
-                    registrationRequest: {
-                        email,
-                        firstname,
-                        lastname,
-                        password,
-                        phoneNumber,
-                        gender: genderEnum,
-                        subscribedToEmail,
-                    },
-                })
-            ).data;
-        } catch (error) {
-            handleApiError(error);
-        }
+        const genderEnum = gender === "men"
+            ? RegistrationRequestGenderEnum.Male
+            : gender === "women"
+                ? RegistrationRequestGenderEnum.Female
+                : undefined;
+        return handleApiCall(() =>
+            this.userApi.register({
+                registrationRequest: {
+                    email,
+                    firstname,
+                    lastname,
+                    password,
+                    phoneNumber,
+                    gender: genderEnum,
+                    subscribedToEmail,
+                },
+            }).then(res => res?.data)
+        );
     }
 
     /**
@@ -51,11 +46,10 @@ class UserService {
      * @param email
      */
     async sendForgotPasswordEmail(email: string) {
-        try {
-            return (await this.userApi.forgottenPassword({forgottenPasswordRequest: {email}})).data
-        } catch (error) {
-            handleApiError(error)
-        }
+        return handleApiCall(() =>
+            this.userApi.forgottenPassword({forgottenPasswordRequest: {email}})
+                .then(res => res?.data)
+        );
     }
 
     /**
@@ -64,11 +58,10 @@ class UserService {
      * @param password
      */
     async newPassword(id: string, password: string) {
-        try {
-            return (await this.userApi.newPassword({newPasswordRequest: {id, password}})).data
-        } catch (error) {
-            handleApiError(error)
-        }
+        return handleApiCall(() =>
+            this.userApi.newPassword({newPasswordRequest: {id, password}})
+                .then(res => res?.data)
+        );
     }
 
     /**
@@ -76,11 +69,10 @@ class UserService {
      * @param id
      */
     async verifyEmail(id: string) {
-        try {
-            return (await this.userApi.verify({verificationRequest: {id}})).data
-        } catch (error) {
-            handleApiError(error)
-        }
+        return handleApiCall(() =>
+            this.userApi.verify({verificationRequest: {id}})
+                .then(res => res?.data)
+        );
     }
 
 }
