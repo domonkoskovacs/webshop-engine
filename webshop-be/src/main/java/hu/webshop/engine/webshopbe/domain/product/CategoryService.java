@@ -74,6 +74,10 @@ public class CategoryService {
 
     public void deleteSubCategory(UUID id) {
         log.info("deleteSubCategory > id: [{}]", id);
+        SubCategory subCategory = getSubCategoryById(id);
+        Category category = subCategory.getCategory();
+        category.getSubCategories().remove(subCategory);
+        categoryRepository.save(category);
         subCategoryRepository.deleteById(id);
     }
 

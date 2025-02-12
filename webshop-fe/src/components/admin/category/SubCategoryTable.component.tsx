@@ -1,0 +1,84 @@
+import React, {Fragment} from "react";
+
+import {ColumnDef, flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table"
+
+import {TableCell, TableRow,} from "src/components/ui/Table"
+import {SubCategoryResponse} from "../../../shared/api";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/DropdownMenu";
+import {Button} from "../../ui/Button";
+import {MoreHorizontal} from "lucide-react";
+import {useCategory} from "../../../hooks/UseCategory";
+import {Badge} from "../../ui/Badge";
+
+interface SubCategoryTableProps {
+    data: SubCategoryResponse[]
+}
+
+function SubCategoryRows({data}: SubCategoryTableProps) {
+    const {deleteSubCategory} = useCategory();
+
+    const columns: ColumnDef<SubCategoryResponse>[] = [
+        {
+            accessorKey: "name",
+            cell: ({row}) => {
+                const subCategory = row.original
+                return (
+                    <div>
+                        <Badge variant="secondary" className="mr-3">Subcategory</Badge>
+                        {subCategory.name}
+                    </div>
+                )
+            }
+        },
+        {
+            id: "actions",
+            cell: ({row}) => {
+                const subcategory = row.original
+                return (
+                    <div className="text-right">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                    <span className="sr-only">Open menu</span>
+                                    <MoreHorizontal className="h-4 w-4"/>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => deleteSubCategory(subcategory.id ?? '')}>Delete
+                                    subcategory</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                )
+            },
+        },
+    ]
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    })
+
+    return (
+        <Fragment>
+            {
+                table.getRowModel().rows.map((row) => (
+                    <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                    >
+                        {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                ))
+            }
+        </Fragment>
+
+    )
+}
+
+export default SubCategoryRows

@@ -27,7 +27,7 @@ public class Category extends BaseEntity {
     @Column(name = "category_name", nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "category")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "category", orphanRemoval = true)
     private List<SubCategory> subCategories;
 
     public void addSubCategory(SubCategory subCategory) {

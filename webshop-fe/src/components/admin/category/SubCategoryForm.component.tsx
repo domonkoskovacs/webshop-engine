@@ -11,17 +11,18 @@ import {useCategory} from "../../../hooks/UseCategory";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {
-        message: "Please add the name of the category."
+        message: "Please add the name of the subcategory."
     })
 })
 
-interface CategoryFormProps {
+interface SubCategoryFormProps {
+    id: string
     setIsOpen: (open: boolean) => void;
 }
 
-const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen}) => {
+const SubCategoryForm: React.FC<SubCategoryFormProps> = ({id, setIsOpen}) => {
     const {toast} = useToast()
-    const {create} = useCategory();
+    const {addSubCategory} = useCategory();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -31,9 +32,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen}) => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await create(data.categoryName);
+        await addSubCategory(id, data.categoryName);
         toast({
-            description: "Category created successfully.",
+            description: "SubCategory created successfully.",
         })
     }
 
@@ -47,9 +48,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen}) => {
                             name="categoryName"
                             render={({field}) => (
                                 <FormItem className="flex-1">
-                                    <FormLabel>Category Name</FormLabel>
+                                    <FormLabel>SubCategory Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Please the name of the category" {...field} />
+                                        <Input placeholder="Please the name of the subcategory" {...field} />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
@@ -63,4 +64,4 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen}) => {
     );
 }
 
-export default CategoryForm
+export default SubCategoryForm
