@@ -10,5 +10,6 @@ public record ProductSpecificationArgs(List<String> brands,
                                        Double minPrice,
                                        Double maxDiscountPercentage,
                                        Double minDiscountPercentage,
+                                       String itemNumber,
                                        boolean showOutOfStock) {
 }

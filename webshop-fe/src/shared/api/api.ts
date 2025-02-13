@@ -638,13 +638,13 @@ export interface PageOrderResponse {
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
@@ -671,12 +671,6 @@ export interface PageOrderResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {PageableObject}
-     * @memberof PageOrderResponse
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
      * @type {boolean}
      * @memberof PageOrderResponse
      */
@@ -695,6 +689,12 @@ export interface PageOrderResponse {
     'numberOfElements'?: number;
     /**
      * 
+     * @type {PageableObject}
+     * @memberof PageOrderResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
      * @type {boolean}
      * @memberof PageOrderResponse
      */
@@ -711,13 +711,13 @@ export interface PageProductResponse {
      * @type {number}
      * @memberof PageProductResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageProductResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
@@ -744,12 +744,6 @@ export interface PageProductResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {PageableObject}
-     * @memberof PageProductResponse
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
      * @type {boolean}
      * @memberof PageProductResponse
      */
@@ -766,6 +760,12 @@ export interface PageProductResponse {
      * @memberof PageProductResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof PageProductResponse
+     */
+    'pageable'?: PageableObject;
     /**
      * 
      * @type {boolean}
@@ -4515,11 +4515,12 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {number} [minPrice] 
          * @param {number} [maxDiscountPercentage] 
          * @param {number} [minDiscountPercentage] 
+         * @param {string} [itemNumber] 
          * @param {boolean} [showOutOfStock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        _export: async (from?: string, to?: string, brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, showOutOfStock?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        _export: async (from?: string, to?: string, brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/product/export`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4578,6 +4579,10 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
 
             if (minDiscountPercentage !== undefined) {
                 localVarQueryParameter['minDiscountPercentage'] = minDiscountPercentage;
+            }
+
+            if (itemNumber !== undefined) {
+                localVarQueryParameter['itemNumber'] = itemNumber;
             }
 
             if (showOutOfStock !== undefined) {
@@ -4710,6 +4715,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {number} [minPrice] 
          * @param {number} [maxDiscountPercentage] 
          * @param {number} [minDiscountPercentage] 
+         * @param {string} [itemNumber] 
          * @param {boolean} [showOutOfStock] 
          * @param {GetAllSortTypeEnum} [sortType] 
          * @param {number} [page] 
@@ -4717,7 +4723,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll: async (brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAll: async (brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/product`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4764,6 +4770,10 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
 
             if (minDiscountPercentage !== undefined) {
                 localVarQueryParameter['minDiscountPercentage'] = minDiscountPercentage;
+            }
+
+            if (itemNumber !== undefined) {
+                localVarQueryParameter['itemNumber'] = itemNumber;
             }
 
             if (showOutOfStock !== undefined) {
@@ -5089,12 +5099,13 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {number} [minPrice] 
          * @param {number} [maxDiscountPercentage] 
          * @param {number} [minDiscountPercentage] 
+         * @param {string} [itemNumber] 
          * @param {boolean} [showOutOfStock] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async _export(from?: string, to?: string, brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, showOutOfStock?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CsvResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator._export(from, to, brands, categories, subCategories, types, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, showOutOfStock, options);
+        async _export(from?: string, to?: string, brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CsvResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator._export(from, to, brands, categories, subCategories, types, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductServiceApi._export']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5132,6 +5143,7 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {number} [minPrice] 
          * @param {number} [maxDiscountPercentage] 
          * @param {number} [minDiscountPercentage] 
+         * @param {string} [itemNumber] 
          * @param {boolean} [showOutOfStock] 
          * @param {GetAllSortTypeEnum} [sortType] 
          * @param {number} [page] 
@@ -5139,8 +5151,8 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAll(brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageProductResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll(brands, categories, subCategories, types, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, showOutOfStock, sortType, page, size, options);
+        async getAll(brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageProductResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll(brands, categories, subCategories, types, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock, sortType, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.getAll']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5247,7 +5259,7 @@ export const ProductServiceApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         _export(requestParameters: ProductServiceApiExportRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<CsvResponse> {
-            return localVarFp._export(requestParameters.from, requestParameters.to, requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.showOutOfStock, options).then((request) => request(axios, basePath));
+            return localVarFp._export(requestParameters.from, requestParameters.to, requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, options).then((request) => request(axios, basePath));
         },
         /**
          * Create a new product
@@ -5267,7 +5279,7 @@ export const ProductServiceApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         getAll(requestParameters: ProductServiceApiGetAllRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<PageProductResponse> {
-            return localVarFp.getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+            return localVarFp.getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * Public endpoint, return existing brands
@@ -5410,6 +5422,13 @@ export interface ProductServiceApiExportRequest {
      * @memberof ProductServiceApiExport
      */
     readonly minDiscountPercentage?: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductServiceApiExport
+     */
+    readonly itemNumber?: string
 
     /**
      * 
@@ -5557,6 +5576,13 @@ export interface ProductServiceApiGetAllRequest {
      * @memberof ProductServiceApiGetAll
      */
     readonly minDiscountPercentage?: number
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductServiceApiGetAll
+     */
+    readonly itemNumber?: string
 
     /**
      * 
@@ -5741,7 +5767,7 @@ export class ProductServiceApi extends BaseAPI {
      * @memberof ProductServiceApi
      */
     public _export(requestParameters: ProductServiceApiExportRequest = {}, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration)._export(requestParameters.from, requestParameters.to, requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.showOutOfStock, options).then((request) => request(this.axios, this.basePath));
+        return ProductServiceApiFp(this.configuration)._export(requestParameters.from, requestParameters.to, requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5765,7 +5791,7 @@ export class ProductServiceApi extends BaseAPI {
      * @memberof ProductServiceApi
      */
     public getAll(requestParameters: ProductServiceApiGetAllRequest = {}, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration).getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+        return ProductServiceApiFp(this.configuration).getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

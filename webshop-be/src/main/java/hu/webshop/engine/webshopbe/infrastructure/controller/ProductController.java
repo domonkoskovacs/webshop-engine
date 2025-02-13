@@ -73,6 +73,7 @@ public class ProductController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxDiscountPercentage,
             @RequestParam(required = false) Double minDiscountPercentage,
+            @RequestParam(required = false) String itemNumber,
             @RequestParam(defaultValue = "false") boolean showOutOfStock,
             @RequestParam(required = false) ProductSortType sortType,
             @RequestParam(defaultValue = "0") int page,
@@ -80,7 +81,7 @@ public class ProductController {
     ) {
         log.info("getAll");
         return ResponseEntity.ok(productAdapter.getAll(new ProductSpecificationArgs(brands, categories, subCategories, types, maxPrice,
-                minPrice, maxDiscountPercentage, minDiscountPercentage, showOutOfStock), sortType, page, size));
+                minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock), sortType, page, size));
     }
 
     @Operation(
@@ -173,10 +174,11 @@ public class ProductController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxDiscountPercentage,
             @RequestParam(required = false) Double minDiscountPercentage,
+            @RequestParam(required = false) String itemNumber,
             @RequestParam(defaultValue = "false") boolean showOutOfStock
     ) {
         log.info("export > from: [{}], to: [{}]", from, to);
         return ResponseEntity.ok().body(productAdapter.export(from, to, new ProductSpecificationArgs(brands, categories, subCategories, types, maxPrice,
-                minPrice, maxDiscountPercentage, minDiscountPercentage, showOutOfStock)));
+                minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock)));
     }
 }

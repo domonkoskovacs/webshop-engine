@@ -50,11 +50,6 @@ public class ProductService {
     private final CategoryService categoryService;
     private final ImageService imageService;
 
-    public List<Product> getAll() {
-        log.info("getAll");
-        return productRepository.findAll();
-    }
-
     public List<Product> getAll(List<UUID> productIds) {
         log.info("getAll > productIds: [{}]", productIds);
         return productRepository.findAllById(productIds);

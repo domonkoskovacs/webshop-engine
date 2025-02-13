@@ -45,6 +45,7 @@ public class ProductSpecification {
                 .and(minPrice(args.minPrice()))
                 .and(maxDiscountPercentage(args.maxDiscountPercentage()))
                 .and(minDiscountPercentage(args.minDiscountPercentage()))
+                .and(itemNumber(args.itemNumber()))
                 .and(outOfStock(args.showOutOfStock()));
     }
 
@@ -109,6 +110,13 @@ public class ProductSpecification {
         return (products, cq, cb) -> {
             if (discountPercentage == null) return cb.conjunction();
             return cb.greaterThanOrEqualTo(products.get("discountPercentage"), discountPercentage);
+        };
+    }
+
+    private static Specification<Product> itemNumber(String itemNumber) {
+        return (products, cq, cb) -> {
+            if (itemNumber == null) return cb.conjunction();
+            return cb.like(products.get("itemNumber"), "%" + itemNumber + "%");
         };
     }
 

@@ -105,6 +105,7 @@ class ProductControllerIT extends IntegrationTest {
                 .param("minPrice", "1.0")
                 .param("maxDiscountPercentage", "20.0")
                 .param("minDiscountPercentage", "1.0")
+                .param("itemNumber", "0")
                 .param("sortType", sortType.name())
                 .param("page", "0")
                 .param("size", "10")

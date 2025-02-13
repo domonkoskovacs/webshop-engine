@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import {ProductResponse, ProductServiceApiGetAllRequest} from "../shared/api";
+import {BrandResponse, ProductResponse, ProductServiceApiGetAllRequest} from "../shared/api";
 import {productService} from "../services/ProductService";
 
 export const useProductPagination = () => {
     const [products, setProducts] = useState<ProductResponse[]>([]);
+    const [brands, setBrands] = useState<BrandResponse[]>([]);
     const [filters, setFilters] = useState<ProductServiceApiGetAllRequest>({
         brands: [],
         categories: [],
@@ -13,6 +14,7 @@ export const useProductPagination = () => {
         minPrice: undefined,
         maxDiscountPercentage: undefined,
         minDiscountPercentage: undefined,
+        itemNumber: undefined,
         showOutOfStock: false,
         sortType: undefined,
         page: 1,
@@ -20,25 +22,41 @@ export const useProductPagination = () => {
     });
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
-
+    useEffect(() => {
+        console.log("Updated products in hook:", products);
+    }, [products]);
     const fetchProducts = useCallback(async () => {
         setLoading(true);
         try {
             const data = await productService.getAll({ ...filters, page: filters.page! - 1 });
-            setProducts(data.content ?? []);
+            setProducts([...data.content ?? []]);
             setTotalPages(data.totalPages ?? 0);
-            console.log(data)
         } catch (error) {
             console.error("Error fetching products:", error);
         }
         setLoading(false);
     }, [filters]);
 
+    const fetchBrands = useCallback(async () => {
+        try {
+            const brandList = await productService.getBrands();
+            setBrands(brandList ?? []);
+        } catch (error) {
+            console.error("Error fetching brands:", error);
+        }
+    }, []);
+
     useEffect(() => {
         (async () => {
             await fetchProducts();
         })();
     }, [fetchProducts]);
+
+    useEffect(() => {
+        (async () => {
+            await fetchBrands();
+        })();
+    }, [fetchBrands]);
 
     const updateFilters = (newFilters: Partial<ProductServiceApiGetAllRequest>) => {
         setFilters((prev) => ({ ...prev, ...newFilters, page: 1 }));
@@ -62,5 +80,5 @@ export const useProductPagination = () => {
         }
     };
 
-    return { products, filters, updateFilters, nextPage, prevPage, setPage, loading, totalPages };
+    return { products, brands, filters, updateFilters, nextPage, prevPage, setPage, loading, totalPages, fetchProducts};
 };
