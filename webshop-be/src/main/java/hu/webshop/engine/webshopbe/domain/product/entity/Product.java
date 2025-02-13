@@ -51,6 +51,9 @@ public class Product extends BaseEntity {
     @Column(name = "image_url_list")
     private String imageUrls;
 
+    @Column(name = "item_number")
+    private String itemNumber;
+
     public String getFullProductName() {
         String separator = " ";
         return getBrand().getName() +

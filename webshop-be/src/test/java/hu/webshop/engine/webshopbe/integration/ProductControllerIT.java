@@ -49,7 +49,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeCreated() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null);
+                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request, Role.ROLE_ADMIN));
@@ -168,7 +168,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeUpdated() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("newBrand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null);
+                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null,"000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_ADMIN));
@@ -197,7 +197,7 @@ class ProductControllerIT extends IntegrationTest {
     void getEndpointsArePublic() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null);
+                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null,"000");
         DiscountRequest discountRequest = new DiscountRequest(UUID.fromString(PRODUCT_ID), 20.0);
 
         //When //Then
@@ -233,7 +233,7 @@ class ProductControllerIT extends IntegrationTest {
     void userCanCallGetEndpointButNotAnyOther() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null);
+                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
         DiscountRequest discountRequest = new DiscountRequest(UUID.fromString(PRODUCT_ID), 20.0);
 
         //When //Then

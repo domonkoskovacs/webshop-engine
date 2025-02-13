@@ -15,6 +15,7 @@ public record ProductResponse(
         Integer count,
         Double price,
         Double discountPercentage,
-        List<String> imageUrls
+        List<String> imageUrls,
+        String itemNumber
 ) {
 }

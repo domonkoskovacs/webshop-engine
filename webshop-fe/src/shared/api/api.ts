@@ -671,6 +671,12 @@ export interface PageOrderResponse {
     'sort'?: SortObject;
     /**
      * 
+     * @type {PageableObject}
+     * @memberof PageOrderResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
      * @type {boolean}
      * @memberof PageOrderResponse
      */
@@ -687,12 +693,6 @@ export interface PageOrderResponse {
      * @memberof PageOrderResponse
      */
     'numberOfElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageOrderResponse
-     */
-    'pageable'?: PageableObject;
     /**
      * 
      * @type {boolean}
@@ -744,6 +744,12 @@ export interface PageProductResponse {
     'sort'?: SortObject;
     /**
      * 
+     * @type {PageableObject}
+     * @memberof PageProductResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
      * @type {boolean}
      * @memberof PageProductResponse
      */
@@ -760,12 +766,6 @@ export interface PageProductResponse {
      * @memberof PageProductResponse
      */
     'numberOfElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageProductResponse
-     */
-    'pageable'?: PageableObject;
     /**
      * 
      * @type {boolean}
@@ -793,6 +793,12 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof PageableObject
      */
@@ -803,12 +809,6 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'pageSize'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -901,6 +901,12 @@ export interface ProductResponse {
      * @memberof ProductResponse
      */
     'imageUrls'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductResponse
+     */
+    'itemNumber'?: string;
 }
 /**
  * 
@@ -4601,10 +4607,11 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {number} price 
          * @param {number} [discountPercentage] 
          * @param {Array<File>} [images] 
+         * @param {string} [itemNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create: async (brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create: async (brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, itemNumber?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'brand' is not null or undefined
             assertParamExists('create', 'brand', brand)
             // verify required parameter 'name' is not null or undefined
@@ -4674,6 +4681,10 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
                 })
             }
 
+    
+            if (itemNumber !== undefined) { 
+                localVarFormParams.append('itemNumber', itemNumber as any);
+            }
     
     
             localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
@@ -4947,10 +4958,11 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {number} price 
          * @param {number} [discountPercentage] 
          * @param {Array<File>} [images] 
+         * @param {string} [itemNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update: async (id: string, brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        update: async (id: string, brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, itemNumber?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('update', 'id', id)
             // verify required parameter 'brand' is not null or undefined
@@ -5024,6 +5036,10 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
             }
 
     
+            if (itemNumber !== undefined) { 
+                localVarFormParams.append('itemNumber', itemNumber as any);
+            }
+    
     
             localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
     
@@ -5095,11 +5111,12 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {number} price 
          * @param {number} [discountPercentage] 
          * @param {Array<File>} [images] 
+         * @param {string} [itemNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create(brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create(brand, name, description, subCategoryId, type, count, price, discountPercentage, images, options);
+        async create(brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, itemNumber?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create(brand, name, description, subCategoryId, type, count, price, discountPercentage, images, itemNumber, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.create']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5192,11 +5209,12 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {number} price 
          * @param {number} [discountPercentage] 
          * @param {Array<File>} [images] 
+         * @param {string} [itemNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update(id: string, brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update(id, brand, name, description, subCategoryId, type, count, price, discountPercentage, images, options);
+        async update(id: string, brand: string, name: string, description: string, subCategoryId: string, type: string, count: number, price: number, discountPercentage?: number, images?: Array<File>, itemNumber?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.update(id, brand, name, description, subCategoryId, type, count, price, discountPercentage, images, itemNumber, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.update']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5239,7 +5257,7 @@ export const ProductServiceApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         create(requestParameters: ProductServiceApiCreateRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProductResponse> {
-            return localVarFp.create(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, options).then((request) => request(axios, basePath));
+            return localVarFp.create(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, requestParameters.itemNumber, options).then((request) => request(axios, basePath));
         },
         /**
          * Get all existing products
@@ -5298,7 +5316,7 @@ export const ProductServiceApiFactory = function (configuration?: Configuration,
          * @throws {RequiredError}
          */
         update(requestParameters: ProductServiceApiUpdateRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProductResponse> {
-            return localVarFp.update(requestParameters.id, requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, options).then((request) => request(axios, basePath));
+            return localVarFp.update(requestParameters.id, requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, requestParameters.itemNumber, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5469,6 +5487,13 @@ export interface ProductServiceApiCreateRequest {
      * @memberof ProductServiceApiCreate
      */
     readonly images?: Array<File>
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductServiceApiCreate
+     */
+    readonly itemNumber?: string
 }
 
 /**
@@ -5679,6 +5704,13 @@ export interface ProductServiceApiUpdateRequest {
      * @memberof ProductServiceApiUpdate
      */
     readonly images?: Array<File>
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductServiceApiUpdate
+     */
+    readonly itemNumber?: string
 }
 
 /**
@@ -5721,7 +5753,7 @@ export class ProductServiceApi extends BaseAPI {
      * @memberof ProductServiceApi
      */
     public create(requestParameters: ProductServiceApiCreateRequest, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration).create(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, options).then((request) => request(this.axios, this.basePath));
+        return ProductServiceApiFp(this.configuration).create(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, requestParameters.itemNumber, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5792,7 +5824,7 @@ export class ProductServiceApi extends BaseAPI {
      * @memberof ProductServiceApi
      */
     public update(requestParameters: ProductServiceApiUpdateRequest, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration).update(requestParameters.id, requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, options).then((request) => request(this.axios, this.basePath));
+        return ProductServiceApiFp(this.configuration).update(requestParameters.id, requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.type, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.images, requestParameters.itemNumber, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
