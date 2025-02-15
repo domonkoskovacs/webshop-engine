@@ -1,52 +1,44 @@
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import {z} from "zod"
-
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormField, FormItem, FormMessage,} from "src/components/ui/Form"
-import {useToast} from "../../../hooks/UseToast";
-import React from "react";
-import {useProductPagination} from "../../../hooks/UseProductPagination";
-import {GetAllSortTypeEnum} from "../../../shared/api";
+import React, {useState} from "react";
+import {useProduct} from "../../../hooks/UseProductPagination";
 import {ComboBoxMultipleValue} from "../../ui/ComboBoxMultipleValue";
-import {Input} from "../../ui/Input";
 import {X} from "lucide-react";
-
-const FormSchema = z.object({
-    brands: z.array(z.string()).optional(),
-    categories: z.array(z.string()).optional(),
-    subCategories: z.array(z.string()).optional(),
-    types: z.array(z.string()).optional(),
-    maxPrice: z.number().min(0, {message: "Max price must be a positive number"}).optional(),
-    minPrice: z.number().min(0, {message: "Min price must be a positive number"}).optional(),
-    maxDiscountPercentage: z.number().min(0).max(100, {message: "Discount must be between 0 and 100"}).optional(),
-    minDiscountPercentage: z.number().min(0).max(100, {message: "Discount must be between 0 and 100"}).optional(),
-    itemNumber: z.string().optional(),
-    showOutOfStock: z.boolean().default(false),
-    sortType: z.enum([GetAllSortTypeEnum.AscPrice, GetAllSortTypeEnum.DescPrice, GetAllSortTypeEnum.AscDiscount, GetAllSortTypeEnum.DescDiscount]).optional(),
-    size: z.number().min(1, {message: "Size must be at least 1"}).default(10),
-});
+import {useCategory} from "../../../hooks/UseCategory";
+import {Slider} from "../../ui/Slider";
+import {Input} from "../../ui/Input";
 
 interface FilterFormProps {
     setIsOpen: (open: boolean) => void;
 }
 
 const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {toast} = useToast()
-    const {brands, filters, updateFilters, fetchProducts} = useProductPagination();
+    const {brands, filters, updateFilters, resetFilters} = useProduct();
+    const {categories} = useCategory()
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema)
-    })
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        //updateFilters(data);
-        await fetchProducts();
-        toast({
-            description: "Filters applied successfully.",
-        })
-        setIsOpen(false);
-    }
+
+
+
+
+    const [priceRange, setPriceRange] = useState<[number, number]>( [0, 100]);
+
+    const handleSliderChange = (values: number[]) => {
+        setPriceRange([values[0], values[1]]);
+    };
+
+    const handleInputChange = (index: number, value: string) => {
+        const newValue = Number(value);
+        if (!isNaN(newValue)) {
+            const newRange: [number, number] = [...priceRange] as [number, number];
+            newRange[index] = newValue;
+            setPriceRange(newRange);
+        }
+    };
+
+
+
+
+
 
     return (
         <div className="flex flex-col h-full">
@@ -57,46 +49,56 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
                 </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4">
-                <Form {...form}>
-                    <form id="filter-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="brands"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <ComboBoxMultipleValue className="w-full"
-                                                               options={brands.map((brand) => brand.name!)} type="brand"
-                                                               selectedValues={filters.brands ?? []}
-                                                               onChange={(newSelected) => updateFilters({brands: newSelected})}/>
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+                <ComboBoxMultipleValue className="w-full"
+                                       options={brands.map((brand) => brand.name!)} type="brand"
+                                       selectedValues={filters.brands ?? []}
+                                       onChange={(newSelected) => updateFilters({brands: newSelected})}/>
 
-                        <FormField
-                            control={form.control}
-                            name="itemNumber"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input placeholder="Search for item No..." {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
+                <ComboBoxMultipleValue className="w-full"
+                                       options={categories.map((category) => category.name!)} type="category"
+                                       selectedValues={filters.categories ?? []}
+                                       onChange={(newSelected) => updateFilters({categories: newSelected})}/>
+
+                <ComboBoxMultipleValue className="w-full"
+                                       options={categories.flatMap(category =>
+                                           category.subCategories?.map(subCategory => subCategory.name!) || []
+                                       )} type="subcategory"
+                                       selectedValues={filters.subCategories ?? []}
+                                       onChange={(newSelected) => updateFilters({subCategories: newSelected})}/>
+
+                <div className="w-full flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                        <Input
+                            value={priceRange[0]}
+                            onChange={(e) => handleInputChange(0, e.target.value)}
+                            className="text-center"
                         />
-                    </form>
-                </Form>
+                        <span>-</span>
+                        <Input
+                            value={priceRange[1]}
+                            onChange={(e) => handleInputChange(1, e.target.value)}
+                            className="text-center"
+                        />
+                    </div>
+
+                    <Slider
+                        value={priceRange}
+                        defaultValue={[0, 100]}
+                        onValueChange={handleSliderChange}
+                        min={0}
+                        max={100}
+                        step={1}
+                    />
+                </div>
+
             </div>
             <div className="mt-auto flex gap-2 pt-3 border-t">
                 <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
                     Back
                 </Button>
-                <Button type="submit" className="w-full" form="filter-form">
-                    Apply
+                <Button className="w-full" onClick={() => resetFilters()}>
+                    Reset
                 </Button>
             </div>
         </div>

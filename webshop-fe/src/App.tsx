@@ -6,6 +6,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {Toaster} from "./components/ui/Toaster";
 import ScrollToTop from "./routing/ScrollToTop";
 import {CategoryProvider} from "./contexts/CategoryContext";
+import {ProductProvider} from "./contexts/ProductContext";
 
 function App() {
     return (
@@ -14,8 +15,10 @@ function App() {
             <ThemeProvider>
                 <AuthProvider>
                     <CategoryProvider>
-                        <AppRouter/>
-                        <Toaster/>
+                        <ProductProvider>
+                            <AppRouter/>
+                            <Toaster/>
+                        </ProductProvider>
                     </CategoryProvider>
                 </AuthProvider>
             </ThemeProvider>

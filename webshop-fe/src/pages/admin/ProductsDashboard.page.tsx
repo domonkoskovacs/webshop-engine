@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {DataTable} from "../../components/ui/DataTable";
+import React, {useEffect, useRef, useState} from 'react';
 import {ColumnDef} from "@tanstack/react-table";
 import {ProductResponse} from "../../shared/api";
-import {useProductPagination} from "../../hooks/UseProductPagination";
+import {useProduct} from "../../hooks/UseProductPagination";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,13 +10,15 @@ import {
 } from "../../components/ui/DropdownMenu";
 import {Button} from "../../components/ui/Button";
 import {ArrowRightFromLine, Import, MoreHorizontal} from "lucide-react";
-import {Input} from "../../components/ui/Input";
 import PaginationComponent from "../../components/ui/Pagination";
 import FilterForm from "../../components/admin/product/FilterForm.component";
+import {DataTable} from "../../components/ui/DataTable";
+import ItemNumberSearch from "../../components/admin/product/ItemNumberSearch.component";
 
 const ProductsDashboard: React.FC = () => {
-    const {products, filters, updateFilters, setPage, nextPage, prevPage, totalPages} = useProductPagination()
+    const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProduct} = useProduct()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const columns: ColumnDef<ProductResponse>[] = [
         {
@@ -33,6 +34,11 @@ const ProductsDashboard: React.FC = () => {
         {
             accessorKey: "name",
             header: "Name",
+        },
+        {
+            id: "Category",
+            accessorKey: "category.name",
+            header: "Category",
         },
         {
             id: "Subcategory",
@@ -88,7 +94,8 @@ const ProductsDashboard: React.FC = () => {
                                 <DropdownMenuItem>View product</DropdownMenuItem>
                                 <DropdownMenuItem>Edit product</DropdownMenuItem>
                                 <DropdownMenuItem>Set discount</DropdownMenuItem>
-                                <DropdownMenuItem>Delete product</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => deleteProduct(product.id ?? '')}>Delete
+                                    product</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -98,25 +105,24 @@ const ProductsDashboard: React.FC = () => {
         },
     ]
 
-    const [searchTerm, setSearchTerm] = useState(filters.itemNumber || "");
-    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            updateFilters({itemNumber: searchTerm});
-        }
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [isInputFocused, setIsInputFocused] = useState(false);
+
+    const handleFocus = () => {
+        setIsInputFocused(true);
     };
-    const itemNoFilter = (
-        <Input
-            placeholder="Search for Item No..."
-            className="max-w-sm mr-2"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleSearch}
-        />
-    );
+
+    useEffect(() => {
+        if (isInputFocused && inputRef.current && !isFilterOpen) {
+            inputRef.current.focus();
+        }
+    }, [inputRef, isFilterOpen, isInputFocused, products]);
+
+    const itemNoFilter = <ItemNumberSearch inputRef={inputRef} handleFocus={handleFocus}/>
+
 
     return (
         <div className="relative">
-            {/* Dashboard */}
             <div
                 className={`flex flex-col items-center justify-center transition-opacity duration-300 ${isFilterOpen ? 'opacity-50' : 'opacity-100'}`}>
                 <div className="my-2 flex w-full justify-between">
@@ -129,7 +135,7 @@ const ProductsDashboard: React.FC = () => {
                         </Button>
                     </div>
                     <div className="flex gap-2">
-                        <Button>New</Button>
+                        <Button onClick={() => setIsDialogOpen(true)}>New</Button>
                         <Button onClick={() => setIsFilterOpen(true)}>Filter</Button>
                     </div>
                 </div>
