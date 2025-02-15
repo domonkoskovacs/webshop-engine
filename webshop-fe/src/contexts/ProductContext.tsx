@@ -1,6 +1,7 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {BrandResponse, ProductResponse, ProductServiceApiGetAllRequest} from "../shared/api";
 import {productService} from "../services/ProductService";
+import {toast} from "../hooks/UseToast";
 
 interface ProductContextType {
     products: ProductResponse[];
@@ -13,8 +14,11 @@ interface ProductContextType {
     setPage: (page: number) => void;
     loading: boolean;
     totalPages: number;
+    totalElements: number;
     fetchProducts: () => void;
     deleteProduct: (id: string) => void;
+    priceRange: number[];
+    discountRange: number[];
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -37,20 +41,27 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         page: 1,
         size: 10,
     });
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
+    const [discountRange, setDiscountRange] = useState<[number, number]>([0, 0]);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalElements, setTotalElements] = useState(1);
 
     const fetchProducts = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await productService.getAll({ ...filters, page: filters.page! - 1 });
+            const data = await productService.getAll({...filters, page: filters.page! - 1});
             setProducts([...data.content ?? []]);
             setTotalPages(data.totalPages ?? 0);
+            setTotalElements(data.totalElements ?? 0);
+            setPriceRange([data.minPrice ?? 0, data.maxPrice ?? 0])
+            console.log(priceRange)
+            setDiscountRange([data.minDiscount ?? 0, data.maxDiscount ?? 0])
         } catch (error) {
             console.error("Error fetching products:", error);
         }
         setLoading(false);
-    }, [filters]);
+    }, [filters, priceRange]);
 
     const fetchBrands = useCallback(async () => {
         try {
@@ -65,8 +76,15 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         try {
             await productService.delete(id);
             setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
+            toast({
+                description: "Product successfully deleted!",
+            });
         } catch (error) {
-            console.error("Error deleting product:", error);
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't delete product. Please try again.",
+            });
         }
     }
 
@@ -83,33 +101,49 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
     }, [fetchBrands]);
 
     const updateFilters = (newFilters: Partial<ProductServiceApiGetAllRequest>) => {
-        setFilters((prev) => ({ ...prev, ...newFilters, page: 1 }));
+        setFilters((prev) => ({...prev, ...newFilters, page: 1}));
     };
 
     const resetFilters = () => {
-        setFilters({ page: 1 });
+        setFilters({page: 1, size: 10});
     };
 
     const nextPage = () => {
         if (filters.page && filters.page < totalPages) {
-            setFilters((prev) => ({ ...prev, page: prev.page! + 1 }));
+            setFilters((prev) => ({...prev, page: prev.page! + 1}));
         }
     };
 
     const prevPage = () => {
         if (filters.page && filters.page > 1) {
-            setFilters((prev) => ({ ...prev, page: prev.page! - 1 }));
+            setFilters((prev) => ({...prev, page: prev.page! - 1}));
         }
     };
 
     const setPage = (page: number) => {
         if (page >= 1 && page <= totalPages) {
-            setFilters((prev) => ({ ...prev, page }));
+            setFilters((prev) => ({...prev, page}));
         }
     };
 
     return (
-        <ProductContext.Provider value={{ products, brands, filters, updateFilters, resetFilters, nextPage, prevPage, setPage, loading, totalPages, fetchProducts, deleteProduct }}>
+        <ProductContext.Provider value={{
+            products,
+            brands,
+            filters,
+            updateFilters,
+            resetFilters,
+            nextPage,
+            prevPage,
+            setPage,
+            loading,
+            totalPages,
+            totalElements,
+            fetchProducts,
+            deleteProduct,
+            priceRange,
+            discountRange
+        }}>
             {children}
         </ProductContext.Provider>
     );

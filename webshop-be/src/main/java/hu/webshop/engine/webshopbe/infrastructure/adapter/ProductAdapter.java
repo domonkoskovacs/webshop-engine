@@ -1,14 +1,17 @@
 package hu.webshop.engine.webshopbe.infrastructure.adapter;
 
+import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSorting.sort;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import hu.webshop.engine.webshopbe.domain.product.BrandService;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
+import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.BrandMapper;
@@ -37,14 +40,15 @@ public class ProductAdapter {
         return productMapper.toResponse(productService.create(productMapper.fromRequest(productRequest), productRequest.subCategoryId(), productRequest.brand(), productRequest.images()));
     }
 
-    public Page<ProductResponse> getAll(
+    public ProductPage<ProductResponse> getAll(
             ProductSpecificationArgs args,
             ProductSortType sortType,
             int page,
             int size
     ) {
         log.info("getAll");
-        return productService.getAll(args, sortType, page, size).map(productMapper::toResponse);
+        PageRequest pageRequest = sortType != null ? PageRequest.of(page, size, sort(sortType)) : PageRequest.of(page, size);
+        return productService.getAll(args, pageRequest).map(productMapper::toResponse);
     }
 
     public ProductResponse getById(UUID uuid) {

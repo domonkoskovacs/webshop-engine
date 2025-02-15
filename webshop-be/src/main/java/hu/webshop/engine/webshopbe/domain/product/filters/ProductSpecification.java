@@ -49,6 +49,28 @@ public class ProductSpecification {
                 .and(outOfStock(args.showOutOfStock()));
     }
 
+    public static Specification<Product> getSpecificationsWithoutPrice(ProductSpecificationArgs args) {
+        return Specification.where(brand(args.brands()))
+                .and(category(args.categories()))
+                .and(subCategory(args.subCategories()))
+                .and(type(args.types()))
+                .and(maxDiscountPercentage(args.maxDiscountPercentage()))
+                .and(minDiscountPercentage(args.minDiscountPercentage()))
+                .and(itemNumber(args.itemNumber()))
+                .and(outOfStock(args.showOutOfStock()));
+    }
+
+    public static Specification<Product> getSpecificationsWithoutDiscount(ProductSpecificationArgs args) {
+        return Specification.where(brand(args.brands()))
+                .and(category(args.categories()))
+                .and(subCategory(args.subCategories()))
+                .and(type(args.types()))
+                .and(maxPrice(args.maxPrice()))
+                .and(minPrice(args.minPrice()))
+                .and(itemNumber(args.itemNumber()))
+                .and(outOfStock(args.showOutOfStock()));
+    }
+
     private static Specification<Product> brand(List<String> brands) {
         return (products, cq, cb) -> {
             if (brands == null || brands.isEmpty()) return cb.conjunction();

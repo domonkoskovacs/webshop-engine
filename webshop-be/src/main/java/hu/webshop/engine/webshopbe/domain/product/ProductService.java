@@ -1,9 +1,10 @@
 package hu.webshop.engine.webshopbe.domain.product;
 
 
-import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSorting.sort;
 import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSpecification.getExportSpecification;
 import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSpecification.getSpecifications;
+import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSpecification.getSpecificationsWithoutDiscount;
+import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSpecification.getSpecificationsWithoutPrice;
 import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ import hu.webshop.engine.webshopbe.domain.product.mapper.ProductUpdateMapper;
 import hu.webshop.engine.webshopbe.domain.product.model.ProductCsv;
 import hu.webshop.engine.webshopbe.domain.product.repository.ProductRepository;
 import hu.webshop.engine.webshopbe.domain.product.value.Discount;
-import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
+import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
 import hu.webshop.engine.webshopbe.domain.util.CSVReader;
@@ -55,16 +56,20 @@ public class ProductService {
         return productRepository.findAllById(productIds);
     }
 
-    public Page<Product> getAll(
+    public ProductPage<Product> getAll(
             ProductSpecificationArgs args,
-            ProductSortType sortType,
-            int page,
-            int size
+            PageRequest pageRequest
     ) {
-        log.info("getAll, args: [{}], sortType: [{}], page: [{}], size: [{}]", args, sortType, page, size);
+        log.info("getAll > args: [{}], pageRequest: [{}]", args, pageRequest);
         Specification<Product> spec = getSpecifications(args);
-        if (sortType != null) return productRepository.findAll(spec, PageRequest.of(page, size, sort(sortType)));
-        else return productRepository.findAll(spec, PageRequest.of(page, size));
+        Page<Product> productsPage = productRepository.findAll(spec, pageRequest);
+        List<Product> productsWithoutPriceFilter = productRepository.findAll(getSpecificationsWithoutPrice(args));
+        List<Product> productsWithoutDiscountFilter = productRepository.findAll(getSpecificationsWithoutDiscount(args));
+        Double minPrice = productsWithoutPriceFilter.stream().map(Product::getPrice).min(Double::compareTo).orElse(0d);
+        Double maxPrice = productsWithoutPriceFilter.stream().map(Product::getPrice).max(Double::compareTo).orElse(0d);
+        Double minDiscount = productsWithoutDiscountFilter.stream().map(Product::getDiscountPercentage).min(Double::compareTo).orElse(0d);
+        Double maxDiscount = productsWithoutDiscountFilter.stream().map(Product::getDiscountPercentage).max(Double::compareTo).orElse(0d);
+        return new ProductPage<>(productsPage.getContent(), pageRequest, productsPage.getTotalElements(), minPrice, maxPrice, minDiscount, maxDiscount);
     }
 
     public void delete(UUID uuid) {

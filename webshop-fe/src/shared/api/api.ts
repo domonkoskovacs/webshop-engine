@@ -638,13 +638,13 @@ export interface PageOrderResponse {
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
@@ -703,79 +703,6 @@ export interface PageOrderResponse {
 /**
  * 
  * @export
- * @interface PageProductResponse
- */
-export interface PageProductResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof PageProductResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageProductResponse
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageProductResponse
-     */
-    'size'?: number;
-    /**
-     * 
-     * @type {Array<ProductResponse>}
-     * @memberof PageProductResponse
-     */
-    'content'?: Array<ProductResponse>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageProductResponse
-     */
-    'number'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageProductResponse
-     */
-    'sort'?: SortObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageProductResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageProductResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageProductResponse
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageProductResponse
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageProductResponse
-     */
-    'empty'?: boolean;
-}
-/**
- * 
- * @export
  * @interface PageableObject
  */
 export interface PageableObject {
@@ -793,12 +720,6 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageableObject
      */
@@ -809,6 +730,12 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'pageSize'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -828,6 +755,103 @@ export interface PaymentTokenRequest {
      * @memberof PaymentTokenRequest
      */
     'token': string;
+}
+/**
+ * 
+ * @export
+ * @interface ProductPageObject
+ */
+export interface ProductPageObject {
+    /**
+     * 
+     * @type {Array<object>}
+     * @memberof ProductPageObject
+     */
+    'content'?: Array<object>;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof ProductPageObject
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'minPrice'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'maxPrice'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'minDiscount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'maxDiscount'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageObject
+     */
+    'last'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'totalElements'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'size'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'number'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof ProductPageObject
+     */
+    'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageObject
+     */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageObject
+     */
+    'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageObject
+     */
+    'empty'?: boolean;
 }
 /**
  * 
@@ -5151,7 +5175,7 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAll(brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageProductResponse>> {
+        async getAll(brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, types?: Array<string>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductPageObject>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAll(brands, categories, subCategories, types, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock, sortType, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.getAll']?.[localVarOperationServerIndex]?.url;
@@ -5278,7 +5302,7 @@ export const ProductServiceApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll(requestParameters: ProductServiceApiGetAllRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<PageProductResponse> {
+        getAll(requestParameters: ProductServiceApiGetAllRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ProductPageObject> {
             return localVarFp.getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.types, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**

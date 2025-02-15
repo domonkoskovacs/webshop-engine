@@ -1,10 +1,13 @@
 import {Button} from "src/components/ui/Button"
-import React, {useState} from "react";
+import React from "react";
 import {useProduct} from "../../../hooks/UseProductPagination";
 import {ComboBoxMultipleValue} from "../../ui/ComboBoxMultipleValue";
 import {X} from "lucide-react";
 import {useCategory} from "../../../hooks/UseCategory";
-import {Slider} from "../../ui/Slider";
+import SliderFilter from "./SliderFilter.component";
+import {Switch} from "../../ui/Switch";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
+import {GetAllSortTypeEnum} from "../../../shared/api";
 import {Input} from "../../ui/Input";
 
 interface FilterFormProps {
@@ -12,33 +15,44 @@ interface FilterFormProps {
 }
 
 const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {brands, filters, updateFilters, resetFilters} = useProduct();
+    const {brands, filters, updateFilters, resetFilters, priceRange, discountRange, totalElements} = useProduct();
     const {categories} = useCategory()
 
-
-
-
-
-
-    const [priceRange, setPriceRange] = useState<[number, number]>( [0, 100]);
-
-    const handleSliderChange = (values: number[]) => {
-        setPriceRange([values[0], values[1]]);
+    const handlePriceSliderChange = (values: number[]) => {
+        updateFilters({minPrice: values[0], maxPrice: values[1]})
     };
 
-    const handleInputChange = (index: number, value: string) => {
+    const handlePriceMinInputChange = (value: string) => {
         const newValue = Number(value);
         if (!isNaN(newValue)) {
-            const newRange: [number, number] = [...priceRange] as [number, number];
-            newRange[index] = newValue;
-            setPriceRange(newRange);
+            updateFilters({minPrice: newValue})
         }
     };
 
+    const handlePriceMaxInputChange = (value: string) => {
+        const newValue = Number(value);
+        if (!isNaN(newValue)) {
+            updateFilters({maxPrice: newValue})
+        }
+    };
 
+    const handleDiscountSliderChange = (values: number[]) => {
+        updateFilters({minDiscountPercentage: values[0], maxDiscountPercentage: values[1]})
+    };
 
+    const handleDiscountMinInputChange = (value: string) => {
+        const newValue = Number(value);
+        if (!isNaN(newValue)) {
+            updateFilters({minDiscountPercentage: newValue})
+        }
+    };
 
-
+    const handleDiscountMaxInputChange = (value: string) => {
+        const newValue = Number(value);
+        if (!isNaN(newValue)) {
+            updateFilters({maxDiscountPercentage: newValue})
+        }
+    };
 
     return (
         <div className="flex flex-col h-full">
@@ -49,7 +63,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
                 </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar">
                 <ComboBoxMultipleValue className="w-full"
                                        options={brands.map((brand) => brand.name!)} type="brand"
                                        selectedValues={filters.brands ?? []}
@@ -67,30 +81,48 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
                                        selectedValues={filters.subCategories ?? []}
                                        onChange={(newSelected) => updateFilters({subCategories: newSelected})}/>
 
-                <div className="w-full flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                        <Input
-                            value={priceRange[0]}
-                            onChange={(e) => handleInputChange(0, e.target.value)}
-                            className="text-center"
-                        />
-                        <span>-</span>
-                        <Input
-                            value={priceRange[1]}
-                            onChange={(e) => handleInputChange(1, e.target.value)}
-                            className="text-center"
-                        />
-                    </div>
+                <SliderFilter handleMinInputChange={handlePriceMinInputChange}
+                              handleMaxInputChange={handlePriceMaxInputChange}
+                              handleSliderChange={handlePriceSliderChange} range={[priceRange[0], priceRange[1]]}
+                              minValue={filters.minPrice} maxValue={filters.maxPrice}/>
 
-                    <Slider
-                        value={priceRange}
-                        defaultValue={[0, 100]}
-                        onValueChange={handleSliderChange}
-                        min={0}
-                        max={100}
-                        step={1}
+                <SliderFilter handleMinInputChange={handleDiscountMinInputChange}
+                              handleMaxInputChange={handleDiscountMaxInputChange}
+                              handleSliderChange={handleDiscountSliderChange}
+                              range={[discountRange[0], discountRange[1]]}
+                              minValue={filters.minDiscountPercentage} maxValue={filters.maxDiscountPercentage}/>
+
+                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                        Show out of stock products?
+                    </div>
+                    <Switch
+                        checked={filters.showOutOfStock}
+                        onCheckedChange={() => updateFilters({showOutOfStock: !filters.showOutOfStock})}
                     />
                 </div>
+
+                <Select value={filters.sortType}
+                        onValueChange={(value) => updateFilters({sortType: value as GetAllSortTypeEnum})}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select sorting..."/>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value={GetAllSortTypeEnum.AscPrice}>Asc Price</SelectItem>
+                        <SelectItem value={GetAllSortTypeEnum.DescPrice}>Desc Price</SelectItem>
+                        <SelectItem value={GetAllSortTypeEnum.AscDiscount}>Asc Discount</SelectItem>
+                        <SelectItem value={GetAllSortTypeEnum.DescDiscount}>Desc Discount</SelectItem>
+                    </SelectContent>
+                </Select>
+
+                <Input
+                    type="number"
+                    value={filters.size}
+                    onChange={(e) => updateFilters({size: Number(e.target.value)})}
+                    min={1}
+                    max={totalElements}
+                    className="text-center"
+                />
 
             </div>
             <div className="mt-auto flex gap-2 pt-3 border-t">

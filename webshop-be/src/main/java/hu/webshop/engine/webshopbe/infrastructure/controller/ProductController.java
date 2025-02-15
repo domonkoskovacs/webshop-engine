@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +27,7 @@ import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.BrandResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
+import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -64,7 +64,7 @@ public class ProductController {
             description = "Get all existing products"
     )
     @GetMapping(produces = "application/json")
-    public ResponseEntity<Page<ProductResponse>> getAll(
+    public ResponseEntity<ProductPage> getAll(
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) List<String> subCategories,
