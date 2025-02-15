@@ -2,7 +2,6 @@ import {Button} from "src/components/ui/Button"
 import React from "react";
 import {useProduct} from "../../../hooks/UseProductPagination";
 import {ComboBoxMultipleValue} from "../../ui/ComboBoxMultipleValue";
-import {X} from "lucide-react";
 import {useCategory} from "../../../hooks/UseCategory";
 import SliderFilter from "./SliderFilter.component";
 import {Switch} from "../../ui/Switch";
@@ -58,9 +57,6 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
         <div className="flex flex-col h-full">
             <div className="flex justify-between items-center border-b pb-3">
                 <h2 className="text-lg font-semibold">Filter Products</h2>
-                <Button variant="ghost" onClick={() => setIsOpen(false)}>
-                    <X className="h-5 w-5"/>
-                </Button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar">

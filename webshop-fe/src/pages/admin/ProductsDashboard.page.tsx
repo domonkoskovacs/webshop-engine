@@ -14,6 +14,7 @@ import PaginationComponent from "../../components/ui/Pagination";
 import FilterForm from "../../components/admin/product/FilterForm.component";
 import {DataTable} from "../../components/ui/DataTable";
 import ItemNumberSearch from "../../components/admin/product/ItemNumberSearch.component";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 
 const ProductsDashboard: React.FC = () => {
     const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProduct} = useProduct()
@@ -122,45 +123,39 @@ const ProductsDashboard: React.FC = () => {
 
 
     return (
-        <div className="relative">
-            <div
-                className={`flex flex-col items-center justify-center transition-opacity duration-300 ${isFilterOpen ? 'opacity-50' : 'opacity-100'}`}>
-                <div className="my-2 flex w-full justify-between">
-                    <div className="flex gap-2 rounded-md border">
-                        <Button variant="ghost">
-                            <Import className="h-4 w-4 mr-2"/> Import
-                        </Button>
-                        <Button variant="ghost">
-                            <ArrowRightFromLine className="h-4 w-4 mr-2"/> Export
-                        </Button>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button onClick={() => setIsDialogOpen(true)}>New</Button>
-                        <Button onClick={() => setIsFilterOpen(true)}>Filter</Button>
-                    </div>
+        <div className="flex flex-col items-center justify-center">
+            <div className="my-2 flex w-full justify-between">
+                <div className="flex gap-2 rounded-md border">
+                    <Button variant="ghost">
+                        <Import className="h-4 w-4 mr-2"/> Import
+                    </Button>
+                    <Button variant="ghost">
+                        <ArrowRightFromLine className="h-4 w-4 mr-2"/> Export
+                    </Button>
                 </div>
-                <div className="w-full">
-                    <DataTable key={products.length} columns={columns} data={products} customFilter={itemNoFilter}/>
+                <div className="flex gap-2">
+                    <Button onClick={() => setIsDialogOpen(true)}>New</Button>
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button onClick={() => setIsFilterOpen(true)}>Filter</Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                            <FilterForm setIsOpen={setIsFilterOpen}/>
+                        </SheetContent>
+                    </Sheet>
                 </div>
-                <PaginationComponent
-                    className="my-2"
-                    currentPage={filters.page ?? 0}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                    onNext={nextPage}
-                    onPrev={prevPage}
-                />
             </div>
-
-            {isFilterOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsFilterOpen(false)}></div>
-            )}
-
-            <div
-                className={`fixed right-0 top-0 h-full w-80 bg-background shadow-lg z-50 p-4 flex flex-col transform transition-transform duration-300 ${isFilterOpen ? 'translate-x-0' : 'translate-x-full'}`}
-            >
-                <FilterForm setIsOpen={setIsFilterOpen}/>
+            <div className="w-full">
+                <DataTable key={products.length} columns={columns} data={products} customFilter={itemNoFilter}/>
             </div>
+            <PaginationComponent
+                className="my-2"
+                currentPage={filters.page ?? 0}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                onNext={nextPage}
+                onPrev={prevPage}
+            />
         </div>
     );
 };
