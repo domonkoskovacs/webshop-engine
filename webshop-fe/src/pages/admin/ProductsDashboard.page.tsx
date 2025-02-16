@@ -15,11 +15,12 @@ import FilterForm from "../../components/admin/product/FilterForm.component";
 import {DataTable} from "../../components/ui/DataTable";
 import ItemNumberSearch from "../../components/admin/product/ItemNumberSearch.component";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
+import ProductForm from "../../components/admin/product/ProductForm.component";
 
 const ProductsDashboard: React.FC = () => {
-    const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProduct} = useProduct()
+    const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProduct, exportProducts} = useProduct()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isNewOpen, setIsNewOpen] = useState(false);
 
     const columns: ColumnDef<ProductResponse>[] = [
         {
@@ -129,13 +130,20 @@ const ProductsDashboard: React.FC = () => {
                     <Button variant="ghost">
                         <Import className="h-4 w-4 mr-2"/> Import
                     </Button>
-                    <Button variant="ghost">
+                    <Button variant="ghost" onClick={() => exportProducts()}>
                         <ArrowRightFromLine className="h-4 w-4 mr-2"/> Export
                     </Button>
                 </div>
                 <div className="flex gap-2">
-                    <Button onClick={() => setIsDialogOpen(true)}>New</Button>
-                    <Sheet>
+                    <Sheet open={isNewOpen} onOpenChange={setIsNewOpen}>
+                        <SheetTrigger asChild>
+                            <Button onClick={() => setIsNewOpen(true)}>New</Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                            <ProductForm setIsOpen={setIsNewOpen}/>
+                        </SheetContent>
+                    </Sheet>
+                    <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                         <SheetTrigger asChild>
                             <Button onClick={() => setIsFilterOpen(true)}>Filter</Button>
                         </SheetTrigger>

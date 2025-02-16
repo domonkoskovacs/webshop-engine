@@ -19,6 +19,7 @@ interface ProductContextType {
     deleteProduct: (id: string) => void;
     priceRange: number[];
     discountRange: number[];
+    exportProducts: () => void;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -55,13 +56,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             setTotalPages(data.totalPages ?? 0);
             setTotalElements(data.totalElements ?? 0);
             setPriceRange([data.minPrice ?? 0, data.maxPrice ?? 0])
-            console.log(priceRange)
             setDiscountRange([data.minDiscount ?? 0, data.maxDiscount ?? 0])
         } catch (error) {
             console.error("Error fetching products:", error);
         }
         setLoading(false);
-    }, [filters, priceRange]);
+    }, [filters]);
 
     const fetchBrands = useCallback(async () => {
         try {
@@ -84,6 +84,43 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
                 description: "Can't delete product. Please try again.",
+            });
+        }
+    }
+
+    const exportProducts = async () => {
+        try {
+            const response = await productService.export({
+                from: undefined,
+                to: undefined,
+                brands: filters.brands,
+                categories: filters.categories,
+                subCategories: filters.subCategories,
+                types: filters.types,
+                maxPrice: filters.maxPrice,
+                minPrice: filters.minPrice,
+                maxDiscountPercentage: filters.maxDiscountPercentage,
+                minDiscountPercentage: filters.minDiscountPercentage,
+                itemNumber: filters.itemNumber,
+                showOutOfStock: filters.showOutOfStock,
+            });
+            if (response.csv) {
+                const csvData = atob(response.csv);
+                const blob = new Blob([csvData], {type: "text/csv"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "products.csv";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't export products. Please try again.",
             });
         }
     }
@@ -142,7 +179,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             fetchProducts,
             deleteProduct,
             priceRange,
-            discountRange
+            discountRange,
+            exportProducts
         }}>
             {children}
         </ProductContext.Provider>
