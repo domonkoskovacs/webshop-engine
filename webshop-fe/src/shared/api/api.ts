@@ -723,13 +723,13 @@ export interface PageableObject {
      * @type {number}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'pageSize'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageableObject
      */
-    'pageSize'?: number;
+    'pageNumber'?: number;
     /**
      * 
      * @type {boolean}

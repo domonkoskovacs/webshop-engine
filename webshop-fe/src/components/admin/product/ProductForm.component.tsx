@@ -3,10 +3,10 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormField, FormItem, FormMessage,} from "src/components/ui/Form"
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import {useToast} from "../../../hooks/UseToast";
-import React from "react";
+import React, {useEffect} from "react";
 import {FormComboBox} from "../../ui/FormComboBox";
 import {useProduct} from "../../../hooks/UseProductPagination";
 import {Textarea} from "../../ui/Textarea";
@@ -20,30 +20,8 @@ export const FormSchema = z.object({
     description: z.string().min(1, "Description is required"),
     subCategoryId: z.string().uuid("Invalid SubCategory format"),
     type: z.string().min(1, "Type is required"),
-    count: z.string()
-        .transform((val) => parseInt(val))
-        .refine(
-            (val) => val > 0,
-            {
-                message: "Count must be a non-negative number",
-            }
-        )
-        .refine(
-            (val) => !isNaN(val),
-            "Count must be a non-negative integer"
-        ),
-    price: z.string()
-        .transform((val) => parseFloat(val))
-        .refine(
-            (val) => val >= 0,
-            {
-                message: "Price must be a positive number",
-            }
-        )
-        .refine(
-            (val) => !isNaN(val),
-            "Price must be a valid number"
-        ),
+    count: z.number().int().min(1, "Count must be a positive integer"),
+    price: z.number().min(0, "Price must be a non-negative number"),
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),
     images: z
         .array(z.instanceof(File))
@@ -62,19 +40,35 @@ interface ProductFormProps {
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {brands} = useProduct()
+    const {brands, create} = useProduct()
     const {categories} = useCategory()
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
+            discountPercentage: 0,
             images: [] as File[],
         },
     })
 
+    useEffect(() => {
+        console.log("Form errors:", form.formState.errors);
+    }, [form.formState.errors]);
+
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log(data)
+        create({
+            brand: data.brand,
+            name: data.name,
+            description: data.description,
+            subCategoryId: data.subCategoryId,
+            type: data.type,
+            count: data.count,
+            price: data.price,
+            discountPercentage: data.discountPercentage,
+            images: data.images,
+            itemNumber: data.itemNumber,
+        })
         setIsOpen(false)
         toast({
             description: "Product created successfully.",
@@ -97,6 +91,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                 name="itemNumber"
                                 render={({field}) => (
                                     <FormItem className="flex-1">
+                                        <FormLabel className="w-full text-center">Item Number</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Item Number..." {...field} />
                                         </FormControl>
@@ -106,18 +101,21 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                             />
 
                             <FormComboBox
-                                name="Brand"
+                                name="brand"
                                 control={form.control}
                                 label="Brand"
-                                options={brands.map((brand) => brand.name!)}
+                                options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
                             />
 
                             <FormComboBox
-                                name="Subcategory"
+                                name="subCategoryId"
                                 control={form.control}
                                 label="Subcategory"
                                 options={categories.flatMap(category =>
-                                    category.subCategories?.map(subCategory => subCategory.name!) || []
+                                    category.subCategories?.map(subCategory => ({
+                                        label: subCategory.name!,
+                                        value: subCategory.id!
+                                    })) || []
                                 )}
                             />
 
@@ -126,6 +124,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                 name="name"
                                 render={({field}) => (
                                     <FormItem className="flex-1">
+                                        <FormLabel className="w-full text-center">Product name</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Product name..." {...field} />
                                         </FormControl>
@@ -139,6 +138,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                 name="description"
                                 render={({field}) => (
                                     <FormItem>
+                                        <FormLabel className="w-full text-center">Description</FormLabel>
                                         <FormControl>
                                             <Textarea
                                                 placeholder="Product description..."
@@ -156,6 +156,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                 name="type"
                                 render={({field}) => (
                                     <FormItem className="flex-1">
+                                        <FormLabel className="w-full text-center">Product type</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Product type..." {...field} />
                                         </FormControl>
@@ -167,10 +168,18 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                             <FormField
                                 control={form.control}
                                 name="count"
-                                render={({field}) => (
+                                render={({ field: { onChange, value, ...rest } }) => (
                                     <FormItem className="flex-1">
+                                        <FormLabel className="w-full text-center">Stock</FormLabel>
                                         <FormControl>
-                                            <Input type="number" min={0} placeholder="Product count..." {...field} />
+                                            <Input
+                                                type="number"
+                                                placeholder="Stock..."
+                                                min={1}
+                                                value={value ?? ""}
+                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
+                                                {...rest}
+                                            />
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
@@ -180,10 +189,39 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                             <FormField
                                 control={form.control}
                                 name="price"
-                                render={({field}) => (
+                                render={({ field: { onChange, value, ...rest } }) => (
                                     <FormItem className="flex-1">
+                                        <FormLabel className="w-full text-center">Price</FormLabel>
                                         <FormControl>
-                                            <Input type="number" min={0} placeholder="Price..." {...field} />
+                                            <Input
+                                                type="number"
+                                                placeholder="Price..."
+                                                min={0}
+                                                value={value ?? ""}
+                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
+                                                {...rest}
+                                            />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="discountPercentage"
+                                render={({ field: { onChange, value, ...rest } }) => (
+                                    <FormItem className="flex-1">
+                                        <FormLabel className="w-full text-center">Discount</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={100}
+                                                value={value ?? ""}
+                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
+                                                {...rest}
+                                            />
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
@@ -195,6 +233,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                 name="images"
                                 render={() => (
                                     <FormItem className="flex flex-col gap-2">
+                                        <FormLabel className="w-full">Images</FormLabel>
                                         {Array.from({length: Math.min(images.length + 1, MAX_IMAGES)}).map((_, index) => (
                                             <FormControl key={index}>
                                                 <Input
@@ -213,7 +252,6 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                     </FormItem>
                                 )}
                             />
-
                         </div>
                     </form>
                 </Form>

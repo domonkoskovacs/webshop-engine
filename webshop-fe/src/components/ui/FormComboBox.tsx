@@ -1,27 +1,33 @@
-import { Controller } from "react-hook-form";
-import { Button } from "src/components/ui/Button";
-import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "src/components/ui/Form";
-import { Popover, PopoverContent, PopoverTrigger } from "src/components/ui/Popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "src/components/ui/Command";
-import { ChevronsUpDown, Check } from "lucide-react";
-import { cn } from "src/lib/utils";
+import {Button} from "src/components/ui/Button";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "src/components/ui/Form";
+import {Popover, PopoverContent, PopoverTrigger} from "src/components/ui/Popover";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "src/components/ui/Command";
+import {Check, ChevronsUpDown} from "lucide-react";
+import {cn} from "src/lib/utils";
 import React from "react";
+
+interface SelectOption {
+    label: string;
+    value: string;
+}
+
 
 interface FormComboBoxProps {
     name: string;
-    control: any;
+    control: any
     label: string;
     description?: string;
-    options: string[];
+    options: SelectOption[];
 }
 
-export const FormComboBox: React.FC<FormComboBoxProps> = ({ name, control, label, description, options }) => {
+export const FormComboBox: React.FC<FormComboBoxProps> = ({name, control, label, description, options}) => {
     return (
-        <Controller
+        <FormField
             control={control}
             name={name}
-            render={({ field }) => (
+            render={({field}) => (
                 <FormItem className="flex flex-col">
+                    <FormLabel className="w-full">{label}</FormLabel>
                     <Popover>
                         <PopoverTrigger asChild>
                             <FormControl>
@@ -34,26 +40,35 @@ export const FormComboBox: React.FC<FormComboBoxProps> = ({ name, control, label
                                     )}
                                 >
                                     {field.value
-                                        ? options.find((option) => option === field.value)
+                                        ? options.find(
+                                            (option) => option.value === field.value
+                                        )?.label
                                         : `Select ${label.toLowerCase()}`}
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50"/>
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                             <Command>
-                                <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
+                                <CommandInput placeholder={`Search ${label.toLowerCase()}...`}/>
                                 <CommandList>
                                     <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
                                     <CommandGroup>
                                         {options.map((option) => (
                                             <CommandItem
-                                                key={option}
-                                                value={option}
-                                                onSelect={() => field.onChange(option)}
+                                                value={option.label}
+                                                key={option.value}
+                                                onSelect={() => field.onChange(option.value)}
                                             >
-                                                {option}
-                                                <Check className={cn("ml-auto", option === field.value ? "opacity-100" : "opacity-0")} />
+                                                {option.label}
+                                                <Check
+                                                    className={cn(
+                                                        "ml-auto",
+                                                        option.value === field.value
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                    )}
+                                                />
                                             </CommandItem>
                                         ))}
                                     </CommandGroup>
@@ -62,7 +77,7 @@ export const FormComboBox: React.FC<FormComboBoxProps> = ({ name, control, label
                         </PopoverContent>
                     </Popover>
                     {description && <FormDescription>{description}</FormDescription>}
-                    <FormMessage />
+                    <FormMessage/>
                 </FormItem>
             )}
         />

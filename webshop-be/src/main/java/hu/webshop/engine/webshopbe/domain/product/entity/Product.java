@@ -45,7 +45,7 @@ public class Product extends BaseEntity {
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "discount_percentage")
+    @Column(name = "discount_percentage", nullable = false)
     private Double discountPercentage;
 
     @Column(name = "image_url_list")

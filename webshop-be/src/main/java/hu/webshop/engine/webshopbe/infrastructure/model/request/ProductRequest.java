@@ -15,7 +15,7 @@ public record ProductRequest(
         @NotNull String type,
         @NotNull Integer count,
         @NotNull Double price,
-        Double discountPercentage,
+        @NotNull Double discountPercentage,
         List<MultipartFile> images,
         @NotNull String itemNumber
 ) {

@@ -1,5 +1,10 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
-import {BrandResponse, ProductResponse, ProductServiceApiGetAllRequest} from "../shared/api";
+import {
+    BrandResponse,
+    ProductResponse,
+    ProductServiceApiCreateRequest,
+    ProductServiceApiGetAllRequest
+} from "../shared/api";
 import {productService} from "../services/ProductService";
 import {toast} from "../hooks/UseToast";
 
@@ -20,6 +25,7 @@ interface ProductContextType {
     priceRange: number[];
     discountRange: number[];
     exportProducts: () => void;
+    create: (productRequest: ProductServiceApiCreateRequest) => void;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -163,6 +169,20 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     };
 
+    const create = async (productRequest: ProductServiceApiCreateRequest) => {
+        try {
+            const response = await productService.create(productRequest)
+            setProducts((prevProducts) => [...prevProducts, response]);
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't create product. Please try again.",
+            });
+            throw error
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             products,
@@ -180,7 +200,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             deleteProduct,
             priceRange,
             discountRange,
-            exportProducts
+            exportProducts,
+            create
         }}>
             {children}
         </ProductContext.Provider>
