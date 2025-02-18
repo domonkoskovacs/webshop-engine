@@ -10,6 +10,7 @@ import org.mapstruct.Named;
 
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.value.Discount;
+import hu.webshop.engine.webshopbe.domain.util.Constants;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
@@ -32,7 +33,7 @@ public interface ProductMapper {
 
     @Named("toImageUrls")
     default List<String> toImageUrls(String imageIds) {
-        if (imageIds != null) return Arrays.stream(imageIds.split(";")).toList();
+        if (imageIds != null) return Arrays.stream(imageIds.split(Constants.IMAGE_URL_SEPARATOR)).toList();
         return Collections.emptyList();
     }
 }

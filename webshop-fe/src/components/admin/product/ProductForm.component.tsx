@@ -6,7 +6,7 @@ import {Button} from "src/components/ui/Button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
 import {Input} from "src/components/ui/Input"
 import {useToast} from "../../../hooks/UseToast";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {FormComboBox} from "../../ui/FormComboBox";
 import {useProduct} from "../../../hooks/UseProductPagination";
 import {Textarea} from "../../ui/Textarea";
@@ -37,12 +37,14 @@ export const FormSchema = z.object({
 
 interface ProductFormProps {
     setIsOpen: (open: boolean) => void;
+    productId?: string;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {brands, create} = useProduct()
+const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
+    const {brands, create, update, getById} = useProduct()
     const {categories} = useCategory()
     const {toast} = useToast()
+    const [loading, setLoading] = useState<boolean>(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -52,9 +54,40 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
         },
     })
 
+    const downloadImage = async (url: string): Promise<File> => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new File([blob], "image.jpg", { type: blob.type });
+    };
+
     useEffect(() => {
-        console.log("Form errors:", form.formState.errors);
-    }, [form.formState.errors]);
+        if (productId) {
+            setLoading(true);
+            getById(productId)
+                .then(async (product) => {
+                    const imageFiles = await Promise.all(
+                        (product.imageUrls || []).map((url) => downloadImage(url))
+                    );
+                    console.log(imageFiles)
+                    console.log(product)
+                    form.reset({
+                        brand: product.brand!.name,
+                        name: product.name,
+                        description: product.description,
+                        subCategoryId: product.subCategory!.id,
+                        type: product.type,
+                        count: product.count,
+                        price: product.price,
+                        discountPercentage: product.discountPercentage,
+                        images: imageFiles,
+                        itemNumber: product.itemNumber,
+                    });
+                    form.setValue("images", imageFiles)
+                })
+                .catch(() => toast({description: "Error fetching product."}))
+                .finally(() => setLoading(false));
+        }
+    }, [productId, form, getById, toast]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         create({
@@ -80,7 +113,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
     return (
         <div className="flex flex-col h-full">
             <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">Create product</h2>
+                <h2 className="text-lg font-semibold">{productId ? "Edit product": "Create product"}</h2>
             </div>
             <div className="flex-1 overflow-y-auto scrollbar">
                 <Form {...form}>
@@ -105,6 +138,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                 control={form.control}
                                 label="Brand"
                                 options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
+                                enableCreateOption={true}
                             />
 
                             <FormComboBox
@@ -117,6 +151,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                         value: subCategory.id!
                                     })) || []
                                 )}
+                                enableCreateOption={false}
                             />
 
                             <FormField

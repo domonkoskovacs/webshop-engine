@@ -21,6 +21,7 @@ const ProductsDashboard: React.FC = () => {
     const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProduct, exportProducts} = useProduct()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isNewOpen, setIsNewOpen] = useState(false);
+    const [id, setId] = useState<string | undefined>(undefined);
 
     const columns: ColumnDef<ProductResponse>[] = [
         {
@@ -94,7 +95,10 @@ const ProductsDashboard: React.FC = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem>View product</DropdownMenuItem>
-                                <DropdownMenuItem>Edit product</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {
+                                    setIsNewOpen(true);
+                                    setId(product.id);
+                                }}>Edit product</DropdownMenuItem>
                                 <DropdownMenuItem>Set discount</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => deleteProduct(product.id ?? '')}>Delete
                                     product</DropdownMenuItem>
@@ -110,17 +114,13 @@ const ProductsDashboard: React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isInputFocused, setIsInputFocused] = useState(false);
 
-    const handleFocus = () => {
-        setIsInputFocused(true);
-    };
-
     useEffect(() => {
         if (isInputFocused && inputRef.current && !isFilterOpen) {
             inputRef.current.focus();
         }
     }, [inputRef, isFilterOpen, isInputFocused, products]);
 
-    const itemNoFilter = <ItemNumberSearch inputRef={inputRef} handleFocus={handleFocus}/>
+    const itemNoFilter = <ItemNumberSearch inputRef={inputRef} setIsInputFocused={setIsInputFocused}/>
 
 
     return (
@@ -137,10 +137,13 @@ const ProductsDashboard: React.FC = () => {
                 <div className="flex gap-2">
                     <Sheet open={isNewOpen} onOpenChange={setIsNewOpen}>
                         <SheetTrigger asChild>
-                            <Button onClick={() => setIsNewOpen(true)}>New</Button>
+                            <Button onClick={() => {
+                                setIsNewOpen(true);
+                                setId(undefined)
+                            }}>New</Button>
                         </SheetTrigger>
                         <SheetContent>
-                            <ProductForm setIsOpen={setIsNewOpen}/>
+                            <ProductForm setIsOpen={setIsNewOpen} productId={id}/>
                         </SheetContent>
                     </Sheet>
                     <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>

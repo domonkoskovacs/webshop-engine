@@ -3,7 +3,8 @@ import {
     BrandResponse,
     ProductResponse,
     ProductServiceApiCreateRequest,
-    ProductServiceApiGetAllRequest
+    ProductServiceApiGetAllRequest,
+    ProductServiceApiUpdateRequest
 } from "../shared/api";
 import {productService} from "../services/ProductService";
 import {toast} from "../hooks/UseToast";
@@ -26,6 +27,8 @@ interface ProductContextType {
     discountRange: number[];
     exportProducts: () => void;
     create: (productRequest: ProductServiceApiCreateRequest) => void;
+    update: (productRequest: ProductServiceApiUpdateRequest) => void;
+    getById: (id: string) => Promise<ProductResponse>;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -183,6 +186,37 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     }
 
+    const update = async (productRequest: ProductServiceApiUpdateRequest) => {
+        try {
+            const response = await productService.update(productRequest)
+            setProducts((prevProducts) =>
+                prevProducts.map((product) =>
+                    product.id === response.id ? response : product
+                )
+            );
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't update product. Please try again.",
+            });
+            throw error
+        }
+    }
+
+    const getById = async (id: string) => {
+        try {
+            return await productService.getById(id)
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't update product. Please try again.",
+            });
+            throw error
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             products,
@@ -201,7 +235,9 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             priceRange,
             discountRange,
             exportProducts,
-            create
+            create,
+            update,
+            getById
         }}>
             {children}
         </ProductContext.Provider>

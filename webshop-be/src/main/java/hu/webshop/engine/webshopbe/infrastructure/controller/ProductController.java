@@ -64,7 +64,7 @@ public class ProductController {
             description = "Get all existing products"
     )
     @GetMapping(produces = "application/json")
-    public ResponseEntity<ProductPage> getAll(
+    public ResponseEntity<ProductPage<ProductResponse>> getAll(
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) List<String> subCategories,
