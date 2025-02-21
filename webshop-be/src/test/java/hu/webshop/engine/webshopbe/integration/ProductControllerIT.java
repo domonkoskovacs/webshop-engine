@@ -283,14 +283,15 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeImported() throws Exception {
         //Given
         if (!productRepository.findAll().isEmpty()) fail();
-        CsvRequest request = new CsvRequest("YnJhbmQ7bmFtZTtkZXNjcmlwdGlvbjtzdWJDYXRlZ29yeU5hbWU7dHlwZTtjb3VudDtwcmljZTtkaXNjb3VudFBlcmNlbnRhZ2U7aW1hZ2VzVXJscw0KYnJhbmQ7c2hpcnQ7dGhpcyBpcyBhIHNoaXJ0O3N1YkNhdGVnb3J5O3R5cGU7MTA7MTAuMDsxLjA7aW1hZ2VVcmw");
+        CsvRequest request = new CsvRequest("aXRlbU51bWJlcjticmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5TmFtZTt0eXBlO2NvdW50O3ByaWNlO2Rpc2NvdW50UGVyY2VudGFnZTtpbWFnZXNVcmxzDQppdGVtMDAwO2JyYW5kO3NoaXJ0O3RoaXMgaXMgYSBzaGlydDtzdWJDYXRlZ29yeTt0eXBlOzEwOzEwLjA7MS4wO2ltYWdlVXJs");
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/import", request, Role.ROLE_ADMIN);
+        transaction();
 
         //Then
         resultActions.andExpect(status().isOk());
-        awaitFor(() -> productRepository.findAll().isEmpty());
+        awaitFor(() -> !productRepository.findAll().isEmpty());
     }
 
     @Test

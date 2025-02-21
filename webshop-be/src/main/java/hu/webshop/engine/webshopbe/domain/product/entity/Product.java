@@ -51,7 +51,7 @@ public class Product extends BaseEntity {
     @Column(name = "image_url_list")
     private String imageUrls;
 
-    @Column(name = "item_number")
+    @Column(name = "item_number", nullable = false)
     private String itemNumber;
 
     public String getFullProductName() {

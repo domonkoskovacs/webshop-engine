@@ -18,12 +18,14 @@ import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import ProductForm from "../../components/admin/product/ProductForm.component";
 import {Checkbox} from "../../components/ui/Checkbox";
 import DiscountForm from "../../components/admin/product/DiscountForm.component";
+import ImportForm from "../../components/admin/product/ImportForm.component";
 
 const ProductsDashboard: React.FC = () => {
     const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProducts, exportProducts} = useProduct()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isProductFormOpen, setIsProductFormOpen] = useState(false);
     const [isDiscountFormOpen, setIsDiscountFormOpen] = useState(false);
+    const [isImportFormOpen, setIsImportFormOpen] = useState(false);
     const [id, setId] = useState<string | undefined>(undefined);
     const [ids, setIds] = useState<string[]>([]);
 
@@ -129,7 +131,7 @@ const ProductsDashboard: React.FC = () => {
                                 }}>Edit product</DropdownMenuItem>}
                                 <DropdownMenuItem onClick={() => {
                                     setIsDiscountFormOpen(true);
-                                    if(selectedRowCount>1) {
+                                    if (selectedRowCount > 1) {
                                         setIds(selectedIds)
                                     } else {
                                         setIds([product.id ?? ''])
@@ -173,9 +175,16 @@ const ProductsDashboard: React.FC = () => {
                     </SheetContent>
                 </Sheet>
                 <div className="flex gap-2 rounded-md border">
-                    <Button variant="ghost">
-                        <Import className="h-4 w-4 mr-2"/> Import
-                    </Button>
+                    <Sheet open={isImportFormOpen} onOpenChange={setIsImportFormOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" onClick={() => setIsImportFormOpen(true)}>
+                                <Import className="h-4 w-4 mr-2"/> Import
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                            <ImportForm setIsOpen={setIsImportFormOpen}/>
+                        </SheetContent>
+                    </Sheet>
                     <Button variant="ghost" onClick={() => exportProducts()}>
                         <ArrowRightFromLine className="h-4 w-4 mr-2"/> Export
                     </Button>

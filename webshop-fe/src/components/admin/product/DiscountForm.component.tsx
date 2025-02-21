@@ -13,12 +13,12 @@ export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),
 });
 
-interface ProductFormProps {
+interface DiscountFormProps {
     setIsOpen: (open: boolean) => void;
     productIds: string[];
 }
 
-const DiscountForm: React.FC<ProductFormProps> = ({setIsOpen, productIds}) => {
+const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
     const {setDiscounts, getById} = useProduct()
     const {toast} = useToast()
 

@@ -142,7 +142,7 @@ public class ProductService {
     }
 
     public void importAndSave(String csv) {
-        List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"brand", "name", "description", "subCategoryName", "type", "count", "price", "discountPercentage", "imagesUrls"})
+        List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"itemNumber", "brand", "name", "description", "subCategoryName", "type", "count", "price", "discountPercentage", "imagesUrls"})
                 .base64()
                 .csv(csv)
                 .registerValidator("brand", brandService::existsByName)

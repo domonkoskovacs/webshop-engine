@@ -20,7 +20,7 @@ export const FormSchema = z.object({
     description: z.string().min(1, "Description is required"),
     subCategoryId: z.string().uuid("Invalid SubCategory format"),
     type: z.string().min(1, "Type is required"),
-    count: z.number().int().min(1, "Count must be a positive integer"),
+    count: z.number().int().min(0, "Count must be a non-negative integer"),
     price: z.number().min(0, "Price must be a non-negative number"),
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100"),
     images: z
@@ -229,7 +229,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                                             <Input
                                                 type="number"
                                                 placeholder="Stock..."
-                                                min={1}
+                                                min={0}
                                                 value={value ?? ""}
                                                 onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
                                                 {...rest}
