@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,9 @@ import org.springframework.util.MultiValueMap;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
+import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.repository.ProductRepository;
+import hu.webshop.engine.webshopbe.domain.product.value.Discount;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
@@ -183,13 +186,21 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void discountCanBeSet() throws Exception {
         //Given
-        DiscountRequest request = new DiscountRequest(UUID.fromString(PRODUCT_ID), 20.0);
+        DiscountRequest request = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/discount", request, Role.ROLE_ADMIN);
 
         //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.discountPercentage").value(20.0));
+        awaitFor(() -> {
+            Optional<Product> byId = productRepository.findById(UUID.fromString(PRODUCT_ID));
+            if (byId.isPresent()) {
+                Product product = byId.get();
+                return product.getDiscountPercentage().equals(20.0);
+            }
+            return false;
+        });
+        resultActions.andExpect(status().isOk());
     }
 
     @Test
@@ -199,7 +210,7 @@ class ProductControllerIT extends IntegrationTest {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
                 SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null,"000");
-        DiscountRequest discountRequest = new DiscountRequest(UUID.fromString(PRODUCT_ID), 20.0);
+        DiscountRequest discountRequest = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
 
         //When //Then
         performGet(BASE_URL).andExpect(status().isOk());
@@ -235,7 +246,7 @@ class ProductControllerIT extends IntegrationTest {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
                 SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
-        DiscountRequest discountRequest = new DiscountRequest(UUID.fromString(PRODUCT_ID), 20.0);
+        DiscountRequest discountRequest = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
 
         //When //Then
         performGet(BASE_URL, Role.ROLE_USER).andExpect(status().isOk());

@@ -57,7 +57,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     const downloadImage = async (url: string): Promise<File> => {
         const response = await fetch(url);
         const blob = await response.blob();
-        return new File([blob], "image.jpg", { type: blob.type });
+        return new File([blob], "image.jpg", {type: blob.type});
     };
 
     useEffect(() => {
@@ -90,22 +90,41 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     }, [productId, form, getById, toast]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        create({
-            brand: data.brand,
-            name: data.name,
-            description: data.description,
-            subCategoryId: data.subCategoryId,
-            type: data.type,
-            count: data.count,
-            price: data.price,
-            discountPercentage: data.discountPercentage,
-            images: data.images,
-            itemNumber: data.itemNumber,
-        })
+        if(productId) {
+            update({
+                id: productId,
+                brand: data.brand,
+                name: data.name,
+                description: data.description,
+                subCategoryId: data.subCategoryId,
+                type: data.type,
+                count: data.count,
+                price: data.price,
+                discountPercentage: data.discountPercentage,
+                //images: data.images,
+                itemNumber: data.itemNumber,
+            })
+            toast({
+                description: "Product updated successfully.",
+            })
+        } else {
+            create({
+                brand: data.brand,
+                name: data.name,
+                description: data.description,
+                subCategoryId: data.subCategoryId,
+                type: data.type,
+                count: data.count,
+                price: data.price,
+                discountPercentage: data.discountPercentage,
+                images: data.images,
+                itemNumber: data.itemNumber,
+            })
+            toast({
+                description: "Product created successfully.",
+            })
+        }
         setIsOpen(false)
-        toast({
-            description: "Product created successfully.",
-        })
     }
 
     const images = form.watch("images");
@@ -113,7 +132,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     return (
         <div className="flex flex-col h-full">
             <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">{productId ? "Edit product": "Create product"}</h2>
+                <h2 className="text-lg font-semibold">{productId ? "Edit product" : "Create product"}</h2>
             </div>
             <div className="flex-1 overflow-y-auto scrollbar">
                 <Form {...form}>
@@ -203,7 +222,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                             <FormField
                                 control={form.control}
                                 name="count"
-                                render={({ field: { onChange, value, ...rest } }) => (
+                                render={({field: {onChange, value, ...rest}}) => (
                                     <FormItem className="flex-1">
                                         <FormLabel className="w-full text-center">Stock</FormLabel>
                                         <FormControl>
@@ -224,7 +243,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                             <FormField
                                 control={form.control}
                                 name="price"
-                                render={({ field: { onChange, value, ...rest } }) => (
+                                render={({field: {onChange, value, ...rest}}) => (
                                     <FormItem className="flex-1">
                                         <FormLabel className="w-full text-center">Price</FormLabel>
                                         <FormControl>
@@ -245,7 +264,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                             <FormField
                                 control={form.control}
                                 name="discountPercentage"
-                                render={({ field: { onChange, value, ...rest } }) => (
+                                render={({field: {onChange, value, ...rest}}) => (
                                     <FormItem className="flex-1">
                                         <FormLabel className="w-full text-center">Discount</FormLabel>
                                         <FormControl>
@@ -263,7 +282,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                                 )}
                             />
 
-                            <FormField
+                            {!productId && <FormField //todo better image handling
                                 control={form.control}
                                 name="images"
                                 render={() => (
@@ -273,7 +292,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                                             <FormControl key={index}>
                                                 <Input
                                                     type="file"
-                                                    accept="image/png, image/jpeg"
+                                                    accept="image/png, image/jpg, image/jpeg"
                                                     onChange={(e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
@@ -286,7 +305,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                                         <FormMessage/>
                                     </FormItem>
                                 )}
-                            />
+                            />}
                         </div>
                     </form>
                 </Form>

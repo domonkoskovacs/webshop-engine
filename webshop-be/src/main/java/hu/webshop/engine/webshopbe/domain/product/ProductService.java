@@ -26,9 +26,9 @@ import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.entity.SubCategory;
 import hu.webshop.engine.webshopbe.domain.product.mapper.ProductUpdateMapper;
 import hu.webshop.engine.webshopbe.domain.product.model.ProductCsv;
+import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.domain.product.repository.ProductRepository;
 import hu.webshop.engine.webshopbe.domain.product.value.Discount;
-import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
 import hu.webshop.engine.webshopbe.domain.util.CSVReader;
@@ -117,11 +117,13 @@ public class ProductService {
         return new EntityNotFoundException("Product was not found");
     }
 
-    public Product setDiscount(Discount discount) {
-        log.info("setDiscount > discount: [{}]", discount);
-        Product product = getById(discount.id());
-        product.setDiscountPercentage(discount.discount());
-        return productRepository.save(product);
+    public void setDiscounts(List<Discount> discounts) {
+        log.info("setDiscounts > discounts: [{}]", discounts);
+        discounts.forEach(discount -> {
+            Product product = getById(discount.id());
+            product.setDiscountPercentage(discount.discount());
+            productRepository.save(product);
+        });
     }
 
     public void updateStock(UUID id, Integer difference, StockChange stockChange) {

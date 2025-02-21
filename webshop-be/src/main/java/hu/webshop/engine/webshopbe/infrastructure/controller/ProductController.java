@@ -133,14 +133,15 @@ public class ProductController {
 
     @Operation(
             tags = {"Product service"},
-            summary = "Update a products discount by id",
-            description = "Update a products discount by id"
+            summary = "Update products discount by id",
+            description = "Update products discount by id"
     )
     @PostMapping(value = "/discount", consumes = "application/json", produces = "application/json")
     @Admin
-    public ResponseEntity<ProductResponse> setDiscount(@RequestBody DiscountRequest discountRequest) {
+    public ResponseEntity<Void> setDiscounts(@RequestBody DiscountRequest discountRequest) {
         log.info("setDiscount > discountRequest: [{}]", discountRequest);
-        return ResponseEntity.ok(productAdapter.setDiscount(discountRequest));
+        productAdapter.setDiscount(discountRequest);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(

@@ -1,11 +1,10 @@
 package hu.webshop.engine.webshopbe.infrastructure.model.request;
 
-import java.util.UUID;
+import java.util.List;
 
-import jakarta.validation.constraints.NotNull;
+import hu.webshop.engine.webshopbe.domain.product.value.Discount;
 
 public record DiscountRequest(
-        @NotNull UUID id,
-        @NotNull Double discount
+        List<Discount> discounts
 ) {
 }

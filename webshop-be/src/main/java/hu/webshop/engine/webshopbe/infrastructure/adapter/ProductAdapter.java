@@ -66,9 +66,9 @@ public class ProductAdapter {
         return productMapper.toResponse(productService.update(uuid, productMapper.fromRequest(productRequest), productRequest.subCategoryId(), productRequest.brand(), productRequest.images()));
     }
 
-    public ProductResponse setDiscount(DiscountRequest discountRequest) {
+    public void setDiscount(DiscountRequest discountRequest) {
         log.info("setDiscount > discountRequest: [{}]", discountRequest);
-        return productMapper.toResponse(productService.setDiscount(productMapper.fromRequest(discountRequest)));
+        productService.setDiscounts(discountRequest.discounts());
     }
 
     public List<BrandResponse> getBrands() {
