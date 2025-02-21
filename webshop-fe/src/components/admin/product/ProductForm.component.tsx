@@ -22,7 +22,7 @@ export const FormSchema = z.object({
     type: z.string().min(1, "Type is required"),
     count: z.number().int().min(1, "Count must be a positive integer"),
     price: z.number().min(0, "Price must be a non-negative number"),
-    discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),
+    discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100"),
     images: z
         .array(z.instanceof(File))
         .min(1, "At least one image is required")
@@ -90,7 +90,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     }, [productId, form, getById, toast]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        if(productId) {
+        if (productId) {
             update({
                 id: productId,
                 brand: data.brand,

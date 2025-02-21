@@ -18,7 +18,6 @@ const ItemNumberSearch: React.FC<ItemNumberSearchProps> = ({inputRef, setIsInput
         <Input
             ref={inputRef}
             placeholder="Search for Item No..."
-            className="max-w-sm mr-2"
             value={filters.itemNumber}
             onChange={handleChange}
             onFocus={() => setIsInputFocused(true)}

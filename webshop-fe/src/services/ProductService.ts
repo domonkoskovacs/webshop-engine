@@ -1,4 +1,5 @@
 import {
+    Discount,
     ProductServiceApi,
     ProductServiceApiCreateRequest,
     ProductServiceApiExportRequest,
@@ -58,9 +59,9 @@ class ProductService {
     /**
      * Delete a product
      */
-    async delete(id: string) {
+    async delete(ids: string[]) {
         return handleApiCall(() =>
-            this.productApi._delete({id})
+            this.productApi._delete({deleteProductRequest: {ids}})
                 .then(res => res?.data)
         );
     }
@@ -78,9 +79,9 @@ class ProductService {
     /**
      * Set discount on a product
      */
-    async discount(id: string, discount: number) {
+    async setDiscounts(discounts: Discount[]) {
         return handleApiCall(() =>
-            this.productApi.setDiscount({discountRequest: {id, discount}})
+            this.productApi.setDiscounts({discountRequest: {discounts}})
                 .then(res => res?.data)
         );
     }

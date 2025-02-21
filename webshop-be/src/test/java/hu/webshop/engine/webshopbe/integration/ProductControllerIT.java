@@ -33,6 +33,7 @@ import hu.webshop.engine.webshopbe.domain.product.value.Discount;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
 import lombok.RequiredArgsConstructor;
@@ -157,8 +158,11 @@ class ProductControllerIT extends IntegrationTest {
     @DisplayName("product can be deleted")
     @DataSet("adminAndProducts.yml")
     void productCanBeDeleted() throws Exception {
-        //Given //When
-        ResultActions resultActions = performDelete(BASE_URL + "/" + PRODUCT_ID, Role.ROLE_ADMIN);
+        //Given
+        DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
+
+        //When
+        ResultActions resultActions = performDelete(BASE_URL, Role.ROLE_ADMIN, deleteProductRequest);
         transaction();
 
         //Then
@@ -172,7 +176,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeUpdated() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("newBrand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null,"000");
+                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_ADMIN));
@@ -190,6 +194,7 @@ class ProductControllerIT extends IntegrationTest {
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/discount", request, Role.ROLE_ADMIN);
+        transaction();
 
         //Then
         awaitFor(() -> {
@@ -209,14 +214,15 @@ class ProductControllerIT extends IntegrationTest {
     void getEndpointsArePublic() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null,"000");
+                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
         DiscountRequest discountRequest = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
+        DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
         //When //Then
         performGet(BASE_URL).andExpect(status().isOk());
         performGet(BASE_URL + "/" + PRODUCT_ID).andExpect(status().isOk());
         mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request)).andExpect(status().isForbidden());
-        performDelete(BASE_URL + "/" + PRODUCT_ID).andExpect(status().isForbidden());
+        performDelete(BASE_URL, deleteProductRequest).andExpect(status().isForbidden());
         mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request)).andExpect(status().isForbidden());
         performPost(BASE_URL + "/discount", discountRequest).andExpect(status().isForbidden());
     }
@@ -247,12 +253,13 @@ class ProductControllerIT extends IntegrationTest {
         ProductRequest request = new ProductRequest("brand", "name", "des",
                 SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
         DiscountRequest discountRequest = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
+        DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
         //When //Then
         performGet(BASE_URL, Role.ROLE_USER).andExpect(status().isOk());
         performGet(BASE_URL + "/" + PRODUCT_ID, Role.ROLE_USER).andExpect(status().isOk());
         mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request, Role.ROLE_USER)).andExpect(status().isForbidden());
-        performDelete(BASE_URL + "/" + PRODUCT_ID, Role.ROLE_USER).andExpect(status().isForbidden());
+        performDelete(BASE_URL, Role.ROLE_USER, deleteProductRequest).andExpect(status().isForbidden());
         mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_USER)).andExpect(status().isForbidden());
         performPost(BASE_URL + "/discount", discountRequest, Role.ROLE_USER).andExpect(status().isForbidden());
     }

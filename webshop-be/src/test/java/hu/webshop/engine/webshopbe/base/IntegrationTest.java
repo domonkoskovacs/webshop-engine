@@ -220,7 +220,15 @@ public abstract class IntegrationTest {
         return mockMvc.perform(delete(url).header(AUTHORIZATION, "Bearer " + getToken(role)));
     }
 
+    protected ResultActions performDelete(String url, Role role, Object body) throws Exception {
+        return mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON).header(AUTHORIZATION, "Bearer " + getToken(role)).content(objectMapper.writeValueAsString(body)));
+    }
+
     protected ResultActions performDelete(String url) throws Exception {
         return mockMvc.perform(delete(url));
+    }
+
+    protected ResultActions performDelete(String url, Object body) throws Exception {
+        return mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(body)));
     }
 }

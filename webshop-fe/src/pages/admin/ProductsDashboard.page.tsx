@@ -16,14 +16,40 @@ import {DataTable} from "../../components/ui/DataTable";
 import ItemNumberSearch from "../../components/admin/product/ItemNumberSearch.component";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import ProductForm from "../../components/admin/product/ProductForm.component";
+import {Checkbox} from "../../components/ui/Checkbox";
+import DiscountForm from "../../components/admin/product/DiscountForm.component";
 
 const ProductsDashboard: React.FC = () => {
-    const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProduct, exportProducts} = useProduct()
+    const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProducts, exportProducts} = useProduct()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isNewOpen, setIsNewOpen] = useState(false);
+    const [isProductFormOpen, setIsProductFormOpen] = useState(false);
+    const [isDiscountFormOpen, setIsDiscountFormOpen] = useState(false);
     const [id, setId] = useState<string | undefined>(undefined);
+    const [ids, setIds] = useState<string[]>([]);
 
     const columns: ColumnDef<ProductResponse>[] = [
+        {
+            id: "select",
+            header: ({table}) => (
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({row}) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
         {
             accessorKey: "itemNumber",
             header: "Item No",
@@ -81,8 +107,10 @@ const ProductsDashboard: React.FC = () => {
         {
             id: "actions",
             header: () => <div className="text-right">Actions</div>,
-            cell: ({row}) => {
+            cell: ({table, row}) => {
                 const product = row.original
+                const selectedRowCount = table.getFilteredSelectedRowModel().rows.length
+                const selectedIds = table.getFilteredSelectedRowModel().rows.map(row => row.original.id ?? '');
 
                 return (
                     <div className="text-right">
@@ -94,14 +122,24 @@ const ProductsDashboard: React.FC = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem>View product</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {
-                                    setIsNewOpen(true);
+                                {selectedRowCount < 2 && <DropdownMenuItem>View product</DropdownMenuItem>}
+                                {selectedRowCount < 2 && <DropdownMenuItem onClick={() => {
+                                    setIsProductFormOpen(true);
                                     setId(product.id);
-                                }}>Edit product</DropdownMenuItem>
-                                <DropdownMenuItem>Set discount</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => deleteProduct(product.id ?? '')}>Delete
-                                    product</DropdownMenuItem>
+                                }}>Edit product</DropdownMenuItem>}
+                                <DropdownMenuItem onClick={() => {
+                                    setIsDiscountFormOpen(true);
+                                    if(selectedRowCount>1) {
+                                        setIds(selectedIds)
+                                    } else {
+                                        setIds([product.id ?? ''])
+                                    }
+                                }}>
+                                    {selectedRowCount > 1 ? "Set discount for selected" : "Set discount"}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => deleteProducts(selectedIds)}>
+                                    {selectedRowCount > 1 ? "Delete selected products" : "Delete product"}
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -126,6 +164,14 @@ const ProductsDashboard: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-center">
             <div className="my-2 flex w-full justify-between">
+                <Sheet open={isDiscountFormOpen} onOpenChange={setIsDiscountFormOpen}>
+                    <SheetTrigger asChild>
+
+                    </SheetTrigger>
+                    <SheetContent>
+                        <DiscountForm setIsOpen={setIsDiscountFormOpen} productIds={ids}/>
+                    </SheetContent>
+                </Sheet>
                 <div className="flex gap-2 rounded-md border">
                     <Button variant="ghost">
                         <Import className="h-4 w-4 mr-2"/> Import
@@ -135,15 +181,15 @@ const ProductsDashboard: React.FC = () => {
                     </Button>
                 </div>
                 <div className="flex gap-2">
-                    <Sheet open={isNewOpen} onOpenChange={setIsNewOpen}>
+                    <Sheet open={isProductFormOpen} onOpenChange={setIsProductFormOpen}>
                         <SheetTrigger asChild>
                             <Button onClick={() => {
-                                setIsNewOpen(true);
+                                setIsProductFormOpen(true);
                                 setId(undefined)
                             }}>New</Button>
                         </SheetTrigger>
                         <SheetContent>
-                            <ProductForm setIsOpen={setIsNewOpen} productId={id}/>
+                            <ProductForm setIsOpen={setIsProductFormOpen} productId={id}/>
                         </SheetContent>
                     </Sheet>
                     <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>

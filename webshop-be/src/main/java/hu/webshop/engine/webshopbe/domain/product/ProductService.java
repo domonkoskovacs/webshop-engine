@@ -10,8 +10,10 @@ import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,9 +74,9 @@ public class ProductService {
         return new ProductPage<>(productsPage.getContent(), pageRequest, productsPage.getTotalElements(), minPrice, maxPrice, minDiscount, maxDiscount);
     }
 
-    public void delete(UUID uuid) {
-        log.info("delete > uuid: [{}]", uuid);
-        productRepository.deleteById(uuid);
+    public void delete(List<UUID> ids) {
+        log.info("delete > ids: [{}]", ids);
+        productRepository.deleteAllById(ids);
     }
 
     public Product create(Product product, UUID subCategoryId, String brandName, List<MultipartFile> images) {
@@ -119,11 +121,13 @@ public class ProductService {
 
     public void setDiscounts(List<Discount> discounts) {
         log.info("setDiscounts > discounts: [{}]", discounts);
-        discounts.forEach(discount -> {
-            Product product = getById(discount.id());
-            product.setDiscountPercentage(discount.discount());
-            productRepository.save(product);
-        });
+        Map<UUID, Discount> discountMap = discounts.stream()
+                .collect(Collectors.toMap(Discount::id, discount -> discount));
+
+        List<Product> products = getAll(discounts.stream().map(Discount::id).toList());
+        products.forEach(product -> product.setDiscountPercentage(discountMap.get(product.getId()).discount()));
+
+        productRepository.saveAll(products);
     }
 
     public void updateStock(UUID id, Integer difference, StockChange stockChange) {

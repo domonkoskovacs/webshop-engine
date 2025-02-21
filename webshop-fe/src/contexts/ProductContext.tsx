@@ -1,6 +1,7 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {
     BrandResponse,
+    Discount,
     ProductResponse,
     ProductServiceApiCreateRequest,
     ProductServiceApiGetAllRequest,
@@ -22,13 +23,14 @@ interface ProductContextType {
     totalPages: number;
     totalElements: number;
     fetchProducts: () => void;
-    deleteProduct: (id: string) => void;
+    deleteProducts: (id: string[]) => void;
     priceRange: number[];
     discountRange: number[];
     exportProducts: () => void;
     create: (productRequest: ProductServiceApiCreateRequest) => void;
     update: (productRequest: ProductServiceApiUpdateRequest) => void;
     getById: (id: string) => Promise<ProductResponse>;
+    setDiscounts: (discounts: Discount[]) => void;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -81,18 +83,20 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     }, []);
 
-    const deleteProduct = async (id: string) => {
+    const deleteProducts = async (ids: string[]) => {
         try {
-            await productService.delete(id);
-            setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
+            await productService.delete(ids);
+            setProducts((prevProducts) =>
+                prevProducts.filter(product => !ids.includes(product.id ?? ''))
+            );
             toast({
-                description: "Product successfully deleted!",
+                description: "Product(s) successfully deleted!",
             });
         } catch (error) {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "Can't delete product. Please try again.",
+                description: "Can't delete product(s). Please try again.",
             });
         }
     }
@@ -217,6 +221,29 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     }
 
+    const setDiscounts = async (discounts: Discount[]) => {
+        try {
+            await productService.setDiscounts(discounts);
+            setProducts((prevProducts) =>
+                prevProducts.map(product => {
+                    const discount = discounts.find(d => d.id === product.id);
+                    return discount
+                        ? {...product, discountPercentage: discount.discount}
+                        : product;
+                })
+            );
+            toast({
+                description: "Discount(s) updated successfully!",
+            });
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't update discount(s). Please try again.",
+            });
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             products,
@@ -231,13 +258,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             totalPages,
             totalElements,
             fetchProducts,
-            deleteProduct,
+            deleteProducts,
             priceRange,
             discountRange,
             exportProducts,
             create,
             update,
-            getById
+            getById,
+            setDiscounts
         }}>
             {children}
         </ProductContext.Provider>

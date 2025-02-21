@@ -18,16 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.ProductAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.BrandResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
-import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -108,14 +109,14 @@ public class ProductController {
 
     @Operation(
             tags = {"Product service"},
-            summary = "Delete a products by id",
-            description = "Delete a products by id"
+            summary = "Delete products with id list",
+            description = "Delete products with id list"
     )
-    @DeleteMapping("/{id}")
+    @DeleteMapping(consumes = "application/json")
     @Admin
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        log.info("delete > id: [{}]", id);
-        productAdapter.delete(id);
+    public ResponseEntity<Void> delete(@RequestBody DeleteProductRequest deleteProductRequest) {
+        log.info("delete > deleteProductRequest: [{}]", deleteProductRequest);
+        productAdapter.delete(deleteProductRequest);
         return ResponseEntity.ok().build();
     }
 

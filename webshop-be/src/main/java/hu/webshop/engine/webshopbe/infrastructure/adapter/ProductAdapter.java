@@ -17,6 +17,7 @@ import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.BrandMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.ProductMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.BrandResponse;
@@ -56,9 +57,9 @@ public class ProductAdapter {
         return productMapper.toResponse(productService.getById(uuid));
     }
 
-    public void delete(UUID uuid) {
-        log.info("delete > uuid: [{}]", uuid);
-        productService.delete(uuid);
+    public void delete(DeleteProductRequest deleteProductRequest) {
+        log.info("delete > deleteProductRequest: [{}]", deleteProductRequest);
+        productService.delete(deleteProductRequest.ids());
     }
 
     public ProductResponse update(UUID uuid, ProductRequest productRequest) {

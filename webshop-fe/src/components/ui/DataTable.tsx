@@ -6,6 +6,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "sr
 import React from "react";
 import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger} from "./DropdownMenu";
 import {Button} from "./Button";
+import {RowSelectionState} from "@tanstack/table-core/src/features/RowSelection";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -16,24 +17,27 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
-                                             customFilter,
+                                             customFilter
                                          }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
 
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
         state: {
             columnVisibility,
+            rowSelection,
         },
     })
 
     return (
         <div>
-            <div className="flex items-center my-2">
+            <div className="flex items-center my-2 gap-4">
                 {customFilter}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -64,7 +68,7 @@ export function DataTable<TData, TValue>({
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="rounded-md border my-2">
+            <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -107,6 +111,10 @@ export function DataTable<TData, TValue>({
                         )}
                     </TableBody>
                 </Table>
+            </div>
+            <div className="flex-1 text-sm text-muted-foreground">
+                {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
         </div>
     )
