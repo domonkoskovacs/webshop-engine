@@ -31,6 +31,7 @@ interface ProductContextType {
     update: (productRequest: ProductServiceApiUpdateRequest) => void;
     getById: (id: string) => Promise<ProductResponse>;
     setDiscounts: (discounts: Discount[]) => void;
+    importProducts: (csv: string) => void;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -244,6 +245,16 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     }
 
+    const importProducts = async (csv: string) => {
+        try {
+            const response = await productService.import(csv);
+            await fetchProducts();
+        } catch (error) {
+            console.log(error)
+            throw error;
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             products,
@@ -265,7 +276,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             create,
             update,
             getById,
-            setDiscounts
+            setDiscounts,
+            importProducts
         }}>
             {children}
         </ProductContext.Provider>
