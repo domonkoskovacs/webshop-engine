@@ -12,6 +12,7 @@ public class ProductCsv {
     private @NotNull String type;
     private @NotNull Integer count;
     private @NotNull Double price;
-    private Double discountPercentage;
+    private @NotNull Double discountPercentage;
     private String imageUrls;
+    private @NotNull String itemNumber;
 }
