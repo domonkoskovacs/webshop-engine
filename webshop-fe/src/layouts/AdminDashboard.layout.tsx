@@ -30,7 +30,7 @@ const AdminDashboardLayout: React.FC<LayoutProps> = ({children}) => {
                     </div>
                 </header>
                 <Separator/>
-                <main className="flex-1 px-4 bg-background">
+                <main className="flex-1 px-4">
                     {children}
                 </main>
             </SidebarInset>

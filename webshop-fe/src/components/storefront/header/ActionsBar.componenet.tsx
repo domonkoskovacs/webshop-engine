@@ -12,14 +12,17 @@ const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex justify-between items-center py-2 px-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center py-2 px-6 gap-4 sm:gap-2">
+            {/* Gender Selector */}
             <GenderSelector gender={gender} setGender={setGender}/>
 
+            {/* Logo */}
             <Link to="/" className="text-xl font-semibold">
                 <span className="cursor-pointer">Webshop Name</span>
             </Link>
 
-            <div className="flex space-x-3">
+            {/* Icons Section */}
+            <div className="flex space-x-4 sm:space-x-2">
                 <AccountHoverIcon/>
                 <Button variant="ghost" size="icon" onClick={() => navigate("/saved")}>
                     <Heart/>
