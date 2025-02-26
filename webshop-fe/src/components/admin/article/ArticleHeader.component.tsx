@@ -4,7 +4,6 @@ import {Button} from "../../ui/Button";
 import React, {useState} from "react";
 import {Sheet, SheetContent, SheetTrigger} from "../../ui/Sheet";
 import ArticleForm from "./ArticleForm.component";
-import {useArticle} from "../../../hooks/UseArticle";
 
 interface ArticleHeaderProps {
     isAutoplay: boolean;
@@ -13,14 +12,10 @@ interface ArticleHeaderProps {
 
 const ArticleHeader: React.FC<ArticleHeaderProps> = ({isAutoplay, setIsAutoplay}) => {
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const {deleteArticle} = useArticle()
 
     return (
         <div className="flex items-center justify-between py-2 w-full">
             <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-1">
-                    <Button variant={"destructive"} onClick={() => deleteArticle()}>Delete Slide</Button>
-                </div>
                 <div className="flex items-center space-x-2">
                     <Switch id="autoplay"
                             checked={isAutoplay}

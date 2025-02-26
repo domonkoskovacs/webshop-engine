@@ -2,16 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {Card, CardContent} from "src/components/ui/Card";
 import {Button} from "../../ui/Button";
+import {useArticle} from "../../../hooks/UseArticle";
+import {Trash} from "lucide-react";
 
 interface ArticleCardProps {
+    id: string;
     image: string;
     text: string;
     buttonText: string;
     buttonLink: string;
+    variant?: "admin" | "storefront";
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({image, text, buttonText, buttonLink}) => {
-
+const ArticleCard: React.FC<ArticleCardProps> = ({image, text, buttonText, buttonLink, variant, id}) => {
+    const {deleteArticle} = useArticle()
     return (
         <Card className="h-full">
             <CardContent
@@ -28,6 +32,14 @@ const ArticleCard: React.FC<ArticleCardProps> = ({image, text, buttonText, butto
                             </Link>
                         </Button>
                     </div>
+                    {variant === "admin" && (
+                        <Button variant="destructive" size="sm"
+                            className="absolute top-2 right-2"
+                            onClick={() => deleteArticle(id)}
+                        >
+                            <Trash className="p-1"/>
+                        </Button>
+                    )}
                 </div>
             </CardContent>
         </Card>

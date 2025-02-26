@@ -6,15 +6,13 @@ import {articleService} from "../services/ArticleService";
 interface ArticleContextType {
     articles: ArticleResponse[];
     create: (name: string, text: string, buttonText: string, buttonLink: string, image: File) => Promise<void>;
-    deleteArticle: () => Promise<void>;
-    setCurrentId: (id: string) => void;
+    deleteArticle: (id: string) => Promise<void>;
 }
 
 export const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
 
 export const ArticleProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [articles, setArticles] = useState<ArticleResponse[]>([]);
-    const [currentId, setCurrentId] = useState<string>('');
 
     useEffect(() => {
         (async () => {
@@ -45,10 +43,13 @@ export const ArticleProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     };
 
-    const deleteArticle = async () => {
+    const deleteArticle = async (id: string) => {
         try {
-            await articleService.delete(currentId);
-            setArticles((prev) => prev.filter((Article) => Article.id !== currentId));
+            await articleService.delete(id);
+            setArticles((prev) => prev.filter((Article) => Article.id !== id));
+            toast({
+                description: "Slide deleted successfully.",
+            })
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -60,7 +61,7 @@ export const ArticleProvider: React.FC<{ children: React.ReactNode }> = ({childr
 
     return (
         <ArticleContext.Provider
-            value={{articles, create, deleteArticle, setCurrentId}}>
+            value={{articles, create, deleteArticle}}>
             {children}
         </ArticleContext.Provider>
     );

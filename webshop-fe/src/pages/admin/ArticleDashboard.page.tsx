@@ -10,8 +10,8 @@ const ArticleDashboard: React.FC = () => {
         <div className="flex flex-col w-full h-full justify-start items-center">
             <ArticleHeader isAutoplay={isAutoplay} setIsAutoplay={setAutoplay}/>
             <Separator/>
-            <div className="m-auto w-[120vh]">
-                <ArticleSlider autoplayEnabled={isAutoplay}/>
+            <div className="w-full max-w-[70vw] sm:max-w-[90vw] md:max-w-[65vw] lg:max-w-[70vw] mx-auto ">
+                <ArticleSlider autoplayEnabled={isAutoplay} variant="admin"/>
             </div>
         </div>
     );
