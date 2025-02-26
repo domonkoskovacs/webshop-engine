@@ -1,4 +1,4 @@
-import {ChartLine, LogOut, Mail, Newspaper, Plus, Shirt, ShoppingBag, Store, UserCog} from "lucide-react"
+import {ChartLine, LogOut, Mail, Newspaper, Shirt, ShoppingBag, Store, UserCog} from "lucide-react"
 import {Link} from "react-router-dom";
 
 import {
@@ -10,16 +10,14 @@ import {
     SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuAction,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarSeparator,
 } from "src/components/ui/Sidebar"
 import {useAuth} from "../../hooks/UseAuth";
 import {Avatar, AvatarFallback} from "../ui/Avatar";
-import React, {useState} from "react";
+import React from "react";
 import {ScrollArea} from "../ui/ScrollArea";
-import CreateCategoryDialog from "./category/CreateCategoryDialog.component";
 
 // Menu items.
 const storefront = [
@@ -36,7 +34,6 @@ const salesOperations = [
 
 export function AppSidebar() {
     const {logout} = useAuth()
-    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <Sidebar collapsible="icon" variant="floating">
@@ -88,10 +85,6 @@ export function AppSidebar() {
                                             <span>{storefront[1].label}</span>
                                         </Link>
                                     </SidebarMenuButton>
-                                    <SidebarMenuAction>
-                                        <Plus onClick={() => setIsOpen(true)}/>
-                                        <CreateCategoryDialog isOpen={isOpen} setIsOpen={setIsOpen} />
-                                    </SidebarMenuAction>
                                 </SidebarMenuItem>
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild>

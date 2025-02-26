@@ -51,7 +51,7 @@ const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             </div>
             <div className="flex-1 overflow-y-auto scrollbar">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="createProductForm">
+                    <form onSubmit={form.handleSubmit(onSubmit)} id="createArticleForm">
                         <div className="flex flex-col p-6 gap-4">
                             <FormField
                                 control={form.control}
@@ -139,7 +139,7 @@ const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                 <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
                     Back
                 </Button>
-                <Button type="submit" className="w-full" form="createProductForm">
+                <Button type="submit" className="w-full" form="createArticleForm">
                     Add
                 </Button>
             </div>

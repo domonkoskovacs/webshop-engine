@@ -16,10 +16,10 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../
 import {useCategory} from "../../../hooks/UseCategory";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/DropdownMenu";
 import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react";
-import CreateSubCategoryDialog from "./CreateSubCategoryDialog.component";
-import CreateCategoryDialog from "./CreateCategoryDialog.component";
 import UpdateCategoryForm from "./UpdateCategoryForm.component";
 import SubCategoryRows from "./SubCategoryTable.component";
+import {Sheet, SheetContent, SheetTrigger} from "../../ui/Sheet";
+import CategoryForm from "./CategoryForm.component";
 
 const CategoryTable: React.FC = () => {
     const {categories, deleteCategory} = useCategory();
@@ -81,14 +81,14 @@ const CategoryTable: React.FC = () => {
 
                 return (
                     <div className="text-right">
-                        <Button variant="ghost" className="h-8 w-8 p-0"
+                        {category.subCategories && category.subCategories.length > 0 && <Button variant="ghost" className="h-8 w-8 p-0"
                                 onClick={() => toggleOpenRow(category.id ?? '')}>
                             <ChevronDown
                                 className={`h-4 w-4 transition-transform duration-200 ${
                                     openRows[category.id ?? ''] ? "rotate-180" : "rotate-0"
                                 }`}
                             />
-                        </Button>
+                        </Button>}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -140,9 +140,13 @@ const CategoryTable: React.FC = () => {
 
     return (
         <div className="w-full">
-            <CreateSubCategoryDialog id={selectedCategoryId ?? ''} isOpen={isSubCategoryDialogOpen}
-                                     setIsOpen={setIsSubCategoryDialogOpen}/>
-            <CreateCategoryDialog isOpen={isCategoryDialogOpen} setIsOpen={setIsCategoryDialogOpen}/>
+            <Sheet open={isSubCategoryDialogOpen} onOpenChange={setIsSubCategoryDialogOpen}>
+                <SheetTrigger asChild>
+                </SheetTrigger>
+                <SheetContent>
+                    <CategoryForm setIsOpen={setIsSubCategoryDialogOpen} id={selectedCategoryId ?? ''}/>
+                </SheetContent>
+            </Sheet>
 
             <div className="flex items-center py-4">
                 <Input
@@ -152,7 +156,14 @@ const CategoryTable: React.FC = () => {
                         table.getColumn("name")?.setFilterValue(event.target.value)
                     }
                 />
-                <Button className="ml-4" onClick={() => setIsCategoryDialogOpen(true)}>New</Button>
+                <Sheet open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+                    <SheetTrigger asChild>
+                        <Button className="ml-4">New</Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                        <CategoryForm setIsOpen={setIsCategoryDialogOpen}/>
+                    </SheetContent>
+                </Sheet>
             </div>
             <div className="rounded-md border my-2">
                 <Table>
