@@ -28,7 +28,7 @@ export const FormSchema = z.object({
         .min(1, "At least one image is required")
         .max(5, "You can upload up to 5 images")
         .refine(
-            (files) => files.every((file) => file.type === "image/png" || file.type === "image/jpeg"),
+            (files) => files.every((file) => file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg"),
             "Only PNG and JPEG images are allowed"
         ),
     itemNumber: z.string().min(1, "Item Number is required"),

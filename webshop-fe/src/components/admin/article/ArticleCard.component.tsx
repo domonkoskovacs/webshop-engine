@@ -15,7 +15,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({image, text, buttonText, butto
     return (
         <Card className="h-full">
             <CardContent
-                className="h-full bg-cover bg-center flex flex-col justify-end text-white p-4 sm:p-6 md:p-8"
+                className="h-full bg-cover bg-center flex flex-col justify-end p-4 sm:p-6 md:p-8"
                 style={{backgroundImage: `url(${image})`}}>
                 <div className="flex flex-col items-center justify-between">
                     <h2 className="text-center text-lg sm:text-xl md:text-2xl font-bold">

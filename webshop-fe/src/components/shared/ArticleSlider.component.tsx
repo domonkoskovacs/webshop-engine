@@ -7,14 +7,19 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Button} from "../ui/Button";
 import ArticleCard from "../../components/admin/article/ArticleCard.component";
+import {useArticle} from "../../hooks/UseArticle";
 
-const ArticleSlider: React.FC = () => {
+interface ArticleSliderProps {
+    autoplayEnabled?: boolean;
+}
+
+const ArticleSlider: React.FC<ArticleSliderProps> = ({ autoplayEnabled = true }) => {
+    const {articles, setCurrentId} = useArticle()
 
     return (
         <div className="swiper swiper-wrapper">
             <Swiper
                 slidesPerView={1}
-                spaceBetween={30}
                 speed={1000}
                 loop={true}
                 pagination={{clickable: true, el: '.custom-swiper-pagination'}}
@@ -23,33 +28,28 @@ const ArticleSlider: React.FC = () => {
                     nextEl: '.custom-swiper-button-next',
                     prevEl: '.custom-swiper-button-prev',
                 }}
-                autoplay={{
+                autoplay={autoplayEnabled ? {
                     delay: 2500,
                     disableOnInteraction: false,
-                }}
+                } : false}
                 modules={[Pagination, Navigation, A11y, Autoplay]}
-                className="h-[60vh]"
+                className="h-[80vh]"
+                onSlideChange={(slide: any) => {} }
             >
-                <SwiperSlide className="swiper-slide text-center flex items-center justify-center"><ArticleCard
-                    image="/Strawberries.jpg"
-                    text="this is the text"
-                    buttonLink="/"
-                    buttonText="this is the button text"/></SwiperSlide>
-                <SwiperSlide className="swiper-slide text-center flex items-center justify-center"><ArticleCard
-                    image="/Strawberries.jpg"
-                    text="this is the text"
-                    buttonLink="/"
-                    buttonText="this is the button text"/></SwiperSlide>
-                <SwiperSlide className="swiper-slide text-center flex items-center justify-center"><ArticleCard
-                    image="/Strawberries.jpg"
-                    text="this is the text"
-                    buttonLink="/"
-                    buttonText="this is the button text"/></SwiperSlide>
-                <SwiperSlide className="swiper-slide text-center flex items-center justify-center"><ArticleCard
-                    image="/Strawberries.jpg"
-                    text="this is the text"
-                    buttonLink="/"
-                    buttonText="this is the button text"/></SwiperSlide>
+                {articles.map((article) => (
+                    <SwiperSlide
+                        key={article.id}
+                        className="swiper-slide text-center flex items-center justify-center"
+                        onChange={() => setCurrentId(article.id ?? '')}
+                    >
+                        <ArticleCard
+                            image={article.imageUrl || "/default.jpg"}
+                            text={article.text ?? ''}
+                            buttonLink={article.buttonLink || "#"}
+                            buttonText={article.buttonText || "Read More"}
+                        />
+                    </SwiperSlide>
+                ))}
             </Swiper>
             <Button variant="outline"
                     className="custom-swiper-button-prev absolute left-0 top-1/2 transform -translate-y-1/2 p-3 z-10">

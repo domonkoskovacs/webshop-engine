@@ -7,6 +7,7 @@ import {Toaster} from "./components/ui/Toaster";
 import ScrollToTop from "./routing/ScrollToTop";
 import {CategoryProvider} from "./contexts/CategoryContext";
 import {ProductProvider} from "./contexts/ProductContext";
+import {ArticleProvider} from "./contexts/ArticleContext";
 
 function App() {
     return (
@@ -16,8 +17,10 @@ function App() {
                 <AuthProvider>
                     <CategoryProvider>
                         <ProductProvider>
-                            <AppRouter/>
-                            <Toaster/>
+                            <ArticleProvider>
+                                <AppRouter/>
+                                <Toaster/>
+                            </ArticleProvider>
                         </ProductProvider>
                     </CategoryProvider>
                 </AuthProvider>
