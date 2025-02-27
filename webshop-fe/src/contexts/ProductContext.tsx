@@ -9,6 +9,8 @@ import {
 } from "../shared/api";
 import {productService} from "../services/ProductService";
 import {toast} from "../hooks/UseToast";
+import {util} from "zod";
+import assertNever = util.assertNever;
 
 interface ProductContextType {
     products: ProductResponse[];
@@ -32,6 +34,7 @@ interface ProductContextType {
     getById: (id: string) => Promise<ProductResponse>;
     setDiscounts: (discounts: Discount[]) => void;
     importProducts: (csv: string) => void;
+    getProductsByCategory: (category: string) => Promise<ProductResponse[]>;
 }
 
 export const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -255,6 +258,27 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         }
     }
 
+    const getProductsByCategory = async (category: string): Promise<ProductResponse[]> => {
+        try {
+            const requestParams: ProductServiceApiGetAllRequest = {
+                categories: [category],
+                page: 1,
+                size: 4,
+                showOutOfStock: false,
+                sortType: "DESC_PRICE"
+            };
+            const products = await productService.getAll(requestParams);
+            return products.content ?? [];
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Can't get products. Please try again.",
+            });
+            return []
+        }
+    }
+
     return (
         <ProductContext.Provider value={{
             products,
@@ -277,7 +301,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             update,
             getById,
             setDiscounts,
-            importProducts
+            importProducts,
+            getProductsByCategory
         }}>
             {children}
         </ProductContext.Provider>

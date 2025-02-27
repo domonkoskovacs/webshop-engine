@@ -22,7 +22,7 @@ const StorefrontLayout: React.FC<LayoutProps> = ({children}) => {
 
             <Separator/>
 
-            <main className="flex-1 h-full">
+            <main className="flex-1 h-full flex items-center justify-center">
                 {children}
             </main>
 
