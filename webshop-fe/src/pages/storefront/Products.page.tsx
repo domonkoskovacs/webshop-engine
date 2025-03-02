@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import {Skeleton} from "../../components/ui/Skeleton";
-import {useProduct} from "../../hooks/UseProductPagination";
-import DashboardBreadcrumb from "../../components/admin/DashboardBreadcrumb.component";
+import {useProduct} from "../../hooks/UseProduct";
+import DashboardBreadcrumb from "../../components/shared/PathBreadcrumb.component";
 import {Button} from "../../components/ui/Button";
 import {Separator} from "../../components/ui/Separator";
 import {Badge} from "../../components/ui/Badge";
 import {useLocation} from "react-router-dom";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
+import {ProductInfiniteScrollProvider} from "../../contexts/ProductInfiniteScrollContext";
+import ProductList from "../../components/storefront/product/ProductList.component";
 
 const Products: React.FC = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -18,19 +19,6 @@ const Products: React.FC = () => {
     const gender = pathSegments[1] || null;
     const category = pathSegments[2] || null;
     const subcategory = pathSegments[3] || null;
-
-    const EmptyState = () => (
-        <div className="flex flex-col space-y-3 py-20 items-center justify-center">
-            <div className="flex flex-col space-y-3">
-                <h1 className="text-center">Sorry, we have no products for <br/> the given filters!</h1>
-                <Skeleton className="h-[125px] w-[250px] rounded-xl"/>
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]"/>
-                    <Skeleton className="h-4 w-[200px]"/>
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <div className="flex flex-col h-full w-full justify-start">
@@ -54,10 +42,9 @@ const Products: React.FC = () => {
                 </Sheet>
             </header>
             <Separator/>
-            {products.length < 1 ? (<EmptyState/>) :
-                <main>
-                    <div className="h-80"/>
-                </main>}
+            <ProductInfiniteScrollProvider>
+                <ProductList/>
+            </ProductInfiniteScrollProvider>
         </div>
     );
 };

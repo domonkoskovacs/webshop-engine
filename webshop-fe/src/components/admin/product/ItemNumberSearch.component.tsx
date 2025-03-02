@@ -1,6 +1,6 @@
 import React from "react";
 import {Input} from "src/components/ui/Input";
-import {useProduct} from "../../../hooks/UseProductPagination";
+import {useProduct} from "../../../hooks/UseProduct";
 
 interface ItemNumberSearchProps {
     inputRef: React.RefObject<HTMLInputElement>;

@@ -9,7 +9,7 @@ import {
 } from "../ui/Breadcrumb";
 import React from "react";
 
-const DashboardBreadcrumb: React.FC = () => {
+const PathBreadcrumb: React.FC = () => {
     const location = useLocation();
     const pathSegments = location.pathname.split("/").filter((segment) => segment);
 
@@ -40,4 +40,4 @@ const DashboardBreadcrumb: React.FC = () => {
     );
 }
 
-export default DashboardBreadcrumb;
+export default PathBreadcrumb;

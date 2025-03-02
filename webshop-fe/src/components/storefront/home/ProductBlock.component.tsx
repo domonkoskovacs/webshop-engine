@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import {Button} from "../../ui/Button";
 import HomeProductCard from "./HomeProductCard.component";
 import {Link} from "react-router-dom";
-import {useProduct} from "../../../hooks/UseProductPagination";
+import {useProduct} from "../../../hooks/UseProduct";
 import {ProductResponse} from "../../../shared/api";
 import SkeletonProductCard from "./SkeletonCard.component";
 import {useGender} from "../../../hooks/useGender";

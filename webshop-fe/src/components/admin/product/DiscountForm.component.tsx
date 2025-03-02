@@ -7,7 +7,7 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "src/components/ui/Input"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
-import {useProduct} from "../../../hooks/UseProductPagination";
+import {useProduct} from "../../../hooks/UseProduct";
 
 export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),

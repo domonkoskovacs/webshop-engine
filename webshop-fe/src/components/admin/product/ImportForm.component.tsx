@@ -7,7 +7,7 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "src/components/ui/Input"
 import {unexpectedErrorToast, useToast} from "../../../hooks/UseToast";
 import React from "react";
-import {useProduct} from "../../../hooks/UseProductPagination";
+import {useProduct} from "../../../hooks/UseProduct";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 

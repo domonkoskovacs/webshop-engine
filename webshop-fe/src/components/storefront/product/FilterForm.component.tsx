@@ -1,6 +1,6 @@
 import {Button} from "src/components/ui/Button"
 import React from "react";
-import {useProduct} from "../../../hooks/UseProductPagination";
+import {useProduct} from "../../../hooks/UseProduct";
 import {ComboBoxMultipleValue} from "../../ui/ComboBoxMultipleValue";
 import {Switch} from "../../ui/Switch";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";

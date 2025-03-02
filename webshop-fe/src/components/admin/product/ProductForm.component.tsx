@@ -8,7 +8,7 @@ import {Input} from "src/components/ui/Input"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect, useState} from "react";
 import {FormComboBox} from "../../ui/FormComboBox";
-import {useProduct} from "../../../hooks/UseProductPagination";
+import {useProduct} from "../../../hooks/UseProduct";
 import {Textarea} from "../../ui/Textarea";
 import {useCategory} from "../../../hooks/UseCategory";
 

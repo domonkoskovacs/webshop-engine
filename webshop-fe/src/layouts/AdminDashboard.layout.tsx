@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import {SidebarInset, SidebarProvider, SidebarTrigger} from '../components/ui/Sidebar';
 import {AppSidebar} from "../components/admin/Sidebar.component";
 import {Separator} from "../components/ui/Separator";
-import DashboardBreadcrumb from "../components/admin/DashboardBreadcrumb.component";
+import DashboardBreadcrumb from "../components/shared/PathBreadcrumb.component";
 import {Bell} from "lucide-react";
 import DarkModeToggle from "../components/ui/DarkModeToggle";
 

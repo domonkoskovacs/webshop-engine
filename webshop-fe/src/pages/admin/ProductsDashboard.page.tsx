@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ColumnDef} from "@tanstack/react-table";
 import {ProductResponse} from "../../shared/api";
-import {useProduct} from "../../hooks/UseProductPagination";
+import {useProduct} from "../../hooks/UseProduct";
 import {
     DropdownMenu,
     DropdownMenuContent,
