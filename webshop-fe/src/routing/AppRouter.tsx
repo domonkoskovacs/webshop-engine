@@ -42,7 +42,7 @@ const AppRouter: React.FC = () => {
             >
                 {/* Public routes */}
                 <Route path="/" element={<Home/>}/>
-                <Route path="/products" element={<Products/>}/>
+                <Route path="/products/*" element={<Products/>}/>
                 <Route path="/saved" element={<Saved/>}/>
                 <Route path="/cart" element={<Cart/>}/>
                 <Route path="/authentication" element={<Authentication/>}/>

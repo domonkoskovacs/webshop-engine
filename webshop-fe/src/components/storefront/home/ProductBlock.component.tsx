@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import {useProduct} from "../../../hooks/UseProductPagination";
 import {ProductResponse} from "../../../shared/api";
 import SkeletonProductCard from "./SkeletonCard.component";
+import {useGender} from "../../../hooks/useGender";
 
 interface ProductSwiperProps {
     category: string;
@@ -35,6 +36,7 @@ const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
     const {getProductsByCategory} = useProduct()
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState<ProductResponse[]>([]);
+    const {gender} = useGender()
 
     useEffect(() => {
         setLoading(true);
@@ -52,7 +54,7 @@ const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
             <div className="flex flex-col gap-3 sm:flex-row justify-between items-center mb-4 p-4">
                 <h2 className="text-xl font-semibold text-center">{randomMarketingText} {category}</h2>
                 <Button>
-                    <Link to={`/products?category=${encodeURIComponent(category ?? "")}`}>
+                    <Link to={`/products/${gender}/${category}`}>
                         {randomSeeAllText}
                     </Link>
                 </Button>

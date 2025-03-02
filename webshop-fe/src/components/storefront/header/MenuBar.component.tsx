@@ -14,9 +14,11 @@ import {
 } from "src/components/ui/NavigationMenu"
 import {Link} from "react-router-dom";
 import {useCategory} from "../../../hooks/UseCategory";
+import {useGender} from "../../../hooks/useGender";
 
 const MenuBar: React.FC = () => {
     const {categories} = useCategory()
+    const {gender} = useGender()
 
     return (
         <NavigationMenu className="w-full">
@@ -31,14 +33,14 @@ const MenuBar: React.FC = () => {
                                         <ListItem
                                             key={subCategory.id}
                                             title={subCategory.name}
-                                            href={`/products?category=${encodeURIComponent(category.name ?? "")}&subcategory=${encodeURIComponent(subCategory.name ?? "")}`}
+                                            href={`/products/${gender}/${category.name}/${subCategory.name}`}
                                         />
                                     ))}
                                 </ul>
                             </NavigationMenuContent>
                         </NavigationMenuItem> :
                         <NavigationMenuItem className="flex-shrink-0">
-                            <Link to={`/products?category=${encodeURIComponent(category.name ?? "")}`}>
+                            <Link to={`/products/${gender}/${category.name}`}>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                     {category.name}
                                 </NavigationMenuLink>

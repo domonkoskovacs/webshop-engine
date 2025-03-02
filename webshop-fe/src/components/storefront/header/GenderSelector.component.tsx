@@ -1,13 +1,10 @@
 import React from "react";
 import {Button} from "../../ui/Button";
-import {Gender} from "../../../shared/types";
+import {Gender} from "../../../contexts/GenderContext";
 
-interface GenderSelectorProps {
-    gender: Gender,
-    setGender: (gender: Gender) => void
-}
+const GenderSelector: React.FC = () => {
+    const [gender, setGender] = React.useState<Gender>()
 
-const GenderSelector: React.FC<GenderSelectorProps> = ({gender, setGender}) => {
     return (
         <div className="flex">
             <Button

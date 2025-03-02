@@ -8,6 +8,7 @@ import ScrollToTop from "./routing/ScrollToTop";
 import {CategoryProvider} from "./contexts/CategoryContext";
 import {ProductProvider} from "./contexts/ProductContext";
 import {ArticleProvider} from "./contexts/ArticleContext";
+import {GenderProvider} from "./contexts/GenderContext";
 
 function App() {
     return (
@@ -15,14 +16,16 @@ function App() {
             <ScrollToTop/>
             <ThemeProvider>
                 <AuthProvider>
-                    <CategoryProvider>
-                        <ProductProvider>
-                            <ArticleProvider>
-                                <AppRouter/>
-                                <Toaster/>
-                            </ArticleProvider>
-                        </ProductProvider>
-                    </CategoryProvider>
+                    <GenderProvider>
+                        <CategoryProvider>
+                            <ProductProvider>
+                                <ArticleProvider>
+                                    <AppRouter/>
+                                    <Toaster/>
+                                </ArticleProvider>
+                            </ProductProvider>
+                        </CategoryProvider>
+                    </GenderProvider>
                 </AuthProvider>
             </ThemeProvider>
         </Router>
