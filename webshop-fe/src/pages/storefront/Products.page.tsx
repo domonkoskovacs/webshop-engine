@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useProduct} from "../../hooks/UseProduct";
 import DashboardBreadcrumb from "../../components/shared/PathBreadcrumb.component";
 import {Button} from "../../components/ui/Button";
 import {Separator} from "../../components/ui/Separator";
@@ -9,10 +8,11 @@ import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
 import {ProductInfiniteScrollProvider} from "../../contexts/ProductInfiniteScrollContext";
 import ProductList from "../../components/storefront/product/ProductList.component";
+import {useProductScroll} from "../../hooks/useProductScroll";
 
 const Products: React.FC = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const {products, totalElements} = useProduct();
+    const {totalElements} = useProductScroll();
     const location = useLocation();
     const pathSegments = location.pathname.split("/").filter(Boolean);
 

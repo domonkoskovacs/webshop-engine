@@ -48,7 +48,7 @@ export function ComboBoxMultipleValue({ options, type, className, selectedValues
                 <Command>
                     <CommandInput placeholder={`Search ${type}...`} className="h-9" />
                     <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandEmpty>No {type.toLowerCase()} found.</CommandEmpty>
                         <CommandGroup>
                             {options.map((option) => (
                                 <CommandItem
