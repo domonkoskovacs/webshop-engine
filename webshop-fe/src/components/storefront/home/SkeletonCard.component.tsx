@@ -4,8 +4,8 @@ import {Skeleton} from "src/components/ui/Skeleton";
 
 const SkeletonProductCard: React.FC = () => {
     return (
-        <Card className="relative space-y-4 overflow-hidden hover:opacity-80">
-            <Skeleton className="w-full h-64 flex items-center justify-center overflow-hidden"/>
+        <Card className="w-full space-y-4 overflow-hidden hover:opacity-80">
+            <Skeleton className=" h-64 flex items-center justify-center overflow-hidden"/>
             <CardContent className="px-4 py-0">
                 <div className="flex justify-between">
                     <div>

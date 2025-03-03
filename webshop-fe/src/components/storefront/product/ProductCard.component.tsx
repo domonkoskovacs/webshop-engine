@@ -4,6 +4,7 @@ import {Card, CardContent, CardFooter} from "src/components/ui/Card";
 import {Button} from "../../ui/Button";
 import {HeartIcon, PlusIcon} from "lucide-react";
 import {ProductResponse} from "../../../shared/api";
+import {useGender} from "../../../hooks/useGender";
 
 interface ProductCardProps {
     product: ProductResponse
@@ -11,6 +12,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const finalPrice = product.discountPercentage && product.price ? product.price - (product.price * product.discountPercentage) / 100 : product.price ?? 0;
+    const {gender} = useGender()
 
     return (
         <Card className="relative space-y-4 overflow-hidden">
@@ -21,7 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                     className="bg-white/70 absolute top-3 end-3 rounded-full dark:text-black hover:bg-red-500 z-10">
                     <HeartIcon className="size-4" />
                 </Button>
-                <Link to="/products">
+                <Link to={`/products/${gender}/${product.category?.name}/${product.subCategory?.name}/${product.name}/${product.id}`}>{/*todo product.gender*/}
                     <img
                         className="aspect-square w-full hover:opacity-80"
                         src={product.imageUrls![0]}

@@ -1,31 +1,50 @@
-import React, {useState} from 'react';
-import DashboardBreadcrumb from "../../components/shared/PathBreadcrumb.component";
+import React, {useEffect, useState} from 'react';
+import PathBreadcrumb from "../../components/shared/PathBreadcrumb.component";
 import {Button} from "../../components/ui/Button";
 import {Separator} from "../../components/ui/Separator";
 import {Badge} from "../../components/ui/Badge";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
 import {ProductInfiniteScrollProvider} from "../../contexts/ProductInfiniteScrollContext";
 import ProductList from "../../components/storefront/product/ProductList.component";
 import {useProductScroll} from "../../hooks/useProductScroll";
+import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
 
 const Products: React.FC = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const {totalElements} = useProductScroll();
     const location = useLocation();
+    const navigate = useNavigate();
     const pathSegments = location.pathname.split("/").filter(Boolean);
 
     const gender = pathSegments[1] || null;
     const category = pathSegments[2] || null;
     const subcategory = pathSegments[3] || null;
+    const name = pathSegments[4] || null;
+    const id = pathSegments[5] || null;
+
+    useEffect(() => {
+        if (name && !id) {
+            navigate(`/products/${gender ?? ""}/${category ?? ""}/${subcategory ?? ""}`.replace(/\/+$/, ""), { replace: true });
+        }
+    }, [name, id, gender, category, subcategory, navigate]);
+
+    const breadcrumbSegments = [
+        {segmentName: "Products", path: "/products"},
+        gender && {segmentName: gender, path: `/products/${gender}`},
+        category && {segmentName: category, path: `/products/${gender}/${category}`},
+        subcategory && {segmentName: subcategory, path: `/products/${gender}/${category}/${subcategory}`},
+        name && {segmentName: name, path: `/products/${gender}/${category}/${subcategory}/${name}${id ? `/${id}` : ''}`}
+    ].filter((segment): segment is { segmentName: string; path: string } => Boolean(segment));
+
 
     return (
         <div className="flex flex-col h-full w-full justify-start">
             <header className="flex justify-between items-center p-4">
                 <div className="flex items-center gap-3">
                     <div className="hidden sm:flex sm:items-center sm:gap-3">
-                        <DashboardBreadcrumb/>
+                        <PathBreadcrumb segments={breadcrumbSegments}/>
                         <Separator orientation="vertical" className="h-10"/>
                     </div>
                     <h2 className="flex items-center gap-1">
@@ -43,7 +62,9 @@ const Products: React.FC = () => {
             </header>
             <Separator/>
             <ProductInfiniteScrollProvider>
-                <ProductList/>
+                {name && id?
+                    <ProductDetails/> :
+                    <ProductList/>}
             </ProductInfiniteScrollProvider>
         </div>
     );

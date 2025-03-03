@@ -9,8 +9,6 @@ import {
 } from "../shared/api";
 import {productService} from "../services/ProductService";
 import {toast} from "../hooks/UseToast";
-import {util} from "zod";
-import assertNever = util.assertNever;
 
 interface ProductContextType {
     products: ProductResponse[];
@@ -219,7 +217,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "Can't update product. Please try again.",
+                description: "Can't get product. Please try again.",
             });
             throw error
         }
