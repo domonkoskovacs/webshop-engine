@@ -2,12 +2,12 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {Card, CardContent, CardFooter, CardHeader} from "../../ui/Card";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "../../ui/Form";
-import {Input} from "../../ui/Input";
+import {Form} from "../../ui/Form";
 import React from "react";
 import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {Button} from "../../ui/Button";
+import {TextInputField} from "../../ui/InputField";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -25,10 +25,7 @@ const PasswordForm: React.FC = () => {
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
-        mode: "onChange",
-        defaultValues: {
-            password: ""
-        },
+        mode: "onChange"
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -52,39 +49,16 @@ const PasswordForm: React.FC = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="renew-password-form"
                           className="w-full space-y-6 mb-6">
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input type="password"
-                                               placeholder="Add new password" {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="passwordAgain"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Password again</FormLabel>
-                                    <FormControl>
-                                        <Input type="password"
-                                               placeholder="Password again" {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
+                        <TextInputField form={form} name="password" label="Password" placeholder="Add new password"
+                                        type="password"/>
+                        <TextInputField form={form} name="passwordAgain" label="Password again"
+                                        placeholder="Password again" type="password"/>
                     </form>
                 </Form>
             </CardContent>
             <CardFooter className="p-0 border-t">
-                <Button className="w-full rounded-t-none" variant="secondary" type="submit" form="renew-password-form">Update</Button>
+                <Button className="w-full rounded-t-none" variant="secondary" type="submit"
+                        form="renew-password-form">Update</Button>
             </CardFooter>
         </Card>
     );

@@ -2,13 +2,13 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {Card, CardContent, CardFooter, CardHeader} from "../../ui/Card";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "../../ui/Form";
-import {Input} from "../../ui/Input";
+import {Form} from "../../ui/Form";
 import React, {useEffect} from "react";
 import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {Button} from "../../ui/Button";
 import {AddressRequest} from "../../../shared/api";
+import {NumberInputField, TextInputField} from "../../ui/InputField";
 
 export const FormSchema = z.object({
     country: z.string().min(1, {message: "Country is required."}),
@@ -19,9 +19,12 @@ export const FormSchema = z.object({
     floorNumber: z.string().min(1, {message: "Floor number is required."})
 });
 
+interface AddressFormProps {
+    type: "shipping" | "billing";
+}
 
-const AddressForm: React.FC = () => {
-    const {user, updateShippingAddress} = useUser()
+const AddressForm: React.FC<AddressFormProps> = ({type}) => {
+    const {user, updateShippingAddress, updateBillingAddress} = useUser()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -38,16 +41,27 @@ const AddressForm: React.FC = () => {
 
     useEffect(() => {
         if (user) {
-            form.reset({
-                country: user.shippingAddress?.country,
-                zipCode: user.shippingAddress?.zipCode,
-                city: user.shippingAddress?.city,
-                street: user.shippingAddress?.street,
-                streetNumber: user.shippingAddress?.streetNumber,
-                floorNumber: user.shippingAddress?.floorNumber,
-            });
+            if (type === "shipping" && user.shippingAddress) {
+                form.reset({
+                    country: user.shippingAddress.country,
+                    zipCode: user.shippingAddress.zipCode,
+                    city: user.shippingAddress.city,
+                    street: user.shippingAddress.street,
+                    streetNumber: user.shippingAddress.streetNumber,
+                    floorNumber: user.shippingAddress.floorNumber,
+                });
+            } else if (type === "billing" && user.billingAddress) {
+                form.reset({
+                    country: user.billingAddress.country,
+                    zipCode: user.billingAddress.zipCode,
+                    city: user.billingAddress.city,
+                    street: user.billingAddress.street,
+                    streetNumber: user.billingAddress.streetNumber,
+                    floorNumber: user.billingAddress.floorNumber,
+                });
+            }
         }
-    }, [form, user]);
+    }, [form, user, type]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
@@ -59,10 +73,13 @@ const AddressForm: React.FC = () => {
                 streetNumber: data.streetNumber,
                 floorNumber: data.floorNumber
             }
-            await updateShippingAddress(addressRq)
-            toast({
-                description: "Your shipping address was successfully updated.",
-            })
+            if (type === "shipping" && user) {
+                await updateShippingAddress(addressRq);
+                toast({description: "Your shipping address was successfully updated."});
+            } else if (type === "billing" && user) {
+                await updateBillingAddress(addressRq);
+                toast({description: "Your billing address was successfully updated."});
+            }
         } catch (error) {
             unexpectedErrorToast()
         }
@@ -71,106 +88,26 @@ const AddressForm: React.FC = () => {
     return (
         <Card className="my-4">
             <CardHeader>
-                <h1 className="font-bold">Change your shipping address</h1>
+                <h1 className="font-bold">Change your {type === "shipping" ? "shipping" : "billing"} address</h1>
             </CardHeader>
             <CardContent className="flex flex-col justify-center">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="shipping-address-form"
+                    <form onSubmit={form.handleSubmit(onSubmit)} id={`${type}-address-form`}
                           className="w-full space-y-6 mb-6">
-                        <FormField
-                            control={form.control}
-                            name="country"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Country</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Add country" {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="zipCode"
-                            render={({field: {onChange, value, ...rest}}) => (
-                                <FormItem>
-                                    <FormLabel>Zipcode</FormLabel>
-                                    <FormControl>
-                                        <Input type="number"
-                                               placeholder="Add your zipcode"
-                                               min={0}
-                                               value={value ?? ""}
-                                               onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                               {...rest} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="city"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>City</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Add your city" {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="street"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Street</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Add your street" {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="streetNumber"
-                            render={({field: {onChange, value, ...rest}}) => (
-                                <FormItem>
-                                    <FormLabel>Street number</FormLabel>
-                                    <FormControl>
-                                        <Input type="number"
-                                               placeholder="Add your street number"
-                                               min={0}
-                                               value={value ?? ""}
-                                               onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                               {...rest} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="floorNumber"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Floor number</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Add your floorNumber" {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
+                        <TextInputField form={form} name="country" label="Country" placeholder="Add country"/>
+                        <NumberInputField form={form} name="zipCode" label="Zipcode" placeholder="Add your zipcode"/>
+                        <TextInputField form={form} name="city" label="City" placeholder="Add your city"/>
+                        <TextInputField form={form} name="street" label="Street" placeholder="Add your street"/>
+                        <NumberInputField form={form} name="streetNumber" label="Street number"
+                                          placeholder="Add your street number"/>
+                        <TextInputField form={form} name="floorNumber" label="Floor number"
+                                        placeholder="Add your floorNumber"/>
                     </form>
                 </Form>
             </CardContent>
             <CardFooter className="p-0 border-t">
                 <Button className="w-full rounded-t-none" variant="secondary" type="submit"
-                        form="shipping-address-form">Update</Button>
+                        form={`${type}-address-form`}>Update</Button>
             </CardFooter>
         </Card>
     );
