@@ -247,7 +247,7 @@ public class UserController {
     @PostMapping(value = "/address/billing", consumes = "application/json", produces = "application/json")
     @User
     public ResponseEntity<UserResponse> addBillingAddress(@Valid @RequestBody AddressRequest addressRequest) {
-        log.info("addShippingAddress, addressRequest: [{}]", addressRequest);
+        log.info("addBillingAddress > addressRequest: [{}]", addressRequest);
         return ResponseEntity.ok().body(userAdapter.addBillingAddress(addressRequest));
     }
 

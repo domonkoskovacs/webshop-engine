@@ -10,6 +10,7 @@ import {ProductProvider} from "./contexts/ProductContext";
 import {ArticleProvider} from "./contexts/ArticleContext";
 import {GenderProvider} from "./contexts/GenderContext";
 import {ProductInfiniteScrollProvider} from "./contexts/ProductInfiniteScrollContext";
+import {UserProvider} from "./contexts/UserContext";
 
 function App() {
     return (
@@ -18,16 +19,18 @@ function App() {
             <ThemeProvider>
                 <AuthProvider>
                     <GenderProvider>
-                        <CategoryProvider>
-                            <ProductProvider>
-                                <ProductInfiniteScrollProvider>
-                                    <ArticleProvider>
-                                        <AppRouter/>
-                                        <Toaster/>
-                                    </ArticleProvider>
-                                </ProductInfiniteScrollProvider>
-                            </ProductProvider>
-                        </CategoryProvider>
+                        <UserProvider>
+                            <CategoryProvider>
+                                <ProductProvider>
+                                    <ProductInfiniteScrollProvider>
+                                        <ArticleProvider>
+                                            <AppRouter/>
+                                            <Toaster/>
+                                        </ArticleProvider>
+                                    </ProductInfiniteScrollProvider>
+                                </ProductProvider>
+                            </CategoryProvider>
+                        </UserProvider>
                     </GenderProvider>
                 </AuthProvider>
             </ThemeProvider>

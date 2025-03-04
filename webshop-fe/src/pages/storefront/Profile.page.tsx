@@ -1,15 +1,17 @@
 import React from 'react';
-import {Skeleton} from "../../components/ui/Skeleton";
+import ProfileForm from "../../components/storefront/user/ProfileForm.component";
+import {Card, CardContent} from "../../components/ui/Card";
 
 const Profile: React.FC = () => {
     return (
-        <div className="flex flex-col space-y-3 py-20">
-            <h1 className="text-center">Profile</h1>
-            <Skeleton className="h-[125px] w-[250px] rounded-xl"/>
-            <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]"/>
-                <Skeleton className="h-4 w-[200px]"/>
-            </div>
+        <div className="flex flex-col w-full px-6 xl:w-4/5 xl:p-0">
+            <Card className="w-full mt-4">
+                <CardContent className="flex flex-col justify-center">
+                    <h1 className="font-bold">Profile Settings</h1>
+                    <h2 className="text-md">Update your information or change profile settings</h2>
+                </CardContent>
+            </Card>
+            <ProfileForm/>
         </div>
     );
 };

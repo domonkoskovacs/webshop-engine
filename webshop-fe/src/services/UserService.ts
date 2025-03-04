@@ -1,4 +1,9 @@
-import {RegistrationRequestGenderEnum, UserServiceApi} from "../shared/api";
+import {
+    CartItemRequest,
+    RegistrationRequestGenderEnum,
+    UpdateUserRequest,
+    UserServiceApi
+} from "../shared/api";
 import {ApiConfig} from "../shared/ApiConfig";
 import {handleApiCall} from "../shared/ApiCall";
 
@@ -75,6 +80,120 @@ class UserService {
         );
     }
 
+
+    /**
+     * Get current user
+     */
+    async getCurrent() {
+        return handleApiCall(() =>
+            this.userApi.getCurrentUser()
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * Update user
+     * @param updateUserRequest rq
+     */
+    async updateUser(updateUserRequest: UpdateUserRequest) {
+        return handleApiCall(() =>
+            this.userApi.updateUser({updateUserRequest})
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * Delete current user
+     */
+    async deleteUser() {
+        return handleApiCall(() =>
+            this.userApi.deleteUser()
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * Get saved products
+     */
+    async getSaved() {
+        return handleApiCall(() =>
+            this.userApi.getSaved()
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * Get cart products
+     */
+    async getCart() {
+        return handleApiCall(() =>
+            this.userApi.getCart()
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * Get orders
+     */
+    async getOrders() {
+        return handleApiCall(() =>
+            this.userApi.getOrders()
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * add saved products
+     * @param productIds
+     */
+    async addSaved(productIds: string[] ) {
+        return handleApiCall(() =>
+            this.userApi.addSaved({requestBody: productIds})
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * remove saved products
+     * @param productIds
+     */
+    async removeSaved(productIds: string[] ) {
+        return handleApiCall(() =>
+            this.userApi.removeSaved({requestBody: productIds})
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * update cart
+     * @param cartItemRequests
+     */
+    async updateCart(cartItemRequests: CartItemRequest[] ) {
+        return handleApiCall(() =>
+            this.userApi.updateCart({cartItemRequest: cartItemRequests})
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * current users subscribes to email list
+     */
+    async subscribeToEmailList() {
+        return handleApiCall(() =>
+            this.userApi.subscribeToEmailList()
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * current users unsubscribes to email list
+     */
+    async unSubscribeToEmailList() {
+        return handleApiCall(() =>
+            this.userApi.unSubscribeToEmailList()
+                .then(res => res?.data)
+        );
+    }
 }
 
 export const userService = new UserService();

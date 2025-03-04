@@ -114,12 +114,12 @@ public class UserAdapter {
         return cartMapper.toResponseList(userService.updateCart(cartMapper.fromRequestList(cartItemRequests)));
     }
 
-    public UserResponse addShippingAddress(AddressRequest addressRequest) {
+    public UserResponse addShippingAddress(AddressRequest addressRequest) { //todo review if needed
         log.info("addShippingAddress > addressRequest: [{}]", addressRequest);
         return userMapper.toResponse(userService.assignShippingAddress(addressMapper.fromRequest(addressRequest)));
     }
 
-    public UserResponse addBillingAddress(AddressRequest addressRequest) {
+    public UserResponse addBillingAddress(AddressRequest addressRequest) {//todo review if needed
         log.info("addBillingAddress > addressRequest: [{}]", addressRequest);
         return userMapper.toResponse(userService.assignBillingAddress(addressMapper.fromRequest(addressRequest)));
     }
@@ -130,7 +130,7 @@ public class UserAdapter {
     }
 
     public UserResponse unSubscribeToEmailList() {
-        log.info("subscribeToEmailList");
+        log.info("unSubscribeToEmailList");
         return userMapper.toResponse(userService.unSubscribeToEmailList());
     }
 
