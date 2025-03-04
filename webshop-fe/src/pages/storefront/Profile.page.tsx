@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfileForm from "../../components/storefront/user/ProfileForm.component";
+import ProfileForm from "../../components/storefront/user/ProfileFormGrid.component";
 import {Card, CardContent} from "../../components/ui/Card";
 
 const Profile: React.FC = () => {
