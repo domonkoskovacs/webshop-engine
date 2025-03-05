@@ -39,7 +39,7 @@ const MenuBar: React.FC = () => {
                                 </ul>
                             </NavigationMenuContent>
                         </NavigationMenuItem> :
-                        <NavigationMenuItem className="flex-shrink-0">
+                        <NavigationMenuItem key={category.id} className="flex-shrink-0">
                             <Link to={`/products/${gender}/${category.name}`}>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                     {category.name}

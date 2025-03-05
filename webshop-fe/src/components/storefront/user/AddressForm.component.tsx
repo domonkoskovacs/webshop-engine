@@ -9,6 +9,8 @@ import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {Button} from "../../ui/Button";
 import {AddressRequest} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
+import {Badge} from "../../ui/Badge";
+import {useAuth} from "../../../hooks/UseAuth";
 
 export const FormSchema = z.object({
     country: z.string().min(1, {message: "Country is required."}),
@@ -25,6 +27,11 @@ interface AddressFormProps {
 
 const AddressForm: React.FC<AddressFormProps> = ({type}) => {
     const {user, updateShippingAddress, updateBillingAddress} = useUser()
+    const {loggedIn} = useAuth()
+    const profileChangesNeeded = loggedIn && (
+        (type === "billing" && !user.billingAddress) ||
+        (type === "shipping" && !user.shippingAddress)
+    );
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -86,7 +93,12 @@ const AddressForm: React.FC<AddressFormProps> = ({type}) => {
     }
 
     return (
-        <Card className="my-4">
+        <Card className="my-4 relative">
+            {profileChangesNeeded && (
+                <Badge
+                    className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-ping">
+                </Badge>
+            )}
             <CardHeader>
                 <h1 className="font-bold">Change your {type === "shipping" ? "shipping" : "billing"} address</h1>
             </CardHeader>

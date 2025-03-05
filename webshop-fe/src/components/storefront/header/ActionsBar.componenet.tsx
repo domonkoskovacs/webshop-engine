@@ -5,10 +5,12 @@ import {Link, useNavigate} from 'react-router-dom';
 import DarkModeToggle from "../../ui/DarkModeToggle";
 import GenderSelector from "./GenderSelector.component";
 import AccountHoverIcon from "./AccountHoverIcon.component";
+import {useUser} from "../../../hooks/UseUser";
+import {Badge} from "../../ui/Badge";
 
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
-
+    const {saved} = useUser()
     return (
         <div className="flex flex-col sm:flex-row justify-between items-center py-2 px-6 gap-4 sm:gap-2">
             <GenderSelector/>
@@ -19,9 +21,18 @@ const ActionsBar: React.FC = () => {
 
             <div className="flex space-x-4 sm:space-x-2">
                 <AccountHoverIcon/>
-                <Button variant="ghost" size="icon" onClick={() => navigate("/saved")}>
-                    <Heart/>
-                </Button>
+                <div className="relative">
+                    <Button variant="ghost" size="icon" onClick={() => navigate("/saved")}>
+                        <Heart/>
+                    </Button>
+                    {saved.length > 0 && (
+                        <Badge
+                            className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                            {saved.length}
+                        </Badge>
+                    )}
+                </div>
+
                 <Button variant="ghost" size="icon" onClick={() => navigate("/cart")}>
                     <ShoppingCart/>
                 </Button>

@@ -5,6 +5,9 @@ import {Button} from "../../ui/Button";
 import {HeartIcon, PlusIcon} from "lucide-react";
 import {ProductResponse} from "../../../shared/api";
 import {useGender} from "../../../hooks/useGender";
+import {useUser} from "../../../hooks/UseUser";
+import {useAuth} from "../../../hooks/UseAuth";
+import {toast} from "../../../hooks/UseToast";
 
 interface ProductCardProps {
     product: ProductResponse
@@ -13,6 +16,26 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const finalPrice = product.discountPercentage && product.price ? product.price - (product.price * product.discountPercentage) / 100 : product.price ?? 0;
     const {gender} = useGender()
+    const {  addToSaved, removeFromSaved, isSaved } = useUser();
+    const { loggedIn } = useAuth();
+
+    const savedProduct = isSaved(product.id!);
+
+    const handleSaveToggle = async () => {
+        if (!loggedIn) {
+            toast({description: "You need to log in to update saved products."});
+        } else {
+            try {
+                if (savedProduct) {
+                    await removeFromSaved(product.id!);
+                } else {
+                    await addToSaved(product.id!);
+                }
+            } catch (error) {
+                toast({variant: "destructive" , description: "Error updating saved products."});
+            }
+        }
+    };
 
     return (
         <Card className="relative space-y-4 overflow-hidden">
@@ -20,7 +43,11 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="bg-white/70 absolute top-3 end-3 rounded-full dark:text-black hover:bg-red-500 z-10">
+                    onClick={handleSaveToggle}
+                    className={`absolute top-3 end-3 rounded-full z-10 transition ${
+                        savedProduct ? "bg-red-500" : "hover:bg-red-500"
+                    }`}
+                >
                     <HeartIcon className="size-4" />
                 </Button>
                 <Link to={`/products/${gender}/${product.category?.name}/${product.subCategory?.name}/${product.name}/${product.id}`}>{/*todo product.gender*/}

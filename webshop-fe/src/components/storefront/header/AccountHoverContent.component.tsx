@@ -3,24 +3,35 @@ import {Button} from "../../ui/Button";
 import {LayoutDashboard, Settings, ShoppingBag, UserPen} from "lucide-react";
 import {Separator} from "../../ui/Separator";
 import {useAuth} from "../../../hooks/UseAuth";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useUser} from "../../../hooks/UseUser";
+import {Badge} from "../../ui/Badge";
 
 const AccountHoverContent: React.FC = () => {
     const {loggedIn, role, logout} = useAuth()
     const navigate = useNavigate();
+    const {user} = useUser()
+    const location = useLocation();
 
+    const profileChangesNeeded = loggedIn &&
+        (!user.shippingAddress || !user.billingAddress) &&
+        location.pathname !== "/profile";
     if (loggedIn && role === "ROLE_USER") {
         return <div className="flex flex-col text-center space-y-1">
             <h1>Welcome back!</h1>
             <Button variant="ghost" className="flex items-center justify-start" onClick={() => navigate("/profile")}>
-                <UserPen className="mr-2"/>Profile
+                <div className="relative flex items-center justify-start">
+                    <UserPen className="mr-2"/>Profile
+                    {profileChangesNeeded && (
+                        <Badge
+                            className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-ping">
+                        </Badge>
+                    )}
+                </div>
             </Button>
             <Button variant="ghost" className="flex items-center justify-start"
                     onClick={() => navigate("/previous-orders")}>
                 <ShoppingBag className="mr-2"/>Previous orders
-            </Button>
-            <Button variant="ghost" className="flex items-center justify-start" onClick={() => navigate("/settings")}>
-                <Settings className="mr-2"/>Settings
             </Button>
             <Separator className="my-4"/>
             <Button onClick={() => logout()}>

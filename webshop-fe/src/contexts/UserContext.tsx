@@ -1,16 +1,26 @@
 import React, {createContext, ReactNode, useCallback, useEffect, useState} from "react";
-import {AddressRequest, UpdateUserRequest, UpdateUserRequestGenderEnum, UserResponse} from "../shared/api";
+import {
+    AddressRequest,
+    ProductResponse,
+    UpdateUserRequest,
+    UpdateUserRequestGenderEnum,
+    UserResponse
+} from "../shared/api";
 import {userService} from "../services/UserService";
 import {useAuth} from "../hooks/UseAuth";
 
 interface UserContextType {
     user: UserResponse
+    saved: ProductResponse[];
     changePassword: (password: string) => Promise<void>;
     updateUserUserInfo: (email: string, firstname: string, lastname: string,
                          phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
     deleteUser: () => Promise<void>;
     updateShippingAddress: (newShippingAddress: AddressRequest) => Promise<void>;
     updateBillingAddress: (newBillingAddress: AddressRequest) => Promise<void>;
+    addToSaved: (id: string) => Promise<void>;
+    removeFromSaved: (id: string) => Promise<void>;
+    isSaved: (id: string) => boolean;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -21,6 +31,7 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     const [user, setUser] = useState<UserResponse>({});
+    const [saved, setSaved] = useState<ProductResponse[]>([])
     const {loggedIn, logout} = useAuth()
 
     const fetchUser = useCallback(async () => {
@@ -28,17 +39,38 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             if (loggedIn) {
                 const data = await userService.getCurrent();
                 setUser(data);
+            } else {
+                setUser({});
+            }
+        } catch (error) {
+            console.error("Error fetching user:", error);
+        }
+    }, [loggedIn]);
+
+    const fetchSaved = useCallback(async () => {
+        try {
+            if (loggedIn && user) {
+                const data = await userService.getSaved();
+                setSaved(data);
+            } else {
+                setSaved([]);
             }
         } catch (error) {
             console.error("Error fetching products:", error);
         }
-    }, [loggedIn]);
+    }, [loggedIn, user]);
 
     useEffect(() => {
         (async () => {
             await fetchUser();
         })();
     }, [fetchUser]);
+
+    useEffect(() => {
+        (async () => {
+            await fetchSaved();
+        })();
+    }, [fetchSaved]);
 
     const changePassword = async (password: string) => {
         try {
@@ -155,9 +187,56 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     };
 
+    const addToSaved = async (id: string) => {
+        try {
+            await userService.addSaved([id]);
+            setUser((prevUser) => {
+                if (!prevUser) return prevUser;
+                const updatedSaved = prevUser.saved ? [...prevUser.saved] : [];
+                if (!updatedSaved.some((item) => item.id === id)) {
+                    const product = { id };
+                    updatedSaved.push(product);
+                }
+                return { ...prevUser, saved: updatedSaved };
+            });
+        } catch (error) {
+            throw error
+        }
+    };
+
+    const removeFromSaved = async (id: string) => {
+        try {
+            await userService.removeSaved([id]);
+            setUser((prevUser) => {
+                if (!prevUser) return prevUser;
+                return {
+                    ...prevUser,
+                    saved: prevUser.saved?.filter((item) => item.id !== id) || [],
+                };
+            });
+        } catch (error) {
+            throw error
+        }
+    };
+
+    const isSaved = (id: string): boolean => {
+        return !!user?.saved?.some((item) => item.id === id);
+    };
+
     return (
         <UserContext.Provider
-            value={{user, changePassword, updateUserUserInfo, deleteUser, updateShippingAddress, updateBillingAddress}}>
+            value={{
+                user,
+                saved,
+                changePassword,
+                updateUserUserInfo,
+                deleteUser,
+                updateShippingAddress,
+                updateBillingAddress,
+                addToSaved,
+                removeFromSaved,
+                isSaved
+            }}>
             {children}
         </UserContext.Provider>
     );

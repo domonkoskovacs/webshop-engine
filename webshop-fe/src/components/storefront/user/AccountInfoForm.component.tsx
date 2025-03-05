@@ -63,7 +63,7 @@ const AccountInfoForm: React.FC = () => {
             </CardHeader>
             <CardContent className="flex flex-col justify-center">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="renew-password-form"
+                    <form onSubmit={form.handleSubmit(onSubmit)} id="account-info-form"
                           className="w-full space-y-6 mb-6">
                         <TextInputField form={form} name="email" label="Email" placeholder="Add your email"/>
                         <TextInputField form={form} name="firstname" label="Firstname"
@@ -103,7 +103,7 @@ const AccountInfoForm: React.FC = () => {
             </CardContent>
             <CardFooter className="p-0 border-t">
                 <Button className="w-full rounded-t-none" variant="secondary" type="submit"
-                        form="renew-password-form">Update</Button>
+                        form="account-info-form">Update</Button>
             </CardFooter>
         </Card>
     );
