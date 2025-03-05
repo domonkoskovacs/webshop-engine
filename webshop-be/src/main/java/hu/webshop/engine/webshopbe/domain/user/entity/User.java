@@ -107,9 +107,12 @@ public class User extends BaseEntity implements UserDetails {
         this.saved.removeAll(products);
     }
 
-    public void updateCart(List<Cart> cartItems) {
-        this.cart.clear();
-        this.cart.addAll(cartItems);
+    public void addCart(Cart cartItem) {
+        this.cart.add(cartItem);
+    }
+
+    public void removeCart(Cart cartItem) {
+        this.cart.remove(cartItem);
     }
 
     public void assignShippingAddress(Address address) {

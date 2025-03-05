@@ -8,7 +8,6 @@ import AccountHoverIcon from "./AccountHoverIcon.component";
 import {useUser} from "../../../hooks/UseUser";
 import {Badge} from "../../ui/Badge";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard";
-import AccountHoverContent from "./AccountHoverContent.component";
 import CartHoverContent from "./CartHoverContent.component";
 
 const ActionsBar: React.FC = () => {
@@ -36,7 +35,7 @@ const ActionsBar: React.FC = () => {
                     )}
                 </div>
 
-                <HoverCard >
+                <HoverCard>
                     <HoverCardTrigger>
                         <div className="relative">
                             <Button variant="ghost" size="icon" onClick={() => navigate("/cart")}>
@@ -50,7 +49,7 @@ const ActionsBar: React.FC = () => {
                             )}
                         </div>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-[50vw] h-[60vh] overflow-auto scrollbar">
+                    <HoverCardContent className="w-[50vw]">
                         <CartHoverContent/>
                     </HoverCardContent>
                 </HoverCard>

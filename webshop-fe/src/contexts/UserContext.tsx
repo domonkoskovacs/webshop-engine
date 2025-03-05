@@ -250,22 +250,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
 
     const updateCart = async (cartItem: CartItemRequest) => {
         try {
-            const requestCart: CartItemRequest[] = cart.map(item => {
-                if (item.product?.id === cartItem.productId) {
-                    return cartItem
-                } else {
-                    return {
-                        count: item.count!,
-                        productId: item.product?.id!
-                    }
-                }
-            });
-
-            if (!cart.some(item => item.product!.id === cartItem.productId)) {
-                requestCart.push(cartItem);
-            }
-
-            const data = await userService.updateCart(requestCart);
+            const data = await userService.updateCart([cartItem]);
             setCart(data)
         } catch (error) {
             throw error

@@ -4,7 +4,9 @@ package hu.webshop.engine.webshopbe.domain.user;
 import static hu.webshop.engine.webshopbe.domain.user.value.Role.ROLE_USER;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -180,7 +182,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<Product> addSaved(List<UUID> productIds) {
-        log.info("updateCart, productIds: [{}]", productIds);
+        log.info("addSaved > productIds: [{}]", productIds);
         User currentUser = getCurrentUser();
         currentUser.addSaved(productService.getAll(productIds));
         userRepository.save(currentUser);
@@ -188,7 +190,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<Product> removeSaved(List<UUID> productIds) {
-        log.info("updateCart, productIds: [{}]", productIds);
+        log.info("removeSaved > productIds: [{}]", productIds);
         User currentUser = getCurrentUser();
         currentUser.removeSaved(productService.getAll(productIds));
         userRepository.save(currentUser);
@@ -198,16 +200,29 @@ public class UserService implements UserDetailsService {
     public List<Cart> updateCart(List<CartItem> cartItems) {
         log.info("updateCart, cartItems: [{}]", cartItems);
         User currentUser = getCurrentUser();
-        currentUser.updateCart(createCarts(cartItems));
+        List<Cart> existingCarts = currentUser.getCart();
+        Map<UUID, Cart> existingCartMap = existingCarts.stream()
+                .collect(Collectors.toMap(cart -> cart.getProduct().getId(), cart -> cart));
+
+        for (CartItem cartItem : cartItems) {
+            Cart existingCart = existingCartMap.get(cartItem.productId());
+
+            if (cartItem.count() == 0 && existingCart != null) {
+                currentUser.removeCart(existingCart);
+            } else if (cartItem.count() > 0) {
+                if (existingCart != null) {
+                    existingCart.setCount(cartItem.count());
+                } else {
+                    Cart newCart = mapCart(cartItem);
+                    currentUser.addCart(newCart);
+                }
+            }
+        }
+
         userRepository.save(currentUser);
-        return currentUser.getCart();
+        return existingCarts;
     }
 
-    private List<Cart> createCarts(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(this::mapCart)
-                .toList();
-    }
 
     private Cart mapCart(CartItem cartItem) {
         Product product = productService.getById(cartItem.productId());

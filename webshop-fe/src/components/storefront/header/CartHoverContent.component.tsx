@@ -3,36 +3,36 @@ import {Button} from "../../ui/Button";
 import {useAuth} from "../../../hooks/UseAuth";
 import {useUser} from "../../../hooks/UseUser";
 import {useNavigate} from "react-router-dom";
+import CartHoverItem from "../cart/CartHoverItem.component";
 
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();
     const {loggedIn} = useAuth()
     const {cart} = useUser()
 
+    const totalPrice = cart.reduce((total, item) => {
+        const price = item.product?.discountPercentage
+            ? item.product.price! * (1 - item.product.discountPercentage / 100)
+            : item.product!.price!;
+        return total + (item.count! * price);
+    }, 0);
+
+    const sortedCart = [...cart].sort((a, b) => (a.product?.name || '').localeCompare(b.product?.name || ''));
+
     return <div className="flex flex-col content-center text-center space-y-2 gap-2">
         {loggedIn ?
             <>
                 {cart.length > 0 ? (
                     <div className="space-y-2">
-                        {cart.map((item) => (
-                            <div key={item.product?.id} className="flex items-center gap-3 border-b pb-2">
-                                <img
-                                    src={item.product?.imageUrls![0]}
-                                    alt={item.product?.name}
-                                    className="w-12 h-12 object-cover rounded-md"
-                                />
-                                <div className="flex flex-col items-start text-left">
-                                    <span className="font-medium">{item.product?.name}</span>
-                                    <span className="text-sm text-gray-500">
-                                            {item.count} * ${item.product?.price!.toFixed(2)}
-                                        </span>
-                                    <span className="font-semibold">
-                                            ${(item.count! * item.product!.price!).toFixed(2)}
-                                        </span>
-                                </div>
-                            </div>
-                        ))}
-                        <Button className="w-full mt-2">Checkout</Button>
+                        <div className="h-[50vh] overflow-auto scrollbar">
+                            {sortedCart.map((item) => (
+                                <CartHoverItem item={item}/>
+                            ))}
+                        </div>
+                        <div className="flex flex-row justify-between items-center">
+                            <h1 className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</h1>
+                            <Button className="w-1/3 mt-2" onClick={() => navigate("/checkout")}>Checkout</Button>
+                        </div>
                     </div>
                 ) : (
                     <p>Your cart is empty!</p>
