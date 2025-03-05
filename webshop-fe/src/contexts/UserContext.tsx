@@ -1,6 +1,8 @@
 import React, {createContext, ReactNode, useCallback, useEffect, useState} from "react";
 import {
     AddressRequest,
+    CartItemRequest,
+    CartItemResponse,
     ProductResponse,
     UpdateUserRequest,
     UpdateUserRequestGenderEnum,
@@ -12,6 +14,7 @@ import {useAuth} from "../hooks/UseAuth";
 interface UserContextType {
     user: UserResponse
     saved: ProductResponse[];
+    cart: CartItemResponse[];
     changePassword: (password: string) => Promise<void>;
     updateUserUserInfo: (email: string, firstname: string, lastname: string,
                          phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
@@ -21,6 +24,8 @@ interface UserContextType {
     addToSaved: (id: string) => Promise<void>;
     removeFromSaved: (id: string) => Promise<void>;
     isSaved: (id: string) => boolean;
+    updateCart: (cartItem: CartItemRequest) => Promise<void>;
+    increaseOneInCart: (id: string) => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -32,6 +37,7 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     const [user, setUser] = useState<UserResponse>({});
     const [saved, setSaved] = useState<ProductResponse[]>([])
+    const [cart, setCart] = useState<CartItemResponse[]>([])
     const {loggedIn, logout} = useAuth()
 
     const fetchUser = useCallback(async () => {
@@ -60,6 +66,19 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     }, [loggedIn, user]);
 
+    const fetchCart = useCallback(async () => {
+        try {
+            if (loggedIn && user) {
+                const data = await userService.getCart();
+                setCart(data);
+            } else {
+                setCart([]);
+            }
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    }, [loggedIn, user]);
+
     useEffect(() => {
         (async () => {
             await fetchUser();
@@ -71,6 +90,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             await fetchSaved();
         })();
     }, [fetchSaved]);
+
+    useEffect(() => {
+        (async () => {
+            await fetchCart();
+        })();
+    }, [fetchCart]);
 
     const changePassword = async (password: string) => {
         try {
@@ -194,10 +219,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 if (!prevUser) return prevUser;
                 const updatedSaved = prevUser.saved ? [...prevUser.saved] : [];
                 if (!updatedSaved.some((item) => item.id === id)) {
-                    const product = { id };
+                    const product = {id};
                     updatedSaved.push(product);
                 }
-                return { ...prevUser, saved: updatedSaved };
+                return {...prevUser, saved: updatedSaved};
             });
         } catch (error) {
             throw error
@@ -223,11 +248,58 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         return !!user?.saved?.some((item) => item.id === id);
     };
 
+    const updateCart = async (cartItem: CartItemRequest) => {
+        try {
+            const requestCart: CartItemRequest[] = cart.map(item => {
+                if (item.product?.id === cartItem.productId) {
+                    return cartItem
+                } else {
+                    return {
+                        count: item.count!,
+                        productId: item.product?.id!
+                    }
+                }
+            });
+
+            if (!cart.some(item => item.product!.id === cartItem.productId)) {
+                requestCart.push(cartItem);
+            }
+
+            const data = await userService.updateCart(requestCart);
+            setCart(data)
+        } catch (error) {
+            throw error
+        }
+    };
+
+    const increaseOneInCart = async (id: string) => {
+        try {
+            const existingItem = cart.find(item => item.product!.id === id);
+
+            if (existingItem) {
+                const updatedCartItem = {
+                    productId: id,
+                    count: existingItem.count! + 1,
+                };
+                await updateCart(updatedCartItem);
+            } else {
+                const cartItem = {
+                    productId: id,
+                    count: 1,
+                };
+                await updateCart(cartItem);
+            }
+        } catch (error) {
+            throw error
+        }
+    };
+
     return (
         <UserContext.Provider
             value={{
                 user,
                 saved,
+                cart,
                 changePassword,
                 updateUserUserInfo,
                 deleteUser,
@@ -235,7 +307,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 updateBillingAddress,
                 addToSaved,
                 removeFromSaved,
-                isSaved
+                isSaved,
+                updateCart,
+                increaseOneInCart
             }}>
             {children}
         </UserContext.Provider>

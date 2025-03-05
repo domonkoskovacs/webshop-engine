@@ -58,7 +58,7 @@ const AccountHoverContent: React.FC = () => {
         </div>;
     }
 
-    return <div className="flex flex-col content-center text-center space-y-2">
+    return <div className="flex flex-col content-center text-center space-y-2 gap-2">
         <h1>You are not logged in!</h1>
         <Button onClick={() => {
             navigate("/authentication?type=login")
