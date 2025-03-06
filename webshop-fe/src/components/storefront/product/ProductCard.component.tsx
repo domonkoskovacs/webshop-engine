@@ -64,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     }
 
     return (
-        <Card className="relative space-y-4 overflow-hidden">
+        <Card className="w-full relative space-y-4 overflow-hidden">
             <figure>
                 <Button
                     variant="ghost"

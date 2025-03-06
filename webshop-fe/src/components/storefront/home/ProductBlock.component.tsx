@@ -4,12 +4,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Button} from "../../ui/Button";
-import HomeProductCard from "./HomeProductCard.component";
 import {Link} from "react-router-dom";
 import {useProduct} from "../../../hooks/UseProduct";
 import {ProductResponse} from "../../../shared/api";
 import SkeletonProductCard from "./SkeletonCard.component";
 import {useGender} from "../../../hooks/useGender";
+import ProductCard from "../product/ProductCard.component";
 
 interface ProductSwiperProps {
     category: string;
@@ -60,13 +60,13 @@ const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
                 </Button>
             </div>
             <div
-                className="grid grid-cols-1 mx-16 sm:grid-cols-2 sm:mx-8 md:grid-cols-4 md:mx-2 gap-4 mb-10 place-items-center">
+                className="grid grid-cols-1 mx-10 16 sm:grid-cols-2 sm:mx-8 md:grid-cols-4 md:mx-2 gap-4 mb-10 place-items-center">
                 {loading ? (
                     Array.from({length: 4}).map((_, index) => <SkeletonProductCard key={index}/>)
                 ) : (
                     products.length > 0 ? (
                         products.slice(0, 4).map(product => (
-                            <HomeProductCard product={product}/>
+                            <ProductCard product={product}/>
                         ))
                     ) : (
                         Array.from({length: 4}).map((_, index) => <SkeletonProductCard key={index}/>)
