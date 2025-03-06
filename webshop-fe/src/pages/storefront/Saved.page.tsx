@@ -1,44 +1,14 @@
 import React from 'react';
-import {Skeleton} from "../../components/ui/Skeleton";
 import {useAuth} from "../../hooks/UseAuth";
-import {Link} from "react-router-dom";
-import {Button} from "../../components/ui/Button";
 import {useUser} from "../../hooks/UseUser";
 import {ProductResponse} from "../../shared/api";
 import ProductCard from "../../components/storefront/product/ProductCard.component";
+import EmptyState from "../../components/storefront/shared/EmptyPage.component";
+import PublicEmptyPage from "../../components/storefront/shared/PublicEmptyPage.component";
 
 const Saved: React.FC = () => {
     const {loggedIn} = useAuth()
     const {saved} = useUser()
-
-    const EmptyState = () => (
-        <div className="flex flex-col space-y-3">
-            <h1 className="text-center">You don't have any saved products!</h1>
-            <Skeleton className="h-[125px] w-[250px] rounded-xl"/>
-            <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]"/>
-                <Skeleton className="h-4 w-[200px]"/>
-            </div>
-        </div>
-    );
-
-    const LoggedInEmptyState = () =>
-        <div className="flex flex-col gap-10 sm:flex-row justify-between items-center mb-4 p-4">
-            <EmptyState/>
-            <div>
-                <h1 className="text-center text-xl">
-                    You need to log in <br/> to save products!
-                </h1>
-                <div className="flex justify-center my-4">
-                    <Link to="/authentication?type=login">
-                        <Button>
-                            Log In
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-        </div>
-
 
     return saved.length > 0 ? (
         <main
@@ -54,9 +24,10 @@ const Saved: React.FC = () => {
     ) : (
         <div className="flex flex-col space-y-3 py-20">
             {loggedIn ? (
-                <EmptyState/>
+                <EmptyState title="You don't have any saved products!"/>
             ) : (
-                <LoggedInEmptyState/>
+                <PublicEmptyPage emptyStateTitle="You don't have any saved products!"
+                                 buttonTitle="You need to log in to save products!"/>
             )}
         </div>
     );

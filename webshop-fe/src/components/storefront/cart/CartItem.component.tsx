@@ -9,9 +9,10 @@ import {toast} from "../../../hooks/UseToast";
 
 interface CartHoverItemProps {
     item: CartItemResponse;
+    type?: "hover" | "page";
 }
 
-const CartHoverItem: React.FC<CartHoverItemProps> = ({item}) => {
+const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover"}) => {
     const {updateCart} = useUser()
 
     const handleUpdate = async (newCount: number) => {
@@ -36,19 +37,19 @@ const CartHoverItem: React.FC<CartHoverItemProps> = ({item}) => {
     const discount = item.product?.discountPercentage ?? 0;
     const discountedPrice = originalPrice * (1 - discount / 100);
     const isDiscounted = discount > 0;
+    const imageSize = type === "page" ? "w-20 h-20" : "w-14 h-14";
 
-    return <div key={item.product?.id} className="flex items-center justify-between gap-3 border-b pb-2 px-3">
+    return <div key={item.product?.id} className="flex items-center justify-between gap-3 border-b p-2 px-3">
         <div className="flex flex-row h-full items-center">
             <img
                 src={item.product?.imageUrls![0]}
                 alt={item.product?.name}
-                className="w-14 h-14 object-cover rounded-md"
+                className={`${imageSize} object-cover rounded-md`}
             />
             <h2 className="ml-4 mr-1 text-lg font-bold">{item.product?.name}</h2>
             {isDiscounted && <Badge className="h-4 bg-red-500">-{discount}%</Badge>}
         </div>
         <div className="flex flex-col items-end text-right">
-            {/* Price Display */}
             <span className="text-sm text-gray-500">
                     {item.count} ×{" "}
                 {isDiscounted ? (
@@ -90,4 +91,4 @@ const CartHoverItem: React.FC<CartHoverItemProps> = ({item}) => {
     </div>
 }
 
-export default CartHoverItem;
+export default CartItem;

@@ -3,7 +3,7 @@ import {Button} from "../../ui/Button";
 import {useAuth} from "../../../hooks/UseAuth";
 import {useUser} from "../../../hooks/UseUser";
 import {useNavigate} from "react-router-dom";
-import CartHoverItem from "../cart/CartHoverItem.component";
+import CartItem from "../cart/CartItem.component";
 
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ const CartHoverContent: React.FC = () => {
                     <div className="space-y-2">
                         <div className="h-[50vh] overflow-auto scrollbar">
                             {sortedCart.map((item) => (
-                                <CartHoverItem item={item}/>
+                                <CartItem item={item}/>
                             ))}
                         </div>
                         <div className="flex flex-row justify-between items-center">

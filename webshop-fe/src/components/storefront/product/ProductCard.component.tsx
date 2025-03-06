@@ -1,8 +1,8 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {Card, CardContent, CardFooter} from "src/components/ui/Card";
 import {Button} from "../../ui/Button";
-import {HeartIcon, PlusIcon} from "lucide-react";
+import {HeartIcon, PlusIcon, TrashIcon} from "lucide-react";
 import {ProductResponse, ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {useGender} from "../../../hooks/useGender";
 import {useUser} from "../../../hooks/UseUser";
@@ -19,6 +19,8 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const {gender} = useGender()
     const {addToSaved, removeFromSaved, isSaved, increaseOneInCart} = useUser();
     const {loggedIn} = useAuth();
+    const location = useLocation();
+    const isSavedPage = location.pathname === '/saved';
 
     const savedProduct = isSaved(product.id!);
 
@@ -69,10 +71,14 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                     size="icon"
                     onClick={handleSaveToggle}
                     className={`absolute top-3 end-3 rounded-full z-10 transition ${
-                        savedProduct ? "bg-red-500" : "hover:bg-red-500"
+                        isSavedPage ? "" : savedProduct ? "bg-red-500" : "hover:bg-red-500"
                     }`}
                 >
-                    <HeartIcon className="size-4"/>
+                    {isSavedPage ? (
+                        <TrashIcon className="w-5 h-5" />
+                    ) : (
+                        <HeartIcon className="w-5 h-5" />
+                    )}
                 </Button>
                 <Link
                     to={`/products/${gender}/${product.category?.name}/${product.subCategory?.name}/${product.name}/${product.id}`}>{/*todo product.gender*/}
