@@ -2,7 +2,7 @@ import React, {createContext, ReactNode, useCallback, useEffect, useState} from 
 import {
     AddressRequest,
     CartItemRequest,
-    CartItemResponse,
+    CartItemResponse, OrderResponse,
     ProductResponse,
     UpdateUserRequest,
     UpdateUserRequestGenderEnum,
@@ -10,11 +10,13 @@ import {
 } from "../shared/api";
 import {userService} from "../services/UserService";
 import {useAuth} from "../hooks/UseAuth";
+import {orderService} from "../services/OrderService";
 
 interface UserContextType {
     user: UserResponse
     saved: ProductResponse[];
     cart: CartItemResponse[];
+    orders: OrderResponse[];
     changePassword: (password: string) => Promise<void>;
     updateUserUserInfo: (email: string, firstname: string, lastname: string,
                          phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
@@ -26,6 +28,9 @@ interface UserContextType {
     isSaved: (id: string) => boolean;
     updateCart: (cartItem: CartItemRequest) => Promise<void>;
     increaseOneInCart: (id: string) => Promise<void>;
+    placeOrder: () => Promise<void>;
+    payOrder: (id: string, paymentToken: string) => Promise<void>;
+    cancelOrder: (id: string) => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -38,6 +43,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     const [user, setUser] = useState<UserResponse>({});
     const [saved, setSaved] = useState<ProductResponse[]>([])
     const [cart, setCart] = useState<CartItemResponse[]>([])
+    const [orders, setOrders] = useState<OrderResponse[]>([])
     const {loggedIn, logout} = useAuth()
 
     const fetchUser = useCallback(async () => {
@@ -79,6 +85,19 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     }, [loggedIn, user]);
 
+    const fetchOrders = useCallback(async () => {
+        try {
+            if (loggedIn && user) {
+                const data = await userService.getOrders();
+                setOrders(data);
+            } else {
+                setOrders([]);
+            }
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
+    }, [loggedIn, user]);
+
     useEffect(() => {
         (async () => {
             await fetchUser();
@@ -96,6 +115,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             await fetchCart();
         })();
     }, [fetchCart]);
+
+    useEffect(() => {
+        (async () => {
+            await fetchOrders();
+        })();
+    }, [fetchOrders]);
 
     const changePassword = async (password: string) => {
         try {
@@ -279,12 +304,49 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     };
 
+    const placeOrder = async () => {
+        try {
+            const order = await orderService.create();
+            setCart([])
+            setOrders((prevOrders) => [...prevOrders, order]);
+        } catch (error) {
+            throw error
+        }
+    }
+
+    const payOrder = async (id: string, paymentToken: string) => {
+        try {
+            const updatedOrder  = await orderService.pay(id, paymentToken);
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === id ? updatedOrder : order
+                )
+            );
+        } catch (error) {
+            throw error
+        }
+    }
+
+    const cancelOrder = async (id: string) => {
+        try {
+            const updatedOrder  = await orderService.cancel(id);
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === id ? updatedOrder : order
+                )
+            );
+        } catch (error) {
+            throw error
+        }
+    }
+
     return (
         <UserContext.Provider
             value={{
                 user,
                 saved,
                 cart,
+                orders,
                 changePassword,
                 updateUserUserInfo,
                 deleteUser,
@@ -294,7 +356,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 removeFromSaved,
                 isSaved,
                 updateCart,
-                increaseOneInCart
+                increaseOneInCart,
+                placeOrder,
+                payOrder,
+                cancelOrder
             }}>
             {children}
         </UserContext.Provider>

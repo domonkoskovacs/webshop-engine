@@ -148,12 +148,12 @@ public class EmailService {
         );
     }
 
-    public void createPromotionEmail(PromotionEmail promotionEmail) {
+    public PromotionEmail createPromotionEmail(PromotionEmail promotionEmail) {
         log.info("createPromotionEmail > promotionEmail: [{}]", promotionEmail);
         if (promotionalEmailRepository.existsPromotionEmailByName(promotionEmail.getName())) {
             throw new EmailException(ReasonCode.PROMOTION_EMAIL_NAME_OCCUPIED, "Email name is occupied please select a new one");
         }
-        promotionalEmailRepository.save(promotionEmail);
+        return promotionalEmailRepository.save(promotionEmail);
     }
 
 

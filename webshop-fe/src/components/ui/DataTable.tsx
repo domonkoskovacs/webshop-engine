@@ -12,12 +12,14 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     customFilter?: React.ReactNode
+    enableSelect?: boolean
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
-                                             customFilter
+                                             customFilter,
+                                             enableSelect = true
                                          }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -112,10 +114,11 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s) selected.
-            </div>
+            {enableSelect &&
+                <div className="flex-1 text-sm text-muted-foreground">
+                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                </div>}
         </div>
     )
 }

@@ -43,10 +43,9 @@ public class EmailController {
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
-    public ResponseEntity<Void> create(@RequestBody PromotionEmailRequest request) {
+    public ResponseEntity<PromotionEmailResponse> create(@RequestBody PromotionEmailRequest request) {
         log.info("create > request: [{}]", request);
-        emailAdapter.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(emailAdapter.create(request));
     }
 
     @Operation(

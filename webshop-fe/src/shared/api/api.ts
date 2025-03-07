@@ -673,6 +673,12 @@ export interface PageOrderResponse {
     'totalPages'?: number;
     /**
      * 
+     * @type {PageableObject}
+     * @memberof PageOrderResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
      * @type {number}
      * @memberof PageOrderResponse
      */
@@ -715,12 +721,6 @@ export interface PageOrderResponse {
     'numberOfElements'?: number;
     /**
      * 
-     * @type {PageableObject}
-     * @memberof PageOrderResponse
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
      * @type {boolean}
      * @memberof PageOrderResponse
      */
@@ -737,25 +737,13 @@ export interface PageableObject {
      * @type {number}
      * @memberof PageableObject
      */
-    'offset'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageableObject
-     */
-    'sort'?: SortObject;
+    'pageSize'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageableObject
      */
     'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
     /**
      * 
      * @type {boolean}
@@ -768,6 +756,18 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'unpaged'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'offset'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof PageableObject
+     */
+    'sort'?: SortObject;
 }
 /**
  * 
@@ -826,12 +826,6 @@ export interface ProductPageProductResponse {
     'maxDiscount'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -842,6 +836,12 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -1288,12 +1288,6 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'empty'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
     'sorted'?: boolean;
     /**
      * 
@@ -1301,6 +1295,12 @@ export interface SortObject {
      * @memberof SortObject
      */
     'unsorted'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
+    'empty'?: boolean;
 }
 /**
  * 
@@ -3303,7 +3303,7 @@ export const EmailServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create2(promotionEmailRequest: PromotionEmailRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async create2(promotionEmailRequest: PromotionEmailRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PromotionEmailResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.create2(promotionEmailRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.create2']?.[localVarOperationServerIndex]?.url;
@@ -3378,7 +3378,7 @@ export const EmailServiceApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create2(requestParameters: EmailServiceApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        create2(requestParameters: EmailServiceApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<PromotionEmailResponse> {
             return localVarFp.create2(requestParameters.promotionEmailRequest, options).then((request) => request(axios, basePath));
         },
         /**

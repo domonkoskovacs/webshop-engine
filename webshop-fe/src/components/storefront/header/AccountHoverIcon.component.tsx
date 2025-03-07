@@ -11,10 +11,10 @@ import {useLocation} from "react-router-dom";
 
 const AccountHoverIcon: React.FC = () => {
     const {user} = useUser()
-    const {loggedIn} = useAuth()
+    const {loggedIn, role} = useAuth()
     const location = useLocation();
 
-    const profileChangesNeeded = loggedIn &&
+    const profileChangesNeeded = loggedIn && role !== "ROLE_ADMIN" &&
         (!user.shippingAddress || !user.billingAddress) &&
         location.pathname !== "/profile";
     return <HoverCard>

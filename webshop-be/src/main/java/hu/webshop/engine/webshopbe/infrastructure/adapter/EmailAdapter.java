@@ -21,9 +21,9 @@ public class EmailAdapter {
     private final EmailService emailService;
     private final EmailMapper emailMapper;
 
-    public void create(PromotionEmailRequest request) {
+    public PromotionEmailResponse create(PromotionEmailRequest request) {
         log.info("create > request: [{}]", request);
-        emailService.createPromotionEmail(emailMapper.fromRequest(request));
+        return emailMapper.toResponse(emailService.createPromotionEmail(emailMapper.fromRequest(request)));
     }
 
     public List<PromotionEmailResponse> getAll() {
