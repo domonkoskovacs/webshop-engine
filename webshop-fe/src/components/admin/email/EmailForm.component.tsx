@@ -3,23 +3,25 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useEmail} from "../../../hooks/UseEmail";
 import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
+import {NumberInputField, TextInputField} from "../../ui/InputField";
+import {TextareaField} from "../../ui/TextAreaField";
+import {FormComboBoxMultipleValue} from "../../ui/FormComboBoxMultipleValue";
 
 export const FormSchema = z.object({
-    name: z.string().min(1, { message: "Name is required." }),
-    text: z.string().min(1, { message: "Text content is required." }),
-    subject: z.string().min(1, { message: "Subject is required." }),
-    imageUrl: z.string().url({ message: "Invalid image URL format." }),
-    dayOfWeek: z.array(z.enum(Object.values(PromotionEmailRequestDayOfWeekEnum) as [string, ...string[]]), {
+    name: z.string().min(1, {message: "Name is required."}),
+    text: z.string().min(1, {message: "Text content is required."}),
+    subject: z.string().min(1, {message: "Subject is required."}),
+    imageUrl: z.string().url({message: "Invalid image URL format."}),
+    dayOfWeek: z.array(z.enum(Object.values(PromotionEmailRequestDayOfWeekEnum) as [PromotionEmailRequestDayOfWeekEnum, ...PromotionEmailRequestDayOfWeekEnum[]]), {
         message: "Invalid day of the week.",
-    }).nonempty({ message: "At least one day of the week is required." }),
-    hour: z.number().int().min(0, { message: "Hour must be at least 0." }).max(23, { message: "Hour must be at most 23." }).optional(),
-    minute: z.number().int().min(0, { message: "Minute must be at least 0." }).max(59, { message: "Minute must be at most 59." }).optional(),
+    }).nonempty({message: "At least one day of the week is required."}),
+    hour: z.number().int().min(0, {message: "Hour must be at least 0."}).max(23, {message: "Hour must be at most 23."}),
+    minute: z.number().int().min(0, {message: "Minute must be at least 0."}).max(59, {message: "Minute must be at most 59."}),
 });
 
 interface ProductFormProps {
@@ -42,14 +44,12 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             text: data.text,
             subject: data.subject,
             imageUrl: data.imageUrl,
-            dayOfWeek: data.dayOfWeek.map((day) =>
-                PromotionEmailRequestDayOfWeekEnum[day as keyof typeof PromotionEmailRequestDayOfWeekEnum]
-            ),
+            dayOfWeek: data.dayOfWeek,
             hour: data.hour,
             minute: data.minute
         })
         toast({
-            description: "Slide created successfully.",
+            description: "Email promotion created successfully.",
         })
         setIsOpen(false)
     }
@@ -63,20 +63,20 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="createEmailForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Name..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
+                            <TextInputField form={form} name={"name"} placeholder={"Name..."} label={"Name"}/>
+                            <TextareaField form={form} name={"text"} placeholder={"text..."} label={"Text"}/>
+                            <TextInputField form={form} name={"subject"} placeholder={"Email subject..."}
+                                            label={"Email subject"}/>
+                            <TextInputField form={form} name={"imageUrl"} placeholder={"Image url..."}
+                                            label={"Image url"}/>
 
+                            <FormComboBoxMultipleValue form={form} name={"dayOfWeek"}
+                                                       options={Object.entries(PromotionEmailRequestDayOfWeekEnum).map(([label, value]) => ({
+                                                           label,
+                                                           value
+                                                       }))} label={"Day of week"}/>
+                            <NumberInputField form={form} name={"hour"} placeholder={"Hour..."} label={"Hour"}/>
+                            <NumberInputField form={form} name={"minute"} placeholder={"Minute..."} label={"Minute"}/>
                         </div>
                     </form>
                 </Form>

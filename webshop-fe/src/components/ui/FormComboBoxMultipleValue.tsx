@@ -5,6 +5,7 @@ import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandL
 import {Check, ChevronsUpDown} from "lucide-react";
 import {cn} from "src/lib/utils";
 import React, {useState} from "react";
+import {UseFormReturn} from "react-hook-form";
 
 interface SelectOption {
     label: string;
@@ -13,16 +14,16 @@ interface SelectOption {
 
 
 interface FormComboBoxProps {
+    form: UseFormReturn<any>;
     name: string;
-    control: any;
     label: string;
     description?: string;
     options: SelectOption[];
 }
 
 export const FormComboBoxMultipleValue: React.FC<FormComboBoxProps> = ({
+                                                                           form,
                                                                            name,
-                                                                           control,
                                                                            label,
                                                                            description,
                                                                            options
@@ -36,7 +37,7 @@ export const FormComboBoxMultipleValue: React.FC<FormComboBoxProps> = ({
     };
     return (
         <FormField
-            control={control}
+            control={form.control}
             name={name}
             render={({field}) => (
                 <FormItem className="flex flex-col">

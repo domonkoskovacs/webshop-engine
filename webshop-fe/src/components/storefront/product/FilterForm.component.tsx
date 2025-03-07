@@ -49,7 +49,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
                         <div className="flex flex-col p-6 gap-4">
                             <FormComboBoxMultipleValue
                                 name="brands"
-                                control={form.control}
+                                form={form}
                                 label="Brands"
                                 options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
                             />

@@ -29,6 +29,7 @@ import Cart from "../pages/storefront/Cart.page";
 import Profile from "../pages/storefront/Profile.page";
 import Settings from "../pages/storefront/Settings.page";
 import PreviousOrders from "../pages/storefront/PreviousOrders.page";
+import { EmailProvider } from 'src/contexts/EmailContext';
 
 const AppRouter: React.FC = () => {
     return (
@@ -75,9 +76,11 @@ const AppRouter: React.FC = () => {
                 path="/admin/dashboard/*"
                 element={
                     <ProtectedRoute allowedRole="ROLE_ADMIN">
-                        <AdminDashboardLayout>
-                            <Outlet/>
-                        </AdminDashboardLayout>
+                        <EmailProvider>
+                            <AdminDashboardLayout>
+                                <Outlet/>
+                            </AdminDashboardLayout>
+                        </EmailProvider>
                     </ProtectedRoute>
                 }
             >

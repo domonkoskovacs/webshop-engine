@@ -1,7 +1,7 @@
 import React from 'react';
 import {useEmail} from "../../hooks/UseEmail";
 import {ColumnDef} from "@tanstack/react-table";
-import {ProductResponse} from "../../shared/api";
+import {ProductResponse, PromotionEmailRequestDayOfWeekEnum} from "../../shared/api";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -39,8 +39,14 @@ const PromotionEmailDashboard: React.FC = () => {
             header: "ImageUrl",
         },
         {
+            id: "dayOfWeek",
             accessorKey: "dayOfWeek",
             header: "Day of week",
+            cell: ({row}) => {
+                const days = row.getValue("dayOfWeek") as PromotionEmailRequestDayOfWeekEnum[];
+                return days.map((day: string) => day.charAt(0).toUpperCase() + day.slice(1).toLowerCase())
+                    .join(", ");
+            },
         },
         {
             accessorKey: "hour",
