@@ -1,46 +1,74 @@
 "use client"
 
-import {ColumnDef, flexRender, getCoreRowModel, useReactTable, VisibilityState,} from "@tanstack/react-table"
+import {
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    useReactTable,
+    VisibilityState,
+} from "@tanstack/react-table"
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "src/components/ui/Table"
 import React from "react";
 import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger} from "./DropdownMenu";
 import {Button} from "./Button";
 import {RowSelectionState} from "@tanstack/table-core/src/features/RowSelection";
+import {Input} from "./Input";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
-    customFilter?: React.ReactNode
+    customElement?: React.ReactNode
     enableSelect?: boolean
+    enableDefaultFilter?: boolean
+    defaultFilterColumn?: string
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
-                                             customFilter,
-                                             enableSelect = true
+                                             customElement,
+                                             enableSelect = true,
+                                             enableDefaultFilter = false,
+                                             defaultFilterColumn
                                          }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
-
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+        []
+    )
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
         state: {
             columnVisibility,
             rowSelection,
+            columnFilters,
         },
     })
 
     return (
         <div>
             <div className="flex items-center my-2 gap-4">
-                {customFilter}
+                {enableDefaultFilter && defaultFilterColumn && <div className="flex items-center">
+                    <Input
+                        placeholder={`Filter ${defaultFilterColumn}...`}
+                        value={(table.getColumn(defaultFilterColumn)?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn(defaultFilterColumn)?.setFilterValue(event.target.value)
+                        }
+                        className="max-w-sm"
+                    />
+                </div>}
+                {customElement}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">

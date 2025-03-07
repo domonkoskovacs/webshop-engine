@@ -212,7 +212,7 @@ const ProductsDashboard: React.FC = () => {
                 </div>
             </div>
             <div className="w-full">
-                <DataTable key={products.length} columns={columns} data={products} customFilter={itemNoFilter}/>
+                <DataTable key={products.length} columns={columns} data={products} customElement={itemNoFilter}/>
             </div>
             <PaginationComponent
                 className="my-2"

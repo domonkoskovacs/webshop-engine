@@ -87,20 +87,20 @@ const PromotionEmailDashboard: React.FC = () => {
         },
     ]
 
+    const emailForm = <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <SheetTrigger asChild>
+                <Button>New</Button>
+            </SheetTrigger>
+            <SheetContent>
+                <EmailForm setIsOpen={setIsFormOpen}/>
+            </SheetContent>
+        </Sheet>
+
     return (
         <div className="flex flex-col items-center justify-center">
-            <div className="my-2 flex w-full justify-between">
-                <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-                    <SheetTrigger asChild>
-                        <Button>New</Button>
-                    </SheetTrigger>
-                    <SheetContent>
-                        <EmailForm setIsOpen={setIsFormOpen}/>
-                    </SheetContent>
-                </Sheet>
-            </div>
             <div className="w-full">
-                <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false}/>
+                <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false}
+                           enableDefaultFilter={true} defaultFilterColumn={"name"} customElement={emailForm}/>
             </div>
         </div>
     );
