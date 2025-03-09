@@ -10,23 +10,31 @@ import {ProductInfiniteScrollProvider} from "../../contexts/ProductInfiniteScrol
 import ProductList from "../../components/storefront/product/ProductList.component";
 import {useProductScroll} from "../../hooks/useProductScroll";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
+import {useGender} from "../../hooks/useGender";
 
 const Products: React.FC = () => {
+    const {gender, setGender} = useGender()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const {totalElements} = useProductScroll();
     const location = useLocation();
     const navigate = useNavigate();
     const pathSegments = location.pathname.split("/").filter(Boolean);
 
-    const gender = pathSegments[1] || null;
+    const genderPathSegment = pathSegments[1] || null;
     const category = pathSegments[2] || null;
     const subcategory = pathSegments[3] || null;
     const name = pathSegments[4] || null;
     const id = pathSegments[5] || null;
 
     useEffect(() => {
+        if ((genderPathSegment === "men" || genderPathSegment === "women") && genderPathSegment !== gender) {
+            setGender(genderPathSegment);
+        }
+    }, [genderPathSegment, gender, setGender]);
+
+    useEffect(() => {
         if (name && !id) {
-            navigate(`/products/${gender ?? ""}/${category ?? ""}/${subcategory ?? ""}`.replace(/\/+$/, ""), { replace: true });
+            navigate(`/products/${gender ?? ""}/${category ?? ""}/${subcategory ?? ""}`.replace(/\/+$/, ""), {replace: true});
         }
     }, [name, id, gender, category, subcategory, navigate]);
 
@@ -62,7 +70,7 @@ const Products: React.FC = () => {
             </header>
             <Separator/>
             <ProductInfiniteScrollProvider>
-                {name && id?
+                {name && id ?
                     <ProductDetails/> :
                     <ProductList/>}
             </ProductInfiniteScrollProvider>

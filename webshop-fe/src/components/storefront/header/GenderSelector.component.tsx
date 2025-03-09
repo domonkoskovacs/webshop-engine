@@ -1,9 +1,17 @@
 import React from "react";
 import {Button} from "../../ui/Button";
+import {useGender} from "../../../hooks/useGender";
 import {Gender} from "../../../contexts/GenderContext";
+import {useNavigate} from "react-router-dom";
 
 const GenderSelector: React.FC = () => {
-    const [gender, setGender] = React.useState<Gender>()
+    const {gender, setGender} = useGender()
+    const navigate = useNavigate();
+
+    const handleGenderChange = (newGender: Gender) => {
+        setGender(newGender);
+        navigate(`/`, { replace: true });
+    };
 
     return (
         <div className="flex">
@@ -12,7 +20,7 @@ const GenderSelector: React.FC = () => {
                 className={`${
                     gender === 'men' ? 'font-bold text-lg' : 'text-lg opacity-50'
                 }`}
-                onClick={() => setGender('men')}
+                onClick={() => handleGenderChange('men')}
             >
                 Men
             </Button>
@@ -21,7 +29,7 @@ const GenderSelector: React.FC = () => {
                 className={`${
                     gender === 'women' ? 'font-bold text-lg' : 'text-lg opacity-50'
                 }`}
-                onClick={() => setGender('women')}
+                onClick={() => handleGenderChange('women')}
             >
                 Women
             </Button>

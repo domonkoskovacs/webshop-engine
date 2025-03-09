@@ -2,7 +2,8 @@ import React, {createContext, ReactNode, useCallback, useEffect, useState} from 
 import {
     AddressRequest,
     CartItemRequest,
-    CartItemResponse, OrderResponse,
+    CartItemResponse,
+    OrderResponse,
     ProductResponse,
     UpdateUserRequest,
     UpdateUserRequestGenderEnum,
@@ -316,7 +317,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
 
     const payOrder = async (id: string, paymentToken: string) => {
         try {
-            const updatedOrder  = await orderService.pay(id, paymentToken);
+            const updatedOrder = await orderService.pay(id, paymentToken);
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
                     order.id === id ? updatedOrder : order
@@ -329,7 +330,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
 
     const cancelOrder = async (id: string) => {
         try {
-            const updatedOrder  = await orderService.cancel(id);
+            const updatedOrder = await orderService.cancel(id);
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
                     order.id === id ? updatedOrder : order
