@@ -18,5 +18,5 @@ export function calculateCartTotals(cart: CartItemResponse[]) {
     const discountAmount = fullPrice - discountedPrice;
     const finalPrice = discountedPrice + SHIPPING_COST;
 
-    return { fullPrice, discountedPrice, discountAmount, finalPrice };
+    return { fullPrice, discountedPrice, discountAmount, finalPrice, shippingCost: SHIPPING_COST };
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
+import com.stripe.model.PaymentIntent;
 import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
@@ -42,6 +43,17 @@ public class StripeService {
         chargeParams.put("source", stripeProperties.isUseTestToken() ? "tok_visa" : charge.token());
         try {
             return Charge.create(chargeParams);
+        } catch (com.stripe.exception.StripeException e) {
+            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+        }
+    }
+
+    public String intent(Double amount) {
+        log.info("intent > amount: [{}]", amount);
+        Map<String, Object> intentParams = new HashMap<>();
+        intentParams.put("amount", amount.intValue());
+        try {
+            return PaymentIntent.create(intentParams).getClientSecret();
         } catch (com.stripe.exception.StripeException e) {
             throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
         }

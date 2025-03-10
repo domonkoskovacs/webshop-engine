@@ -30,6 +30,7 @@ import Profile from "../pages/storefront/Profile.page";
 import Settings from "../pages/storefront/Settings.page";
 import PreviousOrders from "../pages/storefront/PreviousOrders.page";
 import { EmailProvider } from 'src/contexts/EmailContext';
+import Checkout from "../pages/storefront/Checkout.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -46,6 +47,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/products/*" element={<Products/>}/>
                 <Route path="/saved" element={<Saved/>}/>
                 <Route path="/cart" element={<Cart/>}/>
+                <Route path="/checkout" element={<Checkout/>}/>
                 <Route path="/authentication" element={<Authentication/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/new-password" element={<NewPassword/>}/>

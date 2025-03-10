@@ -7,15 +7,14 @@ import CartItem from "../../components/storefront/cart/CartItem.component";
 import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Card";
 import {Separator} from "../../components/ui/Separator";
-import {calculateCartTotals} from "../../lib/priceUtils";
-
-const SHIPPING_COST = 5.99;
+import {calculateCartTotals} from "../../lib/price.utils";
+import {Link} from "react-router-dom";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
     const {cart} = useUser()
 
-    const { fullPrice, discountedPrice, discountAmount, finalPrice } = calculateCartTotals(cart);
+    const {fullPrice, discountedPrice, discountAmount, finalPrice, shippingCost} = calculateCartTotals(cart);
 
     return cart.length > 0 ? (
         <main className="w-full mx-10 mb-6 relative">
@@ -50,12 +49,14 @@ const Cart: React.FC = () => {
                             )}
 
                             <p className="text-lg font-bold">Subtotal: ${discountedPrice.toFixed(2)}</p>
-                            <p className="text-lg">Shipping: ${SHIPPING_COST.toFixed(2)}</p>
+                            <p className="text-lg">Shipping: ${shippingCost.toFixed(2)}</p>
                             <Separator className="w-full"/>
                             <p className="text-xl font-bold">Total: ${finalPrice.toFixed(2)}</p>
                         </CardContent>
                         <CardFooter className="p-0 border-t">
-                            <Button className="w-full rounded-t-none">Go to Checkout</Button>
+                            <Link className="w-full rounded-t-none" to={"/checkout"}>
+                                <Button className="w-full rounded-t-none">Go to Checkout</Button>
+                            </Link>
                         </CardFooter>
                     </Card>
                 </div>
