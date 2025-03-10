@@ -49,6 +49,18 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Column(name = "payment_intent_id")
+    private String paymentIntentId;
+
+    @Column(name = "refund_id")
+    private String refundId;
+
+    @Column(name = "paid_date")
+    private OffsetDateTime paidDate;
+
+    @Column(name = "refunded_date")
+    private OffsetDateTime refundedDate;
+
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;

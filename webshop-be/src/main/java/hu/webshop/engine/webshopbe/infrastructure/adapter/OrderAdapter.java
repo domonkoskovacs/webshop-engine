@@ -12,9 +12,9 @@ import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.OrderMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.OrderStatusRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.PaymentTokenRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
+import hu.webshop.engine.webshopbe.infrastructure.model.response.PaymentIntentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,9 +46,9 @@ public class OrderAdapter {
         return orderMapper.toResponse(orderService.create(paymentMethod));
     }
 
-    public OrderResponse pay(UUID id, PaymentTokenRequest paymentTokenRequest) {
-        log.info("pay > id: [{}]", id);
-        return orderMapper.toResponse(orderService.pay(id, paymentTokenRequest.token()));
+    public PaymentIntentResponse createPaymentIntent(UUID id) {
+        log.info("createPaymentIntent > id: [{}]", id);
+        return new PaymentIntentResponse(orderService.createPaymentIntent(id).getClientSecret());
     }
 
     public OrderResponse changeStatus(UUID id, OrderStatusRequest request) {

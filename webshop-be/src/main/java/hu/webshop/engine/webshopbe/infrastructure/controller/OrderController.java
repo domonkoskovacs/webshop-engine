@@ -25,9 +25,9 @@ import hu.webshop.engine.webshopbe.infrastructure.adapter.OrderAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.OrderStatusRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.PaymentTokenRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
+import hu.webshop.engine.webshopbe.infrastructure.model.response.PaymentIntentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -98,9 +98,9 @@ public class OrderController {
     )
     @PostMapping(value = "/{id}/pay", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @User
-    public ResponseEntity<OrderResponse> pay(@PathVariable UUID id, @RequestBody PaymentTokenRequest paymentTokenRequest) {
-        log.info("pay > id: [{}]", id);
-        return ResponseEntity.ok(orderAdapter.pay(id, paymentTokenRequest));
+    public ResponseEntity<PaymentIntentResponse> createPaymentIntent(@PathVariable UUID id) {
+        log.info("createPaymentIntent > id: [{}]", id);
+        return ResponseEntity.ok(orderAdapter.createPaymentIntent(id));
     }
 
     @Operation(

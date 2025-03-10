@@ -1,17 +1,14 @@
 package hu.webshop.engine.webshopbe.domain.order;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 
 import com.stripe.Stripe;
-import com.stripe.model.Charge;
 import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
-import hu.webshop.engine.webshopbe.domain.order.value.StripeCharge;
+import hu.webshop.engine.webshopbe.domain.order.value.Intent;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,34 +25,32 @@ public class StripeService {
         Stripe.apiKey = stripeProperties.getPrivateKey();
     }
 
-    /**
-     * sends out a stripe charge, test token is used as a default
-     *
-     * @param charge charge data
-     * @return payment info, needed to validate success
-     */
-    public Charge charge(StripeCharge charge) {
-        log.info("charge");
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", charge.amount().intValue());
-        chargeParams.put("currency", charge.currency());
-        chargeParams.put("description", charge.description());
-        chargeParams.put("source", stripeProperties.isUseTestToken() ? "tok_visa" : charge.token());
+    public PaymentIntent intent(Intent intent) {
+        log.info("intent > intent: [{}]", intent);
+
         try {
-            return Charge.create(chargeParams);
+            long amountInCents = Math.round(intent.amount() * 100);
+
+            PaymentIntentCreateParams.Builder builder = PaymentIntentCreateParams.builder()
+                    .setAmount(amountInCents)
+                    .setCurrency(intent.currency().toString())
+                    .setAutomaticPaymentMethods(
+                            PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                    .setEnabled(true)
+                                    .build()
+                    )
+                    .putMetadata("order_id", intent.orderId().toString());
+
+            if (intent.email() != null) {
+                builder.setReceiptEmail(intent.email());
+            }
+
+            PaymentIntentCreateParams params = builder.build();
+            return PaymentIntent.create(params);
+
         } catch (com.stripe.exception.StripeException e) {
             throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
         }
     }
 
-    public String intent(Double amount) {
-        log.info("intent > amount: [{}]", amount);
-        Map<String, Object> intentParams = new HashMap<>();
-        intentParams.put("amount", amount.intValue());
-        try {
-            return PaymentIntent.create(intentParams).getClientSecret();
-        } catch (com.stripe.exception.StripeException e) {
-            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
-        }
-    }
 }

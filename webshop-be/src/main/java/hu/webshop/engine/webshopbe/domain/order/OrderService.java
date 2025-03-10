@@ -28,20 +28,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.stripe.model.Charge;
+import com.stripe.model.PaymentIntent;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
-import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.Currency;
+import hu.webshop.engine.webshopbe.domain.order.value.Intent;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
-import hu.webshop.engine.webshopbe.domain.order.value.StripeCharge;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
@@ -137,20 +136,16 @@ public class OrderService {
                 ).toList();
     }
 
-    public Order pay(UUID id, String token) {
-        log.info("pay > id: [{}]", id);
+    public PaymentIntent createPaymentIntent(UUID id) {
+        log.info("createPaymentIntent > id: [{}]", id);
         Order order = getById(id);
         if (order.getStatus().equals(CREATED)) {
-            Charge charge = stripeService.charge(new StripeCharge("order", order.getTotalPrice(), Currency.HUF, order.getUser().getEmail(), token));
-            if (charge.getStatus().equals("succeeded")) {
-                order.setStatus(PAYED);
-                emailService.sendOrderStatusChangedEmail(order);
-                return order;
-            } else {
-                throw new StripeException(ReasonCode.STRIPE_EXCEPTION, "payment unsuccessful");
-            }
+            PaymentIntent intent = stripeService.intent(new Intent(order.getTotalPrice(), Currency.USD, order.getUser().getEmail(), order.getId()));
+            order.setPaymentIntentId(intent.getId());
+            orderRepository.save(order);
+            return intent;
         } else {
-            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "already payed");
+            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "already paid");
         }
     }
 

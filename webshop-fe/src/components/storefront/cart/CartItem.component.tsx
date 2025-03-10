@@ -2,22 +2,23 @@ import React from "react";
 import {CartItemResponse, ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {Badge} from "../../ui/Badge";
 import {useUser} from "../../../hooks/UseUser";
-import { Minus, Plus } from "lucide-react";
-import { Button } from "src/components/ui/Button";
+import {Minus, Plus} from "lucide-react";
+import {Button} from "src/components/ui/Button";
 import {ApiError} from "../../../shared/ApiError";
 import {toast} from "../../../hooks/UseToast";
 
 interface CartHoverItemProps {
     item: CartItemResponse;
     type?: "hover" | "page";
+    amountModifiable?: boolean
 }
 
-const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover"}) => {
+const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountModifiable = true}) => {
     const {updateCart} = useUser()
 
     const handleUpdate = async (newCount: number) => {
         try {
-            await updateCart({ count: newCount, productId: item.product?.id! });
+            await updateCart({count: newCount, productId: item.product?.id!});
         } catch (error) {
             if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(
@@ -68,7 +69,7 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover"}) => {
                 </span>
 
             <div className="flex items-center mt-1 gap-2">
-                <Button
+                {amountModifiable && <Button
                     variant="outline"
                     size="icon"
                     className="w-6 h-6 p-0"
@@ -76,16 +77,16 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover"}) => {
                     onClick={() => handleUpdate(item.count! - 1)}
                 >
                     <Minus size={14}/>
-                </Button>
+                </Button>}
                 <span className="font-semibold">{item.count}</span>
-                <Button
+                {amountModifiable && <Button
                     variant="outline"
                     size="icon"
                     className="w-6 h-6 p-0"
                     onClick={() => handleUpdate(item.count! + 1)}
                 >
                     <Plus size={14}/>
-                </Button>
+                </Button>}
             </div>
         </div>
     </div>

@@ -1,10 +1,11 @@
 package hu.webshop.engine.webshopbe.domain.order.value;
 
-public record StripeCharge(
-        String description,
+import java.util.UUID;
+
+public record Intent(
         Double amount,
         Currency currency,
-        String stripeEmail,
-        String token
+        String email,
+        UUID orderId
 ) {
 }
