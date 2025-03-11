@@ -22,6 +22,14 @@ interface NumberInputFieldProps {
     description?: string;
 }
 
+interface FileInputFieldProps {
+    form: UseFormReturn<any>;
+    name: string;
+    label: string;
+    accept: string;
+    description?: string;
+}
+
 const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description,type}) => {
     return <FormField
         control={form.control}
@@ -68,4 +76,36 @@ const NumberInputField: React.FC<NumberInputFieldProps> = ({
     />
 };
 
-export {TextInputField, NumberInputField};
+const FileInputField: React.FC<FileInputFieldProps> = ({
+                                                               form,
+                                                               name,
+                                                               label,
+                                                               accept,
+                                                               description,
+                                                           }) => {
+    return <FormField
+        control={form.control}
+        name={name}
+        render={() => (
+            <FormItem className="flex flex-col gap-2">
+                {label && <FormLabel>{label}</FormLabel>}
+                <FormControl>
+                    <Input
+                        type="file"
+                        accept={accept}
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                form.setValue(name, file, {shouldValidate: true});
+                            }
+                        }}
+                    />
+                </FormControl>
+                {description && <FormDescription>{description}</FormDescription>}
+                <FormMessage/>
+            </FormItem>
+        )}
+    />
+};
+
+export {TextInputField, NumberInputField, FileInputField};

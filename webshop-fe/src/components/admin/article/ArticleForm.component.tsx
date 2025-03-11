@@ -3,11 +3,11 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useArticle} from "../../../hooks/UseArticle";
+import {FileInputField, TextInputField} from "../../ui/InputField";
 
 export const FormSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -53,84 +53,14 @@ const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="createArticleForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Name..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="title"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Title</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Title..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="buttonText"
-                                render={({field}) => (
-                                    <FormItem className="">
-                                        <FormLabel className="w-full text-center">Button Text</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Button Text..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="buttonLink"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Button Link</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Button Link..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-
-                            <FormField
-                                control={form.control}
-                                name="image"
-                                render={() => (
-                                    <FormItem className="flex flex-col gap-2">
-                                        <FormLabel className="w-full">Images</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="file"
-                                                accept="image/png, image/jpg, image/jpeg"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (file) {
-                                                        form.setValue("image", file, {shouldValidate: true});
-                                                    }
-                                                }}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
+                            <TextInputField form={form} name="name" label="Name" placeholder="Name..."/>
+                            <TextInputField form={form} name="title" label="Title" placeholder="Title..."/>
+                            <TextInputField form={form} name="buttonText" label="Button Text"
+                                            placeholder="Button Text..."/>
+                            <TextInputField form={form} name="buttonLink" label="Button Link"
+                                            placeholder="Button Link..."/>
+                            <FileInputField form={form} name="image" label="Images"
+                                            accept="image/png, image/jpg, image/jpeg"/>
                         </div>
                     </form>
                 </Form>

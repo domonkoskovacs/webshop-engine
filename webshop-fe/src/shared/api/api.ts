@@ -676,13 +676,13 @@ export interface PageOrderResponse {
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
@@ -761,7 +761,7 @@ export interface PageableObject {
      * @type {boolean}
      * @memberof PageableObject
      */
-    'unpaged'?: boolean;
+    'paged'?: boolean;
     /**
      * 
      * @type {number}
@@ -779,7 +779,7 @@ export interface PageableObject {
      * @type {boolean}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'unpaged'?: boolean;
 }
 /**
  * 
@@ -847,13 +847,13 @@ export interface ProductPageProductResponse {
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
@@ -1143,6 +1143,12 @@ export interface PublicStoreResponse {
      * @memberof PublicStoreResponse
      */
     'shippingPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PublicStoreResponse
+     */
+    'returnPeriod': number;
 }
 /**
  * 
@@ -1276,13 +1282,13 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'unsorted'?: boolean;
+    'sorted'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof SortObject
      */
-    'sorted'?: boolean;
+    'unsorted'?: boolean;
 }
 /**
  * 

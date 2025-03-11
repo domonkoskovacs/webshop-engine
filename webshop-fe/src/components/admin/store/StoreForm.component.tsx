@@ -27,6 +27,15 @@ const StoreForm: React.FC = () => {
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
+        defaultValues: {
+            name: "",
+            minOrderPrice: 0,
+            shippingPrice: 0,
+            returnPeriod: 0,
+            deleteOutOfStockProducts: false,
+            deleteUnusedPictures: false,
+            enableBuiltInMarketingEmails: false,
+        }
     })
 
     useEffect(() => {

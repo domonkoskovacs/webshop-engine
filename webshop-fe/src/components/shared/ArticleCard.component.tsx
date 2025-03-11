@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {Card, CardContent} from "src/components/ui/Card";
-import {Button} from "../../ui/Button";
-import {useArticle} from "../../../hooks/UseArticle";
+import {Button} from "../ui/Button";
+import {useArticle} from "../../hooks/UseArticle";
 import {Trash} from "lucide-react";
 
 interface ArticleCardProps {

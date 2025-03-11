@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Facebook, Instagram, Twitter} from "lucide-react";
 import {usePublicStore} from "../../../hooks/UsePublicStore";
 
@@ -36,8 +36,8 @@ const FooterDetails: React.FC = () => {
                 <div className="flex flex-col items-center md:items-start space-y-2">
                     <h2 className="text-lg font-bold">Information</h2>
                     <p>VAT included in all prices.</p>
-                    <p>Minimum order price: 10000 HUF.</p>
-                    <p>Returns accepted within 14 days.</p>
+                    <p>Minimum order price: ${store?.minOrderPrice}.</p>
+                    <p>Returns accepted within {store?.returnPeriod} days.</p>
                 </div>
             </div>
         </div>

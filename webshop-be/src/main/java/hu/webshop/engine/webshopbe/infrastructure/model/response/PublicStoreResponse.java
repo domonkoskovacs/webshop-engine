@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 public record PublicStoreResponse(
         @NotNull String name,
         @NotNull Double minOrderPrice,
-        @NotNull Double shippingPrice
+        @NotNull Double shippingPrice,
+        @NotNull Integer returnPeriod
 ) {
 }

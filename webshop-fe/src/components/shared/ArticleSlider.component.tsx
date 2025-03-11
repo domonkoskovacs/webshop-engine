@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Button} from "../ui/Button";
-import ArticleCard from "../../components/admin/article/ArticleCard.component";
+import ArticleCard from "./ArticleCard.component";
 import {useArticle} from "../../hooks/UseArticle";
 
 interface ArticleSliderProps {
