@@ -1,8 +1,6 @@
 import {CartItemResponse} from "../shared/api";
 
-const SHIPPING_COST = 5;
-
-export function calculateCartTotals(cart: CartItemResponse[]) {
+export function calculateCartTotals(cart: CartItemResponse[], shippingCost: number) {
     const fullPrice = cart.reduce(
         (total, item) => total + item.count! * item.product!.price!,
         0
@@ -16,7 +14,7 @@ export function calculateCartTotals(cart: CartItemResponse[]) {
     }, 0);
 
     const discountAmount = fullPrice - discountedPrice;
-    const finalPrice = discountedPrice + SHIPPING_COST;
+    const finalPrice = discountedPrice + shippingCost;
 
-    return { fullPrice, discountedPrice, discountAmount, finalPrice, shippingCost: SHIPPING_COST };
+    return { fullPrice, discountedPrice, discountAmount, finalPrice };
 }

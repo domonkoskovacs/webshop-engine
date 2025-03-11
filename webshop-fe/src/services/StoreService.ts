@@ -29,6 +29,16 @@ class StoreService {
         );
     }
 
+    /**
+     * Get public store configuration
+     */
+    async getPublic() {
+        return handleApiCall(() =>
+            this.storeApi.getPublicStore()
+                .then(res => res?.data)
+        );
+    }
+
 }
 
 export const storeService = new StoreService();

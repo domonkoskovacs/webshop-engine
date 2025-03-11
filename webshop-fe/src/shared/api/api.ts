@@ -676,37 +676,13 @@ export interface PageOrderResponse {
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
     'totalPages'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageOrderResponse
      */
-    'numberOfElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageOrderResponse
-     */
-    'pageable'?: PageableObject;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
@@ -736,6 +712,30 @@ export interface PageOrderResponse {
      * @type {boolean}
      * @memberof PageOrderResponse
      */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageOrderResponse
+     */
+    'last'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageOrderResponse
+     */
+    'numberOfElements'?: number;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof PageOrderResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageOrderResponse
+     */
     'empty'?: boolean;
 }
 /**
@@ -744,30 +744,6 @@ export interface PageOrderResponse {
  * @interface PageableObject
  */
 export interface PageableObject {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'unpaged'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
     /**
      * 
      * @type {number}
@@ -780,6 +756,30 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'unpaged'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
 }
 /**
  * 
@@ -847,25 +847,13 @@ export interface ProductPageProductResponse {
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProductPageProductResponse
-     */
     'totalPages'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'numberOfElements'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
@@ -884,6 +872,18 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageProductResponse
+     */
+    'numberOfElements'?: number;
     /**
      * 
      * @type {boolean}
@@ -1122,6 +1122,31 @@ export type PromotionEmailResponseDayOfWeekEnum = typeof PromotionEmailResponseD
 /**
  * 
  * @export
+ * @interface PublicStoreResponse
+ */
+export interface PublicStoreResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof PublicStoreResponse
+     */
+    'name': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PublicStoreResponse
+     */
+    'minOrderPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PublicStoreResponse
+     */
+    'shippingPrice': number;
+}
+/**
+ * 
+ * @export
  * @interface RegistrationRequest
  */
 export interface RegistrationRequest {
@@ -1245,6 +1270,12 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
+    'empty'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
     'unsorted'?: boolean;
     /**
      * 
@@ -1252,12 +1283,6 @@ export interface SortObject {
      * @memberof SortObject
      */
     'sorted'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'empty'?: boolean;
 }
 /**
  * 
@@ -6077,6 +6102,40 @@ export class StatisticsServiceApi extends BaseAPI {
 export const StoreServiceApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Retrieve essential store settings for users
+         * @summary Get public store configuration
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPublicStore: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/store/public`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuthentication required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Admin can retrieve store configuration
          * @summary Get store configuration
          * @param {*} [options] Override http request option.
@@ -6161,6 +6220,18 @@ export const StoreServiceApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = StoreServiceApiAxiosParamCreator(configuration)
     return {
         /**
+         * Retrieve essential store settings for users
+         * @summary Get public store configuration
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPublicStore(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PublicStoreResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPublicStore(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['StoreServiceApi.getPublicStore']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Admin can retrieve store configuration
          * @summary Get store configuration
          * @param {*} [options] Override http request option.
@@ -6195,6 +6266,15 @@ export const StoreServiceApiFp = function(configuration?: Configuration) {
 export const StoreServiceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = StoreServiceApiFp(configuration)
     return {
+        /**
+         * Retrieve essential store settings for users
+         * @summary Get public store configuration
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPublicStore(options?: RawAxiosRequestConfig): AxiosPromise<PublicStoreResponse> {
+            return localVarFp.getPublicStore(options).then((request) => request(axios, basePath));
+        },
         /**
          * Admin can retrieve store configuration
          * @summary Get store configuration
@@ -6238,6 +6318,17 @@ export interface StoreServiceApiUpdateStoreRequest {
  * @extends {BaseAPI}
  */
 export class StoreServiceApi extends BaseAPI {
+    /**
+     * Retrieve essential store settings for users
+     * @summary Get public store configuration
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StoreServiceApi
+     */
+    public getPublicStore(options?: RawAxiosRequestConfig) {
+        return StoreServiceApiFp(this.configuration).getPublicStore(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Admin can retrieve store configuration
      * @summary Get store configuration

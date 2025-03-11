@@ -9,18 +9,25 @@ import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Car
 import {Separator} from "../../components/ui/Separator";
 import {calculateCartTotals} from "../../lib/price.utils";
 import {Link} from "react-router-dom";
+import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
     const {cart} = useUser()
+    const {store} = usePublicStore()
 
-    const {fullPrice, discountedPrice, discountAmount, finalPrice, shippingCost} = calculateCartTotals(cart);
+    const {
+        fullPrice,
+        discountedPrice,
+        discountAmount,
+        finalPrice
+    } = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
 
     return cart.length > 0 ? (
         <main className="w-full mx-10 mb-6 relative">
             <h1 className="text-2xl font-bold my-6">Your Cart</h1>
             <div className="flex flex-col md:grid md:grid-cols-3 gap-6 ">
-                <Card className="md:col-span-2 self-start space-y-4">
+                <Card className="w-full md:col-span-2 self-start space-y-4">
                     <CardContent>
                         {cart.map((item) => (
                             <CartItem key={item.product!.id} item={item} type="page"/>
@@ -49,7 +56,7 @@ const Cart: React.FC = () => {
                             )}
 
                             <p className="text-lg font-bold">Subtotal: ${discountedPrice.toFixed(2)}</p>
-                            <p className="text-lg">Shipping: ${shippingCost.toFixed(2)}</p>
+                            <p className="text-lg">Shipping: ${(store?.shippingPrice ?? NaN).toFixed(2)}</p>
                             <Separator className="w-full"/>
                             <p className="text-xl font-bold">Total: ${finalPrice.toFixed(2)}</p>
                         </CardContent>

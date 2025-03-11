@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.StoreAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.StoreRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.response.PublicStoreResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.StoreResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,5 +52,16 @@ public class StoreController {
     public ResponseEntity<StoreResponse> updateStore(@RequestBody StoreRequest request) {
         log.info("updateStore > request: [{}]", request);
         return ResponseEntity.status(HttpStatus.OK).body(storeAdapter.updateStore(request));
+    }
+
+    @Operation(
+            tags = {"Store service"},
+            summary = "Get public store configuration",
+            description = "Retrieve essential store settings for users"
+    )
+    @GetMapping(value = "/public", produces = "application/json")
+    public ResponseEntity<PublicStoreResponse> getPublicStore() {
+        log.info("getPublicStore");
+        return ResponseEntity.status(HttpStatus.OK).body(storeAdapter.getPublicStore());
     }
 }

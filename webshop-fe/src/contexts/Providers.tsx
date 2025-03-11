@@ -6,7 +6,7 @@ import {CategoryProvider} from "./CategoryContext";
 import {ProductProvider} from "./ProductContext";
 import {ProductInfiniteScrollProvider} from "./ProductInfiniteScrollContext";
 import {ArticleProvider} from "./ArticleContext";
-import {StoreProvider} from "./StoreContext";
+import {PublicStoreProvider} from "./PublicStoreContext";
 
 interface ProvidersProps {
     children: React.ReactNode;
@@ -14,7 +14,7 @@ interface ProvidersProps {
 
 const Providers: React.FC<ProvidersProps> = ({children}) => {
     return (
-        <StoreProvider>
+        <PublicStoreProvider>
             <AuthProvider>
                 <GenderProvider>
                     <UserProvider>
@@ -30,7 +30,7 @@ const Providers: React.FC<ProvidersProps> = ({children}) => {
                     </UserProvider>
                 </GenderProvider>
             </AuthProvider>
-        </StoreProvider>
+        </PublicStoreProvider>
     );
 };
 

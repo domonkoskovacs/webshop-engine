@@ -7,12 +7,14 @@ import {calculateCartTotals} from "../../lib/price.utils";
 import {Button} from "../../components/ui/Button";
 import {toast} from "../../hooks/UseToast";
 import {useNavigate} from "react-router-dom";
+import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const Checkout: React.FC = () => {
     const {user, cart, placeOrder} = useUser()
+    const {store} = usePublicStore()
     const navigate = useNavigate();
 
-    const {fullPrice, discountedPrice, discountAmount, finalPrice, shippingCost} = calculateCartTotals(cart);
+    const {fullPrice, discountedPrice, discountAmount, finalPrice} = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
     const shippingAddress = user.shippingAddress!
     const billingAddress = user.billingAddress!
 
@@ -103,7 +105,7 @@ const Checkout: React.FC = () => {
                             <Separator/>
                             <div>
                                 <h3 className="text-lg font-semibold">Shipping Option</h3>
-                                <p>Standard Shipping - ${shippingCost.toFixed(2)}</p>
+                                <p>Standard Shipping - ${(store?.shippingPrice ?? NaN).toFixed(2)}</p>
                             </div>
                             <Separator/>
                             <div className="my-6">
