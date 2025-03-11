@@ -1,12 +1,14 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const TermsAndConditions: React.FC = () => {
+    const {store} = usePublicStore()
     return (
         <div className="max-w-4xl text-left p-6">
             <h1 className="text-3xl font-bold mb-4 text-center">Terms and Conditions</h1>
             <p className="mb-4">
-                Welcome to Webshop! By accessing and using our platform, you agree to comply with the following
+                Welcome to {store?.name}! By accessing and using our platform, you agree to comply with the following
                 terms and conditions. Please read these terms carefully before proceeding.
             </p>
             <h2 className="text-2xl font-semibold mb-2">1. Use of Our Platform</h2>
@@ -28,7 +30,7 @@ const TermsAndConditions: React.FC = () => {
             </p>
             <h2 className="text-2xl font-semibold mb-2">4. Limitation of Liability</h2>
             <p className="mb-4">
-                To the fullest extent permitted by law, Webshop shall not be liable for any direct, indirect,
+                To the fullest extent permitted by law, {store?.name} shall not be liable for any direct, indirect,
                 incidental, or consequential damages arising from your use of our platform or services.
             </p>
             <h2 className="text-2xl font-semibold mb-2">5. Changes to Terms</h2>

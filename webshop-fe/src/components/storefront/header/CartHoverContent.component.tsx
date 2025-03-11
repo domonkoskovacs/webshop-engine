@@ -19,7 +19,7 @@ const CartHoverContent: React.FC = () => {
             <div className="space-y-2">
                 <div className="h-[50vh] overflow-auto scrollbar">
                     {sortedCart.map((item) => (
-                        <CartItem item={item}/>
+                        <CartItem key={item.product!.id} item={item}/>
                     ))}
                 </div>
                 <div className="flex flex-row justify-between items-center">

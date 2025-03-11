@@ -40,7 +40,7 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
     const isDiscounted = discount > 0;
     const imageSize = type === "page" ? "w-20 h-20" : "w-14 h-14";
 
-    return <div key={item.product?.id} className="flex items-center justify-between gap-3 border-b p-2 px-3">
+    return <div className="flex items-center justify-between gap-3 border-b p-2 px-3">
         <div className="flex flex-row h-full items-center">
             <img
                 src={item.product?.imageUrls![0]}

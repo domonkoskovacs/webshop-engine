@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {usePublicStore} from "../../../hooks/UsePublicStore";
 
 const SiteFooter: React.FC = () => {
+    const {store} = usePublicStore()
+
     return (
         <div className="shrink-0 border-t border-border bg-muted p-4 text-center text-sm">
             <div className="mb-2 flex justify-center space-x-4">
@@ -16,7 +19,7 @@ const SiteFooter: React.FC = () => {
                 </Link>
             </div>
             <div className="text-muted-foreground">
-                &copy; {new Date().getFullYear()} Webshop Name. All rights reserved.
+                &copy; {new Date().getFullYear()} {store?.name}. All rights reserved.
             </div>
         </div>
     );

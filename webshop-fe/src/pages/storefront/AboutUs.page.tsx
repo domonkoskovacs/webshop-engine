@@ -1,14 +1,17 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const AboutUs: React.FC = () => {
+    const {store} = usePublicStore()
+
     return (
         <div className="max-w-4xl text-left p-6">
             <h1 className="text-2xl font-bold text-center">About Us</h1>
             <br/>
             <p>
-                Welcome to WebshopName, your one-stop destination for quality products and excellent service! At
-                WebshopName, we are passionate about providing a seamless online shopping experience, offering a
+                Welcome to {store?.name}, your one-stop destination for quality products and excellent service! At
+                {store?.name}, we are passionate about providing a seamless online shopping experience, offering a
                 curated selection of goods to meet all your needs.
             </p>
             <br/>
@@ -33,7 +36,7 @@ const AboutUs: React.FC = () => {
             <h2 className="text-xl font-semibold">Disclaimer</h2>
             <br/>
             <p>
-                Please note that WebshopName is not a real, functional webshop. This website is part of a thesis
+                Please note that {store?.name} is not a real, functional webshop. This website is part of a thesis
                 project created to explore the rapid development of online shopping habits and consumer
                 behavior.
                 The platform was developed using modern web technologies, including Spring for the backend and
@@ -57,7 +60,7 @@ const AboutUs: React.FC = () => {
                 develop my expertise.
             </p>
             <p>
-                Thank you for visiting WebshopName. We hope you enjoy exploring this thesis project as much as I
+                Thank you for visiting {store?.name}. We hope you enjoy exploring this thesis project as much as I
                 enjoyed creating it!
             </p>
         </div>

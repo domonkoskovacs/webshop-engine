@@ -14,19 +14,35 @@ const Checkout: React.FC = () => {
     const {store} = usePublicStore()
     const navigate = useNavigate();
 
-    const {fullPrice, discountedPrice, discountAmount, finalPrice} = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
+    const {
+        fullPrice,
+        discountedPrice,
+        discountAmount,
+        finalPrice
+    } = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
     const shippingAddress = user.shippingAddress!
     const billingAddress = user.billingAddress!
 
-    const [error, setError] = useState<string | null>(null);
+    const [errors, setErrors] = useState<string[]>([]);
+    const [addressError, setAddressError] = useState(false);
 
     useEffect(() => {
+        const newErrors: string[] = [];
+
         if (!shippingAddress || !billingAddress) {
-            setError("You need to set both shipping and billing addresses to place the order.");
+            newErrors.push("You need to set both shipping and billing addresses to place the order.");
+            setAddressError(true);
         } else {
-            setError(null);
+            setAddressError(false);
         }
-    }, [shippingAddress, billingAddress]);
+
+        if (store?.minOrderPrice && discountedPrice < store.minOrderPrice) {
+            newErrors.push(`Order price too low. Minimum order price is $${store.minOrderPrice.toFixed(2)}.`);
+        }
+
+        setErrors(newErrors);
+    }, [shippingAddress, billingAddress, discountedPrice, store?.minOrderPrice]);
+
 
     const handleOrderPlacement = async () => {
         try {
@@ -114,13 +130,26 @@ const Checkout: React.FC = () => {
                             </div>
                         </CardContent>
                         <CardFooter className="p-0 border-t flex flex-col">
-                            {error && (
+                            {errors.length > 0 && (
                                 <div className="text-red-500 my-4">
-                                    {error}
+                                    {errors.map((err, idx) => (
+                                        <div key={idx} className="text-red-500 px-4 py-2">
+                                            {err}
+                                        </div>
+                                    ))}
                                 </div>
                             )}
-                            {error ? <Button className="w-full rounded-t-none" onClick={() => navigate("/profile")}>Go to Profile</Button>:
-                                <Button className="w-full rounded-t-none" onClick={() => handleOrderPlacement()}>Place Order</Button>}
+                            {addressError ? (
+                                    <Button className="w-full rounded-t-none" onClick={() => navigate("/profile")}>Go to
+                                        Profile</Button>
+                                ) :
+                                <Button
+                                    className="w-full rounded-t-none"
+                                    onClick={handleOrderPlacement}
+                                    disabled={errors.length > 0}
+                                >
+                                    Place Order
+                                </Button>}
                         </CardFooter>
                     </Card>
                 </div>

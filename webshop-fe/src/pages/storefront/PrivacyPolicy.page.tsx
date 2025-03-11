@@ -1,12 +1,14 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const PrivacyPolicy: React.FC = () => {
+    const {store} = usePublicStore()
     return (
         <div className="max-w-4xl text-left p-6">
             <h1 className="text-3xl font-bold mb-4 text-center">Privacy Policy</h1>
             <p className="mb-4">
-                At Webshop, we value your privacy and are committed to protecting your personal data. This
+                At {store?.name}, we value your privacy and are committed to protecting your personal data. This
                 Privacy
                 Policy explains how we collect, use, and safeguard your information.
             </p>

@@ -10,11 +10,12 @@ import {Badge} from "../../ui/Badge";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard";
 import CartHoverContent from "./CartHoverContent.component";
 import {useAuth} from "../../../hooks/UseAuth";
+import {usePublicStore} from "../../../hooks/UsePublicStore";
 
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
     const {saved, cart} = useUser()
-
+    const {store} = usePublicStore()
     const location = useLocation();
     const { loggedIn } = useAuth();
     const isCartHoverDisabled = location.pathname === "/checkout" || !loggedIn;
@@ -24,7 +25,7 @@ const ActionsBar: React.FC = () => {
             <GenderSelector/>
 
             <Link to="/" className="text-xl font-semibold">
-                <span className="cursor-pointer">Webshop Name</span>
+                <span className="cursor-pointer">{store?.name}</span>
             </Link>
 
             <div className="flex space-x-4 sm:space-x-2">

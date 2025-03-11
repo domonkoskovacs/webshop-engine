@@ -1,13 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {Facebook, Instagram, Twitter} from "lucide-react";
+import {usePublicStore} from "../../../hooks/UsePublicStore";
 
 const FooterDetails: React.FC = () => {
+    const {store} = usePublicStore()
     return (
         <div className="flex justify-between items-center py-4 px-8 shadow-md">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex flex-col items-center md:items-start space-y-4">
-                    <h2 className="text-lg font-bold"><Link to={"/"}>Webshop Name</Link></h2>
+                    <h2 className="text-lg font-bold"><Link to={"/"}>{store?.name}</Link></h2>
                     <div className="flex space-x-4">
                         <Link to="/" aria-label="Facebook" className="text-muted-foreground hover:text-primary">
                             <Facebook size={24}/>
