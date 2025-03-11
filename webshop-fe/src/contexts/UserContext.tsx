@@ -30,7 +30,7 @@ interface UserContextType {
     updateCart: (cartItem: CartItemRequest) => Promise<void>;
     increaseOneInCart: (id: string) => Promise<void>;
     placeOrder: () => Promise<void>;
-    payOrder: (id: string, paymentToken: string) => Promise<void>;
+    //payOrder: (id: string, paymentToken: string) => Promise<void>;
     cancelOrder: (id: string) => Promise<void>;
 }
 
@@ -315,7 +315,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     }
 
-    const payOrder = async (id: string, paymentToken: string) => {
+    /*const payOrder = async (id: string, paymentToken: string) => {
         try {
             const updatedOrder = await orderService.pay(id, paymentToken);
             setOrders((prevOrders) =>
@@ -326,7 +326,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         } catch (error) {
             throw error
         }
-    }
+    }*/
 
     const cancelOrder = async (id: string) => {
         try {
@@ -359,7 +359,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 updateCart,
                 increaseOneInCart,
                 placeOrder,
-                payOrder,
+               // payOrder,
                 cancelOrder
             }}>
             {children}

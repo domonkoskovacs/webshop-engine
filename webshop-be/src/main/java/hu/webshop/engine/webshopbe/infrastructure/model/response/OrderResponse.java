@@ -17,6 +17,8 @@ public record OrderResponse(
         String phoneNumber,
         PaymentMethod paymentMethod,
         OrderStatus status,
+        OffsetDateTime paidDate,
+        OffsetDateTime refundedDate,
         UUID userId,
         List<OrderItemResponse> products
 ) {

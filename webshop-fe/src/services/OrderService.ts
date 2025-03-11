@@ -42,12 +42,12 @@ class OrderService {
     /**
      * Pay an existing order
      */
-    async pay(id: string, paymentToken: string) {
+    /*async pay(id: string, paymentToken: string) {
         return handleApiCall(() =>
             this.orderApi.pay({id: id, paymentTokenRequest: {token: paymentToken}})
                 .then(res => res?.data)
         );
-    }
+    }*/
 
     /**
      * Change existing orders status

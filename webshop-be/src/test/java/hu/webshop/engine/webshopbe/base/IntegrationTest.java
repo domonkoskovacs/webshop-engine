@@ -22,6 +22,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Duration;
 import java.util.EnumSet;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +54,7 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.configuration.Orthography;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
-import com.stripe.model.Charge;
+import com.stripe.model.PaymentIntent;
 import hu.webshop.engine.webshopbe.container.MailDevContainer;
 import hu.webshop.engine.webshopbe.domain.order.StripeService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
@@ -145,9 +146,10 @@ public abstract class IntegrationTest {
     @BeforeEach
     @DataSet(cleanBefore = true)
     void setup() {
-        Charge charge = new Charge();
-        charge.setStatus("succeeded");
-        lenient().when(stripeService.charge(any())).thenReturn(charge);
+        PaymentIntent intent = new PaymentIntent();
+        intent.setStatus("succeeded");
+        intent.setId(UUID.randomUUID().toString());
+        lenient().when(stripeService.intent(any())).thenReturn(intent);
         initDataConfig.run();
     }
 

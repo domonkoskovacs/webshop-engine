@@ -673,10 +673,16 @@ export interface PageOrderResponse {
     'totalPages'?: number;
     /**
      * 
-     * @type {PageableObject}
+     * @type {boolean}
      * @memberof PageOrderResponse
      */
-    'pageable'?: PageableObject;
+    'first'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageOrderResponse
+     */
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -703,22 +709,16 @@ export interface PageOrderResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageOrderResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof PageOrderResponse
+     */
+    'pageable'?: PageableObject;
     /**
      * 
      * @type {boolean}
@@ -737,13 +737,25 @@ export interface PageableObject {
      * @type {number}
      * @memberof PageableObject
      */
-    'pageSize'?: number;
+    'offset'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof PageableObject
+     */
+    'sort'?: SortObject;
     /**
      * 
      * @type {number}
      * @memberof PageableObject
      */
     'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageSize'?: number;
     /**
      * 
      * @type {boolean}
@@ -756,31 +768,19 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'unpaged'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'offset'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageableObject
-     */
-    'sort'?: SortObject;
 }
 /**
  * 
  * @export
- * @interface PaymentTokenRequest
+ * @interface PaymentIntentResponse
  */
-export interface PaymentTokenRequest {
+export interface PaymentIntentResponse {
     /**
      * 
      * @type {string}
-     * @memberof PaymentTokenRequest
+     * @memberof PaymentIntentResponse
      */
-    'token': string;
+    'clientSecret'?: string;
 }
 /**
  * 
@@ -826,6 +826,12 @@ export interface ProductPageProductResponse {
     'maxDiscount'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'last'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -841,7 +847,7 @@ export interface ProductPageProductResponse {
      * @type {boolean}
      * @memberof ProductPageProductResponse
      */
-    'last'?: boolean;
+    'first'?: boolean;
     /**
      * 
      * @type {number}
@@ -860,12 +866,6 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'sort'?: SortObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'first'?: boolean;
     /**
      * 
      * @type {number}
@@ -1288,6 +1288,12 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
+    'empty'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
     'sorted'?: boolean;
     /**
      * 
@@ -1295,12 +1301,6 @@ export interface SortObject {
      * @memberof SortObject
      */
     'unsorted'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'empty'?: boolean;
 }
 /**
  * 
@@ -3819,6 +3819,44 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
+         * Users can pay an order
+         * @summary Pay an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPaymentIntent: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('createPaymentIntent', 'id', id)
+            const localVarPath = `/api/order/{id}/pay`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuthentication required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Export orders from a base64 encoded csv
          * @summary Export orders from a csv
          * @param {string} [from] 
@@ -3987,50 +4025,6 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Users can pay an order
-         * @summary Pay an order
-         * @param {string} id 
-         * @param {PaymentTokenRequest} paymentTokenRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        pay: async (id: string, paymentTokenRequest: PaymentTokenRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('pay', 'id', id)
-            // verify required parameter 'paymentTokenRequest' is not null or undefined
-            assertParamExists('pay', 'paymentTokenRequest', paymentTokenRequest)
-            const localVarPath = `/api/order/{id}/pay`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(paymentTokenRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -4081,6 +4075,19 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * Users can pay an order
+         * @summary Pay an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createPaymentIntent(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentIntentResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPaymentIntent(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.createPaymentIntent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Export orders from a base64 encoded csv
          * @summary Export orders from a csv
          * @param {string} [from] 
@@ -4128,20 +4135,6 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getById1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
-        /**
-         * Users can pay an order
-         * @summary Pay an order
-         * @param {string} id 
-         * @param {PaymentTokenRequest} paymentTokenRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async pay(id: string, paymentTokenRequest: PaymentTokenRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.pay(id, paymentTokenRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.pay']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
     }
 };
 
@@ -4182,6 +4175,16 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
             return localVarFp.create1(options).then((request) => request(axios, basePath));
         },
         /**
+         * Users can pay an order
+         * @summary Pay an order
+         * @param {OrderServiceApiCreatePaymentIntentRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPaymentIntent(requestParameters: OrderServiceApiCreatePaymentIntentRequest, options?: RawAxiosRequestConfig): AxiosPromise<PaymentIntentResponse> {
+            return localVarFp.createPaymentIntent(requestParameters.id, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Export orders from a base64 encoded csv
          * @summary Export orders from a csv
          * @param {OrderServiceApiExport1Request} requestParameters Request parameters.
@@ -4210,16 +4213,6 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          */
         getById1(requestParameters: OrderServiceApiGetById1Request, options?: RawAxiosRequestConfig): AxiosPromise<OrderResponse> {
             return localVarFp.getById1(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Users can pay an order
-         * @summary Pay an order
-         * @param {OrderServiceApiPayRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        pay(requestParameters: OrderServiceApiPayRequest, options?: RawAxiosRequestConfig): AxiosPromise<OrderResponse> {
-            return localVarFp.pay(requestParameters.id, requestParameters.paymentTokenRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4257,6 +4250,20 @@ export interface OrderServiceApiChangeOrderStatusRequest {
      * @memberof OrderServiceApiChangeOrderStatus
      */
     readonly orderStatusRequest: OrderStatusRequest
+}
+
+/**
+ * Request parameters for createPaymentIntent operation in OrderServiceApi.
+ * @export
+ * @interface OrderServiceApiCreatePaymentIntentRequest
+ */
+export interface OrderServiceApiCreatePaymentIntentRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderServiceApiCreatePaymentIntent
+     */
+    readonly id: string
 }
 
 /**
@@ -4365,27 +4372,6 @@ export interface OrderServiceApiGetById1Request {
 }
 
 /**
- * Request parameters for pay operation in OrderServiceApi.
- * @export
- * @interface OrderServiceApiPayRequest
- */
-export interface OrderServiceApiPayRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderServiceApiPay
-     */
-    readonly id: string
-
-    /**
-     * 
-     * @type {PaymentTokenRequest}
-     * @memberof OrderServiceApiPay
-     */
-    readonly paymentTokenRequest: PaymentTokenRequest
-}
-
-/**
  * OrderServiceApi - object-oriented interface
  * @export
  * @class OrderServiceApi
@@ -4428,6 +4414,18 @@ export class OrderServiceApi extends BaseAPI {
     }
 
     /**
+     * Users can pay an order
+     * @summary Pay an order
+     * @param {OrderServiceApiCreatePaymentIntentRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrderServiceApi
+     */
+    public createPaymentIntent(requestParameters: OrderServiceApiCreatePaymentIntentRequest, options?: RawAxiosRequestConfig) {
+        return OrderServiceApiFp(this.configuration).createPaymentIntent(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Export orders from a base64 encoded csv
      * @summary Export orders from a csv
      * @param {OrderServiceApiExport1Request} requestParameters Request parameters.
@@ -4461,18 +4459,6 @@ export class OrderServiceApi extends BaseAPI {
      */
     public getById1(requestParameters: OrderServiceApiGetById1Request, options?: RawAxiosRequestConfig) {
         return OrderServiceApiFp(this.configuration).getById1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Users can pay an order
-     * @summary Pay an order
-     * @param {OrderServiceApiPayRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OrderServiceApi
-     */
-    public pay(requestParameters: OrderServiceApiPayRequest, options?: RawAxiosRequestConfig) {
-        return OrderServiceApiFp(this.configuration).pay(requestParameters.id, requestParameters.paymentTokenRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

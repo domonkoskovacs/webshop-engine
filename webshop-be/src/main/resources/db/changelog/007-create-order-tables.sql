@@ -5,6 +5,10 @@ create table webshop_order
     total_price        double precision                  not null,
     payment_method     varchar                           not null,
     order_status       varchar                           not null,
+    payment_intent_id  varchar,
+    refund_id          varchar,
+    paid_date          timestamp,
+    refunded_date      timestamp,
     user_id            uuid references webshop_user (id) not null,
     creation_time      timestamp                         not null,
     last_modified_time timestamp

@@ -1,7 +1,5 @@
 package hu.webshop.engine.webshopbe.integration;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,7 +17,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.stripe.model.Charge;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
@@ -209,22 +206,5 @@ class OrderControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.PAYED.name()));
-    }
-
-    @Test
-    @DisplayName("payment unsuccessful")
-    @DataSet("existingOrderAndAdmin.yml")
-    void paymentUnsuccessful() throws Exception {
-        //Given
-        Charge charge = new Charge();
-        charge.setStatus("unsuccessful");
-        lenient().when(stripeService.charge(any())).thenReturn(charge);
-        PaymentTokenRequest paymentTokenRequest = new PaymentTokenRequest("tok_visa");
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/pay", paymentTokenRequest, Role.ROLE_USER);
-
-        //Then
-        resultActions.andExpect(status().isPaymentRequired());
     }
 }

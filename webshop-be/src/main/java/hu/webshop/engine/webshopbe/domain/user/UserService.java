@@ -207,6 +207,11 @@ public class UserService implements UserDetailsService {
         for (CartItem cartItem : cartItems) {
             Cart existingCart = existingCartMap.get(cartItem.productId());
 
+            Product product = productService.getById(cartItem.productId());
+            if (cartItem.count() > product.getCount()) {
+                throw new ProductException(ReasonCode.NOT_ENOUGH_PRODUCT_IN_STOCK, "Not enough stock for product: " + cartItem.productId());
+            }
+
             if (cartItem.count() == 0 && existingCart != null) {
                 currentUser.removeCart(existingCart);
             } else if (cartItem.count() > 0) {

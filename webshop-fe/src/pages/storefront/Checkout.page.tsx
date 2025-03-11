@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useUser} from "../../hooks/UseUser";
 import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Card";
 import CartItem from "../../components/storefront/cart/CartItem.component";
@@ -15,6 +15,16 @@ const Checkout: React.FC = () => {
     const {fullPrice, discountedPrice, discountAmount, finalPrice, shippingCost} = calculateCartTotals(cart);
     const shippingAddress = user.shippingAddress!
     const billingAddress = user.billingAddress!
+
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!shippingAddress || !billingAddress) {
+            setError("You need to set both shipping and billing addresses to place the order.");
+        } else {
+            setError(null);
+        }
+    }, [shippingAddress, billingAddress]);
 
     const handleOrderPlacement = async () => {
         try {
@@ -101,8 +111,14 @@ const Checkout: React.FC = () => {
                                 <p className="text-xl font-bold">Total: ${finalPrice.toFixed(2)}</p>
                             </div>
                         </CardContent>
-                        <CardFooter className="p-0 border-t">
-                            <Button className="w-full rounded-t-none" onClick={() => handleOrderPlacement()}>Place Order</Button>
+                        <CardFooter className="p-0 border-t flex flex-col">
+                            {error && (
+                                <div className="text-red-500 my-4">
+                                    {error}
+                                </div>
+                            )}
+                            {error ? <Button className="w-full rounded-t-none" onClick={() => navigate("/profile")}>Go to Profile</Button>:
+                                <Button className="w-full rounded-t-none" onClick={() => handleOrderPlacement()}>Place Order</Button>}
                         </CardFooter>
                     </Card>
                 </div>
