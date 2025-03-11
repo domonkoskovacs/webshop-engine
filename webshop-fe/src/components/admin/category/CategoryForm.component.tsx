@@ -3,11 +3,11 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useCategory} from "../../../hooks/UseCategory";
+import {TextInputField} from "../../ui/InputField";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {
@@ -52,20 +52,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen, id}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="createCategoryForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="categoryName"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel>{id ? "Subcategory Name" : "Category Name"}</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder={`Enter ${id ? "subcategory" : "category"} name`} {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
+                            <TextInputField form={form} name="categoryName"
+                                            label={id ? "Subcategory Name" : "Category Name"}
+                                            placeholder={`Enter ${id ? "subcategory" : "category"} name`}/>
                         </div>
                     </form>
                 </Form>

@@ -188,7 +188,7 @@ const CategoryTable: React.FC = () => {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <Fragment>
+                                <Fragment key={row.id}>
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && "selected"}

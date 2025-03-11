@@ -87,7 +87,7 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
         control={form.control}
         name={name}
         render={() => (
-            <FormItem className="flex flex-col gap-2">
+            <FormItem>
                 {label && <FormLabel>{label}</FormLabel>}
                 <FormControl>
                     <Input

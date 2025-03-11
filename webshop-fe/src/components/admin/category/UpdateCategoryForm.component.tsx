@@ -1,11 +1,11 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {Form, FormControl, FormField, FormItem, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useCategory} from "../../../hooks/UseCategory";
+import {TextInputField} from "../../ui/InputField";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {
@@ -22,7 +22,6 @@ interface UpdateCategoryFormProps {
 const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({id, placeholder, toggleEdit}) => {
     const {toast} = useToast()
     const {update} = useCategory();
-
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -42,18 +41,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({id, placeholder,
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} id={`updateCategoryForm-${id}`}>
-                <FormField
-                    control={form.control}
-                    name="categoryName"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input placeholder={placeholder} {...field} />
-                            </FormControl>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
+                <TextInputField form={form} name="categoryName" placeholder={placeholder}/>
             </form>
         </Form>
     );
