@@ -39,6 +39,6 @@ class StoreControllerIT extends IntegrationTest {
         ResultActions resultActions = performPut(BASE_URL, request, Role.ROLE_ADMIN);
 
         //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.maxArticle").value("10"));
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.returnPeriod").value("10"));
     }
 }

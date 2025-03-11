@@ -55,6 +55,7 @@ import com.github.database.rider.core.api.configuration.Orthography;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import hu.webshop.engine.webshopbe.container.MailDevContainer;
 import hu.webshop.engine.webshopbe.domain.order.StripeService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
@@ -149,7 +150,11 @@ public abstract class IntegrationTest {
         PaymentIntent intent = new PaymentIntent();
         intent.setStatus("succeeded");
         intent.setId(UUID.randomUUID().toString());
-        lenient().when(stripeService.intent(any())).thenReturn(intent);
+        Refund refund = new Refund();
+        refund.setId(UUID.randomUUID().toString());
+        lenient().when(stripeService.createIntent(any())).thenReturn(intent);
+        lenient().when(stripeService.retrieveIntent(any())).thenReturn(intent);
+        lenient().when(stripeService.createRefund(any(), any())).thenReturn(refund);
         initDataConfig.run();
     }
 

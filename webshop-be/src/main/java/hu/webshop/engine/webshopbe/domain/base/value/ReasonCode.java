@@ -26,6 +26,7 @@ public enum ReasonCode {
     NO_BILLING_ADDRESS,
     NO_ITEMS_IN_CART,
     NOT_ENOUGH_PRODUCT_IN_STOCK,
+    INVALID_ORDER_PRICE,
     CSV_ERROR,
     CSV_UPLOAD_ERROR,
     PROMOTION_EMAIL_NAME_OCCUPIED;
@@ -56,8 +57,9 @@ public enum ReasonCode {
         reasonStatus.put(NO_BILLING_ADDRESS, 4005);
         reasonStatus.put(NO_ITEMS_IN_CART, 4006);
         reasonStatus.put(NOT_ENOUGH_PRODUCT_IN_STOCK, 4007);
+        reasonStatus.put(INVALID_ORDER_PRICE, 4008);
         reasonStatus.put(CSV_ERROR, 5004);
-        reasonStatus.put(CSV_UPLOAD_ERROR, 4008);
+        reasonStatus.put(CSV_UPLOAD_ERROR, 4009);
         reasonStatus.put(PROMOTION_EMAIL_NAME_OCCUPIED, 4009);
     }
 

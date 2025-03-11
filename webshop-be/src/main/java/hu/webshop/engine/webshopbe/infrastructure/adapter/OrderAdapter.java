@@ -46,9 +46,9 @@ public class OrderAdapter {
         return orderMapper.toResponse(orderService.create(paymentMethod));
     }
 
-    public PaymentIntentResponse createPaymentIntent(UUID id) {
+    public PaymentIntentResponse paymentIntent(UUID id) {
         log.info("createPaymentIntent > id: [{}]", id);
-        return new PaymentIntentResponse(orderService.createPaymentIntent(id).getClientSecret());
+        return new PaymentIntentResponse(orderService.paymentIntent(id).getClientSecret());
     }
 
     public OrderResponse changeStatus(UUID id, OrderStatusRequest request) {

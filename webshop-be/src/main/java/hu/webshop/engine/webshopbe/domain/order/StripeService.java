@@ -4,7 +4,10 @@ import org.springframework.stereotype.Service;
 
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.PaymentIntentRetrieveParams;
+import com.stripe.param.RefundCreateParams;
 import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
@@ -25,7 +28,7 @@ public class StripeService {
         Stripe.apiKey = stripeProperties.getPrivateKey();
     }
 
-    public PaymentIntent intent(Intent intent) {
+    public PaymentIntent createIntent(Intent intent) {
         log.info("intent > intent: [{}]", intent);
 
         try {
@@ -53,4 +56,32 @@ public class StripeService {
         }
     }
 
+    public PaymentIntent retrieveIntent(String intentId) {
+        log.info("retrieveIntent > intentId: [{}]", intentId);
+
+        try {
+            return PaymentIntent.retrieve(intentId, PaymentIntentRetrieveParams.builder().build(), null);
+        } catch (com.stripe.exception.StripeException e) {
+            log.error("Failed to retrieve payment intent: [{}]", intentId, e);
+            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+        }
+    }
+
+    public Refund createRefund(String intentId, Double totalPrice) {
+        log.info("createRefund > intentId: [{}], totalPrice: [{}]", intentId, totalPrice);
+
+        try {
+            long amountInCents = Math.round(totalPrice * 100);
+
+            RefundCreateParams.Builder builder = RefundCreateParams.builder()
+                    .setPaymentIntent(intentId)
+                    .setAmount(amountInCents);
+
+            RefundCreateParams params = builder.build();
+            return Refund.create(params);
+        } catch (com.stripe.exception.StripeException e) {
+            log.error("Failed to create refund for intent: [{}]", intentId, e);
+            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+        }
+    }
 }

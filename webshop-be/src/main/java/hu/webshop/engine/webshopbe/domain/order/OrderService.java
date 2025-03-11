@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
@@ -45,6 +46,7 @@ import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
+import hu.webshop.engine.webshopbe.domain.store.StoreService;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.util.CSVWriter;
@@ -65,6 +67,7 @@ public class OrderService {
     private final EmailService emailService;
     private final StripeService stripeService;
     private final ProductService productService;
+    private final StoreService storeService;
 
     public Page<Order> getAll(
             OrderSpecificationArgs args,
@@ -83,7 +86,7 @@ public class OrderService {
         User currentUser = userService.getCurrentUser();
         validateOrderCanStart(currentUser);
         List<OrderItem> products = mapUserCartToOrderItems(currentUser);
-        Double totalPrice = calculateOrderItemsTotalPrice(products);
+        Double totalPrice = calculateOrderItemsTotalPrice(products) + storeService.getStore().getShippingPrice();
         Order order = Order.builder()
                 .orderDate(OffsetDateTime.now())
                 .totalPrice(totalPrice)
@@ -112,6 +115,9 @@ public class OrderService {
             throw new OrderException(ReasonCode.NO_ITEMS_IN_CART, "User doesnt have any item in cart");
         if (isThereInvalidProducts(currentUser.getCart()))
             throw new OrderException(ReasonCode.NOT_ENOUGH_PRODUCT_IN_STOCK, "There isn't enough product to complete the order");
+        if (calculateOrderItemsTotalPrice(mapUserCartToOrderItems(currentUser)) < storeService.getStore().getMinOrderPrice()) {
+            throw new OrderException(ReasonCode.INVALID_ORDER_PRICE, "Order price is too low");
+        }
     }
 
     private boolean isThereInvalidProducts(List<Cart> cart) {
@@ -124,7 +130,9 @@ public class OrderService {
 
     private static Double calculateOrderItemsTotalPrice(List<OrderItem> products) {
         return products.stream()
-                .map(orderItem -> orderItem.getProduct().getPrice() * orderItem.getCount())
+                .map(orderItem -> orderItem.getProduct().getPrice() *
+                        (1 - orderItem.getProduct().getDiscountPercentage() / 100) *
+                        orderItem.getCount())
                 .reduce(Double::sum)
                 .orElse(0.0);
     }
@@ -136,13 +144,17 @@ public class OrderService {
                 ).toList();
     }
 
-    public PaymentIntent createPaymentIntent(UUID id) {
+    public PaymentIntent paymentIntent(UUID id) {
         log.info("createPaymentIntent > id: [{}]", id);
         Order order = getById(id);
         if (order.getStatus().equals(CREATED)) {
-            PaymentIntent intent = stripeService.intent(new Intent(order.getTotalPrice(), Currency.USD, order.getUser().getEmail(), order.getId()));
-            order.setPaymentIntentId(intent.getId());
-            orderRepository.save(order);
+            PaymentIntent intent = order.getPaymentIntentId() == null ?
+                    stripeService.createIntent(new Intent(order.getTotalPrice(), Currency.USD, order.getUser().getEmail(), order.getId())) :
+                    stripeService.retrieveIntent(order.getPaymentIntentId());
+            if (order.getPaymentIntentId() != null) {
+                order.setPaymentIntentId(intent.getId());
+                orderRepository.save(order);
+            }
             return intent;
         } else {
             throw new OrderException(ReasonCode.ORDER_EXCEPTION, "already paid");
@@ -191,6 +203,13 @@ public class OrderService {
         order.ifPresent(o -> {
                     if (OrderStatus.isCancelable(o.getStatus())) {
                         emailService.sendOrderCanceledEmail(o);
+                        if(CREATED.equals(o.getStatus())) {
+                            o.setStatus(CANCELLED);
+                        } else {
+                            Refund refund = stripeService.createRefund(o.getPaymentIntentId(), o.getTotalPrice());
+                            o.setRefundId(refund.getId());
+                            o.setStatus(WAITING_FOR_REFUND);
+                        }
                         o.setStatus(WAITING_FOR_REFUND);
                         orderRepository.save(o);
                         updateProductStock(o, StockChange.INCREMENT);

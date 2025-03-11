@@ -96,11 +96,11 @@ public class OrderController {
             summary = "Pay an order",
             description = "Users can pay an order"
     )
-    @PostMapping(value = "/{id}/pay", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{id}/paymentIntent", produces = MediaType.APPLICATION_JSON_VALUE)
     @User
-    public ResponseEntity<PaymentIntentResponse> createPaymentIntent(@PathVariable UUID id) {
-        log.info("createPaymentIntent > id: [{}]", id);
-        return ResponseEntity.ok(orderAdapter.createPaymentIntent(id));
+    public ResponseEntity<PaymentIntentResponse> paymentIntent(@PathVariable UUID id) {
+        log.info("paymentIntent > id: [{}]", id);
+        return ResponseEntity.ok(orderAdapter.paymentIntent(id));
     }
 
     @Operation(

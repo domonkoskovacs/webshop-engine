@@ -48,7 +48,7 @@ class OrderControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.totalPrice").value(20));
+                .andExpect(jsonPath("$.totalPrice").value(18));
         awaitFor(() -> !orderRepository.findAll().isEmpty());
         awaitFor(() -> {
             Optional<User> byId = userRepository.findById(UUID.fromString(USER_ID));
