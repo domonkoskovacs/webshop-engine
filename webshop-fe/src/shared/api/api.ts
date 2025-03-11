@@ -576,6 +576,18 @@ export interface OrderResponse {
      * @type {string}
      * @memberof OrderResponse
      */
+    'paidDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderResponse
+     */
+    'refundedDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderResponse
+     */
     'userId'?: string;
     /**
      * 
@@ -688,6 +700,18 @@ export interface PageOrderResponse {
      * @type {number}
      * @memberof PageOrderResponse
      */
+    'numberOfElements'?: number;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof PageOrderResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageOrderResponse
+     */
     'size'?: number;
     /**
      * 
@@ -709,18 +733,6 @@ export interface PageOrderResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageOrderResponse
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
      * @type {boolean}
      * @memberof PageOrderResponse
      */
@@ -734,16 +746,16 @@ export interface PageOrderResponse {
 export interface PageableObject {
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'offset'?: number;
+    'unpaged'?: boolean;
     /**
      * 
-     * @type {SortObject}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'sort'?: SortObject;
+    'paged'?: boolean;
     /**
      * 
      * @type {number}
@@ -758,16 +770,16 @@ export interface PageableObject {
     'pageSize'?: number;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'offset'?: number;
     /**
      * 
-     * @type {boolean}
+     * @type {SortObject}
      * @memberof PageableObject
      */
-    'unpaged'?: boolean;
+    'sort'?: SortObject;
 }
 /**
  * 
@@ -853,6 +865,12 @@ export interface ProductPageProductResponse {
      * @type {number}
      * @memberof ProductPageProductResponse
      */
+    'numberOfElements'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageProductResponse
+     */
     'size'?: number;
     /**
      * 
@@ -866,12 +884,6 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'sort'?: SortObject;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProductPageProductResponse
-     */
-    'numberOfElements'?: number;
     /**
      * 
      * @type {boolean}
@@ -1214,6 +1226,7 @@ export const ResultEntryReasonCodeEnum = {
     NoBillingAddress: 'NO_BILLING_ADDRESS',
     NoItemsInCart: 'NO_ITEMS_IN_CART',
     NotEnoughProductInStock: 'NOT_ENOUGH_PRODUCT_IN_STOCK',
+    InvalidOrderPrice: 'INVALID_ORDER_PRICE',
     CsvError: 'CSV_ERROR',
     CsvUploadError: 'CSV_UPLOAD_ERROR',
     PromotionEmailNameOccupied: 'PROMOTION_EMAIL_NAME_OCCUPIED'
@@ -1221,62 +1234,6 @@ export const ResultEntryReasonCodeEnum = {
 
 export type ResultEntryReasonCodeEnum = typeof ResultEntryReasonCodeEnum[keyof typeof ResultEntryReasonCodeEnum];
 
-/**
- * 
- * @export
- * @interface SocialIconRequest
- */
-export interface SocialIconRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialIconRequest
-     */
-    'url': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialIconRequest
-     */
-    'icon': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SocialIconRequest
-     */
-    'position': number;
-}
-/**
- * 
- * @export
- * @interface SocialIconResponse
- */
-export interface SocialIconResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialIconResponse
-     */
-    'id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialIconResponse
-     */
-    'url'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SocialIconResponse
-     */
-    'icon'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof SocialIconResponse
-     */
-    'position'?: number;
-}
 /**
  * 
  * @export
@@ -1288,7 +1245,7 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'empty'?: boolean;
+    'unsorted'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1300,7 +1257,7 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'unsorted'?: boolean;
+    'empty'?: boolean;
 }
 /**
  * 
@@ -1347,10 +1304,28 @@ export interface StatisticsResponse {
 export interface StoreRequest {
     /**
      * 
+     * @type {string}
+     * @memberof StoreRequest
+     */
+    'name': string;
+    /**
+     * 
      * @type {number}
      * @memberof StoreRequest
      */
     'minOrderPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof StoreRequest
+     */
+    'shippingPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof StoreRequest
+     */
+    'returnPeriod': number;
     /**
      * 
      * @type {string}
@@ -1369,12 +1344,6 @@ export interface StoreRequest {
      * @memberof StoreRequest
      */
     'secondaryColor'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof StoreRequest
-     */
-    'maxArticle'?: number;
     /**
      * 
      * @type {boolean}
@@ -1402,10 +1371,28 @@ export interface StoreRequest {
 export interface StoreResponse {
     /**
      * 
+     * @type {string}
+     * @memberof StoreResponse
+     */
+    'name': string;
+    /**
+     * 
      * @type {number}
      * @memberof StoreResponse
      */
-    'minOrderPrice'?: number;
+    'minOrderPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof StoreResponse
+     */
+    'shippingPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof StoreResponse
+     */
+    'returnPeriod': number;
     /**
      * 
      * @type {string}
@@ -1426,34 +1413,22 @@ export interface StoreResponse {
     'secondaryColor'?: string;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof StoreResponse
      */
-    'maxArticle'?: number;
+    'deleteOutOfStockProducts': boolean;
     /**
      * 
      * @type {boolean}
      * @memberof StoreResponse
      */
-    'deleteOutOfStockProducts'?: boolean;
+    'deleteUnusedPictures': boolean;
     /**
      * 
      * @type {boolean}
      * @memberof StoreResponse
      */
-    'deleteUnusedPictures'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StoreResponse
-     */
-    'enableBuiltInMarketingEmails'?: boolean;
-    /**
-     * 
-     * @type {Array<SocialIconResponse>}
-     * @memberof StoreResponse
-     */
-    'socialIcons'?: Array<SocialIconResponse>;
+    'enableBuiltInMarketingEmails': boolean;
 }
 /**
  * 
@@ -3819,44 +3794,6 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
-         * Users can pay an order
-         * @summary Pay an order
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPaymentIntent: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('createPaymentIntent', 'id', id)
-            const localVarPath = `/api/order/{id}/pay`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Export orders from a base64 encoded csv
          * @summary Export orders from a csv
          * @param {string} [from] 
@@ -4025,6 +3962,44 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Users can pay an order
+         * @summary Pay an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        paymentIntent: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('paymentIntent', 'id', id)
+            const localVarPath = `/api/order/{id}/paymentIntent`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuthentication required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -4075,19 +4050,6 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Users can pay an order
-         * @summary Pay an order
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createPaymentIntent(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentIntentResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createPaymentIntent(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.createPaymentIntent']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Export orders from a base64 encoded csv
          * @summary Export orders from a csv
          * @param {string} [from] 
@@ -4135,6 +4097,19 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getById1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Users can pay an order
+         * @summary Pay an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async paymentIntent(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentIntentResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.paymentIntent(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.paymentIntent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -4175,16 +4150,6 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
             return localVarFp.create1(options).then((request) => request(axios, basePath));
         },
         /**
-         * Users can pay an order
-         * @summary Pay an order
-         * @param {OrderServiceApiCreatePaymentIntentRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPaymentIntent(requestParameters: OrderServiceApiCreatePaymentIntentRequest, options?: RawAxiosRequestConfig): AxiosPromise<PaymentIntentResponse> {
-            return localVarFp.createPaymentIntent(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Export orders from a base64 encoded csv
          * @summary Export orders from a csv
          * @param {OrderServiceApiExport1Request} requestParameters Request parameters.
@@ -4213,6 +4178,16 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          */
         getById1(requestParameters: OrderServiceApiGetById1Request, options?: RawAxiosRequestConfig): AxiosPromise<OrderResponse> {
             return localVarFp.getById1(requestParameters.id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Users can pay an order
+         * @summary Pay an order
+         * @param {OrderServiceApiPaymentIntentRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        paymentIntent(requestParameters: OrderServiceApiPaymentIntentRequest, options?: RawAxiosRequestConfig): AxiosPromise<PaymentIntentResponse> {
+            return localVarFp.paymentIntent(requestParameters.id, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -4250,20 +4225,6 @@ export interface OrderServiceApiChangeOrderStatusRequest {
      * @memberof OrderServiceApiChangeOrderStatus
      */
     readonly orderStatusRequest: OrderStatusRequest
-}
-
-/**
- * Request parameters for createPaymentIntent operation in OrderServiceApi.
- * @export
- * @interface OrderServiceApiCreatePaymentIntentRequest
- */
-export interface OrderServiceApiCreatePaymentIntentRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderServiceApiCreatePaymentIntent
-     */
-    readonly id: string
 }
 
 /**
@@ -4372,6 +4333,20 @@ export interface OrderServiceApiGetById1Request {
 }
 
 /**
+ * Request parameters for paymentIntent operation in OrderServiceApi.
+ * @export
+ * @interface OrderServiceApiPaymentIntentRequest
+ */
+export interface OrderServiceApiPaymentIntentRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderServiceApiPaymentIntent
+     */
+    readonly id: string
+}
+
+/**
  * OrderServiceApi - object-oriented interface
  * @export
  * @class OrderServiceApi
@@ -4414,18 +4389,6 @@ export class OrderServiceApi extends BaseAPI {
     }
 
     /**
-     * Users can pay an order
-     * @summary Pay an order
-     * @param {OrderServiceApiCreatePaymentIntentRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OrderServiceApi
-     */
-    public createPaymentIntent(requestParameters: OrderServiceApiCreatePaymentIntentRequest, options?: RawAxiosRequestConfig) {
-        return OrderServiceApiFp(this.configuration).createPaymentIntent(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Export orders from a base64 encoded csv
      * @summary Export orders from a csv
      * @param {OrderServiceApiExport1Request} requestParameters Request parameters.
@@ -4459,6 +4422,18 @@ export class OrderServiceApi extends BaseAPI {
      */
     public getById1(requestParameters: OrderServiceApiGetById1Request, options?: RawAxiosRequestConfig) {
         return OrderServiceApiFp(this.configuration).getById1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Users can pay an order
+     * @summary Pay an order
+     * @param {OrderServiceApiPaymentIntentRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrderServiceApi
+     */
+    public paymentIntent(requestParameters: OrderServiceApiPaymentIntentRequest, options?: RawAxiosRequestConfig) {
+        return OrderServiceApiFp(this.configuration).paymentIntent(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -6102,84 +6077,6 @@ export class StatisticsServiceApi extends BaseAPI {
 export const StoreServiceApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Add Social Icon
-         * @summary Add Social Icon
-         * @param {SocialIconRequest} socialIconRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addSocialIcon: async (socialIconRequest: SocialIconRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'socialIconRequest' is not null or undefined
-            assertParamExists('addSocialIcon', 'socialIconRequest', socialIconRequest)
-            const localVarPath = `/api/store/socialIcon`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(socialIconRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Delete Social Icon
-         * @summary Delete Social Icon
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSocialIcon: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteSocialIcon', 'id', id)
-            const localVarPath = `/api/store/socialIcon/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Admin can retrieve store configuration
          * @summary Get store configuration
          * @param {*} [options] Override http request option.
@@ -6264,32 +6161,6 @@ export const StoreServiceApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = StoreServiceApiAxiosParamCreator(configuration)
     return {
         /**
-         * Add Social Icon
-         * @summary Add Social Icon
-         * @param {SocialIconRequest} socialIconRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async addSocialIcon(socialIconRequest: SocialIconRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StoreResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addSocialIcon(socialIconRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StoreServiceApi.addSocialIcon']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Delete Social Icon
-         * @summary Delete Social Icon
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteSocialIcon(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StoreResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteSocialIcon(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StoreServiceApi.deleteSocialIcon']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Admin can retrieve store configuration
          * @summary Get store configuration
          * @param {*} [options] Override http request option.
@@ -6325,26 +6196,6 @@ export const StoreServiceApiFactory = function (configuration?: Configuration, b
     const localVarFp = StoreServiceApiFp(configuration)
     return {
         /**
-         * Add Social Icon
-         * @summary Add Social Icon
-         * @param {StoreServiceApiAddSocialIconRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addSocialIcon(requestParameters: StoreServiceApiAddSocialIconRequest, options?: RawAxiosRequestConfig): AxiosPromise<StoreResponse> {
-            return localVarFp.addSocialIcon(requestParameters.socialIconRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Delete Social Icon
-         * @summary Delete Social Icon
-         * @param {StoreServiceApiDeleteSocialIconRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSocialIcon(requestParameters: StoreServiceApiDeleteSocialIconRequest, options?: RawAxiosRequestConfig): AxiosPromise<StoreResponse> {
-            return localVarFp.deleteSocialIcon(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Admin can retrieve store configuration
          * @summary Get store configuration
          * @param {*} [options] Override http request option.
@@ -6367,34 +6218,6 @@ export const StoreServiceApiFactory = function (configuration?: Configuration, b
 };
 
 /**
- * Request parameters for addSocialIcon operation in StoreServiceApi.
- * @export
- * @interface StoreServiceApiAddSocialIconRequest
- */
-export interface StoreServiceApiAddSocialIconRequest {
-    /**
-     * 
-     * @type {SocialIconRequest}
-     * @memberof StoreServiceApiAddSocialIcon
-     */
-    readonly socialIconRequest: SocialIconRequest
-}
-
-/**
- * Request parameters for deleteSocialIcon operation in StoreServiceApi.
- * @export
- * @interface StoreServiceApiDeleteSocialIconRequest
- */
-export interface StoreServiceApiDeleteSocialIconRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof StoreServiceApiDeleteSocialIcon
-     */
-    readonly id: string
-}
-
-/**
  * Request parameters for updateStore operation in StoreServiceApi.
  * @export
  * @interface StoreServiceApiUpdateStoreRequest
@@ -6415,30 +6238,6 @@ export interface StoreServiceApiUpdateStoreRequest {
  * @extends {BaseAPI}
  */
 export class StoreServiceApi extends BaseAPI {
-    /**
-     * Add Social Icon
-     * @summary Add Social Icon
-     * @param {StoreServiceApiAddSocialIconRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StoreServiceApi
-     */
-    public addSocialIcon(requestParameters: StoreServiceApiAddSocialIconRequest, options?: RawAxiosRequestConfig) {
-        return StoreServiceApiFp(this.configuration).addSocialIcon(requestParameters.socialIconRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Delete Social Icon
-     * @summary Delete Social Icon
-     * @param {StoreServiceApiDeleteSocialIconRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StoreServiceApi
-     */
-    public deleteSocialIcon(requestParameters: StoreServiceApiDeleteSocialIconRequest, options?: RawAxiosRequestConfig) {
-        return StoreServiceApiFp(this.configuration).deleteSocialIcon(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * Admin can retrieve store configuration
      * @summary Get store configuration

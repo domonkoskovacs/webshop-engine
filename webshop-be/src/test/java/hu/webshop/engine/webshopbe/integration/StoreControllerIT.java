@@ -33,7 +33,7 @@ class StoreControllerIT extends IntegrationTest {
     @DisplayName("store can be updated")
     void storeCanBeUpdated() throws Exception {
         //Given
-        StoreRequest request = new StoreRequest(10.0, 10.0, 10, null, null, null, true, false, false);
+        StoreRequest request = new StoreRequest("name", 10.0, 10.0, 10, null, null, null, true, false, false);
 
         //When
         ResultActions resultActions = performPut(BASE_URL, request, Role.ROLE_ADMIN);

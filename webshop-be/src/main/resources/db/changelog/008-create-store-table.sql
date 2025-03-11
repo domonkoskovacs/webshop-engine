@@ -1,6 +1,7 @@
 create table store
 (
     id                               uuid default uuid_generate_v4() primary key,
+    name                             varchar          not null,
     min_order_price                  double precision not null,
     shipping_price                   double precision not null,
     return_period                    integer          not null,

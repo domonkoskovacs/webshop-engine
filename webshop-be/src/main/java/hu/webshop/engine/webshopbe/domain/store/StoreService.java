@@ -33,6 +33,7 @@ public class StoreService {
     public void initStore() {
         if (isStoreInitialized()) return;
         storeRepository.save(Store.builder()
+                .name("Webshop name")
                 .minOrderPrice(0.0)
                 .shippingPrice(0.0)
                 .returnPeriod(0)

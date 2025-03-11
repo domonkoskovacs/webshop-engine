@@ -9,7 +9,7 @@ import React from "react";
 import {useEmail} from "../../../hooks/UseEmail";
 import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
-import {TextareaField} from "../../ui/TextAreaField";
+import {TextareaField} from "../../ui/TextareaField";
 import {FormComboBoxMultipleValue} from "../../ui/FormComboBoxMultipleValue";
 
 export const FormSchema = z.object({

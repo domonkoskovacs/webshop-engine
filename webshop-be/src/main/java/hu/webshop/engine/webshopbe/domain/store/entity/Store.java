@@ -19,14 +19,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Store extends BaseEntity {
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "min_order_price", nullable = false)
     private Double minOrderPrice;
 
     @Column(name = "shipping_price", nullable = false)
-    Double shippingPrice;
+    private Double shippingPrice;
 
     @Column(name = "return_period", nullable = false)
-    Integer returnPeriod;
+    private Integer returnPeriod;
 
     @Column(name = "theme")
     private String theme;
