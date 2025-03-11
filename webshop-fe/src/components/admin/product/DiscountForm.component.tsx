@@ -3,11 +3,11 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {useProduct} from "../../../hooks/UseProduct";
+import {NumberInputField} from "../../ui/InputField";
 
 export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),
@@ -61,28 +61,9 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="createProductForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="discountPercentage"
-                                render={({field: {onChange, value, ...rest}}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Discount</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                min={0}
-                                                max={100}
-                                                value={value ?? ""}
-                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                                {...rest}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>The discount will apply for all selected
-                                            products!</FormDescription>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
+                            <NumberInputField form={form} name="discountPercentage" label="Discount" min={0} max={100}
+                                              placeholder="Discount..." description="The discount will apply for all selected
+                                            products!"/>
                         </div>
                     </form>
                 </Form>

@@ -9,8 +9,9 @@ import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect, useState} from "react";
 import {FormComboBox} from "../../ui/FormComboBox";
 import {useProduct} from "../../../hooks/UseProduct";
-import {Textarea} from "../../ui/Textarea";
 import {useCategory} from "../../../hooks/UseCategory";
+import {NumberInputField, TextInputField} from "../../ui/InputField";
+import {TextareaField} from "../../ui/TextareaField";
 
 const MAX_IMAGES = 5
 
@@ -138,28 +139,11 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="createProductForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="itemNumber"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Item Number</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Item Number..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormComboBox
-                                name="brand"
-                                control={form.control}
-                                label="Brand"
-                                options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
-                                enableCreateOption={true}
-                            />
-
+                            <TextInputField form={form} name="itemNumber" label="Item Number"
+                                            placeholder="Item Number..."/>
+                            <FormComboBox name="brand" control={form.control} label="Brand"
+                                          options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
+                                          enableCreateOption={true}/>
                             <FormComboBox
                                 name="subCategoryId"
                                 control={form.control}
@@ -172,115 +156,14 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                                 )}
                                 enableCreateOption={false}
                             />
-
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Product name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Product name..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel className="w-full text-center">Description</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Product description..."
-                                                className="resize-none scrollbar"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="type"
-                                render={({field}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Product type</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Product type..." {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="count"
-                                render={({field: {onChange, value, ...rest}}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Stock</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                placeholder="Stock..."
-                                                min={0}
-                                                value={value ?? ""}
-                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                                {...rest}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="price"
-                                render={({field: {onChange, value, ...rest}}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Price</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                placeholder="Price..."
-                                                min={0}
-                                                value={value ?? ""}
-                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                                {...rest}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="discountPercentage"
-                                render={({field: {onChange, value, ...rest}}) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Discount</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                min={0}
-                                                max={100}
-                                                value={value ?? ""}
-                                                onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                                {...rest}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
+                            <TextInputField form={form} name="name" label="Product name" placeholder="Product name..."/>
+                            <TextareaField form={form} name="description" label="Description"
+                                           placeholder="Product description..."/>
+                            <TextInputField form={form} name="type" label="Product type" placeholder="Product type..."/>
+                            <NumberInputField form={form} name="count" label="Stock" placeholder="Stock..." min={0}/>
+                            <NumberInputField form={form} name="price" label="Price" placeholder="Price..." min={0}/>
+                            <NumberInputField form={form} name="discountPercentage" label="Discount"
+                                              placeholder="Discount..." min={0} max={100}/>
 
                             {!productId && <FormField //todo better image handling
                                 control={form.control}

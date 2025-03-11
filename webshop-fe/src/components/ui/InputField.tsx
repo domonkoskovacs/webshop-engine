@@ -19,6 +19,7 @@ interface NumberInputFieldProps {
     label: string;
     placeholder: string;
     min?: number;
+    max?: number;
     description?: string;
 }
 
@@ -30,7 +31,7 @@ interface FileInputFieldProps {
     description?: string;
 }
 
-const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description,type}) => {
+const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description, type}) => {
     return <FormField
         control={form.control}
         name={name}
@@ -53,6 +54,7 @@ const NumberInputField: React.FC<NumberInputFieldProps> = ({
                                                                label,
                                                                placeholder,
                                                                min = 0,
+                                                               max,
                                                                description,
                                                            }) => {
     return <FormField
@@ -65,6 +67,7 @@ const NumberInputField: React.FC<NumberInputFieldProps> = ({
                     <Input type="number"
                            placeholder={placeholder}
                            min={min}
+                           max={max}
                            value={value ?? ""}
                            onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
                            {...rest} />
@@ -77,12 +80,12 @@ const NumberInputField: React.FC<NumberInputFieldProps> = ({
 };
 
 const FileInputField: React.FC<FileInputFieldProps> = ({
-                                                               form,
-                                                               name,
-                                                               label,
-                                                               accept,
-                                                               description,
-                                                           }) => {
+                                                           form,
+                                                           name,
+                                                           label,
+                                                           accept,
+                                                           description,
+                                                       }) => {
     return <FormField
         control={form.control}
         name={name}

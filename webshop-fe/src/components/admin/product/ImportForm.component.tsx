@@ -3,13 +3,13 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import {unexpectedErrorToast, useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useProduct} from "../../../hooks/UseProduct";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {FileInputField} from "../../ui/InputField";
 
 export const FormSchema = z.object({
     csv: z
@@ -44,7 +44,7 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
                 form.setError("csv", {
                     type: "manual",
                     message: "Failed to convert file to Base64. Please try again.",
-                }, { shouldFocus: true });
+                }, {shouldFocus: true});
 
                 reject(error);
             };
@@ -60,7 +60,8 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
             })
             setIsOpen(false)
         } catch (error) {
-            if(error instanceof ApiError && error.error) {
+            console.log("helloka")
+            if (error instanceof ApiError && error.error) {
                 const csvErrors = error.error.filter(err => err.reasonCode === ResultEntryReasonCodeEnum.CsvUploadError);
                 if (csvErrors.length > 0) {
                     csvErrors.forEach((err, index) => {
@@ -69,7 +70,7 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
                         form.setError("csv", {
                             type: "manual",
                             message: errorMessage,
-                        }, { shouldFocus: index === 0 });
+                        }, {shouldFocus: index === 0});
                     });
                 }
             } else {
@@ -88,31 +89,9 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="createProductForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="csv"
-                                render={(field) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel className="w-full text-center">Csv file</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="file"
-                                                accept="text/csv"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (file) {
-                                                        form.setValue("csv", file, {shouldValidate: true});
-                                                    }
-                                                }}
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>Please select product upload csv! Download the example if you
-                                            need help.</FormDescription>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
+                            <FileInputField form={form} name="csv" label="Csv file"
+                                            accept="text/csv" description="Please select product upload csv! Download the example if you
+                                            need help."/>
                         </div>
                     </form>
                 </Form>
