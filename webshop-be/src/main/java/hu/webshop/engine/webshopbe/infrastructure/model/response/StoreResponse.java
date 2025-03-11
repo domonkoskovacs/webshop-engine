@@ -1,16 +1,16 @@
 package hu.webshop.engine.webshopbe.infrastructure.model.response;
 
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
 
 public record StoreResponse(
-        Double minOrderPrice,
+        @NotNull Double minOrderPrice,
+        @NotNull Double shippingPrice,
+        @NotNull Integer returnPeriod,
         String theme,
         String primaryColor,
         String secondaryColor,
-        Integer maxArticle,
         Boolean deleteOutOfStockProducts,
         Boolean deleteUnusedPictures,
-        Boolean enableBuiltInMarketingEmails,
-        List<SocialIconResponse> socialIcons
+        Boolean enableBuiltInMarketingEmails
 ) {
 }
