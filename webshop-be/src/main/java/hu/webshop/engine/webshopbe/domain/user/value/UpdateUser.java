@@ -9,6 +9,7 @@ public record UpdateUser(
         String lastname,
         String phoneNumber,
         Gender gender,
+        Boolean subscribedToEmail,
         Address shippingAddress,
         Address billingAddress
 ) {

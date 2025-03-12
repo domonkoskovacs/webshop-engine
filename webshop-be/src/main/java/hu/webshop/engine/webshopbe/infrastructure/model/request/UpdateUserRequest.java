@@ -14,7 +14,7 @@ public record UpdateUserRequest(
         @NotBlank
         String phoneNumber,
         Gender gender,
-        boolean subscribedToEmail,
+        Boolean subscribedToEmail,
         AddressRequest shippingAddress,
         AddressRequest billingAddress
 ) {

@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {Card, CardContent, CardFooter, CardHeader} from "../../ui/Card";
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../../ui/Form";
+import {Form} from "../../ui/Form";
 import React, {useEffect} from "react";
 import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
@@ -10,7 +10,7 @@ import {Button} from "../../ui/Button";
 import {TextInputField} from "../../ui/InputField";
 import {UpdateUserRequestGenderEnum} from "../../../shared/api";
 import {Link} from "react-router-dom";
-import {Switch} from "../../ui/Switch";
+import {SwitchField} from "../../ui/SwitchField";
 
 const FormSchema = z.object({
     email: z.string().email({message: "Invalid email format."}),
@@ -72,32 +72,9 @@ const AccountInfoForm: React.FC = () => {
                         <TextInputField form={form} name="phoneNumber" label="PhoneNumber"
                                         placeholder="Add your phoneNumber"/>
                         <TextInputField form={form} name="gender" label="Gender" placeholder="Add your gender"/>
-                        <FormField
-                            control={form.control}
-                            name="subscribedToEmail"
-                            render={({field}) => (
-                                <FormItem>
-                                    <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                        <div className="space-y-0.5">
-                                            <FormLabel className="text-base">
-                                                Subscribe to email list.
-                                            </FormLabel>
-                                            <FormDescription>
-                                                You can change this anytime for more information please
-                                                <Link to={"/terms-and-conditions"}>contact us</Link>.
-                                            </FormDescription>
-                                        </div>
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
+                        <SwitchField form={form} name="subscribedToEmail" label="Subscribe to email list."
+                                     description={<>You can change this anytime for more information please<Link
+                                         to={"/terms-and-conditions"}>contact us</Link>.</>}/>
                     </form>
                 </Form>
             </CardContent>

@@ -3,14 +3,14 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import React from "react";
 import {useAuth} from "../../../hooks/UseAuth";
 import {Link} from "react-router-dom";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {unexpectedErrorToast} from "../../../hooks/UseToast";
+import {TextInputField} from "../../ui/InputField";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -34,9 +34,9 @@ const LoginForm: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            await login(data.email,data.password)
+            await login(data.email, data.password)
         } catch (error: any) {
-            if(error instanceof ApiError && error.error) {
+            if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(
                     error.error.map(err => [err.reasonCode, true])
                 );
@@ -69,37 +69,12 @@ const LoginForm: React.FC = () => {
         <div className="flex items-center justify-center">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Please enter your email" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="*****" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    <Link to="/forgot-password">
-                                        I forgot my password!
-                                    </Link>
-                                </FormDescription>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
+                    <TextInputField form={form} name="email" label="Email"
+                                    placeholder="Please enter your email"/>
+                    <TextInputField form={form} name="password" label="Password"
+                                    placeholder="*****"
+                                    description={<Link to="/forgot-password">I forgot my password!</Link>}
+                                    type="password"/>
                     <Button type="submit">Login</Button>
                 </form>
             </Form>

@@ -3,12 +3,12 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import React from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "../../../hooks/UseToast";
 import {userService} from "../../../services/UserService";
+import {TextInputField} from "../../ui/InputField";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -45,22 +45,10 @@ const NewPasswordForm: React.FC = () => {
         <div className="flex items-center justify-center">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="*****" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    Please type in your new password!
-                                </FormDescription>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
+                    <TextInputField form={form} name="password" label="Password"
+                                    placeholder="*****"
+                                    description="Please type in your new password!"
+                                    type="password"/>
                     <Button type="submit">Renew Password</Button>
                 </form>
             </Form>

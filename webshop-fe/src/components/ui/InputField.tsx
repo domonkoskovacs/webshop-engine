@@ -9,7 +9,7 @@ interface TextInputFieldProps {
     name: string;
     label?: string;
     placeholder: string;
-    description?: string;
+    description?: string | React.ReactNode;
     type?: string
 }
 

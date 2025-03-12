@@ -6,8 +6,8 @@ import {Switch} from "./Switch";
 interface SwitchFieldProps {
     form: UseFormReturn<any>;
     name: string;
-    label: string;
-    description?: string;
+    label: string | React.ReactNode;
+    description?: string | React.ReactNode;
 }
 
 const SwitchField: React.FC<SwitchFieldProps> = ({form, name, label, description}) => {

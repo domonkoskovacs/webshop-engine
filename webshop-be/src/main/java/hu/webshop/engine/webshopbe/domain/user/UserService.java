@@ -147,6 +147,7 @@ public class UserService implements UserDetailsService {
         user.setLastname(updateUser.lastname());
         user.setPhoneNumber(updateUser.phoneNumber());
         if (updateUser.gender() != null) user.setGender(updateUser.gender());
+        if (updateUser.subscribedToEmail() != null) user.setSubscribedToEmail(updateUser.subscribedToEmail());
         if (updateUser.shippingAddress() != null && !updateUser.shippingAddress().equals(user.getShippingAddress()))
             user.setShippingAddress(updateUser.shippingAddress());
         if (updateUser.billingAddress() != null && !updateUser.billingAddress().equals(user.getBillingAddress()))

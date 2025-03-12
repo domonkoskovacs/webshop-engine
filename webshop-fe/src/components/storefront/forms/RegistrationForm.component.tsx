@@ -3,16 +3,16 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "src/components/ui/Button"
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form"
-import {Input} from "src/components/ui/Input"
+import {Form,} from "src/components/ui/Form"
 import React from "react";
-import {RadioGroup, RadioGroupItem} from "src/components/ui/RadioGroup"
-import {Switch} from "../../ui/Switch"
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {Link} from "react-router-dom";
 import {userService} from "../../../services/UserService";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {TextInputField} from "../../ui/InputField";
+import {SwitchField} from "../../ui/SwitchField";
+import {RadioGroupField} from "../../ui/RadioGroupField";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -96,199 +96,33 @@ const RegistrationForm: React.FC = () => {
 
     return (
         <div className="flex items-center justify-center">
-
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="email" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="firstname"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Firstname</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="firstname" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="lastname"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Lastname</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="lastname" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="*****" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="passwordAgain"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Password Again</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="*****" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="phoneNumber"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Phone number</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="0123" {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="gender"
-                        render={({field}) => (
-                            <FormItem className="space-y-3">
-                                <FormLabel>What type of clothes do we recommend for you?</FormLabel>
-                                <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex flex-col space-y-1"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="men"/>
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                Men
-                                            </FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="women"/>
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                Woman
-                                            </FormLabel>
-                                        </FormItem>
-                                    </RadioGroup>
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="subscribe"
-                        render={({field}) => (
-                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                    <FormLabel className="text-base">
-                                        Marketing emails
-                                    </FormLabel>
-                                    <FormDescription>
-                                        Receive emails about new products, features, and more. If you don't accept this
-                                        you will still get emails based on your orders.
-                                    </FormDescription>
-                                </div>
-                                <FormControl>
-                                    <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="privacyPolicy"
-                        render={({field}) => (
-                            <FormItem>
-                                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                    <div className="space-y-0.5">
-                                        <FormLabel className="text-base">
-                                            <Link to={"/privacy-policy"}>
-                                                Privacy Policy
-                                            </Link>
-                                        </FormLabel>
-                                        <FormDescription>
-                                            Accept the <Link to={"/privacy-policy"}>privacy policy</Link>.
-                                        </FormDescription>
-                                    </div>
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                </div>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="termsAndConditions"
-                        render={({field}) => (
-                            <FormItem>
-                                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                    <div className="space-y-0.5">
-                                        <FormLabel className="text-base">
-                                            <Link to={"/terms-and-conditions"}>
-                                                Terms and Conditions
-                                            </Link>
-                                        </FormLabel>
-                                        <FormDescription>
-                                            Accept the <Link to={"/terms-and-conditions"}>terms and conditions</Link>.
-                                        </FormDescription>
-                                    </div>
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                </div>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
+                    <TextInputField form={form} name="email" label="Email"
+                                    placeholder="Please enter your email"/>
+                    <TextInputField form={form} name="firstname" label="Firstname"
+                                    placeholder="Please enter your firstname"/>
+                    <TextInputField form={form} name="lastname" label="Lastname"
+                                    placeholder="Please enter your lastname"/>
+                    <TextInputField form={form} name="password" label="Password"
+                                    placeholder="*****"
+                                    type="password"/>
+                    <TextInputField form={form} name="passwordAgain" label="Password Again"
+                                    placeholder="*****"
+                                    type="password"/>
+                    <TextInputField form={form} name="phoneNumber" label="Phone number"
+                                    placeholder="Please enter your phone number"/>
+                    <RadioGroupField form={form} name="gender" label="What type of clothes do we recommend for you?"
+                                     options={[{value: "men", label: "Men"}, {value: "women", label: "Women"}]}/>
+                    <SwitchField form={form} name="subscribe" label="Marketing emails"
+                                 description="Receive emails about new products, features, and more. If you don't accept this you will still get emails based on your orders."/>
+                    <SwitchField form={form} name="privacyPolicy"
+                                 label={<Link to={"/privacy-policy"}>Privacy Policy</Link>}
+                                 description={<>Accept the <Link to={"/privacy-policy"}>privacy policy</Link>.</>}/>
+                    <SwitchField form={form} name="termsAndConditions"
+                                 label={<Link to={"/terms-and-conditions"}>Terms and Conditions</Link>}
+                                 description={<>Accept the <Link to={"/terms-and-conditions"}>terms and
+                                     conditions</Link>.</>}/>
                     <Button type="submit">Register</Button>
                 </form>
             </Form>
