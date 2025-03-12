@@ -1,16 +1,13 @@
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {Card, CardContent, CardFooter, CardHeader} from "../../ui/Card";
-import {Form} from "../../ui/Form";
 import React, {useEffect} from "react";
 import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
-import {Button} from "../../ui/Button";
 import {AddressRequest} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
-import {Badge} from "../../ui/Badge";
 import {useAuth} from "../../../hooks/UseAuth";
+import FormCardContainer from "../../shared/FormCardContainer.component";
 
 export const FormSchema = z.object({
     country: z.string().min(1, {message: "Country is required."}),
@@ -92,37 +89,22 @@ const AddressForm: React.FC<AddressFormProps> = ({type}) => {
         }
     }
 
-    return (
-        <Card className="my-4 relative">
-            {profileChangesNeeded && (
-                <Badge
-                    className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-ping">
-                </Badge>
-            )}
-            <CardHeader>
-                <h1 className="font-bold">Change your {type === "shipping" ? "shipping" : "billing"} address</h1>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-center">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id={`${type}-address-form`}
-                          className="w-full space-y-6 mb-6">
-                        <TextInputField form={form} name="country" label="Country" placeholder="Add country"/>
-                        <NumberInputField form={form} name="zipCode" label="Zipcode" placeholder="Add your zipcode"/>
-                        <TextInputField form={form} name="city" label="City" placeholder="Add your city"/>
-                        <TextInputField form={form} name="street" label="Street" placeholder="Add your street"/>
-                        <NumberInputField form={form} name="streetNumber" label="Street number"
-                                          placeholder="Add your street number"/>
-                        <TextInputField form={form} name="floorNumber" label="Floor number"
-                                        placeholder="Add your floorNumber"/>
-                    </form>
-                </Form>
-            </CardContent>
-            <CardFooter className="p-0 border-t">
-                <Button className="w-full rounded-t-none" variant="secondary" type="submit"
-                        form={`${type}-address-form`}>Update</Button>
-            </CardFooter>
-        </Card>
-    );
+    return <FormCardContainer title={`Change your ${type === "shipping" ? "shipping" : "billing"} address`}
+                              form={form}
+                              formId={`${type}-address-form`}
+                              onSubmit={onSubmit}
+                              submitButtonText="Update"
+                              singleColumn={true}
+                              profileChangesNeeded={profileChangesNeeded}>
+        <TextInputField form={form} name="country" label="Country" placeholder="Add country"/>
+        <NumberInputField form={form} name="zipCode" label="Zipcode" placeholder="Add your zipcode"/>
+        <TextInputField form={form} name="city" label="City" placeholder="Add your city"/>
+        <TextInputField form={form} name="street" label="Street" placeholder="Add your street"/>
+        <NumberInputField form={form} name="streetNumber" label="Street number"
+                          placeholder="Add your street number"/>
+        <TextInputField form={form} name="floorNumber" label="Floor number"
+                        placeholder="Add your floorNumber"/>
+    </FormCardContainer>
 }
 
 export default AddressForm;

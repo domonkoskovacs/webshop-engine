@@ -27,7 +27,6 @@ import Products from "../pages/storefront/Products.page";
 import Saved from "../pages/storefront/Saved.page";
 import Cart from "../pages/storefront/Cart.page";
 import Profile from "../pages/storefront/Profile.page";
-import Settings from "../pages/storefront/Settings.page";
 import PreviousOrders from "../pages/storefront/PreviousOrders.page";
 import {EmailProvider} from 'src/contexts/EmailContext';
 import Checkout from "../pages/storefront/Checkout.page";
@@ -48,7 +47,6 @@ const AppRouter: React.FC = () => {
                 <Route path="/products/*" element={<Products/>}/>
                 <Route path="/saved" element={<Saved/>}/>
                 <Route path="/cart" element={<Cart/>}/>
-                <Route path="/checkout" element={<Checkout/>}/>
                 <Route path="/authentication" element={<Authentication/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/new-password" element={<NewPassword/>}/>
@@ -61,7 +59,6 @@ const AppRouter: React.FC = () => {
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
 
-                {/* Protected storefront routes */}
                 <Route
                     element={
                         <ProtectedRoute allowedRole="ROLE_USER">
@@ -69,9 +66,10 @@ const AppRouter: React.FC = () => {
                         </ProtectedRoute>
                     }
                 >
+                    {/* Protected storefront routes */}
                     <Route path="/profile" element={<Profile/>}/>
-                    <Route path="/settings" element={<Settings/>}/>
                     <Route path="/previous-orders" element={<PreviousOrders/>}/>
+                    <Route path="/checkout" element={<Checkout/>}/>
                 </Route>
             </Route>
 
