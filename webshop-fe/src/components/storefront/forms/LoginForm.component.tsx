@@ -1,9 +1,6 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
-import {Button} from "src/components/ui/Button"
-import {Form,} from "src/components/ui/Form"
 import React from "react";
 import {useAuth} from "../../../hooks/UseAuth";
 import {Link} from "react-router-dom";
@@ -11,6 +8,7 @@ import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {unexpectedErrorToast} from "../../../hooks/UseToast";
 import {TextInputField} from "../../ui/InputField";
+import FormCardContainer from "../../shared/FormCardContainer.component";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -65,21 +63,21 @@ const LoginForm: React.FC = () => {
         }
     }
 
-    return (
-        <div className="flex items-center justify-center">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <TextInputField form={form} name="email" label="Email"
-                                    placeholder="Please enter your email"/>
-                    <TextInputField form={form} name="password" label="Password"
-                                    placeholder="*****"
-                                    description={<Link to="/forgot-password">I forgot my password!</Link>}
-                                    type="password"/>
-                    <Button type="submit">Login</Button>
-                </form>
-            </Form>
-        </div>
-    );
+    return <FormCardContainer title="Login"
+                              description="Please use your email and password to authenticate yourself."
+                              form={form}
+                              formId="login-form"
+                              onSubmit={onSubmit}
+                              submitButtonText="Login"
+                              singleColumn={true}
+                              className="w-full">
+        <TextInputField form={form} name="email" label="Email"
+                        placeholder="Please enter your email"/>
+        <TextInputField form={form} name="password" label="Password"
+                        placeholder="*****"
+                        description={<Link to="/forgot-password">I forgot my password!</Link>}
+                        type="password"/>
+    </FormCardContainer>
 }
 
 export default LoginForm

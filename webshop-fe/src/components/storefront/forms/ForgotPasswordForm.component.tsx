@@ -1,13 +1,11 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
-import {Button} from "src/components/ui/Button"
-import {Form,} from "src/components/ui/Form"
 import React from "react";
 import {toast} from "../../../hooks/UseToast";
 import {userService} from "../../../services/UserService";
 import {TextInputField} from "../../ui/InputField";
+import FormCardContainer from "../../shared/FormCardContainer.component";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -31,18 +29,17 @@ const ForgotPasswordForm: React.FC = () => {
         })
     }
 
-    return (
-        <div className="flex items-center justify-center">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <TextInputField form={form} name="email" label="Email"
-                                    placeholder="Please enter your email"
-                                    description="Type in your email, we will shortly send you a message to renew your password."/>
-                    <Button type="submit">Send</Button>
-                </form>
-            </Form>
-        </div>
-    );
+    return <FormCardContainer title="Forgot password"
+                              form={form}
+                              formId="forgot-password-form"
+                              onSubmit={onSubmit}
+                              submitButtonText="Send"
+                              singleColumn={true}
+                              className="w-full sm:w-1/2 md:w-1/3 mx-6">
+        <TextInputField form={form} name="email" label="Email"
+                        placeholder="Please enter your email"
+                        description="Type in your email, we will shortly send you a message to renew your password."/>
+    </FormCardContainer>
 }
 
 export default ForgotPasswordForm

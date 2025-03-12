@@ -7,6 +7,7 @@ import {Separator} from "../ui/Separator";
 import {Form} from "../ui/Form";
 import {Button} from "../ui/Button";
 import {Badge} from "../ui/Badge";
+import {cn} from "../../lib/utils";
 
 interface FormCardContainerProps<T extends z.ZodType<any, any>> {
     title: string;
@@ -17,6 +18,7 @@ interface FormCardContainerProps<T extends z.ZodType<any, any>> {
     submitButtonText: string;
     singleColumn?: boolean;
     profileChangesNeeded?: boolean
+    className?: string
     children: React.ReactNode;
 }
 
@@ -29,10 +31,14 @@ const FormCardContainer = <T extends z.ZodType<any, any>>({
                                                               submitButtonText,
                                                               singleColumn = false,
                                                               profileChangesNeeded = false,
+                                                              className,
                                                               children
                                                           }: FormCardContainerProps<T>) => {
     return (
-        <Card className="my-4 relative">
+        <Card className={cn(
+            "my-4 relative",
+            className
+        )}>
             {profileChangesNeeded && (
                 <Badge
                     className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-ping">

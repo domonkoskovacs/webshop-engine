@@ -1,30 +1,34 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
-import {Button} from "src/components/ui/Button"
-import {Form,} from "src/components/ui/Form"
 import React from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "../../../hooks/UseToast";
 import {userService} from "../../../services/UserService";
 import {TextInputField} from "../../ui/InputField";
+import FormCardContainer from "../../shared/FormCardContainer.component";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
         message: "Password must be at least 6 characters.",
     }),
-})
+    passwordAgain: z.string().min(6, {
+        message: "Password must be at least 6 characters.",
+    }),
+}).refine((data) => data.password === data.passwordAgain, {
+    message: "Passwords must match.",
+    path: ["passwordAgain"]
+});
 
 const NewPasswordForm: React.FC = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            password: ""
+            password: "",
+            passwordAgain: ""
         },
     })
 
@@ -41,19 +45,18 @@ const NewPasswordForm: React.FC = () => {
         }
     }
 
-    return (
-        <div className="flex items-center justify-center">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <TextInputField form={form} name="password" label="Password"
-                                    placeholder="*****"
-                                    description="Please type in your new password!"
-                                    type="password"/>
-                    <Button type="submit">Renew Password</Button>
-                </form>
-            </Form>
-        </div>
-    );
+    return <FormCardContainer title="Add new password"
+                              form={form}
+                              formId="new-password-form"
+                              onSubmit={onSubmit}
+                              submitButtonText="Renew Password"
+                              singleColumn={true}
+                              className="w-full sm:w-1/2 md:w-1/3 mx-6">
+        <TextInputField form={form} name="password" label="Password"
+                        placeholder="Add new password" type="password"/>
+        <TextInputField form={form} name="passwordAgain" label="Password again"
+                        placeholder="Password again" type="password"/>
+    </FormCardContainer>
 }
 
 export default NewPasswordForm

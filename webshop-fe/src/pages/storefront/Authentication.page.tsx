@@ -14,30 +14,26 @@ const Authentication: React.FC = () => {
     }, [searchParams]);
 
     const handleTabChange = (value: string) => {
-        setSearchParams({ type: value });
+        setSearchParams({type: value});
         setIsLogin(value === 'login');
     }
 
     return (
-            <div className="flex flex-col items-center justify-center h-full p-6">
-                <h1>{isLogin ? "Login" : "Registration"}</h1>
-                <p>{isLogin ?
-                    "Please use your email and password to authenticate yourself." :
-                    "Please fill the form with your data to register."}</p>
-                <Tabs value={isLogin ? "login" : "registration"} onValueChange={handleTabChange}
-                      className="w-[400px]">
-                    <TabsList className="flex content-center bg-background">
-                        <TabsTrigger value="registration">Registration</TabsTrigger>
-                        <TabsTrigger value="login">Login</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="registration">
-                        <RegistrationForm/>
-                    </TabsContent>
-                    <TabsContent value="login">
-                        <LoginForm/>
-                    </TabsContent>
-                </Tabs>
-            </div>
+        <div className="flex flex-col items-center justify-center h-full p-6">
+            <Tabs value={isLogin ? "login" : "registration"} onValueChange={handleTabChange}
+                  className="w-[90vw] sm:w-[60vw]">
+                <TabsList className="flex content-center">
+                    <TabsTrigger value="registration">Registration</TabsTrigger>
+                    <TabsTrigger value="login">Login</TabsTrigger>
+                </TabsList>
+                <TabsContent value="registration">
+                    <RegistrationForm/>
+                </TabsContent>
+                <TabsContent value="login">
+                    <LoginForm/>
+                </TabsContent>
+            </Tabs>
+        </div>
     );
 };
 
