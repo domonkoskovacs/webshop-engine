@@ -1,15 +1,13 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
-import {Button} from "src/components/ui/Button"
-import {Form,} from "src/components/ui/Form"
 import {unexpectedErrorToast, useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useProduct} from "../../../hooks/UseProduct";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {FileInputField} from "../../ui/InputField";
+import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 
 export const FormSchema = z.object({
     csv: z
@@ -60,13 +58,11 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
             })
             setIsOpen(false)
         } catch (error) {
-            console.log("helloka")
             if (error instanceof ApiError && error.error) {
                 const csvErrors = error.error.filter(err => err.reasonCode === ResultEntryReasonCodeEnum.CsvUploadError);
                 if (csvErrors.length > 0) {
                     csvErrors.forEach((err, index) => {
                         const errorMessage = err.message || `CSV upload failed: Error ${index + 1}`;
-
                         form.setError("csv", {
                             type: "manual",
                             message: errorMessage,
@@ -74,37 +70,25 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
                     });
                 }
             } else {
-                console.log(error)
                 unexpectedErrorToast()
             }
         }
     }
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">Import products</h2>
-            </div>
-            <div className="flex-1 overflow-y-auto scrollbar">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="createProductForm">
-                        <div className="flex flex-col p-6 gap-4">
-                            <FileInputField form={form} name="csv" label="Csv file"
-                                            accept="text/csv" description="Please select product upload csv! Download the example if you
-                                            need help."/>
-                        </div>
-                    </form>
-                </Form>
-            </div>
-            <div className="mt-auto flex gap-2 pt-3 border-t">
-                <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
-                    Back
-                </Button>
-                <Button type="submit" className="w-full" form="createProductForm">
-                    Import
-                </Button>
-            </div>
-        </div>
+        <SheetFormContainer
+            title="Import products"
+            form={form}
+            formId="importProductForm"
+            onSubmit={onSubmit}
+            submitButtonText="Import"
+            secondaryButtonClick={() => setIsOpen(false)}
+            secondaryButtonText="Back"
+        >
+            <FileInputField form={form} name="csv" label="Csv file"
+                            accept="text/csv"
+                            description="Please select product upload csv! Download the example if you need help."/>
+        </SheetFormContainer>
     );
 }
 

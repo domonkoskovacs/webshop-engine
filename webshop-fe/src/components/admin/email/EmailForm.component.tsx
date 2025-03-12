@@ -1,9 +1,6 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
-import {Button} from "src/components/ui/Button"
-import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useEmail} from "../../../hooks/UseEmail";
@@ -11,6 +8,7 @@ import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
 import {TextareaField} from "../../ui/TextareaField";
 import {FormComboBoxMultipleValue} from "../../ui/FormComboBoxMultipleValue";
+import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 
 export const FormSchema = z.object({
     name: z.string().min(1, {message: "Name is required."}),
@@ -37,7 +35,6 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
         defaultValues: {},
     })
 
-
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         await createEmail({
             name: data.name,
@@ -55,41 +52,27 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
     }
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">Create Email</h2>
-            </div>
-            <div className="flex-1 overflow-y-auto scrollbar">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="createEmailForm">
-                        <div className="flex flex-col p-6 gap-4">
-                            <TextInputField form={form} name={"name"} placeholder={"Name..."} label={"Name"}/>
-                            <TextareaField form={form} name={"text"} placeholder={"text..."} label={"Text"}/>
-                            <TextInputField form={form} name={"subject"} placeholder={"Email subject..."}
-                                            label={"Email subject"}/>
-                            <TextInputField form={form} name={"imageUrl"} placeholder={"Image url..."}
-                                            label={"Image url"}/>
-
-                            <FormComboBoxMultipleValue form={form} name={"dayOfWeek"}
-                                                       options={Object.entries(PromotionEmailRequestDayOfWeekEnum).map(([label, value]) => ({
-                                                           label,
-                                                           value
-                                                       }))} label={"Day of week"}/>
-                            <NumberInputField form={form} name={"hour"} placeholder={"Hour..."} label={"Hour"}/>
-                            <NumberInputField form={form} name={"minute"} placeholder={"Minute..."} label={"Minute"}/>
-                        </div>
-                    </form>
-                </Form>
-            </div>
-            <div className="mt-auto flex gap-2 pt-3 border-t">
-                <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
-                    Back
-                </Button>
-                <Button type="submit" className="w-full" form="createEmailForm">
-                    Create
-                </Button>
-            </div>
-        </div>
+        <SheetFormContainer
+            title="Create Email"
+            form={form}
+            formId="createEmailForm"
+            onSubmit={onSubmit}
+            submitButtonText="Create"
+            secondaryButtonClick={() => setIsOpen(false)}
+            secondaryButtonText="Back"
+        >
+            <TextInputField form={form} name={"name"} placeholder={"Name..."} label={"Name"}/>
+            <TextareaField form={form} name={"text"} placeholder={"text..."} label={"Text"}/>
+            <TextInputField form={form} name={"subject"} placeholder={"Email subject..."} label={"Email subject"}/>
+            <TextInputField form={form} name={"imageUrl"} placeholder={"Image url..."} label={"Image url"}/>
+            <FormComboBoxMultipleValue form={form} name={"dayOfWeek"}
+                                       options={Object.entries(PromotionEmailRequestDayOfWeekEnum).map(([label, value]) => ({
+                                           label,
+                                           value
+                                       }))} label={"Day of week"}/>
+            <NumberInputField form={form} name={"hour"} placeholder={"Hour..."} label={"Hour"}/>
+            <NumberInputField form={form} name={"minute"} placeholder={"Minute..."} label={"Minute"}/>
+        </SheetFormContainer>
     );
 }
 

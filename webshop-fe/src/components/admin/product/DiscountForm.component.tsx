@@ -1,13 +1,11 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
-import {Button} from "src/components/ui/Button"
-import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {useProduct} from "../../../hooks/UseProduct";
 import {NumberInputField} from "../../ui/InputField";
+import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 
 export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),
@@ -53,30 +51,19 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
     }
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">Set discount</h2>
-            </div>
-            <div className="flex-1 overflow-y-auto scrollbar">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="createProductForm">
-                        <div className="flex flex-col p-6 gap-4">
-                            <NumberInputField form={form} name="discountPercentage" label="Discount" min={0} max={100}
-                                              placeholder="Discount..." description="The discount will apply for all selected
-                                            products!"/>
-                        </div>
-                    </form>
-                </Form>
-            </div>
-            <div className="mt-auto flex gap-2 pt-3 border-t">
-                <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
-                    Back
-                </Button>
-                <Button type="submit" className="w-full" form="createProductForm">
-                    Save
-                </Button>
-            </div>
-        </div>
+        <SheetFormContainer
+            title="Set discount"
+            form={form}
+            formId="discountForm"
+            onSubmit={onSubmit}
+            submitButtonText="Save"
+            secondaryButtonClick={() => setIsOpen(false)}
+            secondaryButtonText="Back"
+        >
+            <NumberInputField form={form} name="discountPercentage" label="Discount" min={0} max={100}
+                              placeholder="Discount..."
+                              description="The discount will apply for all selected products!"/>
+        </SheetFormContainer>
     );
 }
 
