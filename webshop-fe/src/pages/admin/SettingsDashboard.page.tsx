@@ -1,10 +1,11 @@
 import React from 'react';
+import DashboardPageContainer from 'src/components/admin/shared/DashboardPageContainer.component';
 
 const SettingsDashboard: React.FC = () => {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center">
+        <DashboardPageContainer>
             settings
-        </div>
+        </DashboardPageContainer>
     );
 };
 

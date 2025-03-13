@@ -9,6 +9,7 @@ import {useUser} from "../../../hooks/UseUser";
 import {useAuth} from "../../../hooks/UseAuth";
 import {toast} from "../../../hooks/UseToast";
 import {ApiError} from "../../../shared/ApiError";
+import {generateProductUrl} from "../../../lib/url.utils";
 
 interface ProductCardProps {
     product: ProductResponse
@@ -56,7 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                     if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
                         toast({description: "Not enough products in stock."});
                     }
-                }else {
+                } else {
                     toast({variant: "destructive", description: "Error updating cart."});
                 }
             }
@@ -75,13 +76,18 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                     }`}
                 >
                     {isSavedPage ? (
-                        <TrashIcon className="w-5 h-5" />
+                        <TrashIcon className="w-5 h-5"/>
                     ) : (
-                        <HeartIcon className="w-5 h-5" />
+                        <HeartIcon className="w-5 h-5"/>
                     )}
                 </Button>
-                <Link
-                    to={`/products/${gender}/${product.category?.name}/${product.subCategory?.name}/${product.name}/${product.id}`}>{/*todo product.gender*/}
+                <Link to={generateProductUrl(
+                    gender, /*todo product.gender*/
+                    product.category?.name,
+                    product.subCategory?.name,
+                    product.name,
+                    product.id
+                )}>
                     <img
                         className="aspect-square w-full hover:opacity-80"
                         src={product.imageUrls![0]}

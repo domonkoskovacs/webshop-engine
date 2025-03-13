@@ -1,11 +1,12 @@
 import React from 'react';
 import StoreForm from "../../components/admin/store/StoreForm.component";
+import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
 
 const StoreDashboard: React.FC = () => {
     return (
-        <div className="h-full flex flex-col items-center justify-center">
+        <DashboardPageContainer>
             <StoreForm/>
-        </div>
+        </DashboardPageContainer>
     );
 };
 

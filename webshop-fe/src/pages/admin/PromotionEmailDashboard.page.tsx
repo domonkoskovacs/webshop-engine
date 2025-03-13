@@ -14,6 +14,7 @@ import {useUser} from "../../hooks/UseUser";
 import {DataTable} from "../../components/ui/DataTable";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import EmailForm from "../../components/admin/email/EmailForm.component";
+import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
 
 const PromotionEmailDashboard: React.FC = () => {
     const {emails, deleteEmail, testEmail} = useEmail();
@@ -97,12 +98,10 @@ const PromotionEmailDashboard: React.FC = () => {
         </Sheet>
 
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="w-full">
+        <DashboardPageContainer className="justify-start">
                 <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false}
                            enableDefaultFilter={true} defaultFilterColumn={"name"} customElement={emailForm}/>
-            </div>
-        </div>
+        </DashboardPageContainer>
     );
 };
 

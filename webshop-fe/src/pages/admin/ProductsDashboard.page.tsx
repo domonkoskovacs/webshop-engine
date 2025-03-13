@@ -19,6 +19,7 @@ import ProductForm from "../../components/admin/product/ProductForm.component";
 import {Checkbox} from "../../components/ui/Checkbox";
 import DiscountForm from "../../components/admin/product/DiscountForm.component";
 import ImportForm from "../../components/admin/product/ImportForm.component";
+import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
 
 const ProductsDashboard: React.FC = () => {
     const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProducts, exportProducts} = useProduct()
@@ -164,7 +165,7 @@ const ProductsDashboard: React.FC = () => {
 
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <DashboardPageContainer className="justify-start">
             <div className="my-2 flex w-full justify-between">
                 <Sheet open={isDiscountFormOpen} onOpenChange={setIsDiscountFormOpen}>
                     <SheetTrigger asChild>
@@ -222,7 +223,7 @@ const ProductsDashboard: React.FC = () => {
                 onNext={nextPage}
                 onPrev={prevPage}
             />
-        </div>
+        </DashboardPageContainer>
     );
 };
 

@@ -8,6 +8,7 @@ import {
     BreadcrumbSeparator
 } from "../ui/Breadcrumb";
 import React from "react";
+import {generateBreadcrumbSegments} from "../../lib/url.utils";
 
 interface BreadcrumbSegment {
     segmentName: string;
@@ -20,18 +21,13 @@ interface PathBreadcrumbProps {
 
 const PathBreadcrumb: React.FC<PathBreadcrumbProps> = ({segments}) => {
     const location = useLocation();
-    const pathSegments = location.pathname.split("/").filter((segment) => segment);
-
-    const breadcrumbSegments = segments ?? pathSegments.map((segment, index) => ({
-        segmentName: segment,
-        path: `/${pathSegments.slice(0, index + 1).join("/")}`
-    }));
+    const breadcrumbSegments = segments ?? generateBreadcrumbSegments(location.pathname);
 
     return (
         <Breadcrumb>
             <BreadcrumbList>
                 {breadcrumbSegments.map((segment, index) => {
-                    const isLast = index === pathSegments.length - 1;
+                    const isLast = index === breadcrumbSegments.length - 1;
 
                     return (
                         <React.Fragment key={segment.path}>
