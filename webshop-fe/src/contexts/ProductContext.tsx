@@ -9,6 +9,7 @@ import {
 } from "../shared/api";
 import {productService} from "../services/ProductService";
 import {toast} from "../hooks/UseToast";
+import {downloadCSV} from "../lib/csv.downloader";
 
 interface ProductContextType {
     products: ProductResponse[];
@@ -120,16 +121,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
                 showOutOfStock: filters.showOutOfStock,
             });
             if (response.csv) {
-                const csvData = atob(response.csv);
-                const blob = new Blob([csvData], {type: "text/csv"});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "products.csv";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                downloadCSV(response.csv, "products.csv");
             }
         } catch (error) {
             toast({

@@ -56,8 +56,8 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div>
-            <div className="flex items-center my-2 gap-4">
+        <div className="w-full">
+            <div className="flex items-center my-2 gap-2">
                 {enableDefaultFilter && defaultFilterColumn && <div className="flex items-center">
                     <Input
                         placeholder={`Filter ${defaultFilterColumn}...`}
