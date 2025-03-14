@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {unexpectedErrorToast} from "../../../hooks/UseToast";
-import {TextInputField} from "../../ui/InputField";
+import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 
 const FormSchema = z.object({

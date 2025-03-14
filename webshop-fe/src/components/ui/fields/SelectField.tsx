@@ -1,13 +1,8 @@
 import {UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "./Form";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "./Select";
-
-
-interface SelectOption {
-    label: string;
-    value: string;
-}
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../Select";
+import {SelectOption} from "../../../types/select";
 
 interface SelectFieldProps {
     form: UseFormReturn<any>;

@@ -5,7 +5,7 @@ import React, {useEffect} from "react";
 import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {AddressRequest} from "../../../shared/api";
-import {NumberInputField, TextInputField} from "../../ui/InputField";
+import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {useAuth} from "../../../hooks/UseAuth";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 

@@ -4,7 +4,7 @@ import {z} from "zod";
 import React from "react";
 import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
-import {TextInputField} from "../../ui/InputField";
+import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 
 const FormSchema = z.object({

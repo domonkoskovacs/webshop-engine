@@ -6,8 +6,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage
-} from "./Form";
-import { RadioGroup, RadioGroupItem } from "./RadioGroup";
+} from "../Form";
+import { RadioGroup, RadioGroupItem } from "../RadioGroup";
 
 interface RadioGroupFieldProps {
     form: UseFormReturn<any>;

@@ -5,7 +5,7 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {toast} from "../../../hooks/UseToast";
-import {ComboBoxMultipleValueField} from "../../ui/ComboBoxMultipleValueField";
+import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import {useProductScroll} from "../../../hooks/useProductScroll";
 
 export const FormSchema = z.object({

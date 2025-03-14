@@ -7,9 +7,9 @@
     import {userService} from "../../../services/UserService";
     import {ApiError} from "../../../shared/ApiError";
     import {ResultEntryReasonCodeEnum} from "../../../shared/api";
-    import {TextInputField} from "../../ui/InputField";
-    import {SwitchField} from "../../ui/SwitchField";
-    import {RadioGroupField} from "../../ui/RadioGroupField";
+    import {TextInputField} from "../../ui/fields/InputField";
+    import {SwitchField} from "../../ui/fields/SwitchField";
+    import {RadioGroupField} from "../../ui/fields/RadioGroupField";
     import FormCardContainer from "../../shared/FormCardContainer.component";
 
     const FormSchema = z.object({

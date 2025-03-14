@@ -4,7 +4,7 @@ import {z} from "zod"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {useProduct} from "../../../hooks/UseProduct";
-import {NumberInputField} from "../../ui/InputField";
+import {NumberInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 
 export const FormSchema = z.object({

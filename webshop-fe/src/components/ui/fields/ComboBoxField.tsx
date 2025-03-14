@@ -5,12 +5,7 @@ import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandL
 import {Check, ChevronsUpDown, Plus} from "lucide-react";
 import {cn} from "src/lib/utils";
 import React, {useState} from "react";
-
-interface SelectOption {
-    label: string;
-    value: string;
-}
-
+import {SelectOption} from "../../../types/select";
 
 interface FormComboBoxProps {
     name: string;
@@ -23,14 +18,14 @@ interface FormComboBoxProps {
 }
 
 export const ComboBoxField: React.FC<FormComboBoxProps> = ({
-                                                              name,
-                                                              control,
-                                                              label,
-                                                              description,
-                                                              options,
-                                                              enableCreateOption,
-                                                              onCreateOption
-                                                          }) => {
+                                                               name,
+                                                               control,
+                                                               label,
+                                                               description,
+                                                               options,
+                                                               enableCreateOption,
+                                                               onCreateOption
+                                                           }) => {
     const [localOptions, setLocalOptions] = useState<SelectOption[]>(options);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -109,7 +104,7 @@ export const ComboBoxField: React.FC<FormComboBoxProps> = ({
                                             onSelect={() => handleAddOption(searchTerm, field)}
                                             className="flex items-center justify-between"
                                         >
-                                            Add "{searchTerm}" <Plus className="h-4 w-4" />
+                                            Add "{searchTerm}" <Plus className="h-4 w-4"/>
                                         </CommandItem>
                                     )}
                                 </CommandList>

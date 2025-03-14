@@ -5,7 +5,7 @@ import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useCategory} from "../../../hooks/UseCategory";
-import {TextInputField} from "../../ui/InputField";
+import {TextInputField} from "../../ui/fields/InputField";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {

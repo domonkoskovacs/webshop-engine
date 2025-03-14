@@ -1,8 +1,8 @@
 import React from "react";
-import { Input } from "src/components/ui/Input";
-import { UseFormReturn } from "react-hook-form";
-import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "./Form";
-import {Slider} from "./Slider";
+import {Input} from "src/components/ui/Input";
+import {UseFormReturn} from "react-hook-form";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../Form";
+import {Slider} from "../Slider";
 
 interface SliderInputFieldProps {
     form: UseFormReturn<any>;
@@ -13,13 +13,13 @@ interface SliderInputFieldProps {
     step?: number;
 }
 
-const SliderInputField: React.FC<SliderInputFieldProps> = ({ form, nameMin, nameMax, label, range, step = 1 }) => {
+const SliderInputField: React.FC<SliderInputFieldProps> = ({form, nameMin, nameMax, label, range, step = 1}) => {
     const minValue = form.watch(nameMin) ?? range[0];
     const maxValue = form.watch(nameMax) ?? range[1];
 
     const handleSliderChange = (values: number[]) => {
-        form.setValue(nameMin, values[0], { shouldValidate: true });
-        form.setValue(nameMax, values[1], { shouldValidate: true });
+        form.setValue(nameMin, values[0], {shouldValidate: true});
+        form.setValue(nameMax, values[1], {shouldValidate: true});
     };
 
     return (
@@ -29,12 +29,12 @@ const SliderInputField: React.FC<SliderInputFieldProps> = ({ form, nameMin, name
                 <FormField
                     control={form.control}
                     name={nameMin}
-                    render={({ field }) => (
+                    render={({field}) => (
                         <FormControl>
                             <Input
                                 type="number"
                                 value={field.value ?? range[0]}
-                                onChange={(e) => form.setValue(nameMin, Number(e.target.value), { shouldValidate: true })}
+                                onChange={(e) => form.setValue(nameMin, Number(e.target.value), {shouldValidate: true})}
                                 className="text-center"
                             />
                         </FormControl>
@@ -44,12 +44,12 @@ const SliderInputField: React.FC<SliderInputFieldProps> = ({ form, nameMin, name
                 <FormField
                     control={form.control}
                     name={nameMax}
-                    render={({ field }) => (
+                    render={({field}) => (
                         <FormControl>
                             <Input
                                 type="number"
                                 value={field.value ?? range[1]}
-                                onChange={(e) => form.setValue(nameMax, Number(e.target.value), { shouldValidate: true })}
+                                onChange={(e) => form.setValue(nameMax, Number(e.target.value), {shouldValidate: true})}
                                 className="text-center"
                             />
                         </FormControl>
@@ -63,7 +63,7 @@ const SliderInputField: React.FC<SliderInputFieldProps> = ({ form, nameMin, name
                 max={range[1]}
                 step={step}
             />
-            <FormMessage />
+            <FormMessage/>
         </FormItem>
     );
 };

@@ -5,8 +5,8 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {StoreRequest} from "../../../shared/api";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
-import {NumberInputField, TextInputField} from "../../ui/InputField";
-import {SwitchField} from "../../ui/SwitchField";
+import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
+import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 
 export const FormSchema = z.object({

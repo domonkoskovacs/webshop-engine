@@ -1,8 +1,8 @@
 import React from "react";
 
 import {UseFormReturn} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "./Form";
-import {Input} from "./Input";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
+import {Input} from "../Input";
 
 interface TextInputFieldProps {
     form: UseFormReturn<any>;

@@ -5,7 +5,7 @@ import React from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "../../../hooks/UseToast";
 import {userService} from "../../../services/UserService";
-import {TextInputField} from "../../ui/InputField";
+import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 
 const FormSchema = z.object({

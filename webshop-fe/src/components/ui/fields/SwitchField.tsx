@@ -1,7 +1,7 @@
 import {UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "./Form";
-import {Switch} from "./Switch";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
+import {Switch} from "../Switch";
 
 interface SwitchFieldProps {
     form: UseFormReturn<any>;

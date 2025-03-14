@@ -6,12 +6,12 @@ import React, {useEffect} from "react";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 import {useOrder} from "../../../hooks/UseOrder";
 import {GetAll1PaymentMethodsEnum, GetAll1SortTypeEnum, GetAll1StatusesEnum} from "../../../shared/api";
-import DatePickerField from "../../ui/DatePickerField";
-import SliderField from "../../ui/SliderField";
-import {ComboBoxMultipleValueField} from "../../ui/ComboBoxMultipleValueField";
+import DatePickerField from "../../ui/fields/DatePickerField";
+import SliderField from "../../ui/fields/SliderField";
+import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import {mapEnumToOptions} from "../../../lib/options.utils";
-import SelectField from "../../ui/SelectField";
-import {NumberInputField} from "../../ui/InputField";
+import SelectField from "../../ui/fields/SelectField";
+import {NumberInputField} from "../../ui/fields/InputField";
 
 export const FormSchema = z.object({
     minDate: z.date().optional(),

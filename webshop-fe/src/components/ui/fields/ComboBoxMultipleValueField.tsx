@@ -4,9 +4,9 @@ import {Popover, PopoverContent, PopoverTrigger} from "src/components/ui/Popover
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "src/components/ui/Command";
 import {Check, ChevronsUpDown} from "lucide-react";
 import {cn} from "src/lib/utils";
-import React, {useState} from "react";
+import React from "react";
 import {UseFormReturn} from "react-hook-form";
-import {SelectOption} from "../../types/select";
+import {SelectOption} from "../../../types/select";
 
 interface FormComboBoxProps {
     form: UseFormReturn<any>;
@@ -17,19 +17,12 @@ interface FormComboBoxProps {
 }
 
 export const ComboBoxMultipleValueField: React.FC<FormComboBoxProps> = ({
-                                                                           form,
-                                                                           name,
-                                                                           label,
-                                                                           description,
-                                                                           options
-                                                                       }) => {
-    const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-    const toggleSelection = (value: string) => {
-        const newSelected = selectedValues.includes(value)
-            ? selectedValues.filter((v) => v !== value)
-            : [...selectedValues, value];
-    };
+                                                                            form,
+                                                                            name,
+                                                                            label,
+                                                                            description,
+                                                                            options
+                                                                        }) => {
     return (
         <FormField
             control={form.control}
@@ -74,7 +67,6 @@ export const ComboBoxMultipleValueField: React.FC<FormComboBoxProps> = ({
                                                             ? field.value.filter((v: string) => v !== option.value)
                                                             : [...(field.value || []), option.value];
                                                         field.onChange(newSelected);
-                                                        toggleSelection(newSelected)
                                                     }}
                                                 >
                                                     {option.label}
