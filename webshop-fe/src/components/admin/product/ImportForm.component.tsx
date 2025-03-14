@@ -8,6 +8,7 @@ import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {FileInputField} from "../../ui/InputField";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import {downloadSampleCSV, fileToBase64, FileToBase64Error} from "../../../lib/file.utils";
 
 export const FormSchema = z.object({
     csv: z
@@ -30,25 +31,6 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
         resolver: zodResolver(FormSchema),
     })
 
-    const fileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const base64String = (reader.result as string).split(",")[1];
-                resolve(base64String);
-            };
-            reader.onerror = (error) => {
-                form.setError("csv", {
-                    type: "manual",
-                    message: "Failed to convert file to Base64. Please try again.",
-                }, {shouldFocus: true});
-
-                reject(error);
-            };
-        });
-    };
-
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const base64Csv = await fileToBase64(data.csv);
@@ -58,7 +40,12 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
             })
             setIsOpen(false)
         } catch (error) {
-            if (error instanceof ApiError && error.error) {
+            if (error instanceof FileToBase64Error) {
+                form.setError("csv", {
+                    type: "manual",
+                    message: error.message,
+                }, {shouldFocus: true});
+            } else if (error instanceof ApiError && error.error) {
                 const csvErrors = error.error.filter(err => err.reasonCode === ResultEntryReasonCodeEnum.CsvUploadError);
                 if (csvErrors.length > 0) {
                     csvErrors.forEach((err, index) => {
@@ -87,7 +74,9 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
         >
             <FileInputField form={form} name="csv" label="Csv file"
                             accept="text/csv"
-                            description="Please select product upload csv! Download the example if you need help."/>
+                            description={<>Please select product upload csv! <button className="underline"
+                                                                                     onClick={() => downloadSampleCSV()}>Download
+                                the example</button> if you need help.</>}/>
         </SheetFormContainer>
     );
 }

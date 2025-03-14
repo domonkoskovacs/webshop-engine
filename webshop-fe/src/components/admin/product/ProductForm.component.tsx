@@ -11,6 +11,7 @@ import {useCategory} from "../../../hooks/UseCategory";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
 import {TextareaField} from "../../ui/TextareaField";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import {downloadImage} from "../../../lib/file.utils";
 
 const MAX_IMAGES = 5
 
@@ -52,12 +53,6 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
             images: [] as File[],
         },
     })
-
-    const downloadImage = async (url: string): Promise<File> => {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return new File([blob], "image.jpg", {type: blob.type});
-    };
 
     useEffect(() => {
         if (productId) {

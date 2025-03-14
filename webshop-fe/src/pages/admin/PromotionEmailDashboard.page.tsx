@@ -37,7 +37,15 @@ const PromotionEmailDashboard: React.FC = () => {
         },
         {
             accessorKey: "imageUrl",
-            header: "ImageUrl",
+            header: "Image",
+            cell: ({row}) => {
+                const url: string = row.getValue("imageUrl");
+                return <img
+                    src={url}
+                    alt={"Promotion email"}
+                    className="w-14 h-14 object-cover rounded-md"
+                />
+            },
         },
         {
             id: "dayOfWeek",

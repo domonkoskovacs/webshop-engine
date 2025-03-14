@@ -10,6 +10,8 @@ import DatePickerField from "../../ui/DatePickerField";
 import SliderField from "../../ui/SliderField";
 import {ComboBoxMultipleValueField} from "../../ui/ComboBoxMultipleValueField";
 import {mapEnumToOptions} from "../../../lib/options.utils";
+import SelectField from "../../ui/SelectField";
+import {NumberInputField} from "../../ui/InputField";
 
 export const FormSchema = z.object({
     minDate: z.date().optional(),
@@ -48,7 +50,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             sortType: filters.sortType,
             size: filters.size,
         });
-    }, []);
+    }, [filters.maxDate, filters.maxPrice, filters.minDate, filters.minPrice, filters.paymentMethods, filters.size, filters.sortType, filters.statuses, form]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         updateFilters({
@@ -88,6 +90,8 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                         options={mapEnumToOptions(GetAll1PaymentMethodsEnum)}/>
             <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
                                         options={mapEnumToOptions(GetAll1StatusesEnum)}/>
+            <SelectField form={form} name="sortType" label="Sorting" placeholder="Select sorting..." options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
+            <NumberInputField form={form} name="size" label="Pgae size" placeholder="Add page size..."/>
         </SheetFormContainer>
     );
 }

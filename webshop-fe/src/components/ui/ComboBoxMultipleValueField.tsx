@@ -6,12 +6,7 @@ import {Check, ChevronsUpDown} from "lucide-react";
 import {cn} from "src/lib/utils";
 import React, {useState} from "react";
 import {UseFormReturn} from "react-hook-form";
-
-interface SelectOption {
-    label: string;
-    value: string;
-}
-
+import {SelectOption} from "../../types/select";
 
 interface FormComboBoxProps {
     form: UseFormReturn<any>;

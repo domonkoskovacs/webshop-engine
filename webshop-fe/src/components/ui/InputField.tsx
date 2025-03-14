@@ -28,7 +28,7 @@ interface FileInputFieldProps {
     name: string;
     label: string;
     accept: string;
-    description?: string;
+    description?: string | React.ReactNode;
 }
 
 const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description, type}) => {

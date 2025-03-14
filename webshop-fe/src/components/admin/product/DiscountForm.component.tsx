@@ -45,7 +45,7 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
             discount: data.discountPercentage,
         })));
         toast({
-            description: "Product created successfully.",
+            description: "Discount applied successfully.",
         })
         setIsOpen(false)
     }

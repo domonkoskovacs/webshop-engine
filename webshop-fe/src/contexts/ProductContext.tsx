@@ -9,7 +9,7 @@ import {
 } from "../shared/api";
 import {productService} from "../services/ProductService";
 import {toast} from "../hooks/UseToast";
-import {downloadCSV} from "../lib/csv.downloader";
+import {downloadCSV} from "../lib/file.utils";
 
 interface ProductContextType {
     products: ProductResponse[];
