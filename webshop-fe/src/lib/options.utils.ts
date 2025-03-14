@@ -1,3 +1,5 @@
+import {BrandResponse, CategoryResponse} from "../shared/api";
+
 export const formatLabel = (value: string): string =>
     value
         .toLowerCase()
@@ -9,3 +11,36 @@ export const mapEnumToOptions = <T extends Record<string, string>>(enumObj: T) =
         label: formatLabel(value),
         value
     }));
+
+export const mapCategoryNamesToOptions = (categories: CategoryResponse[]) => {
+    return categories.map((category) => ({
+        label: category.name!,
+        value: category.name!
+    })) || []
+};
+
+export const mapSubCategoryNamesToOptions = (categories: CategoryResponse[]) => {
+    return categories.flatMap(category =>
+        category.subCategories?.map(subCategory => ({
+            label: subCategory.name!,
+            value: subCategory.name!
+        })) || []
+    );
+};
+
+export const mapSubCategoriesToOptions = (categories: CategoryResponse[]) => {
+    return categories.flatMap(category =>
+        category.subCategories?.map(subCategory => ({
+            label: subCategory.name!,
+            value: subCategory.id!
+        })) || []
+    );
+};
+
+export const mapBrandsToOptions = (brands: BrandResponse[]) => {
+    return brands.map(brand => ({
+        label: brand.name!,
+        value: brand.name!
+    }));
+};
+

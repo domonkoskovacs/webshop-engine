@@ -1,136 +1,116 @@
-import {Button} from "src/components/ui/Button"
-import React from "react";
+import React, {useEffect} from "react";
 import {useProduct} from "../../../hooks/UseProduct";
-import {ComboBoxMultipleValue} from "../../ui/ComboBoxMultipleValue";
 import {useCategory} from "../../../hooks/UseCategory";
-import SliderFilter from "./SliderFilter.component";
-import {Switch} from "../../ui/Switch";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
-import {GetAllSortTypeEnum} from "../../../shared/api";
-import {Input} from "../../ui/Input";
+import {GetAllSortTypeEnum, UpdateGenderEnum} from "../../../shared/api";
+
+import {z} from "zod";
+import {useToast} from "../../../hooks/UseToast";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
+import {
+    mapBrandsToOptions,
+    mapCategoryNamesToOptions,
+    mapEnumToOptions,
+    mapSubCategoryNamesToOptions
+} from "../../../lib/options.utils";
+import SliderField from "../../ui/fields/SliderField";
+import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
+import {SwitchField} from "../../ui/fields/SwitchField";
+import SelectField from "../../ui/fields/SelectField";
+
+const FormSchema = z.object({
+    brands: z.array(z.string()).optional(),
+    categories: z.array(z.string()).optional(),
+    subCategories: z.array(z.string()).optional(),
+    genders: z.array(z.nativeEnum(UpdateGenderEnum)).optional(),
+    maxPrice: z.number().min(0, "Price must be non-negative").optional(),
+    minPrice: z.number().min(0, "Price must be non-negative").optional(),
+    maxDiscountPercentage: z.number().min(0, "Discount percentage must be non-negative").max(100, "Discount percentage can't be bigger than 100").optional(),
+    minDiscountPercentage: z.number().min(0, "Discount percentage must be non-negative").max(100, "Discount percentage can't be bigger than 100").optional(),
+    itemNumber: z.string().optional(),
+    showOutOfStock: z.boolean(),
+    sortType: z.nativeEnum(GetAllSortTypeEnum).optional(),
+    size: z.number().int().min(1, "Size must be non-negative"),
+});
 
 interface FilterFormProps {
     setIsOpen: (open: boolean) => void;
 }
 
 const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {brands, filters, updateFilters, resetFilters, priceRange, discountRange, totalElements} = useProduct();
+    const {brands, filters, updateFilters, resetFilters, priceRange, discountRange} = useProduct();
     const {categories} = useCategory()
+    const {toast} = useToast()
 
-    const handlePriceSliderChange = (values: number[]) => {
-        updateFilters({minPrice: values[0], maxPrice: values[1]})
-    };
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            showOutOfStock: false
+        },
+    })
 
-    const handlePriceMinInputChange = (value: string) => {
-        const newValue = Number(value);
-        if (!isNaN(newValue)) {
-            updateFilters({minPrice: newValue})
-        }
-    };
+    useEffect(() => {
+        form.reset({
+            brands: filters.brands,
+            categories: filters.categories,
+            subCategories: filters.subCategories,
+            genders: filters.genders,
+            maxPrice: filters.maxPrice,
+            minPrice: filters.minPrice,
+            maxDiscountPercentage: filters.maxDiscountPercentage,
+            minDiscountPercentage: filters.minDiscountPercentage,
+            itemNumber: filters.itemNumber,
+            showOutOfStock: filters.showOutOfStock,
+            sortType: filters.sortType,
+            size: filters.size,
+        });
+    }, [filters.brands, filters.categories, filters.genders, filters.itemNumber, filters.maxDiscountPercentage,
+        filters.maxPrice, filters.minDiscountPercentage, filters.minPrice, filters.showOutOfStock, filters.size, filters.sortType, filters.subCategories, form])
 
-    const handlePriceMaxInputChange = (value: string) => {
-        const newValue = Number(value);
-        if (!isNaN(newValue)) {
-            updateFilters({maxPrice: newValue})
-        }
-    };
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        updateFilters({
+            brands: data.brands,
+            categories: data.categories,
+            subCategories: data.subCategories,
+            genders: data.genders,
+            maxPrice: data.maxPrice,
+            minPrice: data.minPrice,
+            maxDiscountPercentage: data.maxDiscountPercentage,
+            minDiscountPercentage: data.minDiscountPercentage,
+            itemNumber: data.itemNumber,
+            showOutOfStock: data.showOutOfStock,
+            sortType: data.sortType,
+            size: data.size,
+        })
+        toast({
+            description: "Filters applied successfully.",
+        })
+        setIsOpen(false)
+    }
 
-    const handleDiscountSliderChange = (values: number[]) => {
-        updateFilters({minDiscountPercentage: values[0], maxDiscountPercentage: values[1]})
-    };
-
-    const handleDiscountMinInputChange = (value: string) => {
-        const newValue = Number(value);
-        if (!isNaN(newValue)) {
-            updateFilters({minDiscountPercentage: newValue})
-        }
-    };
-
-    const handleDiscountMaxInputChange = (value: string) => {
-        const newValue = Number(value);
-        if (!isNaN(newValue)) {
-            updateFilters({maxDiscountPercentage: newValue})
-        }
-    };
-
-    return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">Filter Products</h2>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar">
-                <ComboBoxMultipleValue className="w-full"
-                                       options={brands.map((brand) => brand.name!)} type="brand"
-                                       selectedValues={filters.brands ?? []}
-                                       onChange={(newSelected) => updateFilters({brands: newSelected})}/>
-
-                <ComboBoxMultipleValue className="w-full"
-                                       options={categories.map((category) => category.name!)} type="category"
-                                       selectedValues={filters.categories ?? []}
-                                       onChange={(newSelected) => updateFilters({categories: newSelected})}/>
-
-                <ComboBoxMultipleValue className="w-full"
-                                       options={categories.flatMap(category =>
-                                           category.subCategories?.map(subCategory => subCategory.name!) || []
-                                       )} type="subcategory"
-                                       selectedValues={filters.subCategories ?? []}
-                                       onChange={(newSelected) => updateFilters({subCategories: newSelected})}/>
-
-                <SliderFilter handleMinInputChange={handlePriceMinInputChange}
-                              handleMaxInputChange={handlePriceMaxInputChange}
-                              handleSliderChange={handlePriceSliderChange} range={[priceRange[0], priceRange[1]]}
-                              minValue={filters.minPrice} maxValue={filters.maxPrice}/>
-
-                <SliderFilter handleMinInputChange={handleDiscountMinInputChange}
-                              handleMaxInputChange={handleDiscountMaxInputChange}
-                              handleSliderChange={handleDiscountSliderChange}
-                              range={[discountRange[0], discountRange[1]]}
-                              minValue={filters.minDiscountPercentage} maxValue={filters.maxDiscountPercentage}/>
-
-                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                        Show out of stock products?
-                    </div>
-                    <Switch
-                        checked={filters.showOutOfStock}
-                        onCheckedChange={() => updateFilters({showOutOfStock: !filters.showOutOfStock})}
-                    />
-                </div>
-
-                <Select value={filters.sortType}
-                        onValueChange={(value) => updateFilters({sortType: value as GetAllSortTypeEnum})}>
-                    <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select sorting..."/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value={GetAllSortTypeEnum.AscPrice}>Asc Price</SelectItem>
-                        <SelectItem value={GetAllSortTypeEnum.DescPrice}>Desc Price</SelectItem>
-                        <SelectItem value={GetAllSortTypeEnum.AscDiscount}>Asc Discount</SelectItem>
-                        <SelectItem value={GetAllSortTypeEnum.DescDiscount}>Desc Discount</SelectItem>
-                    </SelectContent>
-                </Select>
-
-                <Input
-                    type="number"
-                    value={filters.size}
-                    onChange={(e) => updateFilters({size: Number(e.target.value)})}
-                    min={1}
-                    max={totalElements}
-                    className="text-center"
-                />
-
-            </div>
-            <div className="mt-auto flex gap-2 pt-3 border-t">
-                <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>
-                    Back
-                </Button>
-                <Button className="w-full" onClick={() => resetFilters()}>
-                    Reset
-                </Button>
-            </div>
-        </div>
-    );
+    return <SheetFormContainer title="Filter Products" form={form} formId="productFilterForm" onSubmit={onSubmit}
+                               submitButtonText="Apply" secondaryButtonClick={() => {
+        resetFilters();
+        form.reset();
+    }} secondaryButtonText="Reset">
+        <ComboBoxMultipleValueField form={form} name="brands" label="Brands" options={mapBrandsToOptions(brands)}/>
+        <ComboBoxMultipleValueField form={form} name="categories" label="Categories"
+                                    options={mapCategoryNamesToOptions(categories)}/>
+        <ComboBoxMultipleValueField form={form} name="subCategories" label="Subcategories"
+                                    options={mapSubCategoryNamesToOptions(categories)}/>
+        <ComboBoxMultipleValueField form={form} name="genders" label="Genders"
+                                    options={mapEnumToOptions(UpdateGenderEnum)}/>
+        <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
+                     range={[priceRange[0], priceRange[1]]}/>
+        <SliderField form={form} nameMin="minDiscountPercentage" nameMax="maxDiscountPercentage" label="Price"
+                     range={[discountRange[0], discountRange[1]]}/>
+        <TextInputField form={form} name="itemNumber" placeholder="Item number..."/>
+        <SwitchField form={form} name="showOutOfStock" label="Show out of stock products?"/>
+        <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAllSortTypeEnum)}/>
+        <NumberInputField form={form} name="size" label="Page size" placeholder="Add page size..." min={1}/>
+    </SheetFormContainer>
 }
 
 export default FilterForm

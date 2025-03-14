@@ -6,24 +6,25 @@ import {Check, ChevronsUpDown, Plus} from "lucide-react";
 import {cn} from "src/lib/utils";
 import React, {useState} from "react";
 import {SelectOption} from "../../../types/select";
+import {UseFormReturn} from "react-hook-form";
 
 interface FormComboBoxProps {
+    form: UseFormReturn<any>;
     name: string;
-    control: any;
     label: string;
     description?: string;
     options: SelectOption[];
-    enableCreateOption: boolean;
+    enableCreateOption?: boolean;
     onCreateOption?: (newValue: string) => void;
 }
 
 export const ComboBoxField: React.FC<FormComboBoxProps> = ({
+                                                               form,
                                                                name,
-                                                               control,
                                                                label,
                                                                description,
                                                                options,
-                                                               enableCreateOption,
+                                                               enableCreateOption = false,
                                                                onCreateOption
                                                            }) => {
     const [localOptions, setLocalOptions] = useState<SelectOption[]>(options);
@@ -42,7 +43,7 @@ export const ComboBoxField: React.FC<FormComboBoxProps> = ({
 
     return (
         <FormField
-            control={control}
+            control={form.control}
             name={name}
             render={({field}) => (
                 <FormItem className="flex flex-col">

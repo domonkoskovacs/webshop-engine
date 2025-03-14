@@ -68,6 +68,14 @@ const ProductsDashboard: React.FC = () => {
             header: "Name",
         },
         {
+            accessorKey: "gender",
+            header: "Gender",
+            cell: ({row}) => {
+                const gender: string = row.getValue("gender")
+                return gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
+            },
+        },
+        {
             id: "Category",
             accessorKey: "category.name",
             header: "Category",

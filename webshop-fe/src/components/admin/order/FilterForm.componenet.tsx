@@ -31,7 +31,7 @@ interface ProductFormProps {
 }
 
 const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {updateFilters, filters, resetFilters, priceRange} = useOrder()
+    const {updateFilters, filters, resetFilters, priceRange, totalElements} = useOrder()
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -71,7 +71,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
 
     return (
         <SheetFormContainer
-            title="Filter"
+            title="Filter Orders"
             form={form}
             formId="orderFilterForm"
             onSubmit={onSubmit}
@@ -91,7 +91,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
                                         options={mapEnumToOptions(GetAll1StatusesEnum)}/>
             <SelectField form={form} name="sortType" label="Sorting" placeholder="Select sorting..." options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
-            <NumberInputField form={form} name="size" label="Pgae size" placeholder="Add page size..."/>
+            <NumberInputField form={form} name="size" label="Pgae size" min={1} max={totalElements} placeholder="Add page size..."/>
         </SheetFormContainer>
     );
 }

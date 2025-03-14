@@ -16,6 +16,7 @@ interface OrderContextType {
     changeStatus: (id: string, status: OrderStatusRequestOrderStatusEnum) => Promise<void>;
     exportOrders: (from: string, to: string) => Promise<void>;
     priceRange: number[];
+    totalElements: number;
 }
 
 export const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -32,6 +33,7 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
     });
     const [totalPages, setTotalPages] = useState(1);
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
+    const [totalElements, setTotalElements] = useState(1);
 
     const fetchOrders = useCallback(async () => {
         try {
@@ -39,6 +41,7 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
             if (data.content) setOrders(data.content);
             setTotalPages(data.totalPages ?? 0);
             setPriceRange([data.minPrice ?? 0, data.maxPrice ?? 0])
+            setTotalElements(data.totalElements ?? 0);
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -118,7 +121,8 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
                 setPage,
                 changeStatus,
                 exportOrders,
-                priceRange
+                priceRange,
+                totalElements
             }}>
             {children}
         </OrderContext.Provider>

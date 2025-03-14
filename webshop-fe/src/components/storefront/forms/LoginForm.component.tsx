@@ -69,14 +69,20 @@ const LoginForm: React.FC = () => {
                               formId="login-form"
                               onSubmit={onSubmit}
                               submitButtonText="Login"
-                              singleColumn={true}
+                              singleColumn={false}
                               className="w-full">
-        <TextInputField form={form} name="email" label="Email"
-                        placeholder="Please enter your email"/>
-        <TextInputField form={form} name="password" label="Password"
-                        placeholder="*****"
-                        description={<Link to="/forgot-password">I forgot my password!</Link>}
-                        type="password"/>
+        <div className="flex flex-col gap-2">
+            <TextInputField form={form} name="email" label="Email"
+                            placeholder="Please enter your email"/>
+            <TextInputField form={form} name="password" label="Password"
+                            placeholder="*****"
+                            description={<Link to="/forgot-password">I forgot my password!</Link>}
+                            type="password"/>
+        </div>
+        <div className="hidden sm:flex flex-col justify-center items-center p-4">
+                <h2 className="text-xl font-semibold text-center">Welcome Back!</h2>
+                <p className="text-center">Sign in to start shopping.</p>
+        </div>
     </FormCardContainer>
 }
 

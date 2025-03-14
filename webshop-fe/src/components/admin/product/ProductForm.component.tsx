@@ -12,6 +12,8 @@ import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 import {downloadImage} from "../../../lib/file.utils";
+import {UpdateGenderEnum} from "../../../shared/api";
+import {mapBrandsToOptions, mapSubCategoriesToOptions, mapEnumToOptions} from "../../../lib/options.utils";
 
 const MAX_IMAGES = 5
 
@@ -20,7 +22,7 @@ export const FormSchema = z.object({
     name: z.string().min(1, "Name is required"),
     description: z.string().min(1, "Description is required"),
     subCategoryId: z.string().uuid("Invalid SubCategory format"),
-    type: z.string().min(1, "Type is required"),
+    gender: z.nativeEnum(UpdateGenderEnum, {required_error: "You must select a gender"}),
     count: z.number().int().min(0, "Count must be a non-negative integer"),
     price: z.number().min(0, "Price must be a non-negative number"),
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100"),
@@ -68,7 +70,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                         name: product.name,
                         description: product.description,
                         subCategoryId: product.subCategory!.id,
-                        type: product.type,
+                        gender: product.gender,
                         count: product.count,
                         price: product.price,
                         discountPercentage: product.discountPercentage,
@@ -89,7 +91,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                 name: data.name,
                 description: data.description,
                 subCategoryId: data.subCategoryId,
-                type: data.type,
+                gender: data.gender,
                 count: data.count,
                 price: data.price,
                 discountPercentage: data.discountPercentage,
@@ -105,7 +107,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                 name: data.name,
                 description: data.description,
                 subCategoryId: data.subCategoryId,
-                type: data.type,
+                gender: data.gender,
                 count: data.count,
                 price: data.price,
                 discountPercentage: data.discountPercentage,
@@ -131,29 +133,18 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
             secondaryButtonClick={() => setIsOpen(false)}
             secondaryButtonText="Back"
         >
-            <TextInputField form={form} name="itemNumber" label="Item Number"
-                            placeholder="Item Number..."/>
-            <ComboBoxField name="brand" control={form.control} label="Brand"
-                           options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
+            <TextInputField form={form} name="itemNumber" label="Item Number" placeholder="Item Number..."/>
+            <ComboBoxField form={form} name="brand" label="Brand" options={mapBrandsToOptions(brands)}
                            enableCreateOption={true}/>
-            <ComboBoxField
-                name="subCategoryId"
-                control={form.control}
-                label="Subcategory"
-                options={categories.flatMap(category => category.subCategories?.map(subCategory => ({
-                    label: subCategory.name!,
-                    value: subCategory.id!
-                })) || [])}
-                enableCreateOption={false}
-            />
+            <ComboBoxField form={form} name="subCategoryId" label="Subcategory"
+                           options={mapSubCategoriesToOptions(categories)} enableCreateOption={false}/>
             <TextInputField form={form} name="name" label="Product name" placeholder="Product name..."/>
-            <TextareaField form={form} name="description" label="Description"
-                           placeholder="Product description..."/>
-            <TextInputField form={form} name="type" label="Product type" placeholder="Product type..."/>
+            <TextareaField form={form} name="description" label="Description" placeholder="Product description..."/>
+            <ComboBoxField form={form} name={"gender"} label={"Gender"} options={mapEnumToOptions(UpdateGenderEnum)}/>
             <NumberInputField form={form} name="count" label="Stock" placeholder="Stock..." min={0}/>
             <NumberInputField form={form} name="price" label="Price" placeholder="Price..." min={0}/>
-            <NumberInputField form={form} name="discountPercentage" label="Discount"
-                              placeholder="Discount..." min={0} max={100}/>
+            <NumberInputField form={form} name="discountPercentage" label="Discount" placeholder="Discount..." min={0}
+                              max={100}/>
 
             {!productId && <FormField //todo better image handling
                 control={form.control}

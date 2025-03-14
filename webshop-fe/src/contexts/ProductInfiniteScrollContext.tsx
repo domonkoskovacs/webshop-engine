@@ -23,7 +23,7 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
         brands: [],
         categories: [],
         subCategories: [],
-        types: [],
+        genders: [],
         maxPrice: undefined,
         minPrice: undefined,
         maxDiscountPercentage: undefined,
