@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,7 +113,7 @@ public abstract class IntegrationTest {
     static void cleanupFolder() throws IOException {
         Files.walkFileTree(Paths.get("src/test/resources/images"), EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE, new SimpleFileVisitor<>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public @NotNull FileVisitResult visitFile(Path file, @NotNull BasicFileAttributes attrs) throws IOException {
                 if (!file.getFileName().toString().equals("e3ee6173-d53a-46c0-aea8-2de257e47089.png") && file.toString().endsWith(".png")) {
                     Files.delete(file);
                 }
@@ -120,12 +121,12 @@ public abstract class IntegrationTest {
             }
 
             @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) {
+            public @NotNull FileVisitResult visitFileFailed(Path file, @NotNull IOException exc) {
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            public @NotNull FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                 if (!dir.equals(Paths.get("src/test/resources/images")) && isEmptyDirectory(dir)) {
                     Files.delete(dir);
                 }

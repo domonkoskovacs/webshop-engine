@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import jakarta.validation.constraints.NotNull;
 
 public record ProductRequest(
@@ -12,7 +13,7 @@ public record ProductRequest(
         @NotNull String name,
         @NotNull String description,
         @NotNull UUID subCategoryId,
-        @NotNull String type,
+        @NotNull Gender gender,
         @NotNull Integer count,
         @NotNull Double price,
         @NotNull Double discountPercentage,

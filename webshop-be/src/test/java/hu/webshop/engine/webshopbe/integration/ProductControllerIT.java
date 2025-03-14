@@ -30,6 +30,7 @@ import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.repository.ProductRepository;
 import hu.webshop.engine.webshopbe.domain.product.value.Discount;
+import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
@@ -53,7 +54,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeCreated() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, "000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request, Role.ROLE_ADMIN));
@@ -74,7 +75,7 @@ class ProductControllerIT extends IntegrationTest {
                 .param("name", request.name())
                 .param("description", request.description())
                 .param("subCategoryId", request.subCategoryId().toString())
-                .param("type", request.type())
+                .param("gender", String.valueOf(request.gender()))
                 .param("count", request.count().toString())
                 .param("price", request.price().toString())
                 .param("discountPercentage", request.discountPercentage().toString())
@@ -104,7 +105,7 @@ class ProductControllerIT extends IntegrationTest {
                 .param("brands", "brand")
                 .param("categories", "category")
                 .param("subCategories", "subCategory")
-                .param("types", "type", "Type2")
+                .param("genders", Gender.UNISEX.toString(), Gender.MEN.toString())
                 .param("maxPrice", "100.0")
                 .param("minPrice", "1.0")
                 .param("maxDiscountPercentage", "20.0")
@@ -176,7 +177,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeUpdated() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("newBrand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, "000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_ADMIN));
@@ -214,7 +215,7 @@ class ProductControllerIT extends IntegrationTest {
     void getEndpointsArePublic() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, "000");
         DiscountRequest discountRequest = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
         DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
@@ -239,7 +240,7 @@ class ProductControllerIT extends IntegrationTest {
                 .param("name", request.name())
                 .param("description", request.description())
                 .param("subCategoryId", request.subCategoryId().toString())
-                .param("type", request.type())
+                .param("gender", request.gender().toString())
                 .param("count", request.count().toString())
                 .param("price", request.price().toString())
                 .param("discountPercentage", request.discountPercentage().toString());
@@ -251,7 +252,7 @@ class ProductControllerIT extends IntegrationTest {
     void userCanCallGetEndpointButNotAnyOther() throws Exception {
         //Given
         ProductRequest request = new ProductRequest("brand", "name", "des",
-                SUB_CATEGORY_ID, "type", 2, 3.2, 10.0, null, "000");
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, "000");
         DiscountRequest discountRequest = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
         DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
@@ -283,7 +284,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeImported() throws Exception {
         //Given
         if (!productRepository.findAll().isEmpty()) fail();
-        CsvRequest request = new CsvRequest("aXRlbU51bWJlcjticmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5TmFtZTt0eXBlO2NvdW50O3ByaWNlO2Rpc2NvdW50UGVyY2VudGFnZTtpbWFnZXNVcmxzDQppdGVtMDAwO2JyYW5kO3NoaXJ0O3RoaXMgaXMgYSBzaGlydDtzdWJDYXRlZ29yeTt0eXBlOzEwOzEwLjA7MS4wO2ltYWdlVXJs");
+        CsvRequest request = new CsvRequest("aXRlbU51bWJlcjticmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5TmFtZTtnZW5kZXI7Y291bnQ7cHJpY2U7ZGlzY291bnRQZXJjZW50YWdlO2ltYWdlc1VybHMNCml0ZW0wMDA7YnJhbmQ7c2hpcnQ7dGhpcyBpcyBhIHNoaXJ0O3N1YkNhdGVnb3J5O1VOSVNFWDsxMDsxMC4wOzEuMDtpbWFnZVVybA");
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/import", request, Role.ROLE_ADMIN);
@@ -303,7 +304,7 @@ class ProductControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtUeXBlO0NvdW50O1ByaWNlO0Rpc2NvdW50UGVyY2VudGFnZTtJbWFnZVVybHMNCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7dHlwZTsyOzEwLjA7MTAuMDsNCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7dHlwZTsyOzEwLjA7MTAuMDsNCg=="));
+                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQo="));
 
     }
 
@@ -318,7 +319,7 @@ class ProductControllerIT extends IntegrationTest {
         params.addAll("brands", List.of("brand", "randomBrand"));
         params.addAll("categories", List.of("category", "randomCategory"));
         params.addAll("subCategories", List.of("subCategory", "randomSubCategory"));
-        params.addAll("types", List.of("type", "randomType"));
+        params.addAll("genders", List.of(Gender.UNISEX.toString(), Gender.MEN.toString()));
         params.add("maxPrice", "20.0");
         params.add("minPrice", "2.0");
         params.add("maxDiscountPercentage", "100.0");
@@ -330,6 +331,6 @@ class ProductControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtUeXBlO0NvdW50O1ByaWNlO0Rpc2NvdW50UGVyY2VudGFnZTtJbWFnZVVybHMNCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7dHlwZTsyOzEwLjA7MTAuMDsNCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7dHlwZTsyOzEwLjA7MTAuMDsNCg=="));
+                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQo="));
     }
 }

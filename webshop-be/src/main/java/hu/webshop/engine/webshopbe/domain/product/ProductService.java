@@ -142,7 +142,7 @@ public class ProductService {
     }
 
     public void importAndSave(String csv) {
-        List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"itemNumber", "brand", "name", "description", "subCategoryName", "type", "count", "price", "discountPercentage", "imagesUrls"})
+        List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"itemNumber", "brand", "name", "description", "subCategoryName", "gender", "count", "price", "discountPercentage", "imagesUrls"})
                 .base64()
                 .csv(csv)
                 .registerValidator("brand", brandService::existsByName)
@@ -164,17 +164,18 @@ public class ProductService {
         log.info("export > from: [{}], to: [{}], args: [{}]", from, to, args);
         Specification<Product> spec = getExportSpecification(args, from, to);
         List<Product> exportData = productRepository.findAll(spec);
-        String[] header = {"Brand", "Name", "Description", "SubCategory", "Type", "Count", "Price", "DiscountPercentage", "ImageUrls"};
+        String[] header = {"Brand", "Name", "Description", "SubCategory", "Gender", "Count", "Price", "DiscountPercentage", "ImageUrls", "ItemNumber"};
         List<Function<Product, ?>> columnExtractors = List.of(
                 product -> valueOfNullable(product.getBrand(), Brand::getName),
                 Product::getName,
                 Product::getDescription,
                 product -> valueOfNullable(product.getSubCategory(), SubCategory::getName),
-                Product::getType,
+                Product::getGender,
                 Product::getCount,
                 Product::getPrice,
                 Product::getDiscountPercentage,
-                Product::getImageUrls
+                Product::getImageUrls,
+                Product::getItemNumber
         );
         return new CSVWriter<>(
                 exportData,

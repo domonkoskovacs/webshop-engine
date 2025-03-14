@@ -3,6 +3,8 @@ package hu.webshop.engine.webshopbe.infrastructure.model.response;
 import java.util.List;
 import java.util.UUID;
 
+import hu.webshop.engine.webshopbe.domain.product.value.Gender;
+
 
 public record ProductResponse(
         UUID id,
@@ -11,7 +13,7 @@ public record ProductResponse(
         String description,
         CategoryResponse category,
         SubCategoryResponse subCategory,
-        String type,
+        Gender gender,
         Integer count,
         Double price,
         Double discountPercentage,

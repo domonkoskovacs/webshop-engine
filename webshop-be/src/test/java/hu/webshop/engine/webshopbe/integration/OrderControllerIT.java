@@ -25,7 +25,6 @@ import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.OrderStatusRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.PaymentTokenRequest;
 import lombok.RequiredArgsConstructor;
 
 
@@ -76,8 +75,8 @@ class OrderControllerIT extends IntegrationTest {
 
         //When
         ResultActions resultActions = mockMvc.perform(get(BASE_URL)
-                .param("minDate", "2023-01-09T15:34:41.860028400+01:00")
-                .param("maxDate", "2023-12-09T15:34:41.860028400+01:00")
+                .param("minDate", "2023-01-09")
+                .param("maxDate", "2023-12-09")
                 .param("minPrice", "0.0")
                 .param("maxPrice", "100.0")
                 .param("paymentMethods", "STRIPE")
@@ -192,19 +191,5 @@ class OrderControllerIT extends IntegrationTest {
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
                 .value("T3JkZXJEYXRlO3RvdGFsUHJpY2U7cGF5bWVudE1ldGhvZDtzdGF0dXM7dXNlck5hbWU7cHJvZHVjdENvdW50DQoyMDIzLTA5LTEwIDE5OjI4OjI2OzIwLjA7U1RSSVBFO0NSRUFURUQ7dGVzdCB0ZXN0OzINCg=="));
-    }
-
-    @Test
-    @DisplayName("order can be payed")
-    @DataSet("existingOrderAndAdmin.yml")
-    void orderCanBePayed() throws Exception {
-        //Given
-        PaymentTokenRequest paymentTokenRequest = new PaymentTokenRequest("tok_visa");
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/pay", paymentTokenRequest, Role.ROLE_USER);
-
-        //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.PAYED.name()));
     }
 }

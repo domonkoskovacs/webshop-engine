@@ -9,6 +9,7 @@ import hu.webshop.engine.webshopbe.domain.product.entity.Brand;
 import hu.webshop.engine.webshopbe.domain.product.entity.Category;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.entity.SubCategory;
+import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -40,7 +41,7 @@ public class ProductSpecification {
         return Specification.where(brand(args.brands()))
                 .and(category(args.categories()))
                 .and(subCategory(args.subCategories()))
-                .and(type(args.types()))
+                .and(gender(args.genders()))
                 .and(maxPrice(args.maxPrice()))
                 .and(minPrice(args.minPrice()))
                 .and(maxDiscountPercentage(args.maxDiscountPercentage()))
@@ -53,7 +54,7 @@ public class ProductSpecification {
         return Specification.where(brand(args.brands()))
                 .and(category(args.categories()))
                 .and(subCategory(args.subCategories()))
-                .and(type(args.types()))
+                .and(gender(args.genders()))
                 .and(maxDiscountPercentage(args.maxDiscountPercentage()))
                 .and(minDiscountPercentage(args.minDiscountPercentage()))
                 .and(itemNumber(args.itemNumber()))
@@ -64,7 +65,7 @@ public class ProductSpecification {
         return Specification.where(brand(args.brands()))
                 .and(category(args.categories()))
                 .and(subCategory(args.subCategories()))
-                .and(type(args.types()))
+                .and(gender(args.genders()))
                 .and(maxPrice(args.maxPrice()))
                 .and(minPrice(args.minPrice()))
                 .and(itemNumber(args.itemNumber()))
@@ -100,10 +101,10 @@ public class ProductSpecification {
         };
     }
 
-    private static Specification<Product> type(List<String> types) {
+    private static Specification<Product> gender(List<Gender> genders) {
         return (products, cq, cb) -> {
-            if (types == null || types.isEmpty()) return cb.conjunction();
-            return products.get("type").in(types);
+            if (genders == null || genders.isEmpty()) return cb.conjunction();
+            return products.get("gender").in(genders);
         };
     }
 

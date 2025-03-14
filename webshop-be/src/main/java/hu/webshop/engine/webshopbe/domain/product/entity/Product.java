@@ -1,8 +1,11 @@
 package hu.webshop.engine.webshopbe.domain.product.entity;
 
 import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
+import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -36,8 +39,9 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private SubCategory subCategory;
 
-    @Column(name = "product_type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
 
     @Column(name = "count", nullable = false)
     private Integer count;

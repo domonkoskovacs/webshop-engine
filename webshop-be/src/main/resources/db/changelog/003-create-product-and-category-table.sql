@@ -30,11 +30,11 @@ create table product
     product_name        varchar(255)                      not null,
     description         varchar(1000)                     not null,
     sub_category_id     uuid references sub_category (id) not null,
-    product_type        varchar(255)                      not null,
+    gender              varchar(255)                      not null,
     count               integer                           not null,
     price               float                             not null,
     discount_percentage float                             not null,
-    image_url_list      varchar(10000),
+    image_url_list      varchar(1000),
     item_number         varchar(255)                      not null,
     creation_time       timestamp                         not null,
     last_modified_time  timestamp
