@@ -1,6 +1,6 @@
 package hu.webshop.engine.webshopbe.domain.order.filters;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +21,14 @@ public class OrderSpecification {
                 .and(status(args.statuses()))
                 .and(minTotalPrice(args.minPrice()))
                 .and(maxTotalPrice(args.maxPrice()))
+                .and(minDate(args.minDate()))
+                .and(maxDate(args.maxDate()));
+    }
+
+    public static Specification<Order> getSpecificationsWithoutPrice(
+            OrderSpecificationArgs args) {
+        return Specification.where(paymentMethod(args.paymentMethods()))
+                .and(status(args.statuses()))
                 .and(minDate(args.minDate()))
                 .and(maxDate(args.maxDate()));
     }
@@ -53,14 +61,14 @@ public class OrderSpecification {
         };
     }
 
-    private static Specification<Order> minDate(OffsetDateTime date) {
+    private static Specification<Order> minDate(LocalDate date) {
         return (orders, cq, cb) -> {
             if (date == null) return cb.conjunction();
             return cb.greaterThanOrEqualTo(orders.get("orderDate"), date);
         };
     }
 
-    private static Specification<Order> maxDate(OffsetDateTime date) {
+    private static Specification<Order> maxDate(LocalDate date) {
         return (orders, cq, cb) -> {
             if (date == null) return cb.conjunction();
             return cb.lessThanOrEqualTo(orders.get("orderDate"), date);

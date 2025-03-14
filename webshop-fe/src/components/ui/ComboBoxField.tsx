@@ -22,7 +22,7 @@ interface FormComboBoxProps {
     onCreateOption?: (newValue: string) => void;
 }
 
-export const FormComboBox: React.FC<FormComboBoxProps> = ({
+export const ComboBoxField: React.FC<FormComboBoxProps> = ({
                                                               name,
                                                               control,
                                                               label,

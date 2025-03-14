@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import hu.webshop.engine.webshopbe.domain.order.OrderService;
+import hu.webshop.engine.webshopbe.domain.order.filters.OrderSorting;
+import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
@@ -26,14 +29,15 @@ public class OrderAdapter {
     private final OrderService orderService;
     private final OrderMapper orderMapper;
 
-    public Page<OrderResponse> getAll(
+    public OrderPage<OrderResponse> getAll(
             OrderSpecificationArgs args,
             OrderSortType sortType,
             int page,
             int size
     ) {
         log.info("getAll");
-        return orderService.getAll(args, sortType, page, size).map(orderMapper::toResponse);
+        PageRequest pageRequest = sortType != null ? PageRequest.of(page, size, OrderSorting.sort(sortType)) : PageRequest.of(page, size);
+        return orderService.getAll(args, pageRequest).map(orderMapper::toResponse);
     }
 
     public OrderResponse getById(UUID id) {

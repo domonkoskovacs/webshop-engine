@@ -1,7 +1,6 @@
 package hu.webshop.engine.webshopbe.infrastructure.controller;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
@@ -52,9 +52,9 @@ public class OrderController {
     )
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Admin
-    public ResponseEntity<Page<OrderResponse>> getAll(
-            @RequestParam(required = false) OffsetDateTime minDate,
-            @RequestParam(required = false) OffsetDateTime maxDate,
+    public ResponseEntity<OrderPage<OrderResponse>> getAll(
+            @RequestParam(required = false) LocalDate minDate,
+            @RequestParam(required = false) LocalDate maxDate,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) List<PaymentMethod> paymentMethods,

@@ -2,6 +2,7 @@ import React, {createContext, ReactNode, useCallback, useEffect, useState} from 
 import {OrderResponse, OrderServiceApiGetAll1Request, OrderStatusRequestOrderStatusEnum} from "../shared/api";
 import {orderService} from "../services/OrderService";
 import {downloadCSV} from "../lib/csv.downloader";
+import {toast} from "../hooks/UseToast";
 
 interface OrderContextType {
     orders: OrderResponse[];
@@ -14,6 +15,7 @@ interface OrderContextType {
     setPage: (page: number) => void;
     changeStatus: (id: string, status: OrderStatusRequestOrderStatusEnum) => Promise<void>;
     exportOrders: (from: string, to: string) => Promise<void>;
+    priceRange: number[];
 }
 
 export const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -29,11 +31,21 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
         size: 10,
     });
     const [totalPages, setTotalPages] = useState(1);
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
 
     const fetchOrders = useCallback(async () => {
-        const data = await orderService.getAll({...filters, page: filters.page! - 1});
-        if (data.content) setOrders(data.content);
-        setTotalPages(data.totalPages ?? 0);
+        try {
+            const data = await orderService.getAll({...filters, page: filters.page! - 1});
+            if (data.content) setOrders(data.content);
+            setTotalPages(data.totalPages ?? 0);
+            setPriceRange([data.minPrice ?? 0, data.maxPrice ?? 0])
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Error fetching products. Please try again.",
+            });
+        }
     }, [filters]);
 
     useEffect(() => {
@@ -105,7 +117,8 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
                 prevPage,
                 setPage,
                 changeStatus,
-                exportOrders
+                exportOrders,
+                priceRange
             }}>
             {children}
         </OrderContext.Provider>

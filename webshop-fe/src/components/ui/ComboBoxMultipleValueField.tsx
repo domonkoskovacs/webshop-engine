@@ -21,7 +21,7 @@ interface FormComboBoxProps {
     options: SelectOption[];
 }
 
-export const FormComboBoxMultipleValue: React.FC<FormComboBoxProps> = ({
+export const ComboBoxMultipleValueField: React.FC<FormComboBoxProps> = ({
                                                                            form,
                                                                            name,
                                                                            label,

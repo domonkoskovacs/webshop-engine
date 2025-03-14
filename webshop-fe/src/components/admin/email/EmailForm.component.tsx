@@ -7,7 +7,7 @@ import {useEmail} from "../../../hooks/UseEmail";
 import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
 import {TextareaField} from "../../ui/TextareaField";
-import {FormComboBoxMultipleValue} from "../../ui/FormComboBoxMultipleValue";
+import {ComboBoxMultipleValueField} from "../../ui/ComboBoxMultipleValueField";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 
 export const FormSchema = z.object({
@@ -65,8 +65,8 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             <TextareaField form={form} name={"text"} placeholder={"text..."} label={"Text"}/>
             <TextInputField form={form} name={"subject"} placeholder={"Email subject..."} label={"Email subject"}/>
             <TextInputField form={form} name={"imageUrl"} placeholder={"Image url..."} label={"Image url"}/>
-            <FormComboBoxMultipleValue form={form} name={"dayOfWeek"}
-                                       options={Object.entries(PromotionEmailRequestDayOfWeekEnum).map(([label, value]) => ({
+            <ComboBoxMultipleValueField form={form} name={"dayOfWeek"}
+                                        options={Object.entries(PromotionEmailRequestDayOfWeekEnum).map(([label, value]) => ({
                                            label,
                                            value
                                        }))} label={"Day of week"}/>

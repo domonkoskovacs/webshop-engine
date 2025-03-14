@@ -520,6 +520,91 @@ export interface OrderItemResponse {
 /**
  * 
  * @export
+ * @interface OrderPageOrderResponse
+ */
+export interface OrderPageOrderResponse {
+    /**
+     * 
+     * @type {Array<OrderResponse>}
+     * @memberof OrderPageOrderResponse
+     */
+    'content'?: Array<OrderResponse>;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof OrderPageOrderResponse
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'minPrice'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'maxPrice'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'last'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'totalElements'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'size'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'number'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof OrderPageOrderResponse
+     */
+    'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'empty'?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface OrderResponse
  */
 export interface OrderResponse {
@@ -668,79 +753,6 @@ export type OrderStatusRequestOrderStatusEnum = typeof OrderStatusRequestOrderSt
 /**
  * 
  * @export
- * @interface PageOrderResponse
- */
-export interface PageOrderResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
-    'size'?: number;
-    /**
-     * 
-     * @type {Array<OrderResponse>}
-     * @memberof PageOrderResponse
-     */
-    'content'?: Array<OrderResponse>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
-    'number'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageOrderResponse
-     */
-    'sort'?: SortObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageOrderResponse
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageOrderResponse
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageOrderResponse
-     */
-    'empty'?: boolean;
-}
-/**
- * 
- * @export
  * @interface PageableObject
  */
 export interface PageableObject {
@@ -758,10 +770,10 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageNumber'?: number;
     /**
      * 
      * @type {number}
@@ -770,10 +782,10 @@ export interface PageableObject {
     'pageSize'?: number;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -3906,13 +3918,13 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
 
             if (minDate !== undefined) {
                 localVarQueryParameter['minDate'] = (minDate as any instanceof Date) ?
-                    (minDate as any).toISOString() :
+                    (minDate as any).toISOString().substring(0,10) :
                     minDate;
             }
 
             if (maxDate !== undefined) {
                 localVarQueryParameter['maxDate'] = (maxDate as any instanceof Date) ?
-                    (maxDate as any).toISOString() :
+                    (maxDate as any).toISOString().substring(0,10) :
                     maxDate;
             }
 
@@ -4109,7 +4121,7 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAll1(minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentMethods?: Array<GetAll1PaymentMethodsEnum>, statuses?: Array<GetAll1StatusesEnum>, sortType?: GetAll1SortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageOrderResponse>> {
+        async getAll1(minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentMethods?: Array<GetAll1PaymentMethodsEnum>, statuses?: Array<GetAll1StatusesEnum>, sortType?: GetAll1SortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderPageOrderResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAll1(minDate, maxDate, minPrice, maxPrice, paymentMethods, statuses, sortType, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getAll1']?.[localVarOperationServerIndex]?.url;
@@ -4197,7 +4209,7 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll1(requestParameters: OrderServiceApiGetAll1Request = {}, options?: RawAxiosRequestConfig): AxiosPromise<PageOrderResponse> {
+        getAll1(requestParameters: OrderServiceApiGetAll1Request = {}, options?: RawAxiosRequestConfig): AxiosPromise<OrderPageOrderResponse> {
             return localVarFp.getAll1(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**

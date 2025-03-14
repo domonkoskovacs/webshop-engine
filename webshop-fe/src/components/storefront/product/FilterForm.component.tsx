@@ -5,7 +5,7 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {toast} from "../../../hooks/UseToast";
-import {FormComboBoxMultipleValue} from "../../ui/FormComboBoxMultipleValue";
+import {ComboBoxMultipleValueField} from "../../ui/ComboBoxMultipleValueField";
 import {useProductScroll} from "../../../hooks/useProductScroll";
 
 export const FormSchema = z.object({
@@ -47,7 +47,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} id="storefrontFilterForm">
                         <div className="flex flex-col p-6 gap-4">
-                            <FormComboBoxMultipleValue
+                            <ComboBoxMultipleValueField
                                 name="brands"
                                 form={form}
                                 label="Brands"

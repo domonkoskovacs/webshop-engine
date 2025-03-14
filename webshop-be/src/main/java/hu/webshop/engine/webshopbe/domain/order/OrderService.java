@@ -1,8 +1,8 @@
 package hu.webshop.engine.webshopbe.domain.order;
 
 
-import static hu.webshop.engine.webshopbe.domain.order.filters.OrderSorting.sort;
 import static hu.webshop.engine.webshopbe.domain.order.filters.OrderSpecification.getSpecifications;
+import static hu.webshop.engine.webshopbe.domain.order.filters.OrderSpecification.getSpecificationsWithoutPrice;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.CANCELLED;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.CREATED;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.FINISHED;
@@ -35,10 +35,10 @@ import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
+import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.Currency;
 import hu.webshop.engine.webshopbe.domain.order.value.Intent;
-import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
@@ -69,16 +69,17 @@ public class OrderService {
     private final ProductService productService;
     private final StoreService storeService;
 
-    public Page<Order> getAll(
+    public OrderPage<Order> getAll(
             OrderSpecificationArgs args,
-            OrderSortType sortType,
-            int page,
-            int size
+            PageRequest pageRequest
     ) {
-        log.info("getAll > args: [{}], sortType: [{}], page: [{}], size: [{}]", args, sortType, page, size);
+        log.info("getAll > args: [{}], pageRequest: [{}]", args, pageRequest);
         Specification<Order> spec = getSpecifications(args);
-        if (sortType != null) return orderRepository.findAll(spec, PageRequest.of(page, size, sort(sortType)));
-        else return orderRepository.findAll(spec, PageRequest.of(page, size));
+        Page<Order> orders = orderRepository.findAll(spec, pageRequest);
+        List<Order> ordersWithoutPriceFilter = orderRepository.findAll(getSpecificationsWithoutPrice(args));
+        Double minPrice = ordersWithoutPriceFilter.stream().map(Order::getTotalPrice).min(Double::compareTo).orElse(0d);
+        Double maxPrice = ordersWithoutPriceFilter.stream().map(Order::getTotalPrice).max(Double::compareTo).orElse(0d);
+        return new OrderPage<>(orders.getContent(), pageRequest, orders.getTotalElements(), minPrice, maxPrice);
     }
 
     public Order create(PaymentMethod paymentMethod) {
@@ -203,7 +204,7 @@ public class OrderService {
         order.ifPresent(o -> {
                     if (OrderStatus.isCancelable(o.getStatus())) {
                         emailService.sendOrderCanceledEmail(o);
-                        if(CREATED.equals(o.getStatus())) {
+                        if (CREATED.equals(o.getStatus())) {
                             o.setStatus(CANCELLED);
                         } else {
                             Refund refund = stripeService.createRefund(o.getPaymentIntentId(), o.getTotalPrice());

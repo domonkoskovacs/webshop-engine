@@ -5,7 +5,7 @@ import {FormControl, FormField, FormItem, FormLabel, FormMessage,} from "src/com
 import {Input} from "src/components/ui/Input"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
-import {FormComboBox} from "../../ui/FormComboBox";
+import {ComboBoxField} from "../../ui/ComboBoxField";
 import {useProduct} from "../../../hooks/UseProduct";
 import {useCategory} from "../../../hooks/UseCategory";
 import {NumberInputField, TextInputField} from "../../ui/InputField";
@@ -138,10 +138,10 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
         >
             <TextInputField form={form} name="itemNumber" label="Item Number"
                             placeholder="Item Number..."/>
-            <FormComboBox name="brand" control={form.control} label="Brand"
-                          options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
-                          enableCreateOption={true}/>
-            <FormComboBox
+            <ComboBoxField name="brand" control={form.control} label="Brand"
+                           options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
+                           enableCreateOption={true}/>
+            <ComboBoxField
                 name="subCategoryId"
                 control={form.control}
                 label="Subcategory"

@@ -18,7 +18,6 @@ export const FormSchema = z.object({
     message: "End date must be after start date.",
     path: ["to"],
 });
-;
 
 interface ExportFormProps {
     setIsOpen: (open: boolean) => void;

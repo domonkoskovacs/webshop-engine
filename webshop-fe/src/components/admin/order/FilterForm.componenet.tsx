@@ -2,19 +2,34 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import {useToast} from "../../../hooks/UseToast";
-import React from "react";
-import {TextInputField} from "../../ui/InputField";
+import React, {useEffect} from "react";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 import {useOrder} from "../../../hooks/UseOrder";
+import {GetAll1PaymentMethodsEnum, GetAll1SortTypeEnum, GetAll1StatusesEnum} from "../../../shared/api";
+import DatePickerField from "../../ui/DatePickerField";
+import SliderField from "../../ui/SliderField";
+import {ComboBoxMultipleValueField} from "../../ui/ComboBoxMultipleValueField";
+import {mapEnumToOptions} from "../../../lib/options.utils";
 
-export const FormSchema = z.object({});
+export const FormSchema = z.object({
+    minDate: z.date().optional(),
+    maxDate: z.date().refine((date) => date <= new Date(), {
+        message: "Max date must be today or earlier"
+    }).optional(),
+    minPrice: z.number().min(0, {message: "Min price must be at least 0"}).optional(),
+    maxPrice: z.number().optional(),
+    paymentMethods: z.array(z.nativeEnum(GetAll1PaymentMethodsEnum)).optional(),
+    statuses: z.array(z.nativeEnum(GetAll1StatusesEnum)).optional(),
+    sortType: z.nativeEnum(GetAll1SortTypeEnum).optional(),
+    size: z.number().positive({message: "Size must be a positive number"}).optional()
+});
 
 interface ProductFormProps {
     setIsOpen: (open: boolean) => void;
 }
 
 const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {updateFilters, resetFilters} = useOrder()
+    const {updateFilters, filters, resetFilters, priceRange} = useOrder()
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -22,8 +37,30 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
         defaultValues: {},
     })
 
+    useEffect(() => {
+        form.reset({
+            minDate: filters.minDate ? new Date(filters.minDate) : undefined,
+            maxDate: filters.maxDate ? new Date(filters.maxDate) : undefined,
+            minPrice: filters.minPrice,
+            maxPrice: filters.maxPrice,
+            paymentMethods: filters.paymentMethods,
+            statuses: filters.statuses,
+            sortType: filters.sortType,
+            size: filters.size,
+        });
+    }, []);
+
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await updateFilters({})
+        updateFilters({
+            minDate: data.minDate?.toISOString().split("T")[0],
+            maxDate: data.maxDate?.toISOString().split("T")[0],
+            minPrice: data.minPrice,
+            maxPrice: data.maxPrice,
+            paymentMethods: data.paymentMethods,
+            statuses: data.statuses,
+            sortType: data.sortType,
+            size: data.size,
+        })
         toast({
             description: "Filters applied successfully.",
         })
@@ -37,10 +74,20 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             formId="orderFilterForm"
             onSubmit={onSubmit}
             submitButtonText="Filter"
-            secondaryButtonClick={() => resetFilters()}
+            secondaryButtonClick={() => {
+                resetFilters();
+                form.reset();
+            }}
             secondaryButtonText="Reset"
         >
-            <TextInputField form={form} name={"name"} placeholder={"Name..."} label={"Name"}/>
+            <DatePickerField form={form} name="minDate" label="Ealiest date"/>
+            <DatePickerField form={form} name="maxDate" label="Latest date"/>
+            <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
+                         range={[priceRange[0], priceRange[1]]}/>
+            <ComboBoxMultipleValueField form={form} name="paymentMethods" label="Payment Methods"
+                                        options={mapEnumToOptions(GetAll1PaymentMethodsEnum)}/>
+            <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
+                                        options={mapEnumToOptions(GetAll1StatusesEnum)}/>
         </SheetFormContainer>
     );
 }
