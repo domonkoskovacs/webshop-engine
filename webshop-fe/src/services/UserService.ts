@@ -80,6 +80,16 @@ class UserService {
         );
     }
 
+    /**
+     * Resend verify email
+     * @param email
+     */
+    async resendVerifyEmail(email: string) {
+        return handleApiCall(() =>
+            this.userApi.resendVerify({emailRequest: {email}})
+                .then(res => res?.data)
+        );
+    }
 
     /**
      * Get current user
@@ -171,26 +181,6 @@ class UserService {
     async updateCart(cartItemRequests: CartItemRequest[] ) {
         return handleApiCall(() =>
             this.userApi.updateCart({cartItemRequest: cartItemRequests})
-                .then(res => res?.data)
-        );
-    }
-
-    /**
-     * current users subscribes to email list
-     */
-    async subscribeToEmailList() {
-        return handleApiCall(() =>
-            this.userApi.subscribeToEmailList()
-                .then(res => res?.data)
-        );
-    }
-
-    /**
-     * current users unsubscribes to email list
-     */
-    async unSubscribeToEmailList() {
-        return handleApiCall(() =>
-            this.userApi.unSubscribeToEmailList()
                 .then(res => res?.data)
         );
     }

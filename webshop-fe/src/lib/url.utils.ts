@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 /**
  * Extracts path segments from a given URL path.
  * @param pathname The current URL path (e.g., "/admin/articles/edit")
@@ -48,14 +46,4 @@ export const generateProductUrl = (
     return `/${segments.join("/")}`;
 };
 
-/**
- * Custom hook to handle navigation.
- * @returns navigateTo function for programmatic navigation
- */
-export const useNavigation = () => {
-    const navigate = useNavigate();
-
-    return {
-        navigateTo: (path: string) => navigate(path)
-    };
-};
+export const toLogin = "/authentication?type=login"

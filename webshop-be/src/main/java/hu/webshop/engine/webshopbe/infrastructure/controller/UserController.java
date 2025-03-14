@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.UserAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.AddressRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ForgottenPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.NewPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RegistrationRequest;
@@ -115,6 +115,18 @@ public class UserController {
         log.info("verify > verificationRequest: [{}]", verificationRequest);
         userAdapter.verify(verificationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(
+            tags = {"User service"},
+            summary = "Resend verification email",
+            description = "After registration users can resend the verification email"
+    )
+    @PostMapping(value = "/resend-verify", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Void> resendVerify(@Valid @RequestBody EmailRequest emailRequest) {
+        log.info("resendVerify > emailRequest: [{}]", emailRequest);
+        userAdapter.resendVerify(emailRequest);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
@@ -225,54 +237,6 @@ public class UserController {
     public ResponseEntity<List<CartItemResponse>> updateCart(@Valid @RequestBody List<CartItemRequest> cartItemRequests) {
         log.info("updateSaved, cartItemRequests: [{}]", cartItemRequests);
         return ResponseEntity.ok().body(userAdapter.updateCart(cartItemRequests));
-    }
-
-    @Operation(
-            tags = {"User service"},
-            summary = "Add shipping address",
-            description = "Add a shipping address to a user"
-    )
-    @PostMapping(value = "/address/shipping", consumes = "application/json", produces = "application/json")
-    @User
-    public ResponseEntity<UserResponse> addShippingAddress(@Valid @RequestBody AddressRequest addressRequest) {
-        log.info("addShippingAddress, addressRequest: [{}]", addressRequest);
-        return ResponseEntity.ok().body(userAdapter.addShippingAddress(addressRequest));
-    }
-
-    @Operation(
-            tags = {"User service"},
-            summary = "Add billing address",
-            description = "Add a billing address to a user"
-    )
-    @PostMapping(value = "/address/billing", consumes = "application/json", produces = "application/json")
-    @User
-    public ResponseEntity<UserResponse> addBillingAddress(@Valid @RequestBody AddressRequest addressRequest) {
-        log.info("addBillingAddress > addressRequest: [{}]", addressRequest);
-        return ResponseEntity.ok().body(userAdapter.addBillingAddress(addressRequest));
-    }
-
-    @Operation(
-            tags = {"User service"},
-            summary = "Subscribe to email list",
-            description = "User can subscribe to email list"
-    )
-    @GetMapping(value = "/subscribe")
-    @User
-    public ResponseEntity<UserResponse> subscribeToEmailList() {
-        log.info("subscribeToEmailList");
-        return ResponseEntity.ok(userAdapter.subscribeToEmailList());
-    }
-
-    @Operation(
-            tags = {"User service"},
-            summary = "Unsubscribe from email list",
-            description = "User can unsubscribe from email list"
-    )
-    @GetMapping(value = "/unsubscribe")
-    @User
-    public ResponseEntity<UserResponse> unSubscribeToEmailList() {
-        log.info("unSubscribeToEmailList");
-        return ResponseEntity.ok(userAdapter.unSubscribeToEmailList());
     }
 
     @Operation(

@@ -16,7 +16,7 @@ import SettingsDashboard from "../pages/admin/SettingsDashboard.page";
 import StorefrontLayout from "../layouts/Storefront.layout";
 import ForgotPassword from "../pages/storefront/ForgotPassword.page";
 import NewPassword from "../pages/storefront/NewPassword.page";
-import VerifyEmail from "../pages/storefront/VerifyEmail.page";
+import VerifyEmailConfirmation from "../pages/storefront/VerifyEmailConfirm.page";
 import PrivacyPolicy from "../pages/storefront/PrivacyPolicy.page";
 import TermsAndConditions from "../pages/storefront/TermsAndConditions.page";
 import Authentication from "../pages/storefront/Authentication.page";
@@ -30,6 +30,7 @@ import Profile from "../pages/storefront/Profile.page";
 import PreviousOrders from "../pages/storefront/PreviousOrders.page";
 import Checkout from "../pages/storefront/Checkout.page";
 import AdminProviders from "../contexts/AdminProviders";
+import VerifyEmailResend from "../pages/storefront/VerifyEmailResend.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -49,7 +50,8 @@ const AppRouter: React.FC = () => {
                 <Route path="/authentication" element={<Authentication/>}/>
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/new-password" element={<NewPassword/>}/>
-                <Route path="/verify-email" element={<VerifyEmail/>}/>
+                <Route path="/verify-email" element={<VerifyEmailResend/>}/>
+                <Route path="/verify-email/confirm" element={<VerifyEmailConfirmation/>}/>
                 <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
                 <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
                 <Route path="/about-us" element={<AboutUs/>}/>

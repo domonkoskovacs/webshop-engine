@@ -6,6 +6,7 @@ import {useAuth} from "../../../hooks/UseAuth";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useUser} from "../../../hooks/UseUser";
 import {Badge} from "../../ui/Badge";
+import {toLogin} from "../../../lib/url.utils";
 
 const AccountHoverContent: React.FC = () => {
     const {loggedIn, role, logout} = useAuth()
@@ -61,7 +62,7 @@ const AccountHoverContent: React.FC = () => {
     return <div className="flex flex-col content-center text-center space-y-2 gap-2">
         <h1>You are not logged in!</h1>
         <Button onClick={() => {
-            navigate("/authentication?type=login")
+            navigate(toLogin)
         }}>
             Login
         </Button>

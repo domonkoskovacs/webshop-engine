@@ -33,7 +33,7 @@ public class StatisticsController {
             summary = "Get statistics",
             description = "Admin can get statistics"
     )
-    @GetMapping(consumes = "application/json", produces = "application/json")
+    @GetMapping(produces = "application/json")
     @Admin
     public ResponseEntity<StatisticsResponse> getStatistics(
             @RequestParam(required = false) LocalDate from,

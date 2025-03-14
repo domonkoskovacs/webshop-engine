@@ -31,7 +31,7 @@ interface ProductFormProps {
 }
 
 const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {updateFilters, filters, resetFilters, priceRange, totalElements} = useOrder()
+    const {updateFilters, filters, resetFilters, priceRange} = useOrder()
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -64,7 +64,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             size: data.size,
         })
         toast({
-            description: "Filters applied successfully.",
+            description: "Filters applied successfully."
         })
         setIsOpen(false)
     }
@@ -90,8 +90,9 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                                         options={mapEnumToOptions(GetAll1PaymentMethodsEnum)}/>
             <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
                                         options={mapEnumToOptions(GetAll1StatusesEnum)}/>
-            <SelectField form={form} name="sortType" label="Sorting" placeholder="Select sorting..." options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
-            <NumberInputField form={form} name="size" label="Pgae size" min={1} max={totalElements} placeholder="Add page size..."/>
+            <SelectField form={form} name="sortType" label="Sorting" placeholder="Select sorting..."
+                         options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
+            <NumberInputField form={form} name="size" label="Pgae size" min={1} placeholder="Add page size..."/>
         </SheetFormContainer>
     );
 }

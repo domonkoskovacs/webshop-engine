@@ -7,13 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hu.webshop.engine.webshopbe.domain.user.UserService;
-import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.AddressMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.CartMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.OrderMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.ProductMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.UserMapper;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.AddressRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ForgottenPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.NewPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RegistrationRequest;
@@ -23,6 +22,7 @@ import hu.webshop.engine.webshopbe.infrastructure.model.response.CartItemRespons
 import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.UserResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +35,6 @@ public class UserAdapter {
     private final UserMapper userMapper;
     private final ProductMapper productMapper;
     private final CartMapper cartMapper;
-    private final AddressMapper addressMapper;
     private final OrderMapper orderMapper;
 
     @Transactional
@@ -114,28 +113,13 @@ public class UserAdapter {
         return cartMapper.toResponseList(userService.updateCart(cartMapper.fromRequestList(cartItemRequests)));
     }
 
-    public UserResponse addShippingAddress(AddressRequest addressRequest) { //todo review if needed
-        log.info("addShippingAddress > addressRequest: [{}]", addressRequest);
-        return userMapper.toResponse(userService.assignShippingAddress(addressMapper.fromRequest(addressRequest)));
-    }
-
-    public UserResponse addBillingAddress(AddressRequest addressRequest) {//todo review if needed
-        log.info("addBillingAddress > addressRequest: [{}]", addressRequest);
-        return userMapper.toResponse(userService.assignBillingAddress(addressMapper.fromRequest(addressRequest)));
-    }
-
-    public UserResponse subscribeToEmailList() {
-        log.info("subscribeToEmailList");
-        return userMapper.toResponse(userService.subscribeToEmailList());
-    }
-
-    public UserResponse unSubscribeToEmailList() {
-        log.info("unSubscribeToEmailList");
-        return userMapper.toResponse(userService.unSubscribeToEmailList());
-    }
-
     public void unSubscribeToEmailListWithId(UUID id) {
         log.info("unSubscribeToEmailListWithId > id: [{}]", id);
         userService.unSubscribeToEmailListWithId(id);
+    }
+
+    public void resendVerify(@Valid EmailRequest emailRequest) {
+        log.info("resendVerify > emailRequest: [{}]", emailRequest);
+        userService.resendVerify(emailRequest.email());
     }
 }

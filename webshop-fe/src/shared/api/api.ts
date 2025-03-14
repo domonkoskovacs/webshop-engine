@@ -549,12 +549,6 @@ export interface OrderPageOrderResponse {
     'maxPrice'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
@@ -565,6 +559,12 @@ export interface OrderPageOrderResponse {
      * @memberof OrderPageOrderResponse
      */
     'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -758,16 +758,10 @@ export type OrderStatusRequestOrderStatusEnum = typeof OrderStatusRequestOrderSt
 export interface PageableObject {
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'offset'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageableObject
-     */
-    'sort'?: SortObject;
+    'paged'?: boolean;
     /**
      * 
      * @type {number}
@@ -785,13 +779,19 @@ export interface PageableObject {
      * @type {boolean}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'unpaged'?: boolean;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'unpaged'?: boolean;
+    'offset'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof PageableObject
+     */
+    'sort'?: SortObject;
 }
 /**
  * 
@@ -850,12 +850,6 @@ export interface ProductPageProductResponse {
     'maxDiscount'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -866,6 +860,12 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -1262,6 +1262,7 @@ export const ResultEntryReasonCodeEnum = {
     JwtExpiredError: 'JWT_EXPIRED_ERROR',
     BadTokenFormatError: 'BAD_TOKEN_FORMAT_ERROR',
     UnverifiedUser: 'UNVERIFIED_USER',
+    AlreadyVerifiedUser: 'ALREADY_VERIFIED_USER',
     BadRefreshToken: 'BAD_REFRESH_TOKEN',
     EmailTaken: 'EMAIL_TAKEN',
     UnauthenticatedUser: 'UNAUTHENTICATED_USER',
@@ -1297,12 +1298,6 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'empty'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
     'sorted'?: boolean;
     /**
      * 
@@ -1310,6 +1305,12 @@ export interface SortObject {
      * @memberof SortObject
      */
     'unsorted'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
+    'empty'?: boolean;
 }
 /**
  * 
@@ -6425,46 +6426,6 @@ export class StoreServiceApi extends BaseAPI {
 export const UserServiceApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Add a billing address to a user
-         * @summary Add billing address
-         * @param {AddressRequest} addressRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addBillingAddress: async (addressRequest: AddressRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'addressRequest' is not null or undefined
-            assertParamExists('addBillingAddress', 'addressRequest', addressRequest)
-            const localVarPath = `/api/user/address/billing`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(addressRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Add items to users saved products
          * @summary Add to saved products
          * @param {Array<string>} requestBody 
@@ -6498,46 +6459,6 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Add a shipping address to a user
-         * @summary Add shipping address
-         * @param {AddressRequest} addressRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addShippingAddress: async (addressRequest: AddressRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'addressRequest' is not null or undefined
-            assertParamExists('addShippingAddress', 'addressRequest', addressRequest)
-            const localVarPath = `/api/user/address/shipping`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(addressRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6947,13 +6868,16 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
             };
         },
         /**
-         * User can subscribe to email list
-         * @summary Subscribe to email list
+         * After registration users can resend the verification email
+         * @summary Resend verification email
+         * @param {EmailRequest} emailRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        subscribeToEmailList: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/subscribe`;
+        resendVerify: async (emailRequest: EmailRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'emailRequest' is not null or undefined
+            assertParamExists('resendVerify', 'emailRequest', emailRequest)
+            const localVarPath = `/api/user/resend-verify`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6961,7 +6885,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6971,43 +6895,12 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * User can unsubscribe from email list
-         * @summary Unsubscribe from email list
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        unSubscribeToEmailList: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/unsubscribe`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(emailRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7183,19 +7076,6 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserServiceApiAxiosParamCreator(configuration)
     return {
         /**
-         * Add a billing address to a user
-         * @summary Add billing address
-         * @param {AddressRequest} addressRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async addBillingAddress(addressRequest: AddressRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addBillingAddress(addressRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.addBillingAddress']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Add items to users saved products
          * @summary Add to saved products
          * @param {Array<string>} requestBody 
@@ -7206,19 +7086,6 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addSaved(requestBody, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserServiceApi.addSaved']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Add a shipping address to a user
-         * @summary Add shipping address
-         * @param {AddressRequest} addressRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async addShippingAddress(addressRequest: AddressRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addShippingAddress(addressRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.addShippingAddress']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -7359,27 +7226,16 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * User can subscribe to email list
-         * @summary Subscribe to email list
+         * After registration users can resend the verification email
+         * @summary Resend verification email
+         * @param {EmailRequest} emailRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async subscribeToEmailList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.subscribeToEmailList(options);
+        async resendVerify(emailRequest: EmailRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resendVerify(emailRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.subscribeToEmailList']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * User can unsubscribe from email list
-         * @summary Unsubscribe from email list
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async unSubscribeToEmailList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.unSubscribeToEmailList(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.unSubscribeToEmailList']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.resendVerify']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -7445,16 +7301,6 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
     const localVarFp = UserServiceApiFp(configuration)
     return {
         /**
-         * Add a billing address to a user
-         * @summary Add billing address
-         * @param {UserServiceApiAddBillingAddressRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addBillingAddress(requestParameters: UserServiceApiAddBillingAddressRequest, options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
-            return localVarFp.addBillingAddress(requestParameters.addressRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Add items to users saved products
          * @summary Add to saved products
          * @param {UserServiceApiAddSavedRequest} requestParameters Request parameters.
@@ -7463,16 +7309,6 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
          */
         addSaved(requestParameters: UserServiceApiAddSavedRequest, options?: RawAxiosRequestConfig): AxiosPromise<Array<ProductResponse>> {
             return localVarFp.addSaved(requestParameters.requestBody, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Add a shipping address to a user
-         * @summary Add shipping address
-         * @param {UserServiceApiAddShippingAddressRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addShippingAddress(requestParameters: UserServiceApiAddShippingAddressRequest, options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
-            return localVarFp.addShippingAddress(requestParameters.addressRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete a user
@@ -7579,22 +7415,14 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
             return localVarFp.removeSaved(requestParameters.requestBody, options).then((request) => request(axios, basePath));
         },
         /**
-         * User can subscribe to email list
-         * @summary Subscribe to email list
+         * After registration users can resend the verification email
+         * @summary Resend verification email
+         * @param {UserServiceApiResendVerifyRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        subscribeToEmailList(options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
-            return localVarFp.subscribeToEmailList(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * User can unsubscribe from email list
-         * @summary Unsubscribe from email list
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        unSubscribeToEmailList(options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
-            return localVarFp.unSubscribeToEmailList(options).then((request) => request(axios, basePath));
+        resendVerify(requestParameters: UserServiceApiResendVerifyRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.resendVerify(requestParameters.emailRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * User can unsubscribe from email list with email
@@ -7640,20 +7468,6 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
 };
 
 /**
- * Request parameters for addBillingAddress operation in UserServiceApi.
- * @export
- * @interface UserServiceApiAddBillingAddressRequest
- */
-export interface UserServiceApiAddBillingAddressRequest {
-    /**
-     * 
-     * @type {AddressRequest}
-     * @memberof UserServiceApiAddBillingAddress
-     */
-    readonly addressRequest: AddressRequest
-}
-
-/**
  * Request parameters for addSaved operation in UserServiceApi.
  * @export
  * @interface UserServiceApiAddSavedRequest
@@ -7665,20 +7479,6 @@ export interface UserServiceApiAddSavedRequest {
      * @memberof UserServiceApiAddSaved
      */
     readonly requestBody: Array<string>
-}
-
-/**
- * Request parameters for addShippingAddress operation in UserServiceApi.
- * @export
- * @interface UserServiceApiAddShippingAddressRequest
- */
-export interface UserServiceApiAddShippingAddressRequest {
-    /**
-     * 
-     * @type {AddressRequest}
-     * @memberof UserServiceApiAddShippingAddress
-     */
-    readonly addressRequest: AddressRequest
 }
 
 /**
@@ -7752,6 +7552,20 @@ export interface UserServiceApiRemoveSavedRequest {
 }
 
 /**
+ * Request parameters for resendVerify operation in UserServiceApi.
+ * @export
+ * @interface UserServiceApiResendVerifyRequest
+ */
+export interface UserServiceApiResendVerifyRequest {
+    /**
+     * 
+     * @type {EmailRequest}
+     * @memberof UserServiceApiResendVerify
+     */
+    readonly emailRequest: EmailRequest
+}
+
+/**
  * Request parameters for unSubscribeToEmailListWithId operation in UserServiceApi.
  * @export
  * @interface UserServiceApiUnSubscribeToEmailListWithIdRequest
@@ -7815,18 +7629,6 @@ export interface UserServiceApiVerifyRequest {
  */
 export class UserServiceApi extends BaseAPI {
     /**
-     * Add a billing address to a user
-     * @summary Add billing address
-     * @param {UserServiceApiAddBillingAddressRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserServiceApi
-     */
-    public addBillingAddress(requestParameters: UserServiceApiAddBillingAddressRequest, options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).addBillingAddress(requestParameters.addressRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Add items to users saved products
      * @summary Add to saved products
      * @param {UserServiceApiAddSavedRequest} requestParameters Request parameters.
@@ -7836,18 +7638,6 @@ export class UserServiceApi extends BaseAPI {
      */
     public addSaved(requestParameters: UserServiceApiAddSavedRequest, options?: RawAxiosRequestConfig) {
         return UserServiceApiFp(this.configuration).addSaved(requestParameters.requestBody, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Add a shipping address to a user
-     * @summary Add shipping address
-     * @param {UserServiceApiAddShippingAddressRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserServiceApi
-     */
-    public addShippingAddress(requestParameters: UserServiceApiAddShippingAddressRequest, options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).addShippingAddress(requestParameters.addressRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7977,25 +7767,15 @@ export class UserServiceApi extends BaseAPI {
     }
 
     /**
-     * User can subscribe to email list
-     * @summary Subscribe to email list
+     * After registration users can resend the verification email
+     * @summary Resend verification email
+     * @param {UserServiceApiResendVerifyRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserServiceApi
      */
-    public subscribeToEmailList(options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).subscribeToEmailList(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * User can unsubscribe from email list
-     * @summary Unsubscribe from email list
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserServiceApi
-     */
-    public unSubscribeToEmailList(options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).unSubscribeToEmailList(options).then((request) => request(this.axios, this.basePath));
+    public resendVerify(requestParameters: UserServiceApiResendVerifyRequest, options?: RawAxiosRequestConfig) {
+        return UserServiceApiFp(this.configuration).resendVerify(requestParameters.emailRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

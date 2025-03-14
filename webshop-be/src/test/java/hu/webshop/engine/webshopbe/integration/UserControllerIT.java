@@ -239,38 +239,6 @@ class UserControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("shipping address can be added to user")
-    @DataSet("verifiedUser.yml")
-    void shippingAddressCanBeAddedToUser() throws Exception {
-        //Given
-        AddressRequest addressRequest = new AddressRequest("Hungary", 1111, "Budapest", "utca", 2, "2a");
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/address/shipping", addressRequest, Role.ROLE_USER);
-
-        //Then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shippingAddress.country").value("Hungary"));
-    }
-
-    @Test
-    @DisplayName("billing address can be added to user")
-    @DataSet("verifiedUser.yml")
-    void billingAddressCanBeAddedToUser() throws Exception {
-        //Given
-        AddressRequest addressRequest = new AddressRequest("Hungary", 1111, "Budapest", "utca", 2, "2a");
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/address/billing", addressRequest, Role.ROLE_USER);
-
-        //Then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.billingAddress.country").value("Hungary"));
-    }
-
-    @Test
     @DisplayName("user saved items can be retrieved")
     @DataSet("verifiedUserWithSavedAndCartProduct.yml")
     void userSavedItemsCanBeRetrieved() throws Exception {
@@ -378,32 +346,6 @@ class UserControllerIT extends IntegrationTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$[0].totalPrice").value(20));
-    }
-
-    @Test
-    @DisplayName("user can subscribe to email list")
-    @DataSet("verifiedUser.yml")
-    void userCanSubscribeToEmailList() throws Exception {
-        //Given
-        ResultActions resultActions = performGet(BASE_URL + "/subscribe", Role.ROLE_USER);
-
-        //Then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.subscribedToEmail").value(true));
-    }
-
-    @Test
-    @DisplayName("user can unsubscribe from email list")
-    @DataSet("verifiedUser.yml")
-    void userCanUnsubscribeFromEmailList() throws Exception {
-        //Given
-        ResultActions resultActions = performGet(BASE_URL + "/unsubscribe", Role.ROLE_USER);
-
-        //Then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.subscribedToEmail").value(false));
     }
 
     @Test

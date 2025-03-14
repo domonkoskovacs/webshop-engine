@@ -27,7 +27,6 @@ import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
-import hu.webshop.engine.webshopbe.domain.user.entity.Address;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.CartItem;
@@ -36,6 +35,7 @@ import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.domain.user.value.UpdateUser;
 import hu.webshop.engine.webshopbe.domain.user.value.Verification;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -126,10 +126,13 @@ public class UserService implements UserDetailsService {
 
     public void verify(Verification verification) {
         log.info("verify > verification: [{}]", verification);
-        log.info("verify > verification: [{}]", verification);
         User user = userRepository.findById(verification.id()).orElseThrow(this::entityNotFoundException);
-        user.setVerified(true);
-        userRepository.save(user);
+        if (!Boolean.TRUE.equals(user.getVerified())) {
+            user.setVerified(true);
+            userRepository.save(user);
+        } else {
+            throw new RegistrationException(ReasonCode.ALREADY_VERIFIED_USER, "Email is already verified");
+        }
     }
 
     public void updatePassword(NewPassword newPassword) {
@@ -240,20 +243,6 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public User assignShippingAddress(Address address) {
-        log.info("assignShippingAddress, address: [{}]", address);
-        User currentUser = getCurrentUser();
-        currentUser.assignShippingAddress(address);
-        return userRepository.save(currentUser);
-    }
-
-    public User assignBillingAddress(Address address) {
-        log.info("assignBillingAddress, address: [{}]", address);
-        User currentUser = getCurrentUser();
-        currentUser.assignBillingAddress(address);
-        return userRepository.save(currentUser);
-    }
-
     public void clearCart() {
         log.info("clearCart");
         User currentUser = getCurrentUser();
@@ -264,20 +253,6 @@ public class UserService implements UserDetailsService {
     public List<Order> getOrders() {
         log.info("getOrders");
         return getCurrentUser().getOrders();
-    }
-
-    public User subscribeToEmailList() {
-        log.info("subscribeToEmailList");
-        User currentUser = getCurrentUser();
-        currentUser.subscribeToEmailList();
-        return userRepository.save(currentUser);
-    }
-
-    public User unSubscribeToEmailList() {
-        log.info("unSubscribeToEmailList");
-        User currentUser = getCurrentUser();
-        currentUser.unSubscribeToEmailList();
-        return userRepository.save(currentUser);
     }
 
     public void unSubscribeToEmailListWithId(UUID id) {
@@ -293,5 +268,15 @@ public class UserService implements UserDetailsService {
 
     public List<User> getSubscribedUsers() {
         return userRepository.findAllBySubscribedToEmail(true);
+    }
+
+    public void resendVerify(@Email String email) {
+        log.info("resendVerify > email: [{}]", email);
+        User user = getByEmail(email);
+        if (!Boolean.TRUE.equals(user.getVerified())) {
+            emailService.sendRegistrationMail(user);
+        } else {
+            throw new RegistrationException(ReasonCode.ALREADY_VERIFIED_USER, "Email is already verified");
+        }
     }
 }

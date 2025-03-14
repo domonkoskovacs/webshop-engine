@@ -10,6 +10,7 @@ public enum ReasonCode {
     JWT_EXPIRED_ERROR,
     BAD_TOKEN_FORMAT_ERROR,
     UNVERIFIED_USER,
+    ALREADY_VERIFIED_USER,
     BAD_REFRESH_TOKEN,
     EMAIL_TAKEN,
     UNAUTHENTICATED_USER,
@@ -60,7 +61,8 @@ public enum ReasonCode {
         reasonStatus.put(INVALID_ORDER_PRICE, 4008);
         reasonStatus.put(CSV_ERROR, 5004);
         reasonStatus.put(CSV_UPLOAD_ERROR, 4009);
-        reasonStatus.put(PROMOTION_EMAIL_NAME_OCCUPIED, 4009);
+        reasonStatus.put(PROMOTION_EMAIL_NAME_OCCUPIED, 40010);
+        reasonStatus.put(ALREADY_VERIFIED_USER, 40011);
     }
 
     public int reasonStatus() {
