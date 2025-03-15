@@ -18,3 +18,16 @@ export function calculateCartTotals(cart: CartItemResponse[], shippingCost: numb
 
     return { fullPrice, discountedPrice, discountAmount, finalPrice };
 }
+
+/**
+ * Calculates the discounted price based on the full price and discount percentage.
+ *
+ * @param fullPrice - The original full price of the product.
+ * @param discountPercentage - The discount percentage to apply.
+ * @returns The price after applying the discount.
+ */
+export function calculateDiscountedPrice(fullPrice: number, discountPercentage: number): number {
+    return discountPercentage > 0 ? fullPrice * (1 - discountPercentage / 100) : fullPrice;
+}
+
+

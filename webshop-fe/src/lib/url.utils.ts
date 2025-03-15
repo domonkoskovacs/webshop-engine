@@ -1,3 +1,5 @@
+import { BreadcrumbSegment } from "../components/shared/PathBreadcrumb.component";
+
 /**
  * Extracts path segments from a given URL path.
  * @param pathname The current URL path (e.g., "/admin/articles/edit")
@@ -22,6 +24,28 @@ export const generateBreadcrumbSegments = (pathname: string) => {
 };
 
 /**
+ * Helper function that attaches query parameters to a URL.
+ * @param url The base URL.
+ * @param query An object representing query parameters.
+ * @returns The URL with encoded query parameters appended.
+ */
+export const attachQueryParams = (
+    url: string,
+    query?: Record<string, string | number | undefined>
+): string => {
+    if (!query) return url;
+    const searchParams = new URLSearchParams();
+    for (const key in query) {
+        const value = query[key];
+        if (value !== undefined && value !== null && value !== "") {
+            searchParams.append(key, String(value));
+        }
+    }
+    const queryString = searchParams.toString();
+    return queryString ? `${url}?${queryString}` : url;
+};
+
+/**
  * Generates a product URL based on provided parameters.
  * Ensures that undefined or null values are skipped.
  *
@@ -30,20 +54,85 @@ export const generateBreadcrumbSegments = (pathname: string) => {
  * @param subCategory - Product sub-category name (e.g., "sneakers")
  * @param name - Product name (e.g., "air-jordan-1")
  * @param id - Product ID (e.g., "12345")
- * @returns A properly formatted URL path (e.g., "/products/men/shoes/sneakers/air-jordan-1/12345")
+ * @param query - Optional query parameters to attach to the URL.
+ * @returns A properly formatted URL path with optional query parameters.
+ *          e.g., "/products/men/shoes/sneakers/air-jordan-1/12345?brand=Nike"
  */
 export const generateProductUrl = (
     gender?: string,
     category?: string,
     subCategory?: string,
     name?: string,
-    id?: string | number
+    id?: string | number,
+    query?: Record<string, string | number | undefined>
 ): string => {
     const segments = ["products", gender, category, subCategory, name, id]
         .filter((segment): segment is string | number => segment !== undefined && segment !== null)
         .map((segment) => encodeURIComponent(String(segment)));
 
-    return `/${segments.join("/")}`;
+    const url = `/${segments.join("/")}`;
+    return attachQueryParams(url, query);
 };
 
-export const toLogin = "/authentication?type=login"
+export const toLogin = "/authentication?type=login";
+
+/**
+ * Generates a product list URL based on provided parameters.
+ * Ensures that empty values are replaced with an empty string and removes trailing slashes.
+ *
+ * @param gender - Product gender category (optional)
+ * @param category - Product category name (optional)
+ * @param subcategory - Product sub-category name (optional)
+ * @param query - Optional query parameters to attach to the URL.
+ * @returns A properly formatted URL path with optional query parameters.
+ *          e.g., "/products/men/shoes/sneakers?brand=Nike"
+ */
+export const generateProductListUrl = (
+    gender?: string | null,
+    category?: string | null,
+    subcategory?: string | null,
+    query?: Record<string, string | number | undefined>
+): string => {
+    const segments = ["products", gender ?? "", category ?? "", subcategory ?? ""];
+    const url = `/${segments.join("/")}`.replace(/\/+$/, "");
+    return attachQueryParams(url, query);
+};
+
+/**
+ * Generates breadcrumb segments for product pages.
+ * It returns an array with:
+ *  - "Products" always as the first segment,
+ *  - then gender, category, subCategory (if provided),
+ *  - and finally the product name. If an id exists, it is appended to the product URL.
+ *
+ * @param gender Product gender category (optional)
+ * @param category Product category (optional)
+ * @param subcategory Product sub-category (optional)
+ * @param name Product name (optional)
+ * @param id Product id (optional)
+ * @returns Array of breadcrumb objects with { segmentName, path }.
+ */
+export const generateProductBreadcrumbSegments = ({
+                                                      gender,
+                                                      category,
+                                                      subcategory,
+                                                      name,
+                                                      id,
+                                                  }: {
+    gender?: string | null;
+    category?: string | null;
+    subcategory?: string | null;
+    name?: string | null;
+    id?: string | number | null;
+}): BreadcrumbSegment[] => {
+    return [
+        { segmentName: "Products", path: "/products" },
+        gender && { segmentName: gender, path: `/products/${gender}` },
+        category && { segmentName: category, path: `/products/${gender}/${category}` },
+        subcategory && { segmentName: subcategory, path: `/products/${gender}/${category}/${subcategory}` },
+        name && {
+            segmentName: name,
+            path: `/products/${gender}/${category}/${subcategory}/${name}${id ? `/${id}` : ""}`,
+        },
+    ].filter((segment): segment is BreadcrumbSegment => Boolean(segment));
+};

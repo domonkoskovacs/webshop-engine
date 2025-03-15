@@ -983,11 +983,11 @@ export interface ProductResponse {
     'itemNumber'?: string;
 }
 
-export const ProductResponseGenderEnum = {
-    Men: 'MEN',
-    Women: 'WOMEN',
-    Unisex: 'UNISEX'
-} as const;
+    export const ProductResponseGenderEnum = {
+        Men: 'MEN',
+        Women: 'WOMEN',
+        Unisex: 'UNISEX'
+    } as const;
 
 export type ProductResponseGenderEnum = typeof ProductResponseGenderEnum[keyof typeof ProductResponseGenderEnum];
 

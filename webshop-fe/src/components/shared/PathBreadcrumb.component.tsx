@@ -10,7 +10,7 @@ import {
 import React from "react";
 import {generateBreadcrumbSegments} from "../../lib/url.utils";
 
-interface BreadcrumbSegment {
+export interface BreadcrumbSegment {
     segmentName: string;
     path: string;
 }

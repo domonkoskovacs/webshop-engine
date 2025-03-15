@@ -9,11 +9,12 @@ import FilterForm from "../../components/storefront/product/FilterForm.component
 import {ProductInfiniteScrollProvider} from "../../contexts/ProductInfiniteScrollContext";
 import ProductList from "../../components/storefront/product/ProductList.component";
 import {useProductScroll} from "../../hooks/useProductScroll";
-import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
 import {useGender} from "../../hooks/useGender";
 import PageContainer from "../../components/storefront/shared/PageContainer.component";
 import PageHeader from "../../components/storefront/shared/PageHeader";
 import PageContent from "../../components/storefront/shared/PageContent";
+import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
+import {generateProductBreadcrumbSegments, generateProductListUrl} from "../../lib/url.utils";
 
 const Products: React.FC = () => {
     const {gender, setGender} = useGender()
@@ -37,19 +38,17 @@ const Products: React.FC = () => {
 
     useEffect(() => {
         if (name && !id) {
-            navigate(`/products/${gender ?? ""}/${category ?? ""}/${subcategory ?? ""}`.replace(/\/+$/, ""), {replace: true});
+            navigate(generateProductListUrl(gender, category, subcategory), {replace: true});
         }
-    }, [name, id, gender, category, subcategory, navigate]);
+        if (!genderPathSegment) {
+            navigate(generateProductListUrl(gender), {replace: true});
+        }
+    }, [name, id, gender, category, subcategory, navigate, genderPathSegment]);
 
-    const breadcrumbSegments = [
-        {segmentName: "Products", path: "/products"},
-        gender && {segmentName: gender, path: `/products/${gender}`},
-        category && {segmentName: category, path: `/products/${gender}/${category}`},
-        subcategory && {segmentName: subcategory, path: `/products/${gender}/${category}/${subcategory}`},
-        name && {segmentName: name, path: `/products/${gender}/${category}/${subcategory}/${name}${id ? `/${id}` : ''}`}
-    ].filter((segment): segment is { segmentName: string; path: string } => Boolean(segment));
+    const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
 
-    return (
+    return name && id ?
+        <ProductDetails/> :
         <PageContainer layout="spacious">
             <PageHeader>
                 <div className="flex items-center gap-3">
@@ -58,7 +57,8 @@ const Products: React.FC = () => {
                         <Separator orientation="vertical" className="h-10"/>
                     </div>
                     <h2 className="flex items-center gap-1">
-                        {subcategory ?? category ?? gender ?? ''} <Badge className="text-xs h-6">{totalElements}</Badge>
+                        {subcategory ?? category ?? gender ?? ''} <Badge
+                        className="text-xs h-6">{totalElements}</Badge>
                     </h2>
                 </div>
                 <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
@@ -72,13 +72,11 @@ const Products: React.FC = () => {
             </PageHeader>
             <PageContent>
                 <ProductInfiniteScrollProvider>
-                    {name && id ?
-                        <ProductDetails/> :
-                        <ProductList/>}
+                    <ProductList/>
                 </ProductInfiniteScrollProvider>
             </PageContent>
         </PageContainer>
-    );
+        ;
 };
 
 export default Products;
