@@ -3,7 +3,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/Tabs
 import RegistrationForm from "../../components/storefront/forms/RegistrationForm.component";
 import LoginForm from "../../components/storefront/forms/LoginForm.component";
 import {useSearchParams} from "react-router-dom";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
 
 const Authentication: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -20,7 +20,7 @@ const Authentication: React.FC = () => {
     }
 
     return (
-        <StorefrontPageContainer layout="centered" className="p-6">
+        <PageContainer layout="centered" className="p-6">
             <Tabs value={isLogin ? "login" : "registration"} onValueChange={handleTabChange}
                   className="w-[90vw] sm:w-[60vw]">
                 <TabsList className="flex content-center">
@@ -34,7 +34,7 @@ const Authentication: React.FC = () => {
                     <LoginForm/>
                 </TabsContent>
             </Tabs>
-        </StorefrontPageContainer>
+        </PageContainer>
     );
 };
 

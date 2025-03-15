@@ -7,7 +7,7 @@ import {CheckCircle, Loader2, MailCheck, XCircle} from "lucide-react";
 import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardHeader} from "../../components/ui/Card";
 import {toLogin} from "../../lib/url.utils";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
 
 const VerifyEmailConfirmation: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -52,7 +52,7 @@ const VerifyEmailConfirmation: React.FC = () => {
     }, [navigate, searchParams]);
 
     return (
-        <StorefrontPageContainer className="my-10">
+        <PageContainer className="my-10">
             <Card className="p-8 max-w-md w-full text-center">
                 <CardHeader className="p-0 m-0">
                     <MailCheck className="w-12 h-12 text-blue-500 mx-auto mb-4"/>
@@ -98,7 +98,7 @@ const VerifyEmailConfirmation: React.FC = () => {
                     </div>
                 </CardContent>
             </Card>
-        </StorefrontPageContainer>
+        </PageContainer>
     );
 };
 

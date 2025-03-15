@@ -11,7 +11,9 @@ import ProductList from "../../components/storefront/product/ProductList.compone
 import {useProductScroll} from "../../hooks/useProductScroll";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
 import {useGender} from "../../hooks/useGender";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageHeader from "../../components/storefront/shared/PageHeader";
+import PageContent from "../../components/storefront/shared/PageContent";
 
 const Products: React.FC = () => {
     const {gender, setGender} = useGender()
@@ -47,10 +49,9 @@ const Products: React.FC = () => {
         name && {segmentName: name, path: `/products/${gender}/${category}/${subcategory}/${name}${id ? `/${id}` : ''}`}
     ].filter((segment): segment is { segmentName: string; path: string } => Boolean(segment));
 
-
     return (
-        <StorefrontPageContainer layout="start">
-            <header className="flex justify-between items-center p-4">
+        <PageContainer layout="spacious">
+            <PageHeader>
                 <div className="flex items-center gap-3">
                     <div className="hidden sm:flex sm:items-center sm:gap-3">
                         <PathBreadcrumb segments={breadcrumbSegments}/>
@@ -68,14 +69,15 @@ const Products: React.FC = () => {
                         <FilterForm setIsOpen={setIsFilterOpen}/>
                     </SheetContent>
                 </Sheet>
-            </header>
-            <Separator/>
-            <ProductInfiniteScrollProvider>
-                {name && id ?
-                    <ProductDetails/> :
-                    <ProductList/>}
-            </ProductInfiniteScrollProvider>
-        </StorefrontPageContainer>
+            </PageHeader>
+            <PageContent>
+                <ProductInfiniteScrollProvider>
+                    {name && id ?
+                        <ProductDetails/> :
+                        <ProductList/>}
+                </ProductInfiniteScrollProvider>
+            </PageContent>
+        </PageContainer>
     );
 };
 

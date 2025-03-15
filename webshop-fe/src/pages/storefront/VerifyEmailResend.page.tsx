@@ -4,7 +4,10 @@ import {Button} from "../../components/ui/Button";
 import {ApiError} from "../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../shared/api";
 import {useSearchParams} from "react-router-dom";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageHeader from "../../components/storefront/shared/PageHeader";
+import PageTitle from "../../components/storefront/shared/PageTitle";
+import PageContent from "../../components/storefront/shared/PageContent";
 
 const VerifyEmailResend: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -44,13 +47,14 @@ const VerifyEmailResend: React.FC = () => {
     };
 
     return (
-        <StorefrontPageContainer className="p-4 my-20">
-            <h2 className="text-2xl font-semibold">Verify Your Email</h2>
-            <p className="mt-2">
-                We’ve sent a verification link to your email. Please check your inbox.
-            </p>
-
-            <div className="mt-4 w-full max-w-md">
+        <PageContainer className="p-4 my-20">
+            <PageHeader variant="centered">
+                <PageTitle>Verify Your Email</PageTitle>
+                <p className="mt-2">
+                    We’ve sent a verification link to your email. Please check your inbox.
+                </p>
+            </PageHeader>
+            <PageContent className="mt-4 max-w-md">
                 <input
                     type="email"
                     placeholder="Enter your email"
@@ -65,10 +69,10 @@ const VerifyEmailResend: React.FC = () => {
                 >
                     {loading ? "Resending..." : "Resend Verification Email"}
                 </Button>
-            </div>
 
-            {message && <p className="mt-2 text-sm">{message}</p>}
-        </StorefrontPageContainer>
+                {message && <p className="mt-2 text-sm">{message}</p>}
+            </PageContent>
+        </PageContainer>
     );
 };
 

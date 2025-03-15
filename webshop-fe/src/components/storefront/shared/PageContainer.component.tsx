@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import {cn} from "../../../lib/utils";
 
 const layoutVariants = {
     default: "h-full w-full flex flex-col items-center justify-center",
@@ -17,11 +17,11 @@ export interface StorefrontPageContainerProps {
     layout?: keyof typeof layoutVariants;
 }
 
-const StorefrontPageContainer: React.FC<StorefrontPageContainerProps> = ({
-                                                                             className,
-                                                                             children,
-                                                                             layout = "default"
-                                                                         }) => {
+const PageContainer: React.FC<StorefrontPageContainerProps> = ({
+                                                                   className,
+                                                                   children,
+                                                                   layout = "default"
+                                                               }) => {
     return (
         <div className={cn(layoutVariants[layout], className)}>
             {children}
@@ -29,4 +29,4 @@ const StorefrontPageContainer: React.FC<StorefrontPageContainerProps> = ({
     );
 };
 
-export default StorefrontPageContainer;
+export default PageContainer;

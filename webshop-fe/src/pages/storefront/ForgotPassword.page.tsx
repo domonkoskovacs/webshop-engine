@@ -1,12 +1,12 @@
 import React from 'react';
 import ForgotPasswordForm from "../../components/storefront/forms/ForgotPasswordForm.component";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
 
 const ForgotPassword: React.FC = () => {
     return (
-        <StorefrontPageContainer>
+        <PageContainer>
             <ForgotPasswordForm/>
-        </StorefrontPageContainer>
+        </PageContainer>
     );
 };
 

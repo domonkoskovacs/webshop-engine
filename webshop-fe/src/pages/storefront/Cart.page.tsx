@@ -10,7 +10,10 @@ import {Separator} from "../../components/ui/Separator";
 import {calculateCartTotals} from "../../lib/price.utils";
 import {Link} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageHeader from "../../components/storefront/shared/PageHeader";
+import PageTitle from "../../components/storefront/shared/PageTitle";
+import PageContent from "../../components/storefront/shared/PageContent";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
@@ -25,9 +28,11 @@ const Cart: React.FC = () => {
     } = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
 
     return cart.length > 0 ? (
-        <StorefrontPageContainer layout="spacious" className="relative">
-            <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
-            <div className="flex flex-col md:grid md:grid-cols-3 gap-6 ">
+        <PageContainer layout="spacious" className="relative">
+            <PageHeader>
+                <PageTitle>Your Cart</PageTitle>
+            </PageHeader>
+            <PageContent className="flex flex-col md:grid md:grid-cols-3 gap-6 ">
                 <Card className="w-full md:col-span-2 self-start space-y-4">
                     <CardContent>
                         {cart.map((item) => (
@@ -36,7 +41,6 @@ const Cart: React.FC = () => {
                     </CardContent>
                 </Card>
                 <div className="relative">
-
                     <Card className="sticky top-4 self-start">
                         <CardHeader>
                             <h2 className="text-xl font-semibold">Order Summary</h2>
@@ -68,16 +72,16 @@ const Cart: React.FC = () => {
                         </CardFooter>
                     </Card>
                 </div>
-            </div>
-        </StorefrontPageContainer>) : (
-        <StorefrontPageContainer layout="centered" className="space-y-3 py-20">
+            </PageContent>
+        </PageContainer>) : (
+        <PageContainer layout="centered" className="space-y-3 py-20">
             {loggedIn ? (
                 <EmptyState title="You don't have any products in your cart!"/>
             ) : (
                 <PublicEmptyPage emptyStateTitle="You don't have any products in your cart!"
                                  buttonTitle="You need to log in to put products in your cart!"/>
             )}
-        </StorefrontPageContainer>
+        </PageContainer>
     );
 };
 

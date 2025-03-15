@@ -48,7 +48,6 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
         const currentPage = page - 1;
 
         if (fetchedPagesRef.current.has(currentPage)) {
-            console.log(`Page ${currentPage} already fetched, skipping duplicate call.`);
             return;
         }
         fetchedPagesRef.current.add(currentPage);

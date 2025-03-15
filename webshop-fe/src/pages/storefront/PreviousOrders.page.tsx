@@ -3,21 +3,23 @@ import EmptyState from "../../components/storefront/shared/EmptyPage.component";
 import {useUser} from "../../hooks/UseUser";
 import {OrderResponse} from "../../shared/api";
 import OrderItem from "../../components/storefront/order/OrderItem.component";
-import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageHeader from "../../components/storefront/shared/PageHeader";
+import PageTitle from "../../components/storefront/shared/PageTitle";
+import PageContent from "../../components/storefront/shared/PageContent";
 
 const PreviousOrders: React.FC = () => {
     const {orders} = useUser()
 
     return orders.length > 0 ? (
-        <StorefrontPageContainer layout="spacious" className="relative">
-            <div className="flex flex-row justify-between  my-6">
-                <h1 className="text-2xl font-bold">Previous Orders</h1>
+        <PageContainer layout="spacious" className="relative">
+            <PageHeader>
+                <PageTitle>Previous Orders</PageTitle>
                 <p className="text-lg font-semibold">
                     <span className="text-indigo-600">{orders.length}</span> orders made
                 </p>
-            </div>
-            <div
-                className="w-full flex flex-col gap-4">
+            </PageHeader>
+            <PageContent className="flex flex-col gap-4">
                 {orders.map((order: OrderResponse) => {
                     return (
                         <div key={order.id}>
@@ -25,12 +27,12 @@ const PreviousOrders: React.FC = () => {
                         </div>
                     );
                 })}
-            </div>
-        </StorefrontPageContainer>
+            </PageContent>
+        </PageContainer>
     ) : (
-        <StorefrontPageContainer layout="centered" className="space-y-3 py-20">
+        <PageContainer layout="centered" className="space-y-3 py-20">
             <EmptyState title="You don't have any orders!"/>
-        </StorefrontPageContainer>
+        </PageContainer>
     );
 };
 
