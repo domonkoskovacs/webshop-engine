@@ -1,12 +1,16 @@
-import {Button} from "src/components/ui/Button"
-import React from "react";
-import {Form} from "../../ui/Form";
+import React, {useEffect} from "react";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {toast} from "../../../hooks/UseToast";
+import {useToast} from "../../../hooks/UseToast";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import {useProductScroll} from "../../../hooks/useProductScroll";
+import {GetAllSortTypeEnum} from "../../../shared/api";
+import SheetFormContainer from "../../admin/shared/SheetFormContainer.componenet";
+import {mapBrandsToOptions, mapEnumToOptions} from "../../../lib/options.utils";
+import SliderField from "../../ui/fields/SliderField";
+import {SwitchField} from "../../ui/fields/SwitchField";
+import SelectField from "../../ui/fields/SelectField";
 
 export const FormSchema = z.object({
     brands: z.array(z.string().min(1, "Brand is required"), {message: "Brands must be an array of strings"}).optional(),
@@ -15,7 +19,7 @@ export const FormSchema = z.object({
     minDiscountPercentage: z.number().min(0, {message: "Minimum discount must be at least 0%"}).max(100, {message: "Minimum discount cannot exceed 100%"}).optional(),
     maxDiscountPercentage: z.number().min(0, {message: "Maximum discount must be at least 0%"}).max(100, {message: "Maximum discount cannot exceed 100%"}).optional(),
     showOutOfStock: z.boolean().default(false).describe("Indicates whether out-of-stock products should be shown"),
-    sortType: z.string().optional().describe("Sorting type for products"),
+    sortType: z.nativeEnum(GetAllSortTypeEnum).optional().describe("Sorting type for products"),
 });
 
 interface FilterFormProps {
@@ -23,50 +27,55 @@ interface FilterFormProps {
 }
 
 const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {brands, resetFilters, updateFilters} = useProductScroll();
-
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        updateFilters({brands: data.brands})
-        toast({
-            description: "Filters has been successfully applied",
-        })
-        setIsOpen(false)
-    }
+    const {brands, filters, resetFilters, updateFilters, priceRange, discountRange} = useProductScroll();
+    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {},
     })
 
-    return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">Filter products</h2>
-            </div>
-            <div className="flex-1 overflow-y-auto scrollbar">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} id="storefrontFilterForm">
-                        <div className="flex flex-col p-6 gap-4">
-                            <ComboBoxMultipleValueField
-                                name="brands"
-                                form={form}
-                                label="Brands"
-                                options={brands.map((brand) => ({label: brand.name!, value: brand.name!}))}
-                            />
-                        </div>
-                    </form>
-                </Form>
-            </div>
-            <div className="mt-auto flex gap-2 pt-3 border-t">
-                <Button variant="outline" className="w-full" onClick={() => resetFilters()}>
-                    Reset
-                </Button>
-                <Button type="submit" className="w-full" form="storefrontFilterForm">
-                    Apply
-                </Button>
-            </div>
-        </div>
-    );
+    useEffect(() => {
+        form.reset({
+            brands: filters.brands,
+            maxPrice: filters.maxPrice,
+            minPrice: filters.minPrice,
+            maxDiscountPercentage: filters.maxDiscountPercentage,
+            minDiscountPercentage: filters.minDiscountPercentage,
+            showOutOfStock: filters.showOutOfStock,
+            sortType: filters.sortType,
+        });
+    }, [filters.brands, filters.maxDiscountPercentage, filters.maxPrice, filters.minDiscountPercentage, filters.minPrice, filters.showOutOfStock, filters.sortType, form]);
+
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        updateFilters({
+            brands: data.brands,
+            maxPrice: data.maxPrice,
+            minPrice: data.minPrice,
+            maxDiscountPercentage: data.maxDiscountPercentage,
+            minDiscountPercentage: data.minDiscountPercentage,
+            showOutOfStock: data.showOutOfStock,
+            sortType: data.sortType,
+        })
+        toast({
+            description: "Filters has been successfully applied",
+        })
+        setIsOpen(false)
+    }
+
+    return <SheetFormContainer title="Filter Products" form={form} formId="productStoreFilterForm" onSubmit={onSubmit}
+                               submitButtonText="Apply" secondaryButtonClick={() => {
+        resetFilters();
+        form.reset();
+    }} secondaryButtonText="Reset">
+        <ComboBoxMultipleValueField form={form} name="brands" label="Brands" options={mapBrandsToOptions(brands)}/>
+        <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
+                     range={[priceRange[0], priceRange[1]]}/>
+        <SliderField form={form} nameMin="minDiscountPercentage" nameMax="maxDiscountPercentage" label="Discount percentage"
+                     range={[discountRange[0], discountRange[1]]}/>
+        <SwitchField form={form} name="showOutOfStock" label="Show out of stock products?"/>
+        <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAllSortTypeEnum)}/>
+    </SheetFormContainer>
 }
 
 export default FilterForm
