@@ -1,12 +1,13 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
+import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
 
 const AboutUs: React.FC = () => {
     const {store} = usePublicStore()
 
     return (
-        <div className="max-w-4xl text-left p-6">
+        <StorefrontPageContainer layout="readable">
             <h1 className="text-2xl font-bold text-center">About Us</h1>
             <br/>
             <p>
@@ -63,7 +64,7 @@ const AboutUs: React.FC = () => {
                 Thank you for visiting {store?.name}. We hope you enjoy exploring this thesis project as much as I
                 enjoyed creating it!
             </p>
-        </div>
+        </StorefrontPageContainer>
     );
 };
 

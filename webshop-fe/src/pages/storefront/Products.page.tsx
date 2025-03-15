@@ -11,6 +11,7 @@ import ProductList from "../../components/storefront/product/ProductList.compone
 import {useProductScroll} from "../../hooks/useProductScroll";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
 import {useGender} from "../../hooks/useGender";
+import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
 
 const Products: React.FC = () => {
     const {gender, setGender} = useGender()
@@ -48,7 +49,7 @@ const Products: React.FC = () => {
 
 
     return (
-        <div className="flex flex-col h-full w-full justify-start">
+        <StorefrontPageContainer layout="start">
             <header className="flex justify-between items-center p-4">
                 <div className="flex items-center gap-3">
                     <div className="hidden sm:flex sm:items-center sm:gap-3">
@@ -74,7 +75,7 @@ const Products: React.FC = () => {
                     <ProductDetails/> :
                     <ProductList/>}
             </ProductInfiniteScrollProvider>
-        </div>
+        </StorefrontPageContainer>
     );
 };
 

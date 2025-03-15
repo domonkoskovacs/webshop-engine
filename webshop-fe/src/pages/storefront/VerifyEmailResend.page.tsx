@@ -4,6 +4,7 @@ import {Button} from "../../components/ui/Button";
 import {ApiError} from "../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../shared/api";
 import {useSearchParams} from "react-router-dom";
+import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
 
 const VerifyEmailResend: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -43,7 +44,7 @@ const VerifyEmailResend: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 my-20">
+        <StorefrontPageContainer className="p-4 my-20">
             <h2 className="text-2xl font-semibold">Verify Your Email</h2>
             <p className="mt-2">
                 We’ve sent a verification link to your email. Please check your inbox.
@@ -67,7 +68,7 @@ const VerifyEmailResend: React.FC = () => {
             </div>
 
             {message && <p className="mt-2 text-sm">{message}</p>}
-        </div>
+        </StorefrontPageContainer>
     );
 };
 

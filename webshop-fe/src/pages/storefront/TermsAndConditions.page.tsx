@@ -1,11 +1,12 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import StorefrontPageContainer from 'src/components/storefront/shared/DashboardPageContainer.component';
 import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const TermsAndConditions: React.FC = () => {
     const {store} = usePublicStore()
     return (
-        <div className="max-w-4xl text-left p-6">
+        <StorefrontPageContainer layout="readable">
             <h1 className="text-3xl font-bold mb-4 text-center">Terms and Conditions</h1>
             <p className="mb-4">
                 Welcome to {store?.name}! By accessing and using our platform, you agree to comply with the following
@@ -47,7 +48,7 @@ const TermsAndConditions: React.FC = () => {
                                                                                   className="hover:underline">contact
                 us</Link></strong>.
             </p>
-        </div>
+        </StorefrontPageContainer>
     );
 };
 

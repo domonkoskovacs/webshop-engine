@@ -1,19 +1,21 @@
-import {Button} from "src/components/ui/Button"
 import React from "react";
 import PasswordForm from "./RenewPasswordForm.component";
 import AddressForm from "./AddressForm.component";
 import AccountInfoForm from "./AccountInfoForm.component";
 import {Card, CardContent, CardFooter} from "../../ui/Card";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from "../../ui/Dialog";
 import {useUser} from "../../../hooks/UseUser";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "../../ui/AlertDialog";
+import {Button} from "src/components/ui/Button";
 
 
 const ProfileForm: React.FC = () => {
@@ -37,22 +39,26 @@ const ProfileForm: React.FC = () => {
                                     information and account data. One executed we can no longer restore your data!</h2>
                             </CardContent>
                             <CardFooter>
-                                <Dialog>
-                                    <DialogTrigger asChild>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
                                         <Button variant="destructive" className="w-full">Delete</Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[425px]">
-                                        <DialogHeader>
-                                            <DialogTitle>Delete account</DialogTitle>
-                                            <DialogDescription>
-                                                Are you certain about deleting your account?
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        <DialogFooter>
-                                            <Button variant="destructive" className="w-1/2 mx-auto" type="submit" onClick={() => deleteUser()}>Yes</Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete your account
+                                                and remove your data from our servers.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction asChild className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                <Button variant="destructive" onClick={deleteUser}>Continue</Button>
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </CardFooter>
                         </Card>
                     </div>

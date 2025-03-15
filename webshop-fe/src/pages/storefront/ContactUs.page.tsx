@@ -1,10 +1,11 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {Facebook, Instagram, Twitter} from "lucide-react";
+import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
 
 const ContactUs: React.FC = () => {
     return (
-        <div className="w-full max-w-2xl lg:w-1/3 shadow-md rounded-lg p-6">
+        <StorefrontPageContainer layout="readable">
             <h1 className="text-3xl font-bold text-center mb-4">Contact Us</h1>
             <p className="text-center mb-6">
                 Have a question, concern, or feedback? We're here to help. Reach out to us using the details below.
@@ -59,7 +60,7 @@ const ContactUs: React.FC = () => {
                     </Link>
                 </div>
             </div>
-        </div>
+        </StorefrontPageContainer>
     );
 };
 

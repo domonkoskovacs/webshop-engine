@@ -8,6 +8,7 @@ import {Button} from "../../components/ui/Button";
 import {toast} from "../../hooks/UseToast";
 import {useNavigate} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
+import StorefrontPageContainer from 'src/components/storefront/shared/DashboardPageContainer.component';
 
 const Checkout: React.FC = () => {
     const {user, cart, placeOrder} = useUser()
@@ -61,8 +62,8 @@ const Checkout: React.FC = () => {
     }
 
     return (
-        <main className="w-full mx-10 mb-6 relative">
-            <h1 className="text-2xl font-bold my-6">Checkout</h1>
+        <StorefrontPageContainer layout="spacious" className="relative">
+            <h1 className="text-2xl font-bold mb-6">Checkout</h1>
             <div className="flex flex-col md:grid md:grid-cols-2 gap-6 ">
                 <Card className="self-start w-full">
                     <CardContent className="mb-0 pb-0">
@@ -154,7 +155,7 @@ const Checkout: React.FC = () => {
                     </Card>
                 </div>
             </div>
-        </main>
+        </StorefrontPageContainer>
     );
 };
 

@@ -102,7 +102,7 @@ const RegistrationForm: React.FC = () => {
                               submitButtonText="Register"
                               singleColumn={false}
                               className="w-full">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col justify-between gap-2">
             <TextInputField form={form} name="email" label="Email"
                             placeholder="Please enter your email"/>
             <TextInputField form={form} name="firstname" label="Firstname"
@@ -118,7 +118,7 @@ const RegistrationForm: React.FC = () => {
             <TextInputField form={form} name="phoneNumber" label="Phone number"
                             placeholder="Please enter your phone number"/>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col justify-between gap-2">
             <RadioGroupField form={form} name="gender" label="What type of clothes do we recommend for you?"
                              options={[{value: "men", label: "Men"}, {value: "women", label: "Women"}]}/>
             <SwitchField form={form} name="subscribe" label="Marketing emails"

@@ -1,9 +1,10 @@
 import React from 'react';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from 'src/components/ui/Accordition';
+import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
 
 const FrequentlyAskedQuestions: React.FC = () => {
     return (
-        <div className="max-w-4xl lg:w-1/3 p-6">
+        <StorefrontPageContainer layout="readable" className="lg:w-1/2">
             <h1 className="text-2xl font-bold text-center">Frequently Asked Questions</h1>
             <Accordion type="multiple" className="w-full">
                 <AccordionItem value="item-2">
@@ -70,7 +71,7 @@ const FrequentlyAskedQuestions: React.FC = () => {
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
-        </div>
+        </StorefrontPageContainer>
     );
 };
 

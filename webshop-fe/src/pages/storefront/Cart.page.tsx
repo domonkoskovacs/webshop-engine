@@ -10,6 +10,7 @@ import {Separator} from "../../components/ui/Separator";
 import {calculateCartTotals} from "../../lib/price.utils";
 import {Link} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
+import StorefrontPageContainer from "../../components/storefront/shared/DashboardPageContainer.component";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
@@ -24,8 +25,8 @@ const Cart: React.FC = () => {
     } = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
 
     return cart.length > 0 ? (
-        <main className="w-full mx-10 mb-6 relative">
-            <h1 className="text-2xl font-bold my-6">Your Cart</h1>
+        <StorefrontPageContainer layout="spacious" className="relative">
+            <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
             <div className="flex flex-col md:grid md:grid-cols-3 gap-6 ">
                 <Card className="w-full md:col-span-2 self-start space-y-4">
                     <CardContent>
@@ -68,16 +69,15 @@ const Cart: React.FC = () => {
                     </Card>
                 </div>
             </div>
-        </main>
-    ) : (
-        <div className="flex flex-col space-y-3 py-20">
+        </StorefrontPageContainer>) : (
+        <StorefrontPageContainer layout="centered" className="space-y-3 py-20">
             {loggedIn ? (
                 <EmptyState title="You don't have any products in your cart!"/>
             ) : (
                 <PublicEmptyPage emptyStateTitle="You don't have any products in your cart!"
                                  buttonTitle="You need to log in to put products in your cart!"/>
             )}
-        </div>
+        </StorefrontPageContainer>
     );
 };
 
