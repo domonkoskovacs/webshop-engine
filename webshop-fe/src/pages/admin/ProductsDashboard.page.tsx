@@ -22,7 +22,17 @@ import ImportForm from "../../components/admin/product/ImportForm.component";
 import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
 
 const ProductsDashboard: React.FC = () => {
-    const {products, filters, setPage, nextPage, prevPage, totalPages, deleteProducts, exportProducts} = useProduct()
+    const {
+        products,
+        filters,
+        setPage,
+        nextPage,
+        prevPage,
+        totalPages,
+        deleteProducts,
+        exportProducts,
+        totalElements
+    } = useProduct()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isProductFormOpen, setIsProductFormOpen] = useState(false);
     const [isDiscountFormOpen, setIsDiscountFormOpen] = useState(false);
@@ -221,7 +231,8 @@ const ProductsDashboard: React.FC = () => {
                 </div>
             </div>
             <div className="w-full">
-                <DataTable key={products.length} columns={columns} data={products} customElement={itemNoFilter}/>
+                <DataTable key={products.length} columns={columns} data={products} customElement={itemNoFilter}
+                           totalElements={totalElements}/>
             </div>
             <PaginationComponent
                 className="my-2"

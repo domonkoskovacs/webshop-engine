@@ -18,7 +18,7 @@ import ExportForm from "../../components/admin/order/ExportForm.componenet";
 import FilterForm from "../../components/admin/order/FilterForm.componenet";
 
 const OrdersDashboard: React.FC = () => {
-    const {orders, filters, changeStatus, totalPages, nextPage, prevPage, setPage} = useOrder()
+    const {orders, filters, changeStatus, totalPages, nextPage, prevPage, setPage, totalElements} = useOrder()
     const [isExportFormOpen, setIsExportFormOpen] = React.useState(false);
     const [isFilterFormOpen, setIsFilterFormOpen] = React.useState(false);
 
@@ -122,7 +122,8 @@ const OrdersDashboard: React.FC = () => {
     return (
         <DashboardPageContainer className="justify-start">
             <DataTable key={orders.length} columns={columns} data={orders} enableSelect={false}
-                       enableDefaultFilter={true} defaultFilterColumn={"status"} customElement={actionButtons}/>
+                       enableDefaultFilter={true} defaultFilterColumn={"status"} customElement={actionButtons}
+                       totalElements={totalElements}/>
             <PaginationComponent
                 className="my-2"
                 currentPage={filters.page ?? 0}

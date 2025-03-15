@@ -24,6 +24,7 @@ interface DataTableProps<TData, TValue> {
     enableSelect?: boolean
     enableDefaultFilter?: boolean
     defaultFilterColumn?: string
+    totalElements?: number
 }
 
 export function DataTable<TData, TValue>({
@@ -32,7 +33,8 @@ export function DataTable<TData, TValue>({
                                              customElement,
                                              enableSelect = true,
                                              enableDefaultFilter = false,
-                                             defaultFilterColumn
+                                             defaultFilterColumn,
+                                             totalElements
                                          }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -142,11 +144,18 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            {enableSelect &&
-                <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
-                </div>}
+            <div className="w-full flex flex-row justify-between">
+                {enableSelect &&
+                    <div className="text-sm text-muted-foreground">
+                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                        {table.getFilteredRowModel().rows.length} row(s) selected.
+                    </div>}
+                {totalElements !== undefined && totalElements > 0 &&
+                    <div className="text-sm text-muted-foreground">
+                        {totalElements} elements found.
+                    </div>
+                 }
+            </div>
         </div>
     )
 }

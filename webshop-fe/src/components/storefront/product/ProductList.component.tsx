@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from "react";
+import React, {useCallback, useRef} from "react";
 import {useProductScroll} from "../../../hooks/useProductScroll";
 import ProductCard from "./ProductCard.component";
 import {Skeleton} from "../../ui/Skeleton";
@@ -7,7 +7,6 @@ import {ProductResponse} from "../../../shared/api";
 const ProductList = () => {
     const {products, loading, hasMore, fetchNextPage} = useProductScroll();
     const observer = useRef<IntersectionObserver | null>(null);
-
 
     const lastProductRef = useCallback(
         (node: HTMLDivElement | null) => {
@@ -22,14 +21,6 @@ const ProductList = () => {
         },
         [loading, hasMore, fetchNextPage]
     );
-
-    // Ensure only first page loads on refresh
-    useEffect(() => {
-        if (products.length === 0) {
-            fetchNextPage();
-        }
-    }, []);
-
 
     const EmptyState = () => (
         <div className="flex flex-col space-y-3 py-20 items-center justify-center">
