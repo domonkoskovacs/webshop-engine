@@ -8,7 +8,7 @@ const layoutVariants = {
     padded: "h-full w-full p-6",
     fullScreen: "h-screen w-screen flex flex-col",
     readable: "max-w-4xl w-full text-justify p-6 mx-auto",
-    spacious: "w-full mx-10 my-6",
+    spacious: "w-full mx-10 my-6 h-full flex flex-col justify-start",
 };
 
 export interface StorefrontPageContainerProps {
