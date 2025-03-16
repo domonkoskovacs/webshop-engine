@@ -1,14 +1,12 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {FormField, FormItem, FormLabel, FormMessage,} from "src/components/ui/Form";
-import {Input} from "src/components/ui/Input";
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {ComboBoxField} from "../../ui/fields/ComboBoxField";
 import {useProduct} from "../../../hooks/UseProduct";
 import {useCategory} from "../../../hooks/UseCategory";
-import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
+import {FileListInputField, NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 import {UpdateGenderEnum} from "../../../shared/api";
@@ -91,12 +89,6 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
         }
     }, [productId, form, getById, toast]);
 
-    const removeImage = (index: number) => {
-        const currentImages = form.getValues("images");
-        const updatedImages = currentImages.filter((_, i) => i !== index);
-        form.setValue("images", updatedImages, {shouldValidate: true});
-    };
-
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         const newImages = data.images.filter((img) => img instanceof File) as File[];
         const existingImageIds = data.images.filter(
@@ -136,8 +128,6 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
         }
         setIsOpen(false);
     }
-
-    const images = form.watch("images");
 
     return (
         <SheetFormContainer
@@ -209,42 +199,25 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                 min={0}
                 max={100}
             />
-            <FormField
-                control={form.control}
+            <FileListInputField
+                form={form}
                 name="images"
-                render={() => (
-                    <FormItem className="flex flex-col gap-2">
-                        <FormLabel className="w-full">Images</FormLabel>
-                        <div className="flex flex-wrap gap-2">
-                            {images.map((img, index) => (
-                                <ImageCard
-                                    key={index}
-                                    image={img}
-                                    onDelete={() => removeImage(index)}
-                                />
-                            ))}
-                            {images.length < MAX_IMAGES && (
-                                <div className="mt-2">
-                                    <FormLabel className="w-full">Add more images</FormLabel>
-                                    <Input
-                                        type="file"
-                                        accept="image/png, image/jpg, image/jpeg"
-                                        onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                                form.setValue("images", [...images, file], {
-                                                    shouldValidate: true,
-                                                });
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                        <FormMessage/>
-                    </FormItem>
+                label="Images"
+                accept="image/png, image/jpg, image/jpeg"
+                maxFiles={5}
+            >
+                {(files, removeFile) => (
+                    <>
+                        {files.map((file, index) => (
+                            <ImageCard
+                                key={index}
+                                image={file}
+                                onDelete={() => removeFile(index)}
+                            />
+                        ))}
+                    </>
                 )}
-            />
+            </FileListInputField>
         </SheetFormContainer>
     );
 };

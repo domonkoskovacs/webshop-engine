@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 
 import {UseFormReturn} from "react-hook-form";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
@@ -111,4 +111,68 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
     />
 };
 
-export {TextInputField, NumberInputField, FileInputField};
+export interface FileListInputFieldProps {
+    form: UseFormReturn<any>;
+    name: string;
+    label: string;
+    accept: string;
+    maxFiles?: number;
+    children: (files: Array<File | string>, removeFile: (index: number) => void) => React.ReactNode;
+}
+
+const FileListInputField: React.FC<FileListInputFieldProps> = ({
+                                                                   form,
+                                                                   name,
+                                                                   label,
+                                                                   accept,
+                                                                   maxFiles = 5,
+                                                                   children,
+                                                               }) => {
+    const removeFile = useCallback(
+        (index: number) => {
+            const currentFiles = (form.getValues(name) as Array<File | string>) || [];
+            const updatedFiles = currentFiles.filter((_, i) => i !== index);
+            form.setValue(name, updatedFiles, {shouldValidate: true});
+        },
+        [form, name]
+    );
+
+    return (
+        <FormField
+            control={form.control}
+            name={name}
+            render={({field}) => {
+                const files: Array<File | string> = field.value || [];
+                return (
+                    <FormItem className="flex flex-col gap-2">
+                        <FormLabel className="w-full">{label}</FormLabel>
+                        <div className="flex flex-wrap gap-2">
+                            {children(files, removeFile)}
+                            {files.length < maxFiles && (
+                                <div className="mt-2">
+                                    <FormLabel className="w-full">Add more files</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="file"
+                                            accept={accept}
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    form.setValue(name, [...files, file], {shouldValidate: true});
+                                                }
+                                                e.target.value = "";
+                                            }}
+                                        />
+                                    </FormControl>
+                                </div>
+                            )}
+                        </div>
+                        <FormMessage/>
+                    </FormItem>
+                );
+            }}
+        />
+    );
+};
+
+export {TextInputField, NumberInputField, FileInputField, FileListInputField};
