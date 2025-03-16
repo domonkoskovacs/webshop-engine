@@ -20,6 +20,8 @@ import {Checkbox} from "../../components/ui/Checkbox";
 import DiscountForm from "../../components/admin/product/DiscountForm.component";
 import ImportForm from "../../components/admin/product/ImportForm.component";
 import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'src/components/ui/Dialog';
+import ProductCard from "../../components/storefront/product/ProductCard.component";
 
 const ProductsDashboard: React.FC = () => {
     const {
@@ -37,6 +39,8 @@ const ProductsDashboard: React.FC = () => {
     const [isProductFormOpen, setIsProductFormOpen] = useState(false);
     const [isDiscountFormOpen, setIsDiscountFormOpen] = useState(false);
     const [isImportFormOpen, setIsImportFormOpen] = useState(false);
+    const [isProductCardOpen, setIsProductCardOpen] = useState(false);
+    const [product, setProduct] = useState<ProductResponse>({});
     const [id, setId] = useState<string | undefined>(undefined);
     const [ids, setIds] = useState<string[]>([]);
 
@@ -143,7 +147,10 @@ const ProductsDashboard: React.FC = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                {selectedRowCount < 2 && <DropdownMenuItem>View product</DropdownMenuItem>}
+                                {selectedRowCount < 2 && <DropdownMenuItem onClick={() => {
+                                    setIsProductCardOpen(true);
+                                    setProduct(product)
+                                }}>View product</DropdownMenuItem>}
                                 {selectedRowCount < 2 && <DropdownMenuItem onClick={() => {
                                     setIsProductFormOpen(true);
                                     setId(product.id);
@@ -184,6 +191,14 @@ const ProductsDashboard: React.FC = () => {
 
     return (
         <DashboardPageContainer className="justify-start">
+            <Dialog open={isProductCardOpen} onOpenChange={setIsProductCardOpen}>
+                <DialogContent className="w-1/4 h-auto">
+                    <DialogHeader>
+                        <DialogTitle>Product View</DialogTitle>
+                    </DialogHeader>
+                        <ProductCard product={product}/>
+                </DialogContent>
+            </Dialog>
             <div className="my-2 flex w-full justify-between">
                 <Sheet open={isDiscountFormOpen} onOpenChange={setIsDiscountFormOpen}>
                     <SheetTrigger asChild>
