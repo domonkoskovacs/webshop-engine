@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {ProductResponse, ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {ProductResponse} from "../../../shared/api";
 import {useProduct} from "../../../hooks/UseProduct";
 import {Button} from "../../ui/Button";
 
@@ -16,13 +16,9 @@ import {usePublicStore} from "../../../hooks/UsePublicStore";
 import {calculateDiscountedPrice} from "../../../lib/price.utils";
 import {Badge} from "../../ui/Badge";
 import {useUser} from "../../../hooks/UseUser";
-import {toast} from "../../../hooks/UseToast";
-import {ApiError} from "../../../shared/ApiError";
-import {useAuth} from "../../../hooks/UseAuth";
 
 const ProductDetails: React.FC = () => {
-    const {loggedIn} = useAuth();
-    const {addToSaved, removeFromSaved, isSaved, increaseOneInCart} = useUser();
+    const {toggleSaved, addItemToCart, isSaved} = useUser();
     const {store} = usePublicStore()
     const navigate = useNavigate();
     const {getById} = useProduct();
@@ -37,45 +33,6 @@ const ProductDetails: React.FC = () => {
     const id = pathSegments[5] || null;
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
     const savedProduct = isSaved(product?.id!);
-
-    const handleSaveToggle = async () => {
-        if (!loggedIn) {
-            toast({description: "You need to log in to update saved products."});
-        } else {
-            try {
-                if (savedProduct) {
-                    await removeFromSaved(product?.id!);
-                } else {
-                    await addToSaved(product?.id!);
-                }
-            } catch (error) {
-                toast({variant: "destructive", description: "Error updating saved products."});
-            }
-        }
-    };
-
-    const addToCart = async () => {
-        if (!loggedIn) {
-            toast({description: "You need to log in to update your cart."});
-        } else {
-            try {
-                await increaseOneInCart(product?.id!);
-                toast({description: "Item added to cart."});
-            } catch (error) {
-                if (error instanceof ApiError && error.error) {
-                    const errorMap = new Map(
-                        error.error.map(err => [err.reasonCode, true])
-                    );
-
-                    if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
-                        toast({description: "Not enough products in stock."});
-                    }
-                } else {
-                    toast({variant: "destructive", description: "Error updating cart."});
-                }
-            }
-        }
-    }
 
     useEffect(() => {
         if (!id) return;
@@ -94,7 +51,7 @@ const ProductDetails: React.FC = () => {
     }, [id, getById, navigate]);
 
     if (loading) {
-        return <EmptyState title=""/>
+        return <PageContainer className="my-10"><EmptyState title=""/></PageContainer>
     }
 
     if (!product) {
@@ -103,7 +60,7 @@ const ProductDetails: React.FC = () => {
                 <h1 className="text-5xl font-bold text-red-600">404</h1>
                 <p className="text-2xl">Product Not Found</p>
                 <p className="text-2xl">The product you are looking for does not exist.</p>
-                <Button onClick={() => navigate("/products")}>Go to Products</Button>
+                <Button onClick={() => navigate(-1)}>Go back</Button>
             </PageContainer>
         );
     }
@@ -150,11 +107,12 @@ const ProductDetails: React.FC = () => {
                     )}
                 </div>
                 <div className="w-full flex flex-row gap-2">
-                    <Button className="w-full" onClick={() => addToCart()}><PlusIcon className="size-4 me-1"/> Add to
+                    <Button className="w-full" onClick={() => addItemToCart(product.id!)}><PlusIcon
+                        className="size-4 me-1"/> Add to
                         cart</Button>
                     <Button
                         variant="ghost"
-                        onClick={handleSaveToggle}
+                        onClick={() => toggleSaved(product.id!)}
                         className={`transition ${
                             savedProduct ? "bg-red-500" : "hover:bg-red-500"
                         }`}

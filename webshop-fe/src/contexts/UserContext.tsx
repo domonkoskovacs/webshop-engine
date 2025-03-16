@@ -4,7 +4,7 @@ import {
     CartItemRequest,
     CartItemResponse,
     OrderResponse,
-    ProductResponse,
+    ProductResponse, ResultEntryReasonCodeEnum,
     UpdateUserRequest,
     UpdateUserRequestGenderEnum,
     UserResponse
@@ -12,6 +12,8 @@ import {
 import {userService} from "../services/UserService";
 import {useAuth} from "../hooks/UseAuth";
 import {orderService} from "../services/OrderService";
+import {toast} from "../hooks/UseToast";
+import {ApiError} from "../shared/ApiError";
 
 interface UserContextType {
     user: UserResponse
@@ -32,6 +34,8 @@ interface UserContextType {
     placeOrder: () => Promise<void>;
     //payOrder: (id: string, paymentToken: string) => Promise<void>;
     cancelOrder: (id: string) => Promise<void>;
+    toggleSaved: (id: string) => Promise<void>;
+    addItemToCart: (id: string) => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -341,6 +345,42 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     }
 
+    const toggleSaved = async (id: string) => {
+        if (!loggedIn) {
+            toast({ description: "You need to log in to update saved products." });
+            return;
+        }
+        try {
+            if (isSaved(id)) {
+                await removeFromSaved(id);
+            } else {
+                await addToSaved(id);
+            }
+        } catch (error) {
+            toast({ variant: "destructive", description: "Error updating saved products." });
+        }
+    };
+
+    const addItemToCart = async (id: string) => {
+        if (!loggedIn) {
+            toast({ description: "You need to log in to update your cart." });
+            return;
+        }
+        try {
+            await increaseOneInCart(id);
+            toast({ description: "Item added to cart." });
+        } catch (error) {
+            if (error instanceof ApiError && error.error) {
+                const errorMap = new Map(error.error.map(err => [err.reasonCode, true]));
+                if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
+                    toast({ description: "Not enough products in stock." });
+                }
+            } else {
+                toast({ variant: "destructive", description: "Error updating cart." });
+            }
+        }
+    };
+
     return (
         <UserContext.Provider
             value={{
@@ -360,7 +400,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 increaseOneInCart,
                 placeOrder,
                // payOrder,
-                cancelOrder
+                cancelOrder,
+                toggleSaved,
+                addItemToCart,
             }}>
             {children}
         </UserContext.Provider>

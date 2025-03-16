@@ -3,66 +3,25 @@ import {Link, useLocation} from "react-router-dom";
 import {Card, CardContent, CardFooter} from "src/components/ui/Card";
 import {Button} from "../../ui/Button";
 import {HeartIcon, PlusIcon, TrashIcon} from "lucide-react";
-import {ProductResponse, ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {ProductResponse} from "../../../shared/api";
 import {useGender} from "../../../hooks/useGender";
 import {useUser} from "../../../hooks/UseUser";
-import {useAuth} from "../../../hooks/UseAuth";
-import {toast} from "../../../hooks/UseToast";
-import {ApiError} from "../../../shared/ApiError";
 import {generateProductUrl} from "../../../lib/url.utils";
+import {calculateDiscountedPrice} from "../../../lib/price.utils";
 
 interface ProductCardProps {
     product: ProductResponse
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
-    const finalPrice = product.discountPercentage && product.price ? product.price - (product.price * product.discountPercentage) / 100 : product.price ?? 0;
     const {gender} = useGender()
-    const {addToSaved, removeFromSaved, isSaved, increaseOneInCart} = useUser();
-    const {loggedIn} = useAuth();
+    const {toggleSaved, addItemToCart, isSaved} = useUser();
     const location = useLocation();
     const isSavedPage = location.pathname === '/saved';
-
     const savedProduct = isSaved(product.id!);
-
-    const handleSaveToggle = async () => {
-        if (!loggedIn) {
-            toast({description: "You need to log in to update saved products."});
-        } else {
-            try {
-                if (savedProduct) {
-                    await removeFromSaved(product.id!);
-                } else {
-                    await addToSaved(product.id!);
-                }
-            } catch (error) {
-                toast({variant: "destructive", description: "Error updating saved products."});
-            }
-        }
-    };
-
-    const addToCart = async () => {
-        if (!loggedIn) {
-            toast({description: "You need to log in to update your cart."});
-        } else {
-            try {
-                await increaseOneInCart(product.id!);
-                toast({description: "Item added to cart."});
-            } catch (error) {
-                if (error instanceof ApiError && error.error) {
-                    const errorMap = new Map(
-                        error.error.map(err => [err.reasonCode, true])
-                    );
-
-                    if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
-                        toast({description: "Not enough products in stock."});
-                    }
-                } else {
-                    toast({variant: "destructive", description: "Error updating cart."});
-                }
-            }
-        }
-    }
+    const finalPrice = product.price
+        ? calculateDiscountedPrice(product.price, product.discountPercentage || 0)
+        : 0;
 
     return (
         <Card className="w-full relative space-y-4 overflow-hidden">
@@ -70,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                 <Button
                     variant="ghost"
                     size="icon"
-                    onClick={handleSaveToggle}
+                    onClick={() => toggleSaved(product.id!)}
                     className={`absolute top-3 end-3 rounded-full z-10 transition ${
                         isSavedPage ? "" : savedProduct ? "bg-red-500" : "hover:bg-red-500"
                     }`}
@@ -111,7 +70,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                 </div>
             </CardContent>
             <CardFooter className="p-0 border-t">
-                <Button variant="ghost" className="w-full" onClick={() => addToCart()}>
+                <Button variant="ghost" className="w-full" onClick={() => addItemToCart(product.id!)}>
                     <PlusIcon className="size-4 me-1"/> Add to Card
                 </Button>
             </CardFooter>
