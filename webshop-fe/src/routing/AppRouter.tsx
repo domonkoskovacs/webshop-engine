@@ -31,6 +31,7 @@ import PreviousOrders from "../pages/storefront/PreviousOrders.page";
 import Checkout from "../pages/storefront/Checkout.page";
 import AdminProviders from "../contexts/AdminProviders";
 import VerifyEmailResend from "../pages/storefront/VerifyEmailResend.page";
+import UnsubscribeEmailList from "../pages/storefront/UnsubscribeEmailList.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -57,6 +58,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/about-us" element={<AboutUs/>}/>
                 <Route path="/faq" element={<FrequentlyAskedQuestions/>}/>
                 <Route path="/contact" element={<ContactUs/>}/>
+                <Route path="/unsubcribe/*" element={<UnsubscribeEmailList/>}/>
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
 

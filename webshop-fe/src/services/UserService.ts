@@ -1,9 +1,4 @@
-import {
-    CartItemRequest,
-    RegistrationRequestGenderEnum,
-    UpdateUserRequest,
-    UserServiceApi
-} from "../shared/api";
+import {CartItemRequest, RegistrationRequestGenderEnum, UpdateUserRequest, UserServiceApi} from "../shared/api";
 import {ApiConfig} from "../shared/ApiConfig";
 import {handleApiCall} from "../shared/ApiCall";
 
@@ -156,7 +151,7 @@ class UserService {
      * add saved products
      * @param productIds
      */
-    async addSaved(productIds: string[] ) {
+    async addSaved(productIds: string[]) {
         return handleApiCall(() =>
             this.userApi.addSaved({requestBody: productIds})
                 .then(res => res?.data)
@@ -167,7 +162,7 @@ class UserService {
      * remove saved products
      * @param productIds
      */
-    async removeSaved(productIds: string[] ) {
+    async removeSaved(productIds: string[]) {
         return handleApiCall(() =>
             this.userApi.removeSaved({requestBody: productIds})
                 .then(res => res?.data)
@@ -178,9 +173,20 @@ class UserService {
      * update cart
      * @param cartItemRequests
      */
-    async updateCart(cartItemRequests: CartItemRequest[] ) {
+    async updateCart(cartItemRequests: CartItemRequest[]) {
         return handleApiCall(() =>
             this.userApi.updateCart({cartItemRequest: cartItemRequests})
+                .then(res => res?.data)
+        );
+    }
+
+    /**
+     * update cart
+     * @param id
+     */
+    async unsubscribeById(id: string) {
+        return handleApiCall(() =>
+            this.userApi.unSubscribeToEmailListWithId({id})
                 .then(res => res?.data)
         );
     }
