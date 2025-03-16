@@ -3,29 +3,49 @@ import {Link, useLocation} from "react-router-dom";
 import {Card, CardContent, CardFooter} from "src/components/ui/Card";
 import {Button} from "../../ui/Button";
 import {HeartIcon, PlusIcon, TrashIcon} from "lucide-react";
-import {ProductResponse} from "../../../shared/api";
+import {ProductResponse, ProductResponseGenderEnum} from "../../../shared/api";
 import {useGender} from "../../../hooks/useGender";
 import {useUser} from "../../../hooks/UseUser";
-import {generateProductUrl} from "../../../lib/url.utils";
+import {generateProductListUrl, generateProductUrl} from "../../../lib/url.utils";
 import {calculateDiscountedPrice} from "../../../lib/price.utils";
+import {Swiper, SwiperSlide} from "swiper/react";
+import "swiper/css";
+import {Badge} from "../../ui/Badge";
 
 interface ProductCardProps {
-    product: ProductResponse
+    product: ProductResponse;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
-    const {gender} = useGender()
+    const {gender} = useGender();
     const {toggleSaved, addItemToCart, isSaved} = useUser();
     const location = useLocation();
-    const isSavedPage = location.pathname === '/saved';
+    const isSavedPage = location.pathname === "/saved";
     const savedProduct = isSaved(product.id!);
-    const finalPrice = product.price
-        ? calculateDiscountedPrice(product.price, product.discountPercentage || 0)
-        : 0;
+    const fullPrice = product.price || 0;
+    const discountedPrice = product.discountPercentage && product.discountPercentage > 0
+        ? calculateDiscountedPrice(fullPrice, product.discountPercentage)
+        : fullPrice;
+    const productUrlGender =
+        product.gender && product.gender !== ProductResponseGenderEnum.Unisex
+            ? product.gender.toLowerCase()
+            : gender;
 
     return (
         <Card className="w-full relative space-y-4 overflow-hidden">
-            <figure>
+            <figure className="relative">
+                <div className="absolute top-3 left-3 flex flex-col gap-2 items-start z-20">
+                    {(product.discountPercentage ?? 0) > 0 && (
+                        <Badge variant="destructive" className="w-auto">
+                            -{product.discountPercentage}%
+                        </Badge>
+                    )}
+                    {(product.count ?? 0) <= 0 && (
+                        <Badge variant="secondary" className="w-auto">
+                            Out of Stock
+                        </Badge>
+                    )}
+                </div>
                 <Button
                     variant="ghost"
                     size="icon"
@@ -40,43 +60,96 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                         <HeartIcon className="w-5 h-5"/>
                     )}
                 </Button>
-                <Link to={generateProductUrl(
-                    gender, /*todo product.gender*/
-                    product.category?.name,
-                    product.subCategory?.name,
-                    product.name,
-                    product.id
-                )}>
-                    <img
-                        className="aspect-square w-full hover:opacity-80"
-                        src={product.imageUrls![0]}
-                        width={300}
-                        height={500}
-                        alt={product.name}
-                    />
-                </Link>
+                <Swiper
+                    spaceBetween={0}
+                    slidesPerView={1}
+                    className="w-full h-full"
+                >
+                    {product.imageUrls?.map((url, index) => (
+                        <SwiperSlide key={index}>
+                            <Link
+                                to={generateProductUrl(
+                                    productUrlGender,
+                                    product.category?.name,
+                                    product.subCategory?.name,
+                                    product.name,
+                                    product.id
+                                )}
+                            >
+                                <img
+                                    className="aspect-square w-full hover:opacity-80"
+                                    src={url}
+                                    width={300}
+                                    height={500}
+                                    alt={product.name}
+                                />
+                            </Link>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </figure>
             <CardContent className="px-4 py-0">
                 <div className="flex justify-between">
                     <div>
-                        <h3 className="text-lg">
-                            <Link to="/products">
-                                {product.name}
+                        {product.brand?.name && (
+                            <Link
+                                to={generateProductListUrl(productUrlGender, "", "",
+                                    {brand: product.brand?.name}
+                                )}
+                            >
+                                <p className="text-sm font-bold hover:underline cursor-pointer">
+                                    {product.brand.name}
+                                </p>
                             </Link>
+                        )}
+                        <h3 className="text-lg">
+                            <Link to={generateProductUrl(
+                                productUrlGender,
+                                product.category?.name,
+                                product.subCategory?.name,
+                                product.name,
+                                product.id
+                            )}>{product.name}</Link>
                         </h3>
-                        <p className="text-sm text-muted-foreground">{product.category?.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                            <Link to={generateProductListUrl(
+                                gender,
+                                product.category?.name,
+                                product.subCategory?.name,
+                            )}>
+                                {product.subCategory?.name || product.category?.name}
+                            </Link>
+                        </p>
                     </div>
-                    <p className="text-lg font-semibold">${finalPrice.toFixed(2)}</p>
+                    <div className="flex flex-col justify-center text-right">
+                        {product.discountPercentage && product.discountPercentage > 0 ? (
+                            <>
+                                <p className="text-lg text-gray-500 line-through">
+                                    ${fullPrice.toFixed(2)}
+                                </p>
+                                <p className="text-lg font-semibold text-red-600">
+                                    ${discountedPrice.toFixed(2)}
+                                </p>
+                            </>
+                        ) : (
+                            <p className="text-lg font-semibold">
+                                ${fullPrice.toFixed(2)}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </CardContent>
             <CardFooter className="p-0 border-t">
-                <Button variant="ghost" className="w-full" onClick={() => addItemToCart(product.id!)}>
-                    <PlusIcon className="size-4 me-1"/> Add to Card
+                <Button
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => addItemToCart(product.id!)}
+                >
+                    <PlusIcon className="size-4 me-1"/> Add to Cart
                 </Button>
             </CardFooter>
         </Card>
     );
-
 };
 
 export default ProductCard;
