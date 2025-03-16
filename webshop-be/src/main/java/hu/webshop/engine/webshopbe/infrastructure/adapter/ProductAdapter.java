@@ -20,6 +20,7 @@ import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductUpdateRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.BrandResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
@@ -62,9 +63,9 @@ public class ProductAdapter {
         productService.delete(deleteProductRequest.ids());
     }
 
-    public ProductResponse update(UUID uuid, ProductRequest productRequest) {
-        log.info("update > uuid: [{}], productRequest: [{}]", uuid, productRequest);
-        return productMapper.toResponse(productService.update(uuid, productMapper.fromRequest(productRequest), productRequest.subCategoryId(), productRequest.brand(), productRequest.images()));
+    public ProductResponse update(UUID uuid, ProductUpdateRequest productUpdateRequest) {
+        log.info("update > uuid: [{}], productUpdateRequest: [{}]", uuid, productUpdateRequest);
+        return productMapper.toResponse(productService.update(uuid, productMapper.fromRequest(productUpdateRequest)));
     }
 
     public void setDiscount(DiscountRequest discountRequest) {

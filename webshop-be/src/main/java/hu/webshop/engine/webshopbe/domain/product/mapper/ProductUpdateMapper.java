@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.model.ProductCsv;
+import hu.webshop.engine.webshopbe.domain.product.value.ProductUpdate;
 
 
 @Mapper
@@ -14,7 +15,7 @@ public interface ProductUpdateMapper {
     @Mapping(target = "imageUrls", ignore = true)
     @Mapping(target = "brand", ignore = true)
     @Mapping(target = "subCategory", ignore = true)
-    Product update(@MappingTarget Product updatable, Product newProduct);
+    Product update(@MappingTarget Product updatable, ProductUpdate productUpdate);
 
     @Mapping(target = "subCategory", ignore = true)
     @Mapping(target = "brand", ignore = true)

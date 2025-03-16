@@ -9,11 +9,13 @@ import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,7 @@ import hu.webshop.engine.webshopbe.domain.product.model.ProductPage;
 import hu.webshop.engine.webshopbe.domain.product.repository.ProductRepository;
 import hu.webshop.engine.webshopbe.domain.product.value.Discount;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
+import hu.webshop.engine.webshopbe.domain.product.value.ProductUpdate;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
 import hu.webshop.engine.webshopbe.domain.util.CSVReader;
 import hu.webshop.engine.webshopbe.domain.util.CSVWriter;
@@ -103,11 +106,26 @@ public class ProductService {
         }
     }
 
-    public Product update(UUID uuid, Product product, UUID subCategoryId, String brandName, List<MultipartFile> images) {
-        log.info("update > uuid: [{}], product: [{}], images: [{}]", uuid, product, images);
+    public Product update(UUID uuid, ProductUpdate productUpdate) {
+        log.info("update > uuid: [{}], productUpdate: [{}]", uuid, productUpdate);
         Product old = getById(uuid);
-        Product update = productUpdateMapper.update(old, product);
-        return setProductValues(subCategoryId, brandName, images, update);
+        Product updatedProduct = productUpdateMapper.update(old, productUpdate);
+        List<String> preservedImages = productUpdate.existingImageIds() != null ? productUpdate.existingImageIds() : new ArrayList<>();
+        List<String> newImageUrls = new ArrayList<>();
+
+        if (productUpdate.newImages() != null) {
+            newImageUrls = productUpdate.newImages().stream()
+                    .map(imageService::saveImageToFolder)
+                    .map(imageService::getImageUrl)
+                    .toList();
+        }
+
+        List<String> mergedImages = Stream.concat(preservedImages.stream(), newImageUrls.stream()).toList();
+        updatedProduct.setImageUrls(String.join(Constants.IMAGE_URL_SEPARATOR, mergedImages));
+        updatedProduct.setSubCategory(categoryService.getSubCategoryById(productUpdate.subCategoryId()));
+        updatedProduct.setBrand(brandService.getByName(productUpdate.brand()));
+
+        return productRepository.save(updatedProduct);
     }
 
     public Product getById(UUID uuid) {

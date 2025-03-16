@@ -9,8 +9,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
+import hu.webshop.engine.webshopbe.domain.product.value.ProductUpdate;
 import hu.webshop.engine.webshopbe.domain.util.Constants;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductUpdateRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
 
 @Mapper(uses = {CategoryMapper.class, BrandMapper.class})
@@ -32,4 +34,6 @@ public interface ProductMapper {
         if (imageIds != null) return Arrays.stream(imageIds.split(Constants.IMAGE_URL_SEPARATOR)).toList();
         return Collections.emptyList();
     }
+
+    ProductUpdate fromRequest(ProductUpdateRequest productUpdateRequest);
 }

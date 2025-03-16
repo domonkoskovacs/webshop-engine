@@ -37,6 +37,7 @@ import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
 
 @DisplayName("Product controller integration tests")
@@ -176,14 +177,34 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void productCanBeUpdated() throws Exception {
         //Given
-        ProductRequest request = new ProductRequest("newBrand", "name", "des",
-                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, "000");
+        ProductUpdateRequest request = new ProductUpdateRequest("newBrand", "name", "des",
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, null, "000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_ADMIN));
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.brand.name").value("newBrand"));
+    }
+
+    @NotNull
+    private MockHttpServletRequestBuilder getMultipartRequest(HttpMethod httpMethod, String url, ProductUpdateRequest request, Role role) throws Exception {
+        byte[] pngBytes = Files.readAllBytes(Paths.get("src/test/resources/images/e3ee6173-d53a-46c0-aea8-2de257e47089.png"));
+        MockMultipartFile image1 = new MockMultipartFile("images", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
+        MockMultipartFile image2 = new MockMultipartFile("images", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
+        return multipart(httpMethod, url)
+                .file(image1)
+                .file(image2)
+                //.param("existingImageIds", String.valueOf(List.of()))
+                .param("brand", request.brand())
+                .param("name", request.name())
+                .param("description", request.description())
+                .param("subCategoryId", request.subCategoryId().toString())
+                .param("gender", String.valueOf(request.gender()))
+                .param("count", request.count().toString())
+                .param("price", request.price().toString())
+                .param("discountPercentage", request.discountPercentage().toString())
+                .header(AUTHORIZATION, "Bearer " + getToken(role));
     }
 
     @Test

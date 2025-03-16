@@ -28,6 +28,7 @@ import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.ProductUpdateRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.BrandResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
@@ -128,9 +129,9 @@ public class ProductController {
     )
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
     @Admin
-    public ResponseEntity<ProductResponse> update(@PathVariable UUID id, @ModelAttribute ProductRequest productRequest) {
-        log.info("update > id: [{}], productRequest: [{}]", id, productRequest);
-        return ResponseEntity.ok(productAdapter.update(id, productRequest));
+    public ResponseEntity<ProductResponse> update(@PathVariable UUID id, @ModelAttribute ProductUpdateRequest productUpdateRequest) {
+        log.info("update > id: [{}], productUpdateRequest: [{}]", id, productUpdateRequest);
+        return ResponseEntity.ok(productAdapter.update(id, productUpdateRequest));
     }
 
     @Operation(
