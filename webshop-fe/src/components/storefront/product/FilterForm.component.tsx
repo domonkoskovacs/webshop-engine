@@ -27,7 +27,7 @@ interface FilterFormProps {
 }
 
 const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {brands, filters, resetFilters, updateFilters, priceRange, discountRange} = useProductScroll();
+    const {brands, filters, priceRange, discountRange} = useProductScroll();
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -48,15 +48,6 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
     }, [filters.brands, filters.maxDiscountPercentage, filters.maxPrice, filters.minDiscountPercentage, filters.minPrice, filters.showOutOfStock, filters.sortType, form]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        updateFilters({
-            brands: data.brands,
-            maxPrice: data.maxPrice,
-            minPrice: data.minPrice,
-            maxDiscountPercentage: data.maxDiscountPercentage,
-            minDiscountPercentage: data.minDiscountPercentage,
-            showOutOfStock: data.showOutOfStock,
-            sortType: data.sortType,
-        })
         toast({
             description: "Filters has been successfully applied",
         })
@@ -65,7 +56,6 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
 
     return <SheetFormContainer title="Filter Products" form={form} formId="productStoreFilterForm" onSubmit={onSubmit}
                                submitButtonText="Apply" secondaryButtonClick={() => {
-        resetFilters();
         form.reset();
     }} secondaryButtonText="Reset">
         <ComboBoxMultipleValueField form={form} name="brands" label="Brands" options={mapBrandsToOptions(brands)}/>

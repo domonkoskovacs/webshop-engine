@@ -1,4 +1,5 @@
-import { BreadcrumbSegment } from "../components/shared/PathBreadcrumb.component";
+import {BreadcrumbSegment} from "../components/shared/PathBreadcrumb.component";
+import {GetAllGendersEnum, ProductServiceApiGetAllRequest} from "../shared/api";
 
 /**
  * Extracts path segments from a given URL path.
@@ -127,12 +128,124 @@ export const generateProductBreadcrumbSegments = ({
 }): BreadcrumbSegment[] => {
     return [
         { segmentName: "Products", path: "/products" },
-        gender && { segmentName: gender, path: `/products/${gender}` },
-        category && { segmentName: category, path: `/products/${gender}/${category}` },
-        subcategory && { segmentName: subcategory, path: `/products/${gender}/${category}/${subcategory}` },
+        gender && { segmentName: decodeURIComponent(gender), path: `/products/${gender}` },
+        category && { segmentName: decodeURIComponent(category), path: `/products/${gender}/${category}` },
+        subcategory && { segmentName: decodeURIComponent(subcategory), path: `/products/${gender}/${category}/${subcategory}` },
         name && {
-            segmentName: name,
+            segmentName: decodeURIComponent(name),
             path: `/products/${gender}/${category}/${subcategory}/${name}${id ? `/${id}` : ""}`,
         },
     ].filter((segment): segment is BreadcrumbSegment => Boolean(segment));
 };
+
+type MutableFilters = {
+    -readonly [K in keyof ProductServiceApiGetAllRequest]: ProductServiceApiGetAllRequest[K];
+};
+
+/**
+ * Parses filters from the URL.
+ *
+ * @param pathname - The URL pathname (e.g. "/products/women/Shoes/Sneakers")
+ * @param search - The query string (e.g. "?brands=nike,adidas&maxPrice=200")
+ * @returns A partial filter object derived from the URL.
+ */
+export function parseFiltersFromUrl(
+    pathname: string,
+    search: string
+): Partial<ProductServiceApiGetAllRequest> {
+    const urlObj = new URL(pathname + search, window.location.origin);
+    const params = new URLSearchParams(urlObj.search);
+    const filters: Partial<MutableFilters> = {};
+    const pathSegments = urlObj.pathname.split("/").filter(Boolean);
+
+    if (pathSegments.length > 1) {
+        filters.genders = [
+            pathSegments[1].toUpperCase() as GetAllGendersEnum,
+            GetAllGendersEnum.Unisex,
+        ];
+    }
+    if (pathSegments.length > 2) {
+        filters.categories = [pathSegments[2]];
+    }
+    if (pathSegments.length > 3) {
+        filters.subCategories = [pathSegments[3]];
+    }
+
+    const queryFilterKeys: (keyof ProductServiceApiGetAllRequest)[] = [
+        "brands",
+        "maxPrice",
+        "minPrice",
+        "maxDiscountPercentage",
+        "minDiscountPercentage",
+        "itemNumber",
+        "showOutOfStock",
+        "sortType",
+    ];
+    queryFilterKeys.forEach((key) => {
+        if (params.has(key)) {
+            const value = params.get(key);
+            if (value !== null) {
+                if (["maxPrice", "minPrice", "maxDiscountPercentage", "minDiscountPercentage"].includes(key)) {
+                    filters[key] = Number(value) as any;
+                } else if (key === "showOutOfStock") {
+                    filters[key] = value === "true";
+                } else if (key === "brands") {
+                    filters[key] = value.split(",");
+                } else {
+                    filters[key] = value as any;
+                }
+            }
+        }
+    });
+
+    return filters;
+}
+
+/**
+ * Generates a URL string from a filter object.
+ *
+ * @param filters - The full filter object.
+ * @returns A URL string representing the filters.
+ */
+export function generateUrlFromFilters(
+    filters: ProductServiceApiGetAllRequest
+): string {
+    let path = "/products";
+    if (filters.genders && filters.genders.length > 0) {
+        path += "/" + filters.genders[0].toLowerCase();
+    }
+    if (filters.categories && filters.categories.length > 0) {
+        path += "/" + filters.categories[0];
+    }
+    if (filters.subCategories && filters.subCategories.length > 0) {
+        path += "/" + filters.subCategories[0];
+    }
+
+    const query: Record<string, string> = {};
+    const queryKeys: (keyof ProductServiceApiGetAllRequest)[] = [
+        "brands",
+        "maxPrice",
+        "minPrice",
+        "maxDiscountPercentage",
+        "minDiscountPercentage",
+        "itemNumber",
+        "showOutOfStock",
+        "sortType",
+    ];
+    queryKeys.forEach((key) => {
+        const value = filters[key];
+        if (
+            value !== undefined &&
+            value !== null &&
+            !(Array.isArray(value) && value.length === 0)
+        ) {
+            if (Array.isArray(value)) {
+                query[key] = value.join(",");
+            } else {
+                query[key] = String(value);
+            }
+        }
+    });
+    const queryString = new URLSearchParams(query).toString();
+    return queryString ? `${path}?${queryString}` : path;
+}

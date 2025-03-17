@@ -6,7 +6,6 @@ import {Badge} from "../../components/ui/Badge";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
-import {ProductInfiniteScrollProvider} from "../../contexts/ProductInfiniteScrollContext";
 import ProductList from "../../components/storefront/product/ProductList.component";
 import {useProductScroll} from "../../hooks/useProductScroll";
 import {useGender} from "../../hooks/useGender";
@@ -14,12 +13,12 @@ import PageContainer from "../../components/storefront/shared/PageContainer.comp
 import PageHeader from "../../components/storefront/shared/PageHeader";
 import PageContent from "../../components/storefront/shared/PageContent";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
-import {generateProductBreadcrumbSegments, generateProductListUrl} from "../../lib/url.utils";
+import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersFromUrl} from "../../lib/url.utils";
 
 const Products: React.FC = () => {
     const {gender, setGender} = useGender()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const {totalElements} = useProductScroll();
+    const {totalElements, updateFilters, setUrlFiltersApplied} = useProductScroll();
     const location = useLocation();
     const navigate = useNavigate();
     const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -45,6 +44,14 @@ const Products: React.FC = () => {
         }
     }, [name, id, gender, category, subcategory, navigate, genderPathSegment]);
 
+    useEffect(() => {
+        if (!id) {
+            const filter = parseFiltersFromUrl(location.pathname, location.search);
+            updateFilters(filter);
+            setUrlFiltersApplied(true);
+        }
+    }, [id, location, updateFilters, setUrlFiltersApplied]);
+
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
 
     return name && id ?
@@ -57,7 +64,7 @@ const Products: React.FC = () => {
                         <Separator orientation="vertical" className="h-10"/>
                     </div>
                     <h2 className="flex items-center gap-1">
-                        {subcategory ?? category ?? gender ?? ''} <Badge
+                        {decodeURIComponent(subcategory ?? category ?? gender ?? '')} <Badge
                         className="text-xs h-6">{totalElements}</Badge>
                     </h2>
                 </div>
@@ -71,12 +78,9 @@ const Products: React.FC = () => {
                 </Sheet>
             </PageHeader>
             <PageContent>
-                <ProductInfiniteScrollProvider>
-                    <ProductList/>
-                </ProductInfiniteScrollProvider>
+                <ProductList/>
             </PageContent>
-        </PageContainer>
-        ;
+        </PageContainer>;
 };
 
 export default Products;

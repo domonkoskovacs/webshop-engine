@@ -6,7 +6,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({ title }) => (
-    <div className="flex flex-col space-y-3">
+    <div className="flex items-center justify-center flex-col space-y-3">
         <h1 className="text-center">{title}</h1>
         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
         <div className="space-y-2">

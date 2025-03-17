@@ -8,13 +8,12 @@ interface ProductInfiniteScrollContextType {
     loading: boolean;
     hasMore: boolean;
     fetchNextPage: () => void;
-    resetProducts: () => void;
     totalElements: number;
     filters: ProductServiceApiGetAllRequest;
     updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
-    resetFilters: () => void;
     priceRange: number[];
     discountRange: number[];
+    setUrlFiltersApplied: (applied: boolean) => void;
 }
 
 export const ProductInfiniteScrollContext = createContext<ProductInfiniteScrollContextType | undefined>(undefined);
@@ -38,24 +37,14 @@ const defaultFilters: ProductServiceApiGetAllRequest = {
 export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [products, setProducts] = useState<ProductResponse[]>([]);
     const [brands, setBrands] = useState<BrandResponse[]>([]);
-    const [filters, setFilters] = useState<ProductServiceApiGetAllRequest>(() => {
-        const stored = localStorage.getItem("productFilters");
-        if (stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                return {...defaultFilters, ...parsed};
-            } catch (error) {
-                console.error("Error parsing stored filters", error);
-            }
-        }
-        return defaultFilters;
-    });
+    const [filters, setFilters] = useState<ProductServiceApiGetAllRequest>(defaultFilters);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [totalElements, setTotalElements] = useState(1);
     const [page, setPage] = useState(1);
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
     const [discountRange, setDiscountRange] = useState<[number, number]>([0, 0]);
+    const [urlFiltersApplied, setUrlFiltersApplied] = useState(false);
 
     const fetchedPagesRef = useRef<Set<number>>(new Set());
 
@@ -97,7 +86,6 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
         setLoading(false);
     }, [loading, hasMore, filters, page]);
 
-
     const fetchBrands = useCallback(async () => {
         try {
             const brandList = await productService.getBrands();
@@ -107,19 +95,12 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
         }
     }, []);
 
-    const resetProducts = () => {
-        setProducts([]);
-        setPage(1);
-        fetchedPagesRef.current.clear();
-        resetFilters();
-        setHasMore(true);
-    };
-
     useEffect(() => {
+        if (!urlFiltersApplied) return;
         (async () => {
             await fetchNextPage();
         })();
-    }, [fetchNextPage]);
+    }, [urlFiltersApplied]);
 
     useEffect(() => {
         (async () => {
@@ -127,18 +108,14 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
         })();
     }, [fetchBrands]);
 
-    useEffect(() => {
-        localStorage.setItem("productFilters", JSON.stringify(filters));
-    }, [filters]);
-
     const updateFilters = (newFilters: Partial<ProductServiceApiGetAllRequest>) => {
-        setFilters((prev) => ({...prev, ...newFilters, page: 1}));
-        fetchedPagesRef.current.clear();
-    };
-
-    const resetFilters = () => {
-        setFilters(defaultFilters);
-        fetchedPagesRef.current.clear();
+        setFilters(prev => {
+            const mergedFilters = {...prev, ...newFilters, page: 1};
+            if (JSON.stringify(prev) === JSON.stringify(mergedFilters)) {
+                return prev;
+            }
+            return mergedFilters;
+        });
     };
 
     return (
@@ -149,13 +126,12 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
                 loading,
                 hasMore,
                 fetchNextPage,
-                resetProducts,
                 totalElements,
                 filters,
                 updateFilters,
-                resetFilters,
                 priceRange,
                 discountRange,
+                setUrlFiltersApplied,
             }}
         >
             {children}
