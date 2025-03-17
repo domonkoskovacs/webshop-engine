@@ -157,18 +157,19 @@ export function parseFiltersFromUrl(
     const params = new URLSearchParams(urlObj.search);
     const filters: Partial<MutableFilters> = {};
     const pathSegments = urlObj.pathname.split("/").filter(Boolean);
+    const decodedSegments = pathSegments.map(segment => decodeURIComponent(segment));
 
-    if (pathSegments.length > 1) {
+    if (decodedSegments.length > 1) {
         filters.genders = [
-            pathSegments[1].toUpperCase() as GetAllGendersEnum,
+            decodedSegments[1].toUpperCase() as GetAllGendersEnum,
             GetAllGendersEnum.Unisex,
         ];
     }
-    if (pathSegments.length > 2) {
-        filters.categories = [pathSegments[2]];
+    if (decodedSegments.length > 2) {
+        filters.categories = [decodedSegments[2]];
     }
-    if (pathSegments.length > 3) {
-        filters.subCategories = [pathSegments[3]];
+    if (decodedSegments.length > 3) {
+        filters.subCategories = [decodedSegments[3]];
     }
 
     const queryFilterKeys: (keyof ProductServiceApiGetAllRequest)[] = [

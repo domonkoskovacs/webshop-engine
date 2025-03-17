@@ -18,7 +18,7 @@ import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersF
 const Products: React.FC = () => {
     const {gender, setGender} = useGender()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const {totalElements, updateFilters, setUrlFiltersApplied} = useProductScroll();
+    const {totalElements, updateFilters, urlFiltersApplied, setUrlFiltersApplied} = useProductScroll();
     const location = useLocation();
     const navigate = useNavigate();
     const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -50,7 +50,7 @@ const Products: React.FC = () => {
             updateFilters(filter);
             setUrlFiltersApplied(true);
         }
-    }, [id, location, updateFilters, setUrlFiltersApplied]);
+    }, [id, location.pathname, location.search, updateFilters, setUrlFiltersApplied, urlFiltersApplied ]);
 
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
 

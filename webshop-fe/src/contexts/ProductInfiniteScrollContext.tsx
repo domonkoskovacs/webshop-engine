@@ -13,6 +13,7 @@ interface ProductInfiniteScrollContextType {
     updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
     priceRange: number[];
     discountRange: number[];
+    urlFiltersApplied: boolean;
     setUrlFiltersApplied: (applied: boolean) => void;
 }
 
@@ -34,7 +35,7 @@ const defaultFilters: ProductServiceApiGetAllRequest = {
     size: 10,
 };
 
-export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [products, setProducts] = useState<ProductResponse[]>([]);
     const [brands, setBrands] = useState<BrandResponse[]>([]);
     const [filters, setFilters] = useState<ProductServiceApiGetAllRequest>(defaultFilters);
@@ -131,6 +132,7 @@ export const ProductInfiniteScrollProvider: React.FC<{ children: React.ReactNode
                 updateFilters,
                 priceRange,
                 discountRange,
+                urlFiltersApplied,
                 setUrlFiltersApplied,
             }}
         >
