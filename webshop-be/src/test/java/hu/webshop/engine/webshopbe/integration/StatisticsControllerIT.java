@@ -15,7 +15,7 @@ import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import lombok.RequiredArgsConstructor;
 
-@DisplayName("Order controller integration tests")
+@DisplayName("Statistics controller integration tests")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class StatisticsControllerIT extends IntegrationTest {
 

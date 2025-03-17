@@ -59,9 +59,8 @@ public class StatisticsService {
 
     private List<ProductStatistics> getMostOrderedProducts(LocalDate from, LocalDate to, Integer mostOrderedProductCount) {
         return orderService.getAllBetween(from, to).stream()
-                .flatMap(order -> order.getProducts().stream())
-                .map(OrderItem::getProduct)
-                .collect(Collectors.toMap(Product::getId, product -> new ProductStatistics(product, 0), (acc, item) -> {
+                .flatMap(order -> order.getItems().stream())
+                .collect(Collectors.toMap(OrderItem::getProductId, orderItem -> new ProductStatistics(new Product(), 0), (acc, item) -> {
                     acc.setCount(acc.getCount() + item.getProduct().getCount());
                     return acc;
                 }))

@@ -1,13 +1,14 @@
 package hu.webshop.engine.webshopbe.domain.order.entity;
 
 
+import java.util.UUID;
+
 import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
-import hu.webshop.engine.webshopbe.domain.product.entity.Product;
+import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +25,27 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderItem extends BaseEntity {
 
-    @JoinColumn(name = "product_id", nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Product product;
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
+    @Column(name = "individual_price", nullable = false)
+    private Double individualPrice;
+
+    @Column(name = "thumbnail_url")
+    private String thumbNailUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @Column(name = "category_name", nullable = false)
+    private String categoryName;
+
+    @Column(name = "subcategory_name", nullable = false)
+    private String subcategoryName;
+
+    @Column(name = "product_id", nullable = false)
+    private UUID productId;
 
     @Column(name = "count", nullable = false)
     private Integer count;

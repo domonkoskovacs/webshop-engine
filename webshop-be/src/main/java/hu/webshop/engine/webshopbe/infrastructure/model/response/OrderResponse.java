@@ -11,7 +11,9 @@ import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
 public record OrderResponse(
         UUID id,
         OffsetDateTime orderDate,
+        String orderNumber,
         Double totalPrice,
+        Double shippingPrice,
         AddressResponse address,
         String email,
         String phoneNumber,
@@ -19,7 +21,6 @@ public record OrderResponse(
         OrderStatus status,
         OffsetDateTime paidDate,
         OffsetDateTime refundedDate,
-        UUID userId,
-        List<OrderItemResponse> products
+        List<OrderItemResponse> items
 ) {
 }

@@ -51,7 +51,7 @@ class OrderControllerIT extends IntegrationTest {
         awaitFor(() -> !orderRepository.findAll().isEmpty());
         awaitFor(() -> {
             Optional<User> byId = userRepository.findById(UUID.fromString(USER_ID));
-            return byId.isPresent() && byId.get().getCart().isEmpty() && !byId.get().getOrders().get(0).getProducts().isEmpty();
+            return byId.isPresent() && byId.get().getCart().isEmpty() && !byId.get().getOrders().get(0).getItems().isEmpty();
         });
     }
 

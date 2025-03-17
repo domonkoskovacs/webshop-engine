@@ -1,7 +1,10 @@
 package hu.webshop.engine.webshopbe.domain.order.entity;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
@@ -35,19 +38,28 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Order extends BaseEntity {
 
+    @Builder.Default
     @Column(name = "order_date", nullable = false)
-    private OffsetDateTime orderDate;
+    private OffsetDateTime orderDate = OffsetDateTime.now();
+
+    @Builder.Default
+    @Column(name = "order_number", nullable = false, unique = true, updatable = false)
+    private String orderNumber = generateOrderNumber();
 
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
+
+    @Column(name = "shipping_price", nullable = false)
+    private Double shippingPrice;
 
     @Column(name = "payment_method", nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
+    @Builder.Default
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.CREATED;
 
     @Column(name = "payment_intent_id")
     private String paymentIntentId;
@@ -67,13 +79,20 @@ public class Order extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "order_id", nullable = false)
-    private List<OrderItem> products;
+    private List<OrderItem> items;
+
+    private static String generateOrderNumber() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        String uuidSegment = UUID.randomUUID().toString().split("-")[0].toUpperCase();
+        return "ORD-" + timestamp + "-" + uuidSegment;
+    }
 
     public List<ProductDetails> getProductDetails() {
-        if (products == null || products.isEmpty())
+        if (items == null || items.isEmpty())
             throw new OrderException(ReasonCode.ORDER_EXCEPTION, "order can't be empty");
-        return products.stream().map(orderItem -> new ProductDetails(
-                orderItem.getProduct().getName(), orderItem.getCount(), orderItem.getProduct().getPrice() * orderItem.getCount()
+        return items.stream().map(orderItem -> new ProductDetails(
+                orderItem.getProductName(), orderItem.getCount(), orderItem.getIndividualPrice() * orderItem.getCount()
         )).toList();
     }
 }

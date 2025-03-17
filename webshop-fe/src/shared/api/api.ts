@@ -506,10 +506,46 @@ export interface NewPasswordRequest {
 export interface OrderItemResponse {
     /**
      * 
-     * @type {ProductResponse}
+     * @type {string}
      * @memberof OrderItemResponse
      */
-    'product'?: ProductResponse;
+    'productName'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderItemResponse
+     */
+    'individualPrice'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderItemResponse
+     */
+    'thumbNailUrl'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderItemResponse
+     */
+    'gender'?: OrderItemResponseGenderEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderItemResponse
+     */
+    'categoryName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderItemResponse
+     */
+    'subcategoryName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderItemResponse
+     */
+    'productId'?: string;
     /**
      * 
      * @type {number}
@@ -517,6 +553,15 @@ export interface OrderItemResponse {
      */
     'count'?: number;
 }
+
+export const OrderItemResponseGenderEnum = {
+    Men: 'MEN',
+    Women: 'WOMEN',
+    Unisex: 'UNISEX'
+} as const;
+
+export type OrderItemResponseGenderEnum = typeof OrderItemResponseGenderEnum[keyof typeof OrderItemResponseGenderEnum];
+
 /**
  * 
  * @export
@@ -558,13 +603,13 @@ export interface OrderPageOrderResponse {
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
@@ -622,10 +667,22 @@ export interface OrderResponse {
     'orderDate'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof OrderResponse
+     */
+    'orderNumber'?: string;
+    /**
+     * 
      * @type {number}
      * @memberof OrderResponse
      */
     'totalPrice'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderResponse
+     */
+    'shippingPrice'?: number;
     /**
      * 
      * @type {AddressResponse}
@@ -670,16 +727,10 @@ export interface OrderResponse {
     'refundedDate'?: string;
     /**
      * 
-     * @type {string}
-     * @memberof OrderResponse
-     */
-    'userId'?: string;
-    /**
-     * 
      * @type {Array<OrderItemResponse>}
      * @memberof OrderResponse
      */
-    'products'?: Array<OrderItemResponse>;
+    'items'?: Array<OrderItemResponse>;
 }
 
 export const OrderResponsePaymentMethodEnum = {
@@ -770,6 +821,12 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof PageableObject
      */
@@ -780,12 +837,6 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'pageSize'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -859,13 +910,13 @@ export interface ProductPageProductResponse {
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}

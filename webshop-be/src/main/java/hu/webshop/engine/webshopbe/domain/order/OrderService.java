@@ -86,15 +86,14 @@ public class OrderService {
         log.info("create > paymentMethod: [{}]", paymentMethod);
         User currentUser = userService.getCurrentUser();
         validateOrderCanStart(currentUser);
-        List<OrderItem> products = mapUserCartToOrderItems(currentUser);
-        Double totalPrice = calculateOrderItemsTotalPrice(products) + storeService.getStore().getShippingPrice();
+        List<OrderItem> orderItems = mapUserCartToOrderItems(currentUser);
+        Double totalPrice = calculateOrderItemsTotalPrice(orderItems) + storeService.getStore().getShippingPrice();
         Order order = Order.builder()
-                .orderDate(OffsetDateTime.now())
                 .totalPrice(totalPrice)
+                .shippingPrice(storeService.getStore().getShippingPrice())
                 .paymentMethod(paymentMethod)
-                .status(CREATED)
                 .user(currentUser)
-                .products(products)
+                .items(orderItems)
                 .build();
         userService.clearCart();
         Order saved = orderRepository.save(order);
@@ -104,7 +103,7 @@ public class OrderService {
     }
 
     private void updateProductStock(Order saved, StockChange stockChange) {
-        saved.getProducts().forEach(orderItem -> productService.updateStock(orderItem.getProduct().getId(), orderItem.getCount(), stockChange));
+        saved.getItems().forEach(orderItem -> productService.updateStock(orderItem.getProductId(), orderItem.getCount(), stockChange));
     }
 
     private void validateOrderCanStart(User currentUser) {
@@ -131,9 +130,7 @@ public class OrderService {
 
     private static Double calculateOrderItemsTotalPrice(List<OrderItem> products) {
         return products.stream()
-                .map(orderItem -> orderItem.getProduct().getPrice() *
-                        (1 - orderItem.getProduct().getDiscountPercentage() / 100) *
-                        orderItem.getCount())
+                .map(orderItem -> orderItem.getIndividualPrice() * orderItem.getCount())
                 .reduce(Double::sum)
                 .orElse(0.0);
     }
@@ -141,7 +138,14 @@ public class OrderService {
     private static List<OrderItem> mapUserCartToOrderItems(User currentUser) {
         return currentUser.getCart().stream()
                 .map(cartItem ->
-                        OrderItem.builder().product(cartItem.getProduct()).count(cartItem.getCount()).build()
+                        OrderItem.builder().productName(cartItem.getProduct().getName())
+                                .individualPrice(cartItem.getProduct().getPrice() * (1 - cartItem.getProduct().getDiscountPercentage() / 100))
+                                .thumbNailUrl(cartItem.getProduct().getThumbNailUrl())
+                                .gender(cartItem.getProduct().getGender())
+                                .categoryName(cartItem.getProduct().getSubCategory().getCategory().getName())
+                                .subcategoryName(cartItem.getProduct().getSubCategory().getName())
+                                .productId(cartItem.getProduct().getId())
+                                .count(cartItem.getCount()).build()
                 ).toList();
     }
 
@@ -242,7 +246,7 @@ public class OrderService {
                 order -> valueOfNullable(order.getPaymentMethod(), PaymentMethod::name),
                 order -> valueOfNullable(order.getStatus(), OrderStatus::name),
                 order -> valueOfNullable(order.getUser(), User::getFullName),
-                order -> valueOfNullable(order.getProducts(), List::size)
+                order -> valueOfNullable(order.getItems(), List::size)
         );
         return new CSVWriter<>(
                 exportData,

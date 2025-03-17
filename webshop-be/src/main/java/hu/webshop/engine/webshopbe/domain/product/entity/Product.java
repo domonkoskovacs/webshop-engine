@@ -1,5 +1,7 @@
 package hu.webshop.engine.webshopbe.domain.product.entity;
 
+import static hu.webshop.engine.webshopbe.domain.util.Constants.IMAGE_URL_SEPARATOR;
+
 import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
 import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import jakarta.persistence.Column;
@@ -64,5 +66,9 @@ public class Product extends BaseEntity {
                 separator +
                 getName() +
                 separator;
+    }
+
+    public String getThumbNailUrl() {
+        return imageUrls != null ? imageUrls.split(IMAGE_URL_SEPARATOR)[0] : null;
     }
 }
