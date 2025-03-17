@@ -58,7 +58,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/about-us" element={<AboutUs/>}/>
                 <Route path="/faq" element={<FrequentlyAskedQuestions/>}/>
                 <Route path="/contact" element={<ContactUs/>}/>
-                <Route path="/unsubcribe/*" element={<UnsubscribeEmailList/>}/>
+                <Route path="/unsubcribe" element={<UnsubscribeEmailList/>}/>
                 <Route path="/403" element={<Forbidden/>}/>
                 <Route path="*" element={<NotFound/>}/>
 
