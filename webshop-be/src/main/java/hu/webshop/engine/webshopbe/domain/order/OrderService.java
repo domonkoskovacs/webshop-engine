@@ -153,12 +153,15 @@ public class OrderService {
         log.info("createPaymentIntent > id: [{}]", id);
         Order order = getById(id);
         if (order.getStatus().equals(CREATED)) {
-            PaymentIntent intent = order.getPaymentIntentId() == null ?
-                    stripeService.createIntent(new Intent(order.getTotalPrice(), Currency.USD, order.getUser().getEmail(), order.getId())) :
-                    stripeService.retrieveIntent(order.getPaymentIntentId());
-            if (order.getPaymentIntentId() != null) {
+            PaymentIntent intent;
+            if (order.getPaymentIntentId() == null) {
+                intent = stripeService.createIntent(
+                        new Intent(order.getTotalPrice(), Currency.USD, order.getUser().getEmail(), order.getId())
+                );
                 order.setPaymentIntentId(intent.getId());
                 orderRepository.save(order);
+            } else {
+                intent = stripeService.retrieveIntent(order.getPaymentIntentId());
             }
             return intent;
         } else {

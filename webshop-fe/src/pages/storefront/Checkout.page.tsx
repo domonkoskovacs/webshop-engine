@@ -50,8 +50,8 @@ const Checkout: React.FC = () => {
 
     const handleOrderPlacement = async () => {
         try {
-            await placeOrder()
-            navigate("/checkout-payment")
+            const order = await placeOrder();
+            navigate(`/checkout-payment?orderId=${order.id}`);
             toast({
                 description: "Order placed successfully",
             });

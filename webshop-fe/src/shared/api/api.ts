@@ -603,13 +603,13 @@ export interface OrderPageOrderResponse {
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
@@ -689,6 +689,12 @@ export interface OrderResponse {
      * @memberof OrderResponse
      */
     'address'?: AddressResponse;
+    /**
+     * 
+     * @type {AddressResponse}
+     * @memberof OrderResponse
+     */
+    'billingAddress'?: AddressResponse;
     /**
      * 
      * @type {string}
@@ -821,12 +827,6 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageableObject
      */
@@ -837,6 +837,12 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'pageSize'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -910,13 +916,13 @@ export interface ProductPageProductResponse {
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}

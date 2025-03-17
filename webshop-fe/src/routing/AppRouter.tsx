@@ -32,6 +32,7 @@ import Checkout from "../pages/storefront/Checkout.page";
 import AdminProviders from "../contexts/AdminProviders";
 import VerifyEmailResend from "../pages/storefront/VerifyEmailResend.page";
 import UnsubscribeEmailList from "../pages/storefront/UnsubscribeEmailList.page";
+import CheckoutPayment from "../pages/storefront/CheckoutPayment.page";
 
 const AppRouter: React.FC = () => {
     return (
@@ -75,6 +76,16 @@ const AppRouter: React.FC = () => {
                     <Route path="/checkout" element={<Checkout/>}/>
                 </Route>
             </Route>
+
+            {/* Protected payment route */}
+            <Route
+                path="/checkout-payment"
+                element={
+                    <ProtectedRoute allowedRole="ROLE_USER">
+                        <CheckoutPayment/>
+                    </ProtectedRoute>
+                }
+            />
 
             <Route
                 path="/admin/dashboard/*"

@@ -15,6 +15,7 @@ public record OrderResponse(
         Double totalPrice,
         Double shippingPrice,
         AddressResponse address,
+        AddressResponse billingAddress,
         String email,
         String phoneNumber,
         PaymentMethod paymentMethod,

@@ -14,6 +14,7 @@ public interface OrderMapper {
     @Mapping(target = "phoneNumber", source = "user.phoneNumber")
     @Mapping(target = "email", source = "user.email")
     @Mapping(target = "address", source = "user.shippingAddress")
+    @Mapping(target = "billingAddress", source = "user.billingAddress")
     OrderResponse toResponse(Order entity);
 
     List<OrderResponse> toResponseList(List<Order> entities);

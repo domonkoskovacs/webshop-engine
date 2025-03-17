@@ -40,14 +40,14 @@ class OrderService {
     }
 
     /**
-     * Pay an existing order
+     * Get payment intent for order
      */
-    /*async pay(id: string, paymentToken: string) {
+    async paymentIntent(id: string) {
         return handleApiCall(() =>
-            this.orderApi.pay({id: id, paymentTokenRequest: {token: paymentToken}})
+            this.orderApi.paymentIntent({id: id})
                 .then(res => res?.data)
         );
-    }*/
+    }
 
     /**
      * Change existing orders status
