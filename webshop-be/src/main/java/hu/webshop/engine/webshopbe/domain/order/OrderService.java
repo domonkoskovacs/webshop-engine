@@ -7,7 +7,7 @@ import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.CANCELL
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.CREATED;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.FINISHED;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.PACKAGED;
-import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.PAYED;
+import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.PAID;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.SHIPPING;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.WAITING_FOR_REFUND;
 import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.formatDate;
@@ -195,11 +195,12 @@ public class OrderService {
 
     private boolean isNewStatusApplicable(OrderStatus old, OrderStatus newStatus) {
         return switch (old) {
-            case CREATED -> newStatus.equals(PAYED) || newStatus.equals(WAITING_FOR_REFUND);
-            case PAYED -> newStatus.equals(PACKAGED) || newStatus.equals(WAITING_FOR_REFUND);
+            case CREATED -> newStatus.equals(PAID) || newStatus.equals(WAITING_FOR_REFUND);
+            case PAID -> newStatus.equals(PACKAGED) || newStatus.equals(WAITING_FOR_REFUND);
+            case PAYMENT_FAILED -> newStatus.equals(PAID) ;
             case PACKAGED -> newStatus.equals(SHIPPING) || newStatus.equals(WAITING_FOR_REFUND);
             case SHIPPING -> newStatus.equals(FINISHED);
-            case FINISHED, CANCELLED -> false;
+            case FINISHED, CANCELLED, REFUNDED -> false;
             case WAITING_FOR_REFUND -> newStatus.equals(CANCELLED);
         };
     }
@@ -263,5 +264,37 @@ public class OrderService {
                 OffsetDateTime.of(from, LocalTime.MIDNIGHT, ZoneOffset.UTC),
                 OffsetDateTime.of(to, LocalTime.MIDNIGHT, ZoneOffset.UTC)
         );
+    }
+
+    public void paymentIntentSucceeded(PaymentIntent paymentIntent) {
+        Optional<Order> orderByPaymentIntentId = orderRepository.findByPaymentIntentId(paymentIntent.getId());
+        orderByPaymentIntentId.ifPresent(order -> {
+            if((CREATED.equals(order.getStatus()) || OrderStatus.PAYMENT_FAILED.equals(order.getStatus())) && order.getPaidDate() == null) {
+                order.setStatus(PAID);
+                order.setPaidDate(OffsetDateTime.now());
+            }
+            orderRepository.save(order);
+        });
+    }
+
+    public void paymentIntentFailed(PaymentIntent paymentIntent) {
+        Optional<Order> orderByPaymentIntentId = orderRepository.findByPaymentIntentId(paymentIntent.getId());
+        orderByPaymentIntentId.ifPresent(order -> {
+            if(CREATED.equals(order.getStatus())) {
+                order.setStatus(OrderStatus.PAYMENT_FAILED);
+            }
+            orderRepository.save(order);
+        });
+    }
+
+    public void handleRefundSuccess(Refund refund) {
+        Optional<Order> orderByRefundId = orderRepository.findByRefundId(refund.getId());
+        orderByRefundId.ifPresent(order -> {
+            if(!OrderStatus.REFUNDED.equals(order.getStatus()) && order.getRefundedDate() == null) {
+                order.setStatus(OrderStatus.REFUNDED);
+                order.setRefundedDate(OffsetDateTime.now());
+            }
+            orderRepository.save(order);
+        });
     }
 }

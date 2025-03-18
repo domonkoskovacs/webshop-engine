@@ -1,23 +1,77 @@
 package hu.webshop.engine.webshopbe.infrastructure.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stripe.exception.SignatureVerificationException;
+import com.stripe.model.Event;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
+import com.stripe.net.Webhook;
+import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentAdapter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Hidden
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/api/payment/webhooks")
 @RequiredArgsConstructor
-@Tag(
-        name = "Payment service",
-        description = "REST endpoints for payment service"
-)
 public class PaymentController {
 
     private final PaymentAdapter paymentAdapter;
+    private final StripeProperties stripeProperties;
 
+
+    @PostMapping
+    public ResponseEntity<Void> handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
+        Event event;
+        try {
+            event = Webhook.constructEvent(payload, sigHeader, stripeProperties.getEndpointSecret());
+        } catch (SignatureVerificationException e) {
+            log.error("Signature verification failed.", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            log.error("Invalid payload.", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        log.info("handleStripeEvent > Received event: [{}]", event.getType());
+        switch (event.getType()) {
+            case "payment_intent.succeeded":
+                PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElse(null);
+                if (paymentIntent != null) {
+                    paymentAdapter.paymentIntentSucceeded(paymentIntent);
+                } else {
+                    log.error("Failed to deserialize PaymentIntent for succeeded event.");
+                }
+                break;
+            case "payment_intent.failed":
+                PaymentIntent failedIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElse(null);
+                if (failedIntent != null) {
+                    paymentAdapter.paymentIntentFailed(failedIntent);
+                } else {
+                    log.error("Failed to deserialize PaymentIntent for failed event.");
+                }
+                break;
+            case "refund.updated":
+                Refund refund = (Refund) event.getDataObjectDeserializer().getObject().orElse(null);
+                if (refund != null && "succeeded".equals(refund.getStatus())) {
+                    paymentAdapter.handleRefundSuccess(refund);
+                }
+                break;
+            default:
+                log.warn("Unhandled event type: {}", event.getType());
+                break;
+        }
+
+        return ResponseEntity.ok().build();
+    }
 }

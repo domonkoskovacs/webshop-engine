@@ -9,7 +9,6 @@ import lombok.Data;
 @Component
 @ConfigurationProperties("application.stripe")
 public class StripeProperties {
-    private boolean useTestToken;
-    private String publicKey;
     private String privateKey;
+    private String endpointSecret;
 }

@@ -78,9 +78,8 @@ application:
     folder-name: images
     server-domain: ${SERVER_HOST:localhost}
   stripe:
-    use-test-token: true
-    public-key: ${STRIPE_PUBLIC_KEY:MUST_BE_SPECIFIED}
     private-key: ${STRIPE_PRIVATE_KEY:MUST_BE_SPECIFIED}
+    endpoint-secret: ${ENDPOINT_SECRET:MUST_BE_SPECIFIED}
   schedule:
     out-of-stock-product:
       cron: "* 0 0 * * *" #every midnight
