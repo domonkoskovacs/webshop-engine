@@ -38,6 +38,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.transaction.TestTransaction;
@@ -73,6 +74,7 @@ import lombok.extern.slf4j.Slf4j;
 @DBRider
 @DBUnit(caseInsensitiveStrategy = Orthography.LOWERCASE, schema = "public")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@ContextConfiguration(loader = PropertiesLoggerLoader.class)
 public abstract class IntegrationTest {
 
     public static final String TEST_PROFILE = "test";
