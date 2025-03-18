@@ -10,6 +10,7 @@ import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -56,6 +57,11 @@ public class ProductService {
     private final CategoryService categoryService;
     private final ImageService imageService;
 
+    public List<Product> getAll() {
+        log.info("getAll");
+        return productRepository.findAll();
+    }
+
     public List<Product> getAll(List<UUID> productIds) {
         log.info("getAll > productIds: [{}]", productIds);
         return productRepository.findAllById(productIds);
@@ -79,6 +85,11 @@ public class ProductService {
 
     public void delete(List<UUID> ids) {
         log.info("delete > ids: [{}]", ids);
+        List<Product> products = productRepository.findAllById(ids);
+        products.stream()
+                .map(Product::getImageUrls)
+                .filter(imageUrls -> imageUrls != null && !imageUrls.isEmpty())
+                .forEach(imageService::deleteImagesFromFolder);
         productRepository.deleteAllById(ids);
     }
 
@@ -110,17 +121,26 @@ public class ProductService {
         log.info("update > uuid: [{}], productUpdate: [{}]", uuid, productUpdate);
         Product old = getById(uuid);
         Product updatedProduct = productUpdateMapper.update(old, productUpdate);
-        List<String> preservedImages = productUpdate.existingImageIds() != null ? productUpdate.existingImageIds() : new ArrayList<>();
-        List<String> newImageUrls = new ArrayList<>();
 
+        List<String> preservedImages = productUpdate.existingImageIds() != null
+                ? productUpdate.existingImageIds()
+                : new ArrayList<>();
+
+        List<String> newImageUrls = new ArrayList<>();
         if (productUpdate.newImages() != null) {
-            newImageUrls = productUpdate.newImages().stream()
+            newImageUrls.addAll(productUpdate.newImages().stream()
                     .map(imageService::saveImageToFolder)
                     .map(imageService::getImageUrl)
-                    .toList();
+                    .toList());
         }
 
         List<String> mergedImages = Stream.concat(preservedImages.stream(), newImageUrls.stream()).toList();
+        if (old.getImageUrls() != null && !old.getImageUrls().isEmpty()) {
+            Arrays.stream(old.getImageUrls().split(Constants.IMAGE_URL_SEPARATOR))
+                    .filter(url -> !mergedImages.contains(url))
+                    .forEach(imageService::deleteImagesFromFolder);
+        }
+
         updatedProduct.setImageUrls(String.join(Constants.IMAGE_URL_SEPARATOR, mergedImages));
         updatedProduct.setSubCategory(categoryService.getSubCategoryById(productUpdate.subCategoryId()));
         updatedProduct.setBrand(brandService.getByName(productUpdate.brand()));
@@ -204,6 +224,11 @@ public class ProductService {
 
     public void deleteAllByStockAndDate(int stock, OffsetDateTime dateTime) {
         log.info("deleteAllByStockAndDate > stock: [{}], dateTime: [{}]", stock, dateTime);
-        productRepository.deleteAllByCountIsLessThanEqualAndCreationTimeLessThan(stock, dateTime);
+        List<Product> products = productRepository.findAllByCountIsLessThanEqualAndCreationTimeLessThan(stock, dateTime);
+        products.stream()
+                .map(Product::getImageUrls)
+                .filter(imageUrls -> imageUrls != null && !imageUrls.isEmpty())
+                .forEach(imageService::deleteImagesFromFolder);
+        productRepository.deleteAll(products);
     }
 }

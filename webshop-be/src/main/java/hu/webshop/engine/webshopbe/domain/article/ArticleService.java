@@ -45,6 +45,12 @@ public class ArticleService {
 
     public void delete(UUID id) {
         log.info("delete > id: [{}]", id);
-        articleRepository.deleteById(id);
+        articleRepository.findById(id).ifPresent(article -> {
+            String imageUrl = article.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                imageService.deleteImageFromFolder(imageUrl);
+            }
+            articleRepository.delete(article);
+        });
     }
 }

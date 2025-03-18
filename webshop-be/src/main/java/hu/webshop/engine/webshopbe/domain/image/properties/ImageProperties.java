@@ -10,4 +10,5 @@ import lombok.Data;
 @ConfigurationProperties("application.image")
 public class ImageProperties {
     private String folderName;
+    private String serverDomain;
 }

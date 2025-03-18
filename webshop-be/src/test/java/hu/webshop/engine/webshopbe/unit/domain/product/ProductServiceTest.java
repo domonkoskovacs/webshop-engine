@@ -48,6 +48,6 @@ class ProductServiceTest {
         productService.deleteAllByStockAndDate(count, date);
 
         //Then
-        verify(productRepository, times(1)).deleteAllByCountIsLessThanEqualAndCreationTimeLessThan(any(int.class), any(OffsetDateTime.class));
+        verify(productRepository, times(1)).findAllByCountIsLessThanEqualAndCreationTimeLessThan(any(int.class), any(OffsetDateTime.class));
     }
 }
