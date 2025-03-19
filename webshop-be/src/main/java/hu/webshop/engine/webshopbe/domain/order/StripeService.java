@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
+import com.stripe.param.PaymentIntentCancelParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.PaymentIntentRetrieveParams;
 import com.stripe.param.RefundCreateParams;
@@ -63,6 +64,22 @@ public class StripeService {
             return PaymentIntent.retrieve(intentId, PaymentIntentRetrieveParams.builder().build(), null);
         } catch (com.stripe.exception.StripeException e) {
             log.error("Failed to retrieve payment intent: [{}]", intentId, e);
+            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+        }
+    }
+
+    public PaymentIntent cancelPaymentIntent(String paymentIntentId) {
+        log.info("cancelPaymentIntent > paymentIntentId: [{}]", paymentIntentId);
+        try {
+            PaymentIntent intent = retrieveIntent(paymentIntentId);
+            if ("succeeded".equals(intent.getStatus())) {
+                log.warn("PaymentIntent [{}] already succeeded and cannot be canceled.", paymentIntentId);
+                return intent;
+            }
+            PaymentIntentCancelParams params = PaymentIntentCancelParams.builder().build();
+            return intent.cancel(params);
+        } catch (com.stripe.exception.StripeException e) {
+            log.error("Failed to cancel PaymentIntent: [{}]", paymentIntentId, e);
             throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
         }
     }

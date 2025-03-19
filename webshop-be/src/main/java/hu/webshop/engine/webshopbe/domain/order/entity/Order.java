@@ -81,6 +81,13 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private List<OrderItem> items;
 
+    public void setStatus(OrderStatus status) {
+        if (!this.status.isNewStatusApplicable(status)) {
+            throw new OrderException(ReasonCode.ORDER_EXCEPTION, status + " is not applicable to current status: " + this.status);
+        }
+        this.status = status;
+    }
+
     private static String generateOrderNumber() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
         String timestamp = LocalDateTime.now().format(formatter);

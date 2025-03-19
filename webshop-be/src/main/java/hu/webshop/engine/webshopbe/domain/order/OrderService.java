@@ -3,13 +3,8 @@ package hu.webshop.engine.webshopbe.domain.order;
 
 import static hu.webshop.engine.webshopbe.domain.order.filters.OrderSpecification.getSpecifications;
 import static hu.webshop.engine.webshopbe.domain.order.filters.OrderSpecification.getSpecificationsWithoutPrice;
-import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.CANCELLED;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.CREATED;
-import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.FINISHED;
-import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.PACKAGED;
 import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.PAID;
-import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.SHIPPING;
-import static hu.webshop.engine.webshopbe.domain.order.value.OrderStatus.WAITING_FOR_REFUND;
 import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.formatDate;
 import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 
@@ -178,60 +173,47 @@ public class OrderService {
         return new EntityNotFoundException("Order was not found");
     }
 
-    public Order changeStatus(UUID id, OrderStatus orderStatus) {
-        log.info("changeStatus > id: [{}], orderStatus: [{}]", id, orderStatus);
+    public Order changeStatus(UUID id, OrderStatus newStatus) {
+        log.info("changeStatus > id: [{}], newStatus: [{}]", id, newStatus);
         Order order = getById(id);
-        if (isNewStatusApplicable(order.getStatus(), orderStatus)) {
-            order.setStatus(orderStatus);
+        order.setStatus(newStatus);
+        if (order.getStatus().shouldSendEmailNotification()) {
             emailService.sendOrderStatusChangedEmail(order);
-            if (WAITING_FOR_REFUND.equals(orderStatus)) {
-                updateProductStock(order, StockChange.INCREMENT);
-            }
-            return order;
-        } else {
-            throw new OrderException(ReasonCode.ORDER_EXCEPTION, orderStatus + "is not applicable to status: " + order.getStatus());
         }
+        if (order.getStatus().shouldUpdateStock()) {
+            updateProductStock(order, StockChange.INCREMENT);
+        }
+        orderRepository.save(order);
+        return order;
     }
 
-    private boolean isNewStatusApplicable(OrderStatus old, OrderStatus newStatus) {
-        return switch (old) {
-            case CREATED -> newStatus.equals(PAID) || newStatus.equals(WAITING_FOR_REFUND);
-            case PAID -> newStatus.equals(PACKAGED) || newStatus.equals(WAITING_FOR_REFUND);
-            case PAYMENT_FAILED -> newStatus.equals(PAID) ;
-            case PACKAGED -> newStatus.equals(SHIPPING) || newStatus.equals(WAITING_FOR_REFUND);
-            case SHIPPING -> newStatus.equals(FINISHED);
-            case FINISHED, CANCELLED, REFUNDED -> false;
-            case WAITING_FOR_REFUND -> newStatus.equals(CANCELLED);
-        };
-    }
 
     public Order cancel(UUID id) {
         log.info("cancel > id: [{}]", id);
         User currentUser = userService.getCurrentUser();
-        Optional<Order> order = currentUser.getOrders().stream().filter(o -> o.getId().equals(id)).findFirst();
-        order.ifPresent(o -> {
-                    if (OrderStatus.isCancelable(o.getStatus())) {
-                        emailService.sendOrderCanceledEmail(o);
-                        if (CREATED.equals(o.getStatus())) {
-                            o.setStatus(CANCELLED);
-                        } else {
-                            Refund refund = stripeService.createRefund(o.getPaymentIntentId(), o.getTotalPrice());
-                            o.setRefundId(refund.getId());
-                            o.setStatus(WAITING_FOR_REFUND);
-                        }
-                        o.setStatus(WAITING_FOR_REFUND);
-                        orderRepository.save(o);
-                        updateProductStock(o, StockChange.INCREMENT);
-                    } else {
-                        throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Can't cancel order, its status is: " + o.getStatus());
-                    }
+        Optional<Order> orderOpt = currentUser.getOrders().stream()
+                .filter(o -> o.getId().equals(id))
+                .findFirst();
+
+        orderOpt.ifPresent(o -> {
+            if (o.getStatus().isCancelable()) {
+                if (OrderStatus.CREATED.equals(o.getStatus())) {
+                    stripeService.cancelPaymentIntent(o.getPaymentIntentId());
+                    o.setStatus(OrderStatus.CANCELLED);
+                } else {
+                    Refund refund = stripeService.createRefund(o.getPaymentIntentId(), o.getTotalPrice());
+                    o.setRefundId(refund.getId());
+                    o.setStatus(OrderStatus.WAITING_FOR_REFUND);
                 }
-        );
-        if (order.isPresent()) {
-            return order.get();
-        } else {
-            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id");
-        }
+                orderRepository.save(o);
+                updateProductStock(o, StockChange.INCREMENT);
+                emailService.sendOrderCanceledEmail(o);
+            } else {
+                throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Can't cancel order, its status is: " + o.getStatus());
+            }
+        });
+
+        return orderOpt.orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
     }
 
     /**
@@ -269,7 +251,7 @@ public class OrderService {
     public void paymentIntentSucceeded(PaymentIntent paymentIntent) {
         Optional<Order> orderByPaymentIntentId = orderRepository.findByPaymentIntentId(paymentIntent.getId());
         orderByPaymentIntentId.ifPresent(order -> {
-            if((CREATED.equals(order.getStatus()) || OrderStatus.PAYMENT_FAILED.equals(order.getStatus())) && order.getPaidDate() == null) {
+            if ((CREATED.equals(order.getStatus()) || OrderStatus.PAYMENT_FAILED.equals(order.getStatus())) && order.getPaidDate() == null) {
                 order.setStatus(PAID);
                 order.setPaidDate(OffsetDateTime.now());
             }
@@ -280,7 +262,7 @@ public class OrderService {
     public void paymentIntentFailed(PaymentIntent paymentIntent) {
         Optional<Order> orderByPaymentIntentId = orderRepository.findByPaymentIntentId(paymentIntent.getId());
         orderByPaymentIntentId.ifPresent(order -> {
-            if(CREATED.equals(order.getStatus())) {
+            if (CREATED.equals(order.getStatus())) {
                 order.setStatus(OrderStatus.PAYMENT_FAILED);
             }
             orderRepository.save(order);
@@ -288,13 +270,18 @@ public class OrderService {
     }
 
     public void handleRefundSuccess(Refund refund) {
-        Optional<Order> orderByRefundId = orderRepository.findByRefundId(refund.getId());
-        orderByRefundId.ifPresent(order -> {
-            if(!OrderStatus.REFUNDED.equals(order.getStatus()) && order.getRefundedDate() == null) {
-                order.setStatus(OrderStatus.REFUNDED);
+        Optional<Order> orderOpt = orderRepository.findByRefundId(refund.getId());
+        orderOpt.ifPresent(order -> {
+            if (order.getRefundedDate() == null) {
+                if (order.getStatus() == OrderStatus.WAITING_FOR_REFUND) {
+                    order.setStatus(OrderStatus.REFUNDED);
+                } else if (order.getStatus() == OrderStatus.RETURN_RECEIVED) {
+                    order.setStatus(OrderStatus.RETURN_COMPLETED);
+                }
                 order.setRefundedDate(OffsetDateTime.now());
+                orderRepository.save(order);
             }
-            orderRepository.save(order);
         });
     }
+
 }
