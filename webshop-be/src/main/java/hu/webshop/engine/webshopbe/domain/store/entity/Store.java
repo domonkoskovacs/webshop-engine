@@ -31,6 +31,9 @@ public class Store extends BaseEntity {
     @Column(name = "return_period", nullable = false)
     private Integer returnPeriod;
 
+    @Column(name = "unpaid_order_cancel_hours", nullable = false)
+    private Integer unpaidOrderCancelHours;
+
     @Column(name = "theme")
     private String theme;
 

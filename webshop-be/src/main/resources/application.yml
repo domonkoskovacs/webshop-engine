@@ -89,3 +89,7 @@ application:
       cron: "* 0 14 * * 4" #every thursday 14:00
     promotion-email:
       cron: "* 0,30 * * * *" # every 30 minutes
+    unpaid-orders:
+      cron: "* 0 * * * *"
+    complete-orders:
+      cron: "* 0 * * * *"

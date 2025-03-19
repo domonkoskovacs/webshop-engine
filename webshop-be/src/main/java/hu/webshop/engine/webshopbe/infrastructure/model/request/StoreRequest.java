@@ -7,6 +7,7 @@ public record StoreRequest(
         @NotNull Double minOrderPrice,
         @NotNull Double shippingPrice,
         @NotNull Integer returnPeriod,
+        @NotNull Integer unpaidOrderCancelHours,
         String theme,
         String primaryColor,
         String secondaryColor,

@@ -5,6 +5,7 @@ create table store
     min_order_price                  double precision not null,
     shipping_price                   double precision not null,
     return_period                    integer          not null,
+    unpaid_order_cancel_hours        integer          not null,
     theme                            varchar,
     primary_color                    varchar,
     secondary_color                  varchar,
