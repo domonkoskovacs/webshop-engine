@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -70,32 +71,23 @@ public class StatisticsService {
     }
 
     private List<ProductStatistics> getMostOrderedProducts(LocalDate from, LocalDate to, Integer mostOrderedProductCount) {
-        return orderService.getAllBetween(from, to).stream()
-                .flatMap(order -> order.getItems().stream())
-                .collect(Collectors.groupingBy(
-                        OrderItem::getProductId,
-                        Collectors.summingInt(OrderItem::getCount)
-                ))
-                .entrySet().stream()
-                .sorted(Map.Entry.<UUID, Integer>comparingByValue().reversed())
-                .limit(mostOrderedProductCount)
-                .map(entry -> new ProductStatistics(
-                        productService.getById(entry.getKey()),
-                        entry.getValue()
-                ))
-                .toList();
+        return getProductStatistics(from, to, mostOrderedProductCount, OrderItem::getCount);
     }
 
     private List<ProductStatistics> getMostReturnedProducts(LocalDate from, LocalDate to, Integer mostOrderedProductCount) {
+        return getProductStatistics(from, to, mostOrderedProductCount, OrderItem::getReturnedCount);
+    }
+
+    private List<ProductStatistics> getProductStatistics(LocalDate from, LocalDate to, Integer limit, ToIntFunction<OrderItem> valueExtractor) {
         return orderService.getAllBetween(from, to).stream()
                 .flatMap(order -> order.getItems().stream())
                 .collect(Collectors.groupingBy(
                         OrderItem::getProductId,
-                        Collectors.summingInt(OrderItem::getReturnedCount)
+                        Collectors.summingInt(valueExtractor)
                 ))
                 .entrySet().stream()
                 .sorted(Map.Entry.<UUID, Integer>comparingByValue().reversed())
-                .limit(mostOrderedProductCount)
+                .limit(limit)
                 .map(entry -> new ProductStatistics(
                         productService.getById(entry.getKey()),
                         entry.getValue()

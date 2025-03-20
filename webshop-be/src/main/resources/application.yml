@@ -58,7 +58,7 @@ spring:
 management:
   endpoint:
     prometheus:
-      enabled: true
+      access: unrestricted
   endpoints:
     web:
       exposure:

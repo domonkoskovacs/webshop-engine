@@ -191,33 +191,26 @@ public class OrderService {
         return order;
     }
 
-
     public Order cancel(UUID id) {
         log.info("cancel > id: [{}]", id);
-        User currentUser = userService.getCurrentUser();
-        Optional<Order> orderOpt = currentUser.getOrders().stream()
-                .filter(o -> o.getId().equals(id))
-                .findFirst();
+        Order order = getOrderFromCurrentUser(id);
 
-        orderOpt.ifPresent(o -> {
-            if (o.getStatus().isCancelable()) {
-                if (OrderStatus.CREATED.equals(o.getStatus())) {
-                    stripeService.cancelPaymentIntent(o.getPaymentIntentId());
-                    o.setStatus(OrderStatus.CANCELLED);
-                } else {
-                    Refund refund = stripeService.createRefund(o.getPaymentIntentId(), o.getTotalPrice());
-                    o.setRefundId(refund.getId());
-                    o.setStatus(OrderStatus.WAITING_FOR_REFUND);
-                }
-                orderRepository.save(o);
-                updateProductStock(o, StockChange.INCREMENT);
-                emailService.sendOrderCanceledEmail(o);
+        if (order.getStatus().isCancelable()) {
+            if (OrderStatus.CREATED.equals(order.getStatus())) {
+                stripeService.cancelPaymentIntent(order.getPaymentIntentId());
+                order.setStatus(OrderStatus.CANCELLED);
             } else {
-                throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Can't cancel order, its status is: " + o.getStatus());
+                Refund refund = stripeService.createRefund(order.getPaymentIntentId(), order.getTotalPrice());
+                order.setRefundId(refund.getId());
+                order.setStatus(OrderStatus.WAITING_FOR_REFUND);
             }
-        });
-
-        return orderOpt.orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
+            orderRepository.save(order);
+            updateProductStock(order, StockChange.INCREMENT);
+            emailService.sendOrderCanceledEmail(order);
+        } else {
+            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Can't cancel order, its status is: " + order.getStatus());
+        }
+        return order;
     }
 
     /**
@@ -296,28 +289,18 @@ public class OrderService {
 
     public Order returnOrder(UUID id) {
         log.info("returnOrder > id: [{}]", id);
-        User currentUser = userService.getCurrentUser();
-        Optional<Order> orderOpt = currentUser.getOrders().stream()
-                .filter(o -> o.getId().equals(id))
-                .findFirst();
+        Order order = getOrderFromCurrentUser(id);
 
-        orderOpt.ifPresent(order -> {
-            order.setStatus(OrderStatus.RETURN_REQUESTED);
-            orderRepository.save(order);
-            emailService.sendReturnRequestedEmail(order);
-        });
-
-        return orderOpt.orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
+        order.setStatus(OrderStatus.RETURN_REQUESTED);
+        orderRepository.save(order);
+        emailService.sendReturnRequestedEmail(order);
+        return order;
     }
 
     public Order createRefund(UUID id, List<RefundOrderItem> refundOrderItems) {
         log.info("createRefund > id: [{}], refundOrderItems: [{}]", id, refundOrderItems);
 
-        User currentUser = userService.getCurrentUser();
-        Order order = currentUser.getOrders().stream()
-                .filter(o -> o.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
+        Order order = getOrderFromCurrentUser(id);
 
         Map<UUID, OrderItem> orderItemMap = order.getItems().stream().collect(Collectors.toMap(OrderItem::getId, Function.identity()));
 
@@ -338,6 +321,13 @@ public class OrderService {
         order.setRefundId(refund.getId());
         order.setStatus(OrderStatus.RETURN_RECEIVED);
         return orderRepository.save(order);
+    }
+
+    private Order getOrderFromCurrentUser(UUID id) {
+        return userService.getCurrentUser().getOrders().stream()
+                .filter(o -> o.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
     }
 
     private static void validateRefundItem(RefundOrderItem refundItem, Map<UUID, OrderItem> orderItemMap) {

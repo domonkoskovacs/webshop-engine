@@ -35,12 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageService {
 
     private final ImageProperties imageProperties;
+    private static final String USER_DIR = System.getProperty("user.dir");
 
     public byte[] getImageFromFolder(UUID id, String fileExtension) {
         log.info("getImageFromFolder > id: [{}]", id);
         String imageName = id.toString() + "." + fileExtension;
         Path imageDirectory = Paths.get(imageProperties.getFolderName());
-        Path fullImageDirectory = Paths.get(System.getProperty("user.dir"), String.valueOf(imageDirectory));
+        Path fullImageDirectory = Paths.get(USER_DIR, String.valueOf(imageDirectory));
         Path imagePath = Path.of(String.valueOf(fullImageDirectory), imageName);
 
         if (!Files.exists(imagePath)) {
@@ -58,7 +59,7 @@ public class ImageService {
         log.info("saveImageToFolder > image: [{}]", image);
         try {
             Path imageDirectory = Paths.get(imageProperties.getFolderName());
-            Path fullImageDirectory = Paths.get(System.getProperty("user.dir"), String.valueOf(imageDirectory));
+            Path fullImageDirectory = Paths.get(USER_DIR, String.valueOf(imageDirectory));
             Files.createDirectories(fullImageDirectory);
             UUID imageId = UUID.randomUUID();
             String originalFilename = image.getOriginalFilename();
@@ -212,7 +213,7 @@ public class ImageService {
      */
     private Path getFullImagePath(String fileName) {
         Path imageDirectory = Paths.get(imageProperties.getFolderName());
-        Path fullImageDirectory = Paths.get(System.getProperty("user.dir"), imageDirectory.toString());
+        Path fullImageDirectory = Paths.get(USER_DIR, imageDirectory.toString());
         return fullImageDirectory.resolve(fileName);
     }
 }

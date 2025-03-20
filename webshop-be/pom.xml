@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>hu.webshop.engine</groupId>
@@ -39,6 +39,8 @@
         <version.springdoc-openapi-starter-webmvc-ui>2.1.0</version.springdoc-openapi-starter-webmvc-ui>
         <version.maven-compiler-plugin>3.11.0</version.maven-compiler-plugin>
         <version.assertj.core>3.24.2</version.assertj.core>
+        <version.stripe>24.6.0</version.stripe>
+        <version.shedlock>4.29.0</version.shedlock>
     </properties>
     <dependencies>
         <dependency>
@@ -101,7 +103,7 @@
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
-            <version>24.6.0</version>
+            <version>${version.stripe}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -149,7 +151,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk18on</artifactId>
-            <version>1.77</version>
+            <version>1.80</version>
         </dependency>
 
         <!-- Security -->
@@ -248,12 +250,12 @@
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>4.29.0</version>
+            <version>${version.shedlock}</version>
         </dependency>
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>4.29.0</version>
+            <version>${version.shedlock}</version>
         </dependency>
     </dependencies>
 
