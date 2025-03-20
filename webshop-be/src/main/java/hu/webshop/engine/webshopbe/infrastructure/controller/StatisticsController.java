@@ -38,11 +38,9 @@ public class StatisticsController {
     public ResponseEntity<StatisticsResponse> getStatistics(
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to,
-            @RequestParam(required = false, defaultValue = "5") Integer mostSavedProductCount,
-            @RequestParam(required = false, defaultValue = "5") Integer mostOrderedProductCount,
-            @RequestParam(required = false, defaultValue = "5") Integer topUserCount
+            @RequestParam(required = false, defaultValue = "5") Integer topCount
     ) {
-        log.info("getStatistics");
-        return ResponseEntity.ok(statisticsAdapter.getStatistics(from, to, mostSavedProductCount, mostOrderedProductCount, topUserCount));
+        log.info("getStatistics > from: [{}], to: [{}], topCount: [{}]", from, to, topCount);
+        return ResponseEntity.ok(statisticsAdapter.getStatistics(from, to, topCount));
     }
 }

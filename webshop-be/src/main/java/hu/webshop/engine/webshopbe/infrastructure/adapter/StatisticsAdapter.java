@@ -18,8 +18,9 @@ public class StatisticsAdapter {
     private final StatisticsService statisticsService;
     private final StatisticsMapper statisticsMapper;
 
-    public StatisticsResponse getStatistics(LocalDate from, LocalDate to, Integer mostSavedProductCount, Integer mostOrderedProductCount, Integer topUserCount) {
-        return statisticsMapper.toResponse(statisticsService.calculateStatistics(from, to, mostSavedProductCount, mostOrderedProductCount, topUserCount));
+    public StatisticsResponse getStatistics(LocalDate from, LocalDate to, Integer topCount) {
+        log.info("getStatistics > from: [{}], to: [{}], topCount: [{}]", from, to, topCount);
+        return statisticsMapper.toResponse(statisticsService.calculateStatistics(from, to, topCount));
     }
 }
 
