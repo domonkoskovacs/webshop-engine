@@ -50,6 +50,7 @@ public class OrderItem extends BaseEntity {
     @Column(name = "count", nullable = false)
     private Integer count;
 
+    @Builder.Default
     @Column(name = "returned_count", nullable = false)
-    private Integer returnedCount;
+    private Integer returnedCount = 0;
 }

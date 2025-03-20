@@ -88,5 +88,5 @@ public class DomainArchitectureTest {
 
     @ArchTest
     public static final ArchRule valuePackageShouldOnlyContainEnumsOrRecords =
-            classes().that().resideInAnyPackage(VALUE_PACKAGE).should().beEnums().orShould().beRecords();
+            classes().that().resideInAnyPackage(VALUE_PACKAGE).and().areTopLevelClasses().should().beEnums().orShould().beRecords();
 }

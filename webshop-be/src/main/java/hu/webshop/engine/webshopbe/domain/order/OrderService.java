@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -228,12 +229,18 @@ public class OrderService {
         log.info("export > from: [{}], to: [{}]", from, to);
         DateBetween dateBetween = TimeUtil.validateAndSetDateBetween(from, to);
         List<Order> exportData = getAllBetween(dateBetween.from(), dateBetween.to());
-        String[] header = {"OrderDate", "totalPrice", "paymentMethod", "status", "userName", "productCount"};
+        String[] header = {"OrderDate", "OrderNumber", "TotalPrice", "ShippingPrice", "PaymentMethod", "Status", "PaymentIntentId", "RefundId", "PaidDate", "RefundedDate", "UserName", "ItemCount"};
         List<Function<Order, ?>> columnExtractors = List.of(
                 order -> formatDate(order.getOrderDate()),
+                Order::getOrderNumber,
                 Order::getTotalPrice,
+                Order::getShippingPrice,
                 order -> valueOfNullable(order.getPaymentMethod(), PaymentMethod::name),
                 order -> valueOfNullable(order.getStatus(), OrderStatus::name),
+                Order::getPaymentIntentId,
+                Order::getRefundId,
+                Order::getPaidDate,
+                Order::getRefundedDate,
                 order -> valueOfNullable(order.getUser(), User::getFullName),
                 order -> valueOfNullable(order.getItems(), List::size)
         );
@@ -343,5 +350,30 @@ public class OrderService {
         orderItem.setReturnedCount(orderItem.getReturnedCount() + refundItem.count());
     }
 
+    public void autoCancelUnpaidOrders(OffsetDateTime cutoff) {
+        orderRepository.findAllByStatusInAndOrderDateBefore(
+                Arrays.asList(OrderStatus.CREATED, OrderStatus.PAYMENT_FAILED),
+                cutoff).forEach(this::cancelOrder);
+    }
 
+    public void autoCompleteDeliveredOrders(OffsetDateTime cutoff) {
+        orderRepository.findAllByStatusAndOrderDateBefore(OrderStatus.DELIVERED, cutoff)
+                .forEach(this::completeOrder);
+    }
+
+    private void cancelOrder(Order order) {
+        try {
+            cancel(order.getId());
+        } catch (Exception e) {
+            log.error("Error cancelling order {}: {}", order.getId(), e.getMessage());
+        }
+    }
+
+    private void completeOrder(Order order) {
+        try {
+            changeStatus(order.getId(), OrderStatus.COMPLETED);
+        } catch (Exception e) {
+            log.error("Error finishing order {}: {}", order.getId(), e.getMessage());
+        }
+    }
 }

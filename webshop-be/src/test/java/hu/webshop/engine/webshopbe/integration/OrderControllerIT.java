@@ -173,7 +173,7 @@ class OrderControllerIT extends IntegrationTest {
         ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/cancel", "", Role.ROLE_USER);
 
         //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.WAITING_FOR_REFUND.name()));
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.CANCELLED.name()));
     }
 
     @Test
@@ -190,6 +190,6 @@ class OrderControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("T3JkZXJEYXRlO3RvdGFsUHJpY2U7cGF5bWVudE1ldGhvZDtzdGF0dXM7dXNlck5hbWU7cHJvZHVjdENvdW50DQoyMDIzLTA5LTEwIDE5OjI4OjI2OzIwLjA7U1RSSVBFO0NSRUFURUQ7dGVzdCB0ZXN0OzINCg=="));
+                .value("T3JkZXJEYXRlO09yZGVyTnVtYmVyO1RvdGFsUHJpY2U7U2hpcHBpbmdQcmljZTtQYXltZW50TWV0aG9kO1N0YXR1cztQYXltZW50SW50ZW50SWQ7UmVmdW5kSWQ7UGFpZERhdGU7UmVmdW5kZWREYXRlO1VzZXJOYW1lO0l0ZW1Db3VudA0KMjAyMy0wOS0xMCAxOToyODoyNjtPUkRFUjE7MjAuMDs1LjA7U1RSSVBFO0NSRUFURUQ7Ozs7O3Rlc3QgdGVzdDsyDQo="));
     }
 }

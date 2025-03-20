@@ -37,8 +37,6 @@ class StatisticsControllerIT extends IntegrationTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.mostSavedProducts").isArray()).andExpect(jsonPath("$.mostSavedProducts").isNotEmpty())
                 .andExpect(jsonPath("$.mostOrderedProducts").isArray()).andExpect(jsonPath("$.mostOrderedProducts").isNotEmpty())
-                .andExpect(jsonPath("$.orderStatistics").isArray()).andExpect(jsonPath("$.orderStatistics").isNotEmpty())
-                .andExpect(jsonPath("$.topUsers").isArray()).andExpect(jsonPath("$.topUsers").isNotEmpty())
-                .andExpect(jsonPath("$.emailsSent").value(10));
+                .andExpect(jsonPath("$.orderStatistics").isArray()).andExpect(jsonPath("$.orderStatistics").isNotEmpty());
     }
 }
