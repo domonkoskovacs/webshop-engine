@@ -19,7 +19,6 @@ import org.thymeleaf.spring6.ISpringTemplateEngine;
 import hu.webshop.engine.webshopbe.domain.email.AsyncEmailSenderService;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.email.properties.EmailProperties;
-import hu.webshop.engine.webshopbe.domain.email.repository.EmailStatRepository;
 import hu.webshop.engine.webshopbe.domain.email.value.Email;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
@@ -35,8 +34,6 @@ class EmailServiceTest {
     private ISpringTemplateEngine templateEngine;
     @Mock
     private AsyncEmailSenderService emailSender;
-    @Mock
-    private EmailStatRepository emailStatRepository;
 
     @Test
     @DisplayName("send reoccurring email")

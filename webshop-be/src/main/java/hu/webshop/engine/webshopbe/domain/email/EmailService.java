@@ -1,9 +1,5 @@
 package hu.webshop.engine.webshopbe.domain.email;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +12,8 @@ import org.thymeleaf.spring6.ISpringTemplateEngine;
 
 import hu.webshop.engine.webshopbe.domain.base.exception.EmailException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
-import hu.webshop.engine.webshopbe.domain.email.entity.EmailStat;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
 import hu.webshop.engine.webshopbe.domain.email.properties.EmailProperties;
-import hu.webshop.engine.webshopbe.domain.email.repository.EmailStatRepository;
 import hu.webshop.engine.webshopbe.domain.email.repository.PromotionalEmailRepository;
 import hu.webshop.engine.webshopbe.domain.email.value.Email;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
@@ -41,7 +35,6 @@ public class EmailService {
     private final EmailProperties emailProperties;
     private final ISpringTemplateEngine templateEngine;
     private final AsyncEmailSenderService emailSender;
-    private final EmailStatRepository emailStatRepository;
     private final PromotionalEmailRepository promotionalEmailRepository;
 
     public void sendForgottenPasswordEmail(String to, UUID id) {
@@ -120,17 +113,14 @@ public class EmailService {
     /**
      * sends a recurring email, but catches every error in order complete the majority of the job
      */
-    public boolean sendRecurringMarketingEmail(User user) {
+    public void sendRecurringMarketingEmail(User user) {
         try {
             Product product = user.getMostDiscontedSavedProduct();
             if (product != null) {
                 sendMarketingEmail(user, product);
-                return true;
             }
-            return false;
         } catch (Exception e) {
             log.error("error during sending recurring email", e);
-            return false;
         }
     }
 
@@ -144,18 +134,6 @@ public class EmailService {
         String body = createEmailBody("recurring.html", variables);
         Email email = new Email(user.getEmail(), "Discounts", body);
         emailSender.sendNoReplyMail(email);
-    }
-
-    public void saveStat(int sent, String type) {
-        log.info("saveStat > sent: [{}]", sent);
-        if (sent > 0) emailStatRepository.save(EmailStat.builder().sent(sent).emailType(type).build());
-    }
-
-    public List<EmailStat> getEmailStatsInBetween(LocalDate from, LocalDate to) {
-        return emailStatRepository.findAllByCreationTimeGreaterThanEqualAndCreationTimeLessThan(
-                OffsetDateTime.of(from, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(to, LocalTime.MIDNIGHT, ZoneOffset.UTC)
-        );
     }
 
     public PromotionEmail createPromotionEmail(PromotionEmail promotionEmail) {
@@ -185,13 +163,11 @@ public class EmailService {
     /**
      * sends a recurring email, but catches every error in order complete the majority of the job
      */
-    public boolean sendRecurringPromotionEmail(PromotionEmail promotionEmail, User user) {
+    public void sendRecurringPromotionEmail(PromotionEmail promotionEmail, User user) {
         try {
             sendPromotionEmail(promotionEmail, user);
-            return true;
         } catch (Exception e) {
             log.error("error during sending recurring email", e);
-            return false;
         }
     }
 

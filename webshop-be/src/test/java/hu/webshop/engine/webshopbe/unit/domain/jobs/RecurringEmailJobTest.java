@@ -48,7 +48,6 @@ class RecurringEmailJobTest {
 
         //Then
         verify(emailService, times(2)).sendRecurringMarketingEmail(any(User.class));
-        verify(emailService, times(1)).saveStat(any(int.class), any(String.class));
     }
 
     @Test
@@ -63,7 +62,6 @@ class RecurringEmailJobTest {
 
         //Then
         verify(emailService, times(0)).sendRecurringMarketingEmail(any(User.class));
-        verify(emailService, times(1)).saveStat(any(int.class), any(String.class));
     }
 
     @Test
@@ -77,7 +75,6 @@ class RecurringEmailJobTest {
 
         //Then
         verify(emailService, times(0)).sendRecurringMarketingEmail(any(User.class));
-        verify(emailService, times(0)).saveStat(any(int.class), any(String.class));
     }
 
     @Test
@@ -98,7 +95,6 @@ class RecurringEmailJobTest {
 
         //Then
         verify(emailService, times(2)).sendRecurringPromotionEmail(any(PromotionEmail.class), any(User.class));
-        verify(emailService, times(1)).saveStat(any(int.class), any(String.class));
     }
 
     @Test
@@ -113,6 +109,5 @@ class RecurringEmailJobTest {
 
         //Then
         verify(emailService, times(0)).sendRecurringPromotionEmail(any(PromotionEmail.class), any(User.class));
-        verify(emailService, times(0)).saveStat(any(int.class), any(String.class));
     }
 }

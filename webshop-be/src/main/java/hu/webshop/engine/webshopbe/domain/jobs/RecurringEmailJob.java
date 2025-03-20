@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
-import hu.webshop.engine.webshopbe.domain.email.value.EmailType;
 import hu.webshop.engine.webshopbe.domain.store.StoreService;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
@@ -34,10 +33,8 @@ public class RecurringEmailJob {
     public void sendRecurringMarketingEmail() {
         log.info("sendRecurringMarketingEmail > job");
         if (Boolean.TRUE.equals(storeService.getStore().getEnableBuiltInMarketingEmails())) {
-            List<User> subscribedUsers = userService.getSubscribedUsers();
-            long sent = subscribedUsers.stream().filter(emailService::sendRecurringMarketingEmail).count();
-            emailService.saveStat((int) sent, EmailType.BUILT_IN_MARKETING.name());
-            log.info("Recurring emails sent successfully, statistics saved");
+            userService.getSubscribedUsers().forEach(emailService::sendRecurringMarketingEmail);
+            log.info("Recurring emails sent successfully");
         }
     }
 
@@ -52,10 +49,7 @@ public class RecurringEmailJob {
         log.info("sendPromotionEmails > job");
         List<PromotionEmail> promotionEmails = emailService.getAllPromotionEmail().stream().filter(PromotionEmail::needsToBeSent).toList();
         List<User> subscribedUsers = userService.getSubscribedUsers();
-        promotionEmails.forEach(email -> {
-            long sent = subscribedUsers.stream().filter(user -> emailService.sendRecurringPromotionEmail(email, user)).count();
-            emailService.saveStat((int) sent, email.getName());
-        });
-        log.info("Promotional emails sent successfully, statistics saved");
+        promotionEmails.forEach(email -> subscribedUsers.forEach(user -> emailService.sendRecurringPromotionEmail(email, user)));
+        log.info("Promotional emails sent successfully");
     }
 }
