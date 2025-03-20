@@ -1,9 +1,9 @@
 package hu.webshop.engine.webshopbe.infrastructure.adapter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +15,11 @@ import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.OrderMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.OrderStatusRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.RefundOrderItemRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.PaymentIntentResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,5 +70,15 @@ public class OrderAdapter {
     public CsvResponse export(LocalDate from, LocalDate to) {
         log.info("export > from: [{}], to: [{}]", from, to);
         return new CsvResponse(orderService.export(from, to));
+    }
+
+    public OrderResponse returnOrder(UUID id) {
+        log.info("returnOrder > id: [{}]", id);
+        return orderMapper.toResponse(orderService.returnOrder(id));
+    }
+
+    public OrderResponse createRefund(UUID id, List<@Valid RefundOrderItemRequest> refundRequest) {
+        log.info("createRefund > id: [{}], refundRequest: [{}]", id, refundRequest);
+        return orderMapper.toResponse(orderService.createRefund(id, orderMapper.fromRequestlist(refundRequest)));
     }
 }

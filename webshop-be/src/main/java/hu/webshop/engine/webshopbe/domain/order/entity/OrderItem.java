@@ -49,4 +49,7 @@ public class OrderItem extends BaseEntity {
 
     @Column(name = "count", nullable = false)
     private Integer count;
+
+    @Column(name = "returned_count", nullable = false)
+    private Integer returnedCount;
 }

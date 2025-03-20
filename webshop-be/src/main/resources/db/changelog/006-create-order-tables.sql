@@ -28,6 +28,7 @@ create table order_item
     subcategory_name   varchar(255)                       not null,
     product_id         uuid                               not null,
     count              integer                            not null,
+    returned_count     integer                            not null,
     creation_time      timestamp                          not null,
     last_modified_time timestamp
 );

@@ -13,9 +13,11 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,7 @@ import hu.webshop.engine.webshopbe.domain.order.value.Intent;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.RefundOrderItem;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
@@ -283,5 +286,62 @@ public class OrderService {
             }
         });
     }
+
+    public Order returnOrder(UUID id) {
+        log.info("returnOrder > id: [{}]", id);
+        User currentUser = userService.getCurrentUser();
+        Optional<Order> orderOpt = currentUser.getOrders().stream()
+                .filter(o -> o.getId().equals(id))
+                .findFirst();
+
+        orderOpt.ifPresent(order -> {
+            order.setStatus(OrderStatus.RETURN_REQUESTED);
+            orderRepository.save(order);
+            emailService.sendReturnRequestedEmail(order);
+        });
+
+        return orderOpt.orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
+    }
+
+    public Order createRefund(UUID id, List<RefundOrderItem> refundOrderItems) {
+        log.info("createRefund > id: [{}], refundOrderItems: [{}]", id, refundOrderItems);
+
+        User currentUser = userService.getCurrentUser();
+        Order order = currentUser.getOrders().stream()
+                .filter(o -> o.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));
+
+        Map<UUID, OrderItem> orderItemMap = order.getItems().stream().collect(Collectors.toMap(OrderItem::getId, Function.identity()));
+
+        refundOrderItems.forEach(refundItem -> validateRefundItem(refundItem, orderItemMap));
+
+        double totalRefundAmount = refundOrderItems.stream()
+                .mapToDouble(refundItem -> {
+                    OrderItem orderItem = orderItemMap.get(refundItem.orderItemId());
+                    return orderItem.getIndividualPrice() * refundItem.count();
+                })
+                .sum();
+
+        if (totalRefundAmount <= 0 || totalRefundAmount > order.getTotalPrice()) {
+            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Invalid total refund amount for order " + order.getOrderNumber());
+        }
+
+        Refund refund = stripeService.createRefund(order.getPaymentIntentId(), totalRefundAmount);
+        order.setRefundId(refund.getId());
+        order.setStatus(OrderStatus.RETURN_RECEIVED);
+        return orderRepository.save(order);
+    }
+
+    private static void validateRefundItem(RefundOrderItem refundItem, Map<UUID, OrderItem> orderItemMap) {
+        OrderItem orderItem = Optional.ofNullable(orderItemMap.get(refundItem.orderItemId()))
+                .orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "Invalid order item in refund request: " + refundItem.orderItemId()));
+
+        if (refundItem.count() <= 0 || refundItem.count() > (orderItem.getCount() - orderItem.getReturnedCount())) {
+            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Invalid refund count for item: " + refundItem.orderItemId());
+        }
+        orderItem.setReturnedCount(orderItem.getReturnedCount() + refundItem.count());
+    }
+
 
 }

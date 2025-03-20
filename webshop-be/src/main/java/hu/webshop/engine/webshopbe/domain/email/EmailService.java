@@ -107,6 +107,16 @@ public class EmailService {
         emailSender.sendNoReplyMail(email);
     }
 
+    public void sendReturnRequestedEmail(Order order) {
+        log.info("sendReturnRequestedEmail > order: [{}]", order);
+        Map<String, Object> variables = Map.of(
+                FULL_NAME, order.getUser().getFullName()
+        );
+        String body = createEmailBody("return-order.html", variables);
+        Email email = new Email(order.getUser().getEmail(), "Confirmation of Your Return Request", body);
+        emailSender.sendNoReplyMail(email);
+    }
+
     /**
      * sends a recurring email, but catches every error in order complete the majority of the job
      */

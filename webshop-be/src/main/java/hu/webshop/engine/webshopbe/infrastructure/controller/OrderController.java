@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +24,13 @@ import hu.webshop.engine.webshopbe.infrastructure.adapter.OrderAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.OrderStatusRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.RefundOrderItemRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CsvResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.PaymentIntentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -125,6 +126,30 @@ public class OrderController {
     public ResponseEntity<OrderResponse> cancel(@PathVariable UUID id) {
         log.info("cancel > id: [{}]", id);
         return ResponseEntity.ok().body(orderAdapter.cancel(id));
+    }
+
+    @Operation(
+            tags = {"Order service"},
+            summary = "Return order items",
+            description = "Users can return order items"
+    )
+    @PostMapping(value = "/{id}/return")
+    @User
+    public ResponseEntity<OrderResponse> returnOrder(@PathVariable UUID id) {
+        log.info("returnOrder > id: [{}]", id);
+        return ResponseEntity.ok().body(orderAdapter.returnOrder(id));
+    }
+
+    @Operation(
+            tags = {"Order service"},
+            summary = "Admin can refund order items",
+            description = "Admin can refund order items"
+    )
+    @PostMapping(value = "/{id}/refund")
+    @Admin
+    public ResponseEntity<OrderResponse> createRefund(@PathVariable UUID id, @RequestBody List<@Valid RefundOrderItemRequest> refundRequest) {
+        log.info("createRefund > id: [{}], refundRequest: [{}]", id, refundRequest);
+        return ResponseEntity.ok().body(orderAdapter.createRefund(id, refundRequest));
     }
 
     @Operation(

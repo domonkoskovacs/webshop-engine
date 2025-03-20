@@ -142,13 +142,13 @@ class OrderControllerIT extends IntegrationTest {
     @DataSet("existingOrderAndAdmin.yml")
     void adminCanChangeStatus() throws Exception {
         //Given
-        OrderStatusRequest orderStatusRequest = new OrderStatusRequest(OrderStatus.PAYED);
+        OrderStatusRequest orderStatusRequest = new OrderStatusRequest(OrderStatus.PAID);
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/status", orderStatusRequest, Role.ROLE_ADMIN);
 
         //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.PAYED.name()));
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.PAID.name()));
     }
 
     @Test
@@ -156,7 +156,7 @@ class OrderControllerIT extends IntegrationTest {
     @DataSet("existingOrderAndAdmin.yml")
     void newStatusIfNotApplicableResultsInAnException() throws Exception {
         //Given
-        OrderStatusRequest orderStatusRequest = new OrderStatusRequest(OrderStatus.FINISHED);
+        OrderStatusRequest orderStatusRequest = new OrderStatusRequest(OrderStatus.COMPLETED);
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/status", orderStatusRequest, Role.ROLE_ADMIN);

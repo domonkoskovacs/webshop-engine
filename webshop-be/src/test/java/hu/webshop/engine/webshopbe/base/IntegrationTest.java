@@ -151,12 +151,12 @@ public abstract class IntegrationTest {
     @DataSet(cleanBefore = true)
     void setup() {
         PaymentIntent intent = new PaymentIntent();
-        intent.setStatus("succeeded");
         intent.setId(UUID.randomUUID().toString());
         Refund refund = new Refund();
         refund.setId(UUID.randomUUID().toString());
         lenient().when(stripeService.createIntent(any())).thenReturn(intent);
         lenient().when(stripeService.retrieveIntent(any())).thenReturn(intent);
+        lenient().when(stripeService.cancelPaymentIntent(any())).thenReturn(intent);
         lenient().when(stripeService.createRefund(any(), any())).thenReturn(refund);
         initDataConfig.run();
     }

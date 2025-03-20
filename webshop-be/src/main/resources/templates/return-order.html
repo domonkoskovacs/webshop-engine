@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Returned</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 24px;
+        }
+
+        a {
+            color: #090909;
+            padding: 0.4em 1.2em;
+            font-size: 20px;
+            border-radius: 0.5em;
+            background: #7CB9E8;
+            border: 1px solid #7CB9E8;
+            transition: all .3s;
+            box-shadow: 6px 6px 12px #c5c5c5,
+            -6px -6px 12px #ffffff;
+        }
+
+        a:active {
+            color: #666;
+            box-shadow: inset 4px 4px 12px #c5c5c5,
+            inset -4px -4px 12px #ffffff;
+        }
+    </style>
+</head>
+<body>
+<p th:text="${'Dear ' + fullName}"></p>
+
+<p>
+    We have received your return request and appreciate you reaching out.
+    Our team will carefully review your request and verify the details. Once the review is complete,
+    we will contact you shortly with further instructions regarding the pickup of the returned items.
+</p>
+
+<p>
+    If you have any questions or concerns, please feel free to contact our customer support.
+</p>
+</body>
+</html>
