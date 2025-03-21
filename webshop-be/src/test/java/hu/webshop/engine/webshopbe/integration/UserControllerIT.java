@@ -22,6 +22,7 @@ import hu.webshop.engine.webshopbe.domain.user.value.Gender;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.AddressRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
+import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ForgottenPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.NewPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RegistrationRequest;
@@ -181,6 +182,49 @@ class UserControllerIT extends IntegrationTest {
             Optional<User> user = userRepository.findById(id);
             return user.isPresent() && user.get().getVerified();
         });
+    }
+
+    @Test
+    @DisplayName("verified user cannot be verified")
+    @DataSet("verifiedUser.yml")
+    void verifiedUserCannotBeVerified() throws Exception {
+        //Given
+        UUID id = UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7ee");
+
+        // When
+        ResultActions resultActions = performPost(BASE_URL + "/verify", new VerificationRequest(id));
+
+        //Then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("unverified user can resend verification email")
+    @DataSet("notVerifiedUser.yml")
+    void unverifiedUserCanResendVerificationEmail() throws Exception {
+        //Given
+        EmailRequest emailRequest = new EmailRequest("test@test.com");
+
+        // When
+        ResultActions resultActions = performPost(BASE_URL + "/resend-verify", emailRequest);
+        transaction();
+
+        //Then
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("verified user cannot resend verification email")
+    @DataSet("verifiedUser.yml")
+    void verifiedUserCannotResendVerificationEmail() throws Exception {
+        //Given
+        EmailRequest emailRequest = new EmailRequest("test@test.com");
+
+        // When
+        ResultActions resultActions = performPost(BASE_URL + "/resend-verify", emailRequest);
+
+        //Then
+        resultActions.andExpect(status().isBadRequest());
     }
 
     @Test

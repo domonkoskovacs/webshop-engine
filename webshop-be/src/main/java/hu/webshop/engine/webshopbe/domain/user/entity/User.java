@@ -115,14 +115,6 @@ public class User extends BaseEntity implements UserDetails {
         this.cart.remove(cartItem);
     }
 
-    public void assignShippingAddress(Address address) {
-        this.shippingAddress = address;
-    }
-
-    public void assignBillingAddress(Address address) {
-        this.billingAddress = address;
-    }
-
     public String getFullName() {
         return firstname + " " + lastname;
     }
@@ -144,14 +136,6 @@ public class User extends BaseEntity implements UserDetails {
 
     public void clearCart() {
         this.cart.clear();
-    }
-
-    public void subscribeToEmailList() {
-        this.subscribedToEmail = true;
-    }
-
-    public void unSubscribeToEmailList() {
-        this.subscribedToEmail = false;
     }
 
     public Product getMostDiscontedSavedProduct() {

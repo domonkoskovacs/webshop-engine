@@ -290,7 +290,6 @@ public class OrderService {
     public Order returnOrder(UUID id) {
         log.info("returnOrder > id: [{}]", id);
         Order order = getOrderFromCurrentUser(id);
-
         order.setStatus(OrderStatus.RETURN_REQUESTED);
         orderRepository.save(order);
         emailService.sendReturnRequestedEmail(order);
@@ -300,7 +299,7 @@ public class OrderService {
     public Order createRefund(UUID id, List<RefundOrderItem> refundOrderItems) {
         log.info("createRefund > id: [{}], refundOrderItems: [{}]", id, refundOrderItems);
 
-        Order order = getOrderFromCurrentUser(id);
+        Order order = getById(id);
 
         Map<UUID, OrderItem> orderItemMap = order.getItems().stream().collect(Collectors.toMap(OrderItem::getId, Function.identity()));
 

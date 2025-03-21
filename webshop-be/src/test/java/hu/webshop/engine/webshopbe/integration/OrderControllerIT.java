@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,9 +19,11 @@ import org.springframework.util.MultiValueMap;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
+import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
+import hu.webshop.engine.webshopbe.domain.order.value.RefundOrderItem;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
@@ -191,5 +194,54 @@ class OrderControllerIT extends IntegrationTest {
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
                 .value("T3JkZXJEYXRlO09yZGVyTnVtYmVyO1RvdGFsUHJpY2U7U2hpcHBpbmdQcmljZTtQYXltZW50TWV0aG9kO1N0YXR1cztQYXltZW50SW50ZW50SWQ7UmVmdW5kSWQ7UGFpZERhdGU7UmVmdW5kZWREYXRlO1VzZXJOYW1lO0l0ZW1Db3VudA0KMjAyMy0wOS0xMCAxOToyODoyNjtPUkRFUjE7MjAuMDs1LjA7U1RSSVBFO0NSRUFURUQ7Ozs7O3Rlc3QgdGVzdDsyDQo="));
+    }
+
+    @Test
+    @DisplayName("user can initiate return")
+    @DataSet("userWithReturnableOrder.yml")
+    void userCanInitiateReturn() throws Exception {
+        //Given //When
+        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/return", Role.ROLE_USER);
+
+        //Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(OrderStatus.RETURN_REQUESTED.toString()));
+    }
+
+    @Test
+    @DisplayName("admins can create a refund for returned items")
+    @DataSet("refundableOrderAndAdmin.yml")
+    void adminsCanCreateARefundForReturnedItems() throws Exception {
+        //Given
+        List<RefundOrderItem> refundOrderItems = List.of(new RefundOrderItem(UUID.fromString("12f86506-8ea8-4908-b8f4-668c5ec6a1e2"), 1));
+
+        //When
+        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/refund", refundOrderItems, Role.ROLE_ADMIN);
+        transaction();
+
+        //Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(OrderStatus.RETURN_RECEIVED.toString()));
+        awaitFor(() -> {
+            Optional<Order> byId = orderRepository.findById(UUID.fromString(ORDER_ID));
+            return byId.isPresent() && byId.get().getRefundId() != null;
+        });
+    }
+
+    @Test
+    @DisplayName("user can get payment intent for order")
+    @DataSet("userWithOrder.yml")
+    void userCanGetPaymentIntentForOrder() throws Exception {
+        //Given //When
+        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/paymentIntent", Role.ROLE_USER);
+        transaction();
+
+        //Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.clientSecret").isNotEmpty());
+        awaitFor(() -> {
+            Optional<Order> byId = orderRepository.findById(UUID.fromString(ORDER_ID));
+            return byId.isPresent() && byId.get().getPaymentIntentId() != null;
+        });
     }
 }

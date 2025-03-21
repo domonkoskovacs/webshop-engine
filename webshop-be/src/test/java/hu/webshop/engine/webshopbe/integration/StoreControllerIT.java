@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.StoreRequest;
@@ -40,5 +41,16 @@ class StoreControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.returnPeriod").value("10"));
+    }
+
+    @Test
+    @DisplayName("store can be retrieved")
+    @DataSet("verifiedUser.yml")
+    void publicStoreCanBeRetrieved() throws Exception {
+        //Given //When
+        ResultActions resultActions = performGet(BASE_URL + "/public", Role.ROLE_USER);
+
+        //Then
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.minOrderPrice").value("0.0"));
     }
 }

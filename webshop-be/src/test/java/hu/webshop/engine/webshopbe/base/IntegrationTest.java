@@ -152,6 +152,7 @@ public abstract class IntegrationTest {
     void setup() {
         PaymentIntent intent = new PaymentIntent();
         intent.setId(UUID.randomUUID().toString());
+        intent.setClientSecret(UUID.randomUUID().toString());
         Refund refund = new Refund();
         refund.setId(UUID.randomUUID().toString());
         lenient().when(stripeService.createIntent(any())).thenReturn(intent);
