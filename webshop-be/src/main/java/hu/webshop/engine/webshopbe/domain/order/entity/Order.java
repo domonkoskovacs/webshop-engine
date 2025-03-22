@@ -3,6 +3,7 @@ package hu.webshop.engine.webshopbe.domain.order.entity;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,9 +78,10 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "order_id", nullable = false)
-    private List<OrderItem> items;
+    private List<OrderItem> items = new ArrayList<>();
 
     public void setStatus(OrderStatus status) {
         if (!this.status.isNewStatusApplicable(status)) {
@@ -96,8 +98,6 @@ public class Order extends BaseEntity {
     }
 
     public List<ProductDetails> getProductDetails() {
-        if (items == null || items.isEmpty())
-            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "order can't be empty");
         return items.stream().map(orderItem -> new ProductDetails(
                 orderItem.getProductName(), orderItem.getCount(), orderItem.getIndividualPrice() * orderItem.getCount()
         )).toList();

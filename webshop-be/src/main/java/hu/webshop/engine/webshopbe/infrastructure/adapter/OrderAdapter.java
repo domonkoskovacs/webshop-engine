@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import hu.webshop.engine.webshopbe.domain.order.OrderCreationService;
 import hu.webshop.engine.webshopbe.domain.order.OrderService;
 import hu.webshop.engine.webshopbe.domain.order.filters.OrderSorting;
 import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
@@ -29,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderAdapter {
 
     private final OrderService orderService;
+    private final OrderCreationService orderCreationService;
     private final OrderMapper orderMapper;
 
     public OrderPage<OrderResponse> getAll(
@@ -49,7 +51,7 @@ public class OrderAdapter {
 
     public OrderResponse create(PaymentMethod paymentMethod) {
         log.info("create > paymentMethod: [{}]", paymentMethod);
-        return orderMapper.toResponse(orderService.create(paymentMethod));
+        return orderMapper.toResponse(orderCreationService.create(paymentMethod));
     }
 
     public PaymentIntentResponse paymentIntent(UUID id) {

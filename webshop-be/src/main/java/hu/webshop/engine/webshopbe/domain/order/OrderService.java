@@ -42,10 +42,7 @@ import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
 import hu.webshop.engine.webshopbe.domain.order.value.RefundOrderItem;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
-import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
-import hu.webshop.engine.webshopbe.domain.product.entity.Product;
-import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
-import hu.webshop.engine.webshopbe.domain.store.StoreService;
+import hu.webshop.engine.webshopbe.domain.product.value.StockChangeType;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.util.CSVWriter;
@@ -62,11 +59,11 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderItemStockChangeMapper orderItemStockChangeMapper;
     private final UserService userService;
     private final EmailService emailService;
     private final StripeService stripeService;
     private final ProductService productService;
-    private final StoreService storeService;
 
     public OrderPage<Order> getAll(
             OrderSpecificationArgs args,
@@ -79,73 +76,6 @@ public class OrderService {
         Double minPrice = ordersWithoutPriceFilter.stream().map(Order::getTotalPrice).min(Double::compareTo).orElse(0d);
         Double maxPrice = ordersWithoutPriceFilter.stream().map(Order::getTotalPrice).max(Double::compareTo).orElse(0d);
         return new OrderPage<>(orders.getContent(), pageRequest, orders.getTotalElements(), minPrice, maxPrice);
-    }
-
-    public Order create(PaymentMethod paymentMethod) {
-        log.info("create > paymentMethod: [{}]", paymentMethod);
-        User currentUser = userService.getCurrentUser();
-        validateOrderCanStart(currentUser);
-        List<OrderItem> orderItems = mapUserCartToOrderItems(currentUser);
-        Double totalPrice = calculateOrderItemsTotalPrice(orderItems) + storeService.getStore().getShippingPrice();
-        Order order = Order.builder()
-                .totalPrice(totalPrice)
-                .shippingPrice(storeService.getStore().getShippingPrice())
-                .paymentMethod(paymentMethod)
-                .user(currentUser)
-                .items(orderItems)
-                .build();
-        userService.clearCart();
-        Order saved = orderRepository.save(order);
-        emailService.sendOrderCreatedEmail(saved);
-        updateProductStock(saved, StockChange.DECREMENT);
-        return saved;
-    }
-
-    private void updateProductStock(Order saved, StockChange stockChange) {
-        saved.getItems().forEach(orderItem -> productService.updateStock(orderItem.getProductId(), orderItem.getCount(), stockChange));
-    }
-
-    private void validateOrderCanStart(User currentUser) {
-        if (currentUser.getShippingAddress() == null)
-            throw new OrderException(ReasonCode.NO_SHIPPING_ADDRESS, "User doesnt have a shipping address");
-        if (currentUser.getBillingAddress() == null)
-            throw new OrderException(ReasonCode.NO_BILLING_ADDRESS, "User doesnt have a billing address");
-        if (currentUser.getCart().isEmpty())
-            throw new OrderException(ReasonCode.NO_ITEMS_IN_CART, "User doesnt have any item in cart");
-        if (isThereInvalidProducts(currentUser.getCart()))
-            throw new OrderException(ReasonCode.NOT_ENOUGH_PRODUCT_IN_STOCK, "There isn't enough product to complete the order");
-        if (calculateOrderItemsTotalPrice(mapUserCartToOrderItems(currentUser)) < storeService.getStore().getMinOrderPrice()) {
-            throw new OrderException(ReasonCode.INVALID_ORDER_PRICE, "Order price is too low");
-        }
-    }
-
-    private boolean isThereInvalidProducts(List<Cart> cart) {
-        log.info("isThereInvalidProducts > cart: [{}]", cart);
-        return cart.stream().anyMatch(cartItem -> {
-            Product product = productService.getById(cartItem.getProduct().getId());
-            return product.getCount() < cartItem.getCount();
-        });
-    }
-
-    private static Double calculateOrderItemsTotalPrice(List<OrderItem> products) {
-        return products.stream()
-                .map(orderItem -> orderItem.getIndividualPrice() * orderItem.getCount())
-                .reduce(Double::sum)
-                .orElse(0.0);
-    }
-
-    private static List<OrderItem> mapUserCartToOrderItems(User currentUser) {
-        return currentUser.getCart().stream()
-                .map(cartItem ->
-                        OrderItem.builder().productName(cartItem.getProduct().getName())
-                                .individualPrice(cartItem.getProduct().getPrice() * (1 - cartItem.getProduct().getDiscountPercentage() / 100))
-                                .thumbNailUrl(cartItem.getProduct().getThumbNailUrl())
-                                .gender(cartItem.getProduct().getGender())
-                                .categoryName(cartItem.getProduct().getSubCategory().getCategory().getName())
-                                .subcategoryName(cartItem.getProduct().getSubCategory().getName())
-                                .productId(cartItem.getProduct().getId())
-                                .count(cartItem.getCount()).build()
-                ).toList();
     }
 
     public PaymentIntent paymentIntent(UUID id) {
@@ -185,7 +115,9 @@ public class OrderService {
             emailService.sendOrderStatusChangedEmail(order);
         }
         if (order.getStatus().shouldUpdateStock()) {
-            updateProductStock(order, StockChange.INCREMENT);
+            productService.updateStock(
+                    orderItemStockChangeMapper.orderItemsToStockChanges(order.getItems()),
+                    StockChangeType.INCREMENT);
         }
         orderRepository.save(order);
         return order;
@@ -205,7 +137,9 @@ public class OrderService {
                 order.setStatus(OrderStatus.WAITING_FOR_REFUND);
             }
             orderRepository.save(order);
-            updateProductStock(order, StockChange.INCREMENT);
+            productService.updateStock(
+                    orderItemStockChangeMapper.orderItemsToStockChanges(order.getItems()),
+                    StockChangeType.INCREMENT);
             emailService.sendOrderCanceledEmail(order);
         } else {
             throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Can't cancel order, its status is: " + order.getStatus());

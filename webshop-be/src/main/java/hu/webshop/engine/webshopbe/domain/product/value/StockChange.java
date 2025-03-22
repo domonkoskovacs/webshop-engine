@@ -1,5 +1,9 @@
 package hu.webshop.engine.webshopbe.domain.product.value;
 
-public enum StockChange {
-    INCREMENT, DECREMENT
+import java.util.UUID;
+
+public record StockChange(
+        UUID productId,
+        Integer count
+) {
 }

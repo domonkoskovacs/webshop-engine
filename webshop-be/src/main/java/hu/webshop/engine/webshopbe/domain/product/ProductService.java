@@ -37,6 +37,7 @@ import hu.webshop.engine.webshopbe.domain.product.value.Discount;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductUpdate;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
+import hu.webshop.engine.webshopbe.domain.product.value.StockChangeType;
 import hu.webshop.engine.webshopbe.domain.util.CSVReader;
 import hu.webshop.engine.webshopbe.domain.util.CSVWriter;
 import hu.webshop.engine.webshopbe.domain.util.Constants;
@@ -168,13 +169,17 @@ public class ProductService {
         productRepository.saveAll(products);
     }
 
-    public void updateStock(UUID id, Integer difference, StockChange stockChange) {
-        log.info("updateStock > id: [{}], difference: [{}]", id, difference);
-        Product byId = getById(id);
-        if (StockChange.INCREMENT.equals(stockChange)) {
-            byId.setCount(byId.getCount() + difference);
+    public void updateStock(List<StockChange> stockChanges, StockChangeType type) {
+        log.info("updateStock > stockChanges: [{}], type: [{}]", stockChanges, type);
+        stockChanges.forEach(change -> updateStock(change, type));
+    }
+
+    private void updateStock(StockChange stockChange, StockChangeType stockChangeType) {
+        Product byId = getById(stockChange.productId());
+        if (StockChangeType.INCREMENT.equals(stockChangeType)) {
+            byId.setCount(byId.getCount() + stockChange.count());
         } else {
-            byId.setCount(byId.getCount() - difference);
+            byId.setCount(byId.getCount() - stockChange.count());
         }
         productRepository.save(byId);
     }
