@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
-import hu.webshop.engine.webshopbe.domain.order.OrderService;
+import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PaymentAdapter {
 
-    private final OrderService orderService;
+    private final OrderPaymentService orderPaymentService;
 
     public void handleStripeEvent(Event event) {
         switch (event.getType()) {
@@ -22,21 +22,21 @@ public class PaymentAdapter {
                 PaymentIntent paymentIntent = deserialize(event, PaymentIntent.class,
                         "Failed to deserialize PaymentIntent for succeeded event.");
                 if (paymentIntent != null) {
-                    orderService.paymentIntentSucceeded(paymentIntent);
+                    orderPaymentService.paymentIntentSucceeded(paymentIntent);
                 }
                 break;
             case "payment_intent.failed":
                 PaymentIntent failedIntent = deserialize(event, PaymentIntent.class,
                         "Failed to deserialize PaymentIntent for failed event.");
                 if (failedIntent != null) {
-                    orderService.paymentIntentFailed(failedIntent);
+                    orderPaymentService.paymentIntentFailed(failedIntent);
                 }
                 break;
             case "refund.updated":
                 Refund refund = deserialize(event, Refund.class,
                         "Failed to deserialize Refund for updated event.");
                 if (refund != null && "succeeded".equals(refund.getStatus())) {
-                    orderService.handleRefundSuccess(refund);
+                    orderPaymentService.handleRefundSuccess(refund);
                 }
                 break;
             default:

@@ -8,7 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import hu.webshop.engine.webshopbe.domain.order.OrderCreationService;
-import hu.webshop.engine.webshopbe.domain.order.OrderService;
+import hu.webshop.engine.webshopbe.domain.order.OrderQueryService;
+import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
+import hu.webshop.engine.webshopbe.domain.order.OrderStatusService;
 import hu.webshop.engine.webshopbe.domain.order.filters.OrderSorting;
 import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
@@ -29,8 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OrderAdapter {
 
-    private final OrderService orderService;
+    private final OrderPaymentService orderPaymentService;
     private final OrderCreationService orderCreationService;
+    private final OrderQueryService orderQueryService;
+    private final OrderStatusService orderStatusService;
     private final OrderMapper orderMapper;
 
     public OrderPage<OrderResponse> getAll(
@@ -41,12 +45,12 @@ public class OrderAdapter {
     ) {
         log.info("getAll");
         PageRequest pageRequest = sortType != null ? PageRequest.of(page, size, OrderSorting.sort(sortType)) : PageRequest.of(page, size);
-        return orderService.getAll(args, pageRequest).map(orderMapper::toResponse);
+        return orderQueryService.getAll(args, pageRequest).map(orderMapper::toResponse);
     }
 
     public OrderResponse getById(UUID id) {
         log.info("getById > id: [{}]", id);
-        return orderMapper.toResponse(orderService.getById(id));
+        return orderMapper.toResponse(orderQueryService.getById(id));
     }
 
     public OrderResponse create(PaymentMethod paymentMethod) {
@@ -56,31 +60,31 @@ public class OrderAdapter {
 
     public PaymentIntentResponse paymentIntent(UUID id) {
         log.info("createPaymentIntent > id: [{}]", id);
-        return new PaymentIntentResponse(orderService.paymentIntent(id).getClientSecret());
+        return new PaymentIntentResponse(orderPaymentService.paymentIntent(id).getClientSecret());
     }
 
     public OrderResponse changeStatus(UUID id, OrderStatusRequest request) {
         log.info("changeStatus > id: [{}], request: [{}]", id, request);
-        return orderMapper.toResponse(orderService.changeStatus(id, request.orderStatus()));
+        return orderMapper.toResponse(orderStatusService.changeStatus(id, request.orderStatus()));
     }
 
     public OrderResponse cancel(UUID id) {
         log.info("cancel > id: [{}]", id);
-        return orderMapper.toResponse(orderService.cancel(id));
+        return orderMapper.toResponse(orderPaymentService.cancel(id));
     }
 
     public CsvResponse export(LocalDate from, LocalDate to) {
         log.info("export > from: [{}], to: [{}]", from, to);
-        return new CsvResponse(orderService.export(from, to));
+        return new CsvResponse(orderQueryService.export(from, to));
     }
 
     public OrderResponse returnOrder(UUID id) {
         log.info("returnOrder > id: [{}]", id);
-        return orderMapper.toResponse(orderService.returnOrder(id));
+        return orderMapper.toResponse(orderPaymentService.returnOrder(id));
     }
 
     public OrderResponse createRefund(UUID id, List<@Valid RefundOrderItemRequest> refundRequest) {
         log.info("createRefund > id: [{}], refundRequest: [{}]", id, refundRequest);
-        return orderMapper.toResponse(orderService.createRefund(id, orderMapper.fromRequestlist(refundRequest)));
+        return orderMapper.toResponse(orderPaymentService.createRefund(id, orderMapper.fromRequestlist(refundRequest)));
     }
 }

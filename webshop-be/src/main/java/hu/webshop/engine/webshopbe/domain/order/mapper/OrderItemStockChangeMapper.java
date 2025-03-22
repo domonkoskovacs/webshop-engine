@@ -1,4 +1,4 @@
-package hu.webshop.engine.webshopbe.domain.order;
+package hu.webshop.engine.webshopbe.domain.order.mapper;
 
 import java.util.List;
 

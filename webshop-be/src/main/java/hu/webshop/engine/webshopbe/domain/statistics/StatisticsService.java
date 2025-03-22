@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import hu.webshop.engine.webshopbe.domain.order.OrderService;
+import hu.webshop.engine.webshopbe.domain.order.OrderQueryService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class StatisticsService {
 
-    private final OrderService orderService;
+    private final OrderQueryService orderQueryService;
     private final UserService userService;
     private final ProductService productService;
 
@@ -79,7 +79,7 @@ public class StatisticsService {
     }
 
     private List<ProductStatistics> getProductStatistics(LocalDate from, LocalDate to, Integer limit, ToIntFunction<OrderItem> valueExtractor) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .flatMap(order -> order.getItems().stream())
                 .collect(Collectors.groupingBy(
                         OrderItem::getProductId,
@@ -96,7 +96,7 @@ public class StatisticsService {
     }
 
     private List<UserStatistics> getTopSpendingUsers(LocalDate from, LocalDate to, Integer topUserCount) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .collect(Collectors.groupingBy(
                         Order::getUser,
                         Collectors.summingDouble(Order::getTotalPrice)
@@ -109,7 +109,7 @@ public class StatisticsService {
     }
 
     private List<UserStatistics> getTopOrderingUsers(LocalDate from, LocalDate to, Integer topUserCount) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .collect(Collectors.groupingBy(
                         Order::getUser,
                         Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
@@ -122,7 +122,7 @@ public class StatisticsService {
     }
 
     private List<OrderStatistics> createOrderStatistics(LocalDate from, LocalDate to) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate()))
                 .entrySet().stream()
                 .map(entry -> {
@@ -139,7 +139,7 @@ public class StatisticsService {
     }
 
     private List<WeeklyOrderStatistics> createWeeklyOrderStatistics(LocalDate from, LocalDate to) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .collect(Collectors.groupingBy(
                         order -> order.getOrderDate().toLocalDate().getDayOfWeek(),
                         Collectors.counting()
@@ -151,7 +151,7 @@ public class StatisticsService {
     }
 
     private CustomerTypeDistribution createCustomerTypeDistribution(LocalDate from, LocalDate to) {
-        Set<User> usersInTimeframe = orderService.getAllBetween(from, to).stream()
+        Set<User> usersInTimeframe = orderQueryService.getAllBetween(from, to).stream()
                 .map(Order::getUser)
                 .collect(Collectors.toSet());
 
@@ -165,19 +165,19 @@ public class StatisticsService {
     }
 
     private OrderStatusDistribution createOrderStatusDistribution(LocalDate from, LocalDate to) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .map(order -> OrderStatusDistribution.empty().accumulate(order))
                 .reduce(OrderStatusDistribution.empty(), OrderStatusDistribution::combine);
     }
 
     private Double computeTotalRevenue(LocalDate from, LocalDate to) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .mapToDouble(Order::getTotalPrice)
                 .sum();
     }
 
     private Double computeAverageOrderValue(LocalDate from, LocalDate to) {
-        return orderService.getAllBetween(from, to).stream()
+        return orderQueryService.getAllBetween(from, to).stream()
                 .collect(Collectors.teeing(
                         Collectors.summingDouble(Order::getTotalPrice),
                         Collectors.counting(),

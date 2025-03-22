@@ -10,6 +10,7 @@ import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
+import hu.webshop.engine.webshopbe.domain.order.mapper.OrderItemStockChangeMapper;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;

@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
-import hu.webshop.engine.webshopbe.domain.order.OrderService;
+import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentAdapter;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +28,7 @@ import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentAdapter;
 class PaymentAdapterTest {
 
     @Mock
-    private OrderService orderService;
+    private OrderPaymentService orderService;
 
     @InjectMocks
     private PaymentAdapter paymentAdapter;
