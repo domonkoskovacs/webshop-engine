@@ -18,6 +18,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import hu.webshop.engine.webshopbe.domain.base.exception.CsvException;
 import hu.webshop.engine.webshopbe.domain.base.exception.GenericRuntimeException;
 import hu.webshop.engine.webshopbe.domain.base.exception.ImageException;
+import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.base.value.ResultEntry;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.HandlerErrorMapper;
@@ -117,6 +118,29 @@ class ControllerExceptionHandlerTest {
 
         //When
         ErrorResponse errorResponse = exceptionHandler.genericRuntimeException(exception);
+
+        //Then
+        assertThat(errorResponse.error()).hasSizeGreaterThan(0)
+                .allMatch(error -> error.reasonCode().reasonStatus() == reasonCode.reasonStatus())
+                .allMatch(error -> error.reasonCode() == reasonCode)
+                .allMatch(error -> error.message().equals(errorMessage));
+    }
+
+    @Test
+    @DisplayName("stripe exception is handled")
+    void stripeExceptionIsHandled() {
+        //Given
+        ReasonCode reasonCode = ReasonCode.STRIPE_EXCEPTION;
+        String errorMessage = "Error message";
+        StripeException exception = new StripeException(reasonCode, errorMessage);
+        when(errorMapper.toResponse(exception.getResponse())).thenReturn(new ErrorResponse(
+                exception.getResponse().info(),
+                exception.getResponse().error(),
+                exception.getResponse().warning()
+        ));
+
+        //When
+        ErrorResponse errorResponse = exceptionHandler.stripeException(exception);
 
         //Then
         assertThat(errorResponse.error()).hasSizeGreaterThan(0)

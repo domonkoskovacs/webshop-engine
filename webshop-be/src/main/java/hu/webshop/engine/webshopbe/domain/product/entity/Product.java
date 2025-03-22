@@ -60,14 +60,6 @@ public class Product extends BaseEntity {
     @Column(name = "item_number", nullable = false)
     private String itemNumber;
 
-    public String getFullProductName() {
-        String separator = " ";
-        return getBrand().getName() +
-                separator +
-                getName() +
-                separator;
-    }
-
     public String getThumbNailUrl() {
         return imageUrls != null ? imageUrls.split(IMAGE_URL_SEPARATOR)[0] : null;
     }

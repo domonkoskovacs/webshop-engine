@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -185,11 +186,43 @@ public class ProductService {
     }
 
     public void importAndSave(String csv) {
+        final Pattern pricePattern = Pattern.compile("\\d+(\\.\\d{1,2})?");
+        final Pattern countPattern = Pattern.compile("\\d+");
+
         List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"itemNumber", "brand", "name", "description", "subCategoryName", "gender", "count", "price", "discountPercentage", "imagesUrls"})
                 .base64()
                 .csv(csv)
                 .registerValidator("brand", brandService::existsByName)
                 .registerValidator("subCategoryName", categoryService::subCategoryExistsByName)
+                .registerValidator("price",
+                        s -> pricePattern.matcher(s).matches(),
+                        s -> {
+                            try {
+                                double price = Double.parseDouble(s);
+                                return price > 0;
+                            } catch (NumberFormatException e) {
+                                return false;
+                            }
+                        })
+                .registerValidator("count",
+                        s -> countPattern.matcher(s).matches(),
+                        s -> {
+                            try {
+                                int count = Integer.parseInt(s);
+                                return count >= 0;
+                            } catch (NumberFormatException e) {
+                                return false;
+                            }
+                        })
+                .registerValidator("discountPercentage",
+                        s -> {
+                            try {
+                                double discount = Double.parseDouble(s);
+                                return discount >= 0 && discount <= 100;
+                            } catch (NumberFormatException e) {
+                                return false;
+                            }
+                        })
                 .validate()
                 .parse();
         List<Product> products = parsedProducts.stream()

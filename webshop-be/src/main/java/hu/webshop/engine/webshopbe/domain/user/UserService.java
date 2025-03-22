@@ -236,7 +236,9 @@ public class UserService implements UserDetailsService {
     private Cart mapCart(CartItem cartItem) {
         Product product = productService.getById(cartItem.productId());
         if (product.getCount() < cartItem.count())
-            throw new ProductException(ReasonCode.NOT_ENOUGH_PRODUCT_IN_STOCK, String.format("There is not enough product: product: [%s]", product.getFullProductName()));
+            throw new ProductException(ReasonCode.NOT_ENOUGH_PRODUCT_IN_STOCK,
+                    String.format("There is not enough product: product: [%s]",
+                            product.getBrand().getName() + " " + product.getName()));
         return Cart.builder()
                 .count(cartItem.count())
                 .product(productService.getById(cartItem.productId()))

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -65,9 +66,10 @@ public class CSVReader<T> {
 
     @SafeVarargs
     public final CSVReader<T> registerValidator(String columnName, Predicate<String>... validators) {
-        for (Predicate<String> validator : validators) {
-            columnValidators.put(columnName, validator);
-        }
+        Predicate<String> combinedValidator = Arrays.stream(validators)
+                .reduce(Predicate::and)
+                .orElse(s -> true);
+        columnValidators.merge(columnName, combinedValidator, Predicate::and);
         return this;
     }
 

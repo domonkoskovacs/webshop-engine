@@ -1,6 +1,5 @@
 package hu.webshop.engine.webshopbe.domain.util;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -103,7 +102,7 @@ public class CSVWriter<T> {
             for (T data : dataList) {
                 csvPrinter.printRecord(mapToRecord(data));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Unexpected error during csv generation: ", e);
             throw new CsvException(ReasonCode.CSV_ERROR, e.getMessage());
         }
