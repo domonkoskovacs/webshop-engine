@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.Refund;
 import com.stripe.net.Webhook;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentAdapter;
@@ -44,33 +42,7 @@ public class PaymentController {
         }
 
         log.info("handleStripeEvent > Received event: [{}]", event.getType());
-        switch (event.getType()) {
-            case "payment_intent.succeeded":
-                PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElse(null);
-                if (paymentIntent != null) {
-                    paymentAdapter.paymentIntentSucceeded(paymentIntent);
-                } else {
-                    log.error("Failed to deserialize PaymentIntent for succeeded event.");
-                }
-                break;
-            case "payment_intent.failed":
-                PaymentIntent failedIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElse(null);
-                if (failedIntent != null) {
-                    paymentAdapter.paymentIntentFailed(failedIntent);
-                } else {
-                    log.error("Failed to deserialize PaymentIntent for failed event.");
-                }
-                break;
-            case "refund.updated":
-                Refund refund = (Refund) event.getDataObjectDeserializer().getObject().orElse(null);
-                if (refund != null && "succeeded".equals(refund.getStatus())) {
-                    paymentAdapter.handleRefundSuccess(refund);
-                }
-                break;
-            default:
-                log.warn("Unhandled event type: {}", event.getType());
-                break;
-        }
+        paymentAdapter.handleStripeEvent(event);
 
         return ResponseEntity.ok().build();
     }

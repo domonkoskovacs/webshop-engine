@@ -113,6 +113,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/store/**").permitAll()
                         .requestMatchers("/api/statistics/**").permitAll()
                         .requestMatchers("/api/email/**").permitAll()
+                        .requestMatchers("/api/payment/webhooks/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

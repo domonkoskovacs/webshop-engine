@@ -199,6 +199,13 @@ public abstract class IntegrationTest {
                 .content(objectMapper.writeValueAsString(body)).header(AUTHORIZATION, "Bearer " + getToken(role)));
     }
 
+    protected ResultActions performPost(String url, String payload, String signatureHeader) throws Exception {
+        return mockMvc.perform(post(url).header("Stripe-Signature", signatureHeader)
+                        .content(payload)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
     protected ResultActions performPut(String url, Object body, Role role) throws Exception {
         return mockMvc.perform(put(url).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)).header(AUTHORIZATION, "Bearer " + getToken(role)));
