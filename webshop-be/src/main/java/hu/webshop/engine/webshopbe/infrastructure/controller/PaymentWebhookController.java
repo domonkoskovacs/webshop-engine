@@ -12,7 +12,7 @@ import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
-import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentWebhookAdapter;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/payment/webhooks")
 @RequiredArgsConstructor
-public class PaymentController {
+public class PaymentWebhookController {
 
-    private final PaymentAdapter paymentAdapter;
+    private final PaymentWebhookAdapter paymentAdapter;
     private final StripeProperties stripeProperties;
 
 

@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageService {
 
     private final ImageProperties imageProperties;
-    private static final String USER_DIR = System.getProperty("user.dir");
+    protected static final String USER_DIR = System.getProperty("user.dir");
 
     public byte[] getImageFromFolder(UUID id, String fileExtension) {
         log.info("getImageFromFolder > id: [{}]", id);
@@ -94,7 +94,6 @@ public class ImageService {
         return builder.toString();
     }
 
-
     /**
      * Deletes the image file corresponding to the given image URL.
      * Expects URLs in the format:
@@ -149,7 +148,7 @@ public class ImageService {
      *
      * @param fileName the image file name to delete.
      */
-    public void deleteImageFromFileName(String fileName) {
+    private void deleteImageFromFileName(String fileName) {
         log.info("deleteImageFromFileName > fileName: [{}]", fileName);
         if (fileName == null || fileName.trim().isEmpty()) {
             log.warn("File name is null or empty");

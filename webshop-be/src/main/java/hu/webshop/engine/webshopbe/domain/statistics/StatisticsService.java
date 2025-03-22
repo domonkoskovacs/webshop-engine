@@ -16,10 +16,10 @@ import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
-import hu.webshop.engine.webshopbe.domain.statistics.dto.ProductStatistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.CustomerTypeDistribution;
 import hu.webshop.engine.webshopbe.domain.statistics.value.OrderStatistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.OrderStatusDistribution;
+import hu.webshop.engine.webshopbe.domain.statistics.value.ProductStatistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.Statistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.UserStatistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.WeeklyOrderStatistics;
@@ -42,44 +42,49 @@ public class StatisticsService {
     public Statistics calculateStatistics(LocalDate from, LocalDate to, Integer topCount) {
         log.info("calculateStatistics > from: [{}], to: [{}], topCount: [{}]", from, to, topCount);
         DateBetween dateBetween = TimeUtil.validateAndSetDateBetween(from, to);
+        List<Order> orders = orderQueryService.getAllBetween(dateBetween.from(), dateBetween.to());
         return new Statistics(
                 getMostSavedProducts(topCount),
-                getMostOrderedProducts(dateBetween.from(), dateBetween.to(), topCount),
-                getMostReturnedProducts(dateBetween.from(), dateBetween.to(), topCount),
-                getTopSpendingUsers(dateBetween.from(), dateBetween.to(), topCount),
-                getTopOrderingUsers(dateBetween.from(), dateBetween.to(), topCount),
-                createOrderStatistics(dateBetween.from(), dateBetween.to()),
-                createWeeklyOrderStatistics(dateBetween.from(), dateBetween.to()),
-                createCustomerTypeDistribution(dateBetween.from(), dateBetween.to()),
-                createOrderStatusDistribution(dateBetween.from(), dateBetween.to()),
-                computeTotalRevenue(dateBetween.from(), dateBetween.to()),
-                computeAverageOrderValue(dateBetween.from(), dateBetween.to())
+                getMostOrderedProducts(orders, topCount),
+                getMostReturnedProducts(orders, topCount),
+                getTopSpendingUsers(orders, topCount),
+                getTopOrderingUsers(orders, topCount),
+                createOrderStatistics(orders),
+                createWeeklyOrderStatistics(orders),
+                createCustomerTypeDistribution(orders),
+                createOrderStatusDistribution(orders),
+                computeTotalRevenue(orders),
+                computeAverageOrderValue(orders)
         );
     }
 
     private List<ProductStatistics> getMostSavedProducts(Integer topCount) {
         return userService.getUsers().stream()
                 .flatMap(user -> user.getSaved().stream())
-                .collect(Collectors.toMap(Product::getId, product -> new ProductStatistics(product, 0), (acc, item) -> {
-                    acc.setCount(acc.getCount() + 1);
-                    return acc;
-                }))
-                .values().stream()
-                .sorted(Comparator.comparingInt(ProductStatistics::getCount).reversed())
+                .collect(Collectors.groupingBy(
+                        Product::getId,
+                        Collectors.summingInt(product -> 1)
+                ))
+                .entrySet().stream()
+                .map(entry -> new ProductStatistics(
+                        productService.getById(entry.getKey()),
+                        entry.getValue()
+                ))
+                .sorted(Comparator.comparingInt(ProductStatistics::count).reversed())
                 .limit(topCount)
                 .toList();
     }
 
-    private List<ProductStatistics> getMostOrderedProducts(LocalDate from, LocalDate to, Integer mostOrderedProductCount) {
-        return getProductStatistics(from, to, mostOrderedProductCount, OrderItem::getCount);
+    private List<ProductStatistics> getMostOrderedProducts(List<Order> orders, Integer mostOrderedProductCount) {
+        return getProductStatistics(orders, mostOrderedProductCount, OrderItem::getCount);
     }
 
-    private List<ProductStatistics> getMostReturnedProducts(LocalDate from, LocalDate to, Integer mostOrderedProductCount) {
-        return getProductStatistics(from, to, mostOrderedProductCount, OrderItem::getReturnedCount);
+    private List<ProductStatistics> getMostReturnedProducts(List<Order> orders, Integer mostOrderedProductCount) {
+        return getProductStatistics(orders, mostOrderedProductCount, OrderItem::getReturnedCount);
     }
 
-    private List<ProductStatistics> getProductStatistics(LocalDate from, LocalDate to, Integer limit, ToIntFunction<OrderItem> valueExtractor) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private List<ProductStatistics> getProductStatistics(List<Order> orders, Integer limit, ToIntFunction<OrderItem> valueExtractor) {
+        return orders.stream()
                 .flatMap(order -> order.getItems().stream())
                 .collect(Collectors.groupingBy(
                         OrderItem::getProductId,
@@ -95,8 +100,8 @@ public class StatisticsService {
                 .toList();
     }
 
-    private List<UserStatistics> getTopSpendingUsers(LocalDate from, LocalDate to, Integer topUserCount) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private List<UserStatistics> getTopSpendingUsers(List<Order> orders, Integer topUserCount) {
+        return orders.stream()
                 .collect(Collectors.groupingBy(
                         Order::getUser,
                         Collectors.summingDouble(Order::getTotalPrice)
@@ -108,8 +113,8 @@ public class StatisticsService {
                 .toList();
     }
 
-    private List<UserStatistics> getTopOrderingUsers(LocalDate from, LocalDate to, Integer topUserCount) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private List<UserStatistics> getTopOrderingUsers(List<Order> orders, Integer topUserCount) {
+        return orders.stream()
                 .collect(Collectors.groupingBy(
                         Order::getUser,
                         Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
@@ -121,8 +126,8 @@ public class StatisticsService {
                 .toList();
     }
 
-    private List<OrderStatistics> createOrderStatistics(LocalDate from, LocalDate to) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private List<OrderStatistics> createOrderStatistics(List<Order> orders) {
+        return orders.stream()
                 .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate()))
                 .entrySet().stream()
                 .map(entry -> {
@@ -138,8 +143,8 @@ public class StatisticsService {
                 .toList();
     }
 
-    private List<WeeklyOrderStatistics> createWeeklyOrderStatistics(LocalDate from, LocalDate to) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private List<WeeklyOrderStatistics> createWeeklyOrderStatistics(List<Order> orders) {
+        return orders.stream()
                 .collect(Collectors.groupingBy(
                         order -> order.getOrderDate().toLocalDate().getDayOfWeek(),
                         Collectors.counting()
@@ -150,8 +155,8 @@ public class StatisticsService {
                 .toList();
     }
 
-    private CustomerTypeDistribution createCustomerTypeDistribution(LocalDate from, LocalDate to) {
-        Set<User> usersInTimeframe = orderQueryService.getAllBetween(from, to).stream()
+    private CustomerTypeDistribution createCustomerTypeDistribution(List<Order> orders) {
+        Set<User> usersInTimeframe = orders.stream()
                 .map(Order::getUser)
                 .collect(Collectors.toSet());
 
@@ -164,20 +169,20 @@ public class StatisticsService {
         return new CustomerTypeDistribution(newCustomers, returningCustomers);
     }
 
-    private OrderStatusDistribution createOrderStatusDistribution(LocalDate from, LocalDate to) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private OrderStatusDistribution createOrderStatusDistribution(List<Order> orders) {
+        return orders.stream()
                 .map(order -> OrderStatusDistribution.empty().accumulate(order))
                 .reduce(OrderStatusDistribution.empty(), OrderStatusDistribution::combine);
     }
 
-    private Double computeTotalRevenue(LocalDate from, LocalDate to) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private Double computeTotalRevenue(List<Order> orders) {
+        return orders.stream()
                 .mapToDouble(Order::getTotalPrice)
                 .sum();
     }
 
-    private Double computeAverageOrderValue(LocalDate from, LocalDate to) {
-        return orderQueryService.getAllBetween(from, to).stream()
+    private Double computeAverageOrderValue(List<Order> orders) {
+        return orders.stream()
                 .collect(Collectors.teeing(
                         Collectors.summingDouble(Order::getTotalPrice),
                         Collectors.counting(),
