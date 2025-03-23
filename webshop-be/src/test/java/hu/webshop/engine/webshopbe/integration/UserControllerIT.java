@@ -378,6 +378,40 @@ class UserControllerIT extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("user can remove items from cart")
+    @DataSet("verifiedUserWithSavedAndCartProduct.yml")
+    void userCanRemoveItemsFromCart() throws Exception {
+        //Given
+        List<CartItemRequest> cartItemRequests = List.of(new CartItemRequest(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"), 0));
+
+        //When
+        ResultActions resultActions = performPost(BASE_URL + "/update/cart", cartItemRequests, Role.ROLE_USER);
+
+        //Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].product.brand.name").value("brand"));
+    }
+
+    @Test
+    @DisplayName("user can increase items in the cart")
+    @DataSet("verifiedUserWithSavedAndCartProduct.yml")
+    void userCanIncreaseItemsInTheCart() throws Exception {
+        //Given
+        List<CartItemRequest> cartItemRequests = List.of(new CartItemRequest(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"), 2));
+
+        //When
+        ResultActions resultActions = performPost(BASE_URL + "/update/cart", cartItemRequests, Role.ROLE_USER);
+
+        //Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].count").value(2));
+    }
+
+    @Test
     @DisplayName("user can get its orders")
     @DataSet("userWithOrder.yml")
     void userCanGetItsOrders() throws Exception {

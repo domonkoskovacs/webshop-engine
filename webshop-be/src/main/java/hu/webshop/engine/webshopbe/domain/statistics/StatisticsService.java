@@ -1,6 +1,7 @@
 package hu.webshop.engine.webshopbe.domain.statistics;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -51,10 +52,10 @@ public class StatisticsService {
                 getTopOrderingUsers(orders, topCount),
                 createOrderStatistics(orders),
                 createWeeklyOrderStatistics(orders),
-                createCustomerTypeDistribution(orders),
+                createCustomerTypeDistribution(orders, from),
                 createOrderStatusDistribution(orders),
-                computeTotalRevenue(orders),
-                computeAverageOrderValue(orders)
+                computeAverageOrderValue(orders),
+                computeTotalRevenue(orders)
         );
     }
 
@@ -155,17 +156,18 @@ public class StatisticsService {
                 .toList();
     }
 
-    private CustomerTypeDistribution createCustomerTypeDistribution(List<Order> orders) {
+    private CustomerTypeDistribution createCustomerTypeDistribution(List<Order> orders, LocalDate from) {
         Set<User> usersInTimeframe = orders.stream()
                 .map(Order::getUser)
                 .collect(Collectors.toSet());
 
         int newCustomers = (int) usersInTimeframe.stream()
-                .filter(user -> user.getOrders().size() == 1)
+                .filter(user -> user.getOrders().stream()
+                        .map(Order::getCreationTime)
+                        .noneMatch(orderDate -> orderDate.isBefore(from.atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime())))
                 .count();
 
         int returningCustomers = usersInTimeframe.size() - newCustomers;
-
         return new CustomerTypeDistribution(newCustomers, returningCustomers);
     }
 
