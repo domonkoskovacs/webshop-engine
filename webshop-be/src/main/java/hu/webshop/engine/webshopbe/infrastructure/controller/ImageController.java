@@ -35,9 +35,9 @@ public class ImageController {
             description = "Public endpoint returns an image by id and extension"
     )
     @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
-    public ResponseEntity<ByteArrayResource> getImage(@PathVariable UUID id,
+    public ResponseEntity<ByteArrayResource> getById(@PathVariable UUID id,
                                                       @RequestParam String fileExtension) {
         log.info("getImage > id: [{}]", id);
-        return ResponseEntity.ok().body(imageAdapter.getImage(id, fileExtension));
+        return ResponseEntity.ok().body(imageAdapter.getById(id, fileExtension));
     }
 }

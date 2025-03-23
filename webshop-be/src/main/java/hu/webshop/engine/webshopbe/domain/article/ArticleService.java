@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import hu.webshop.engine.webshopbe.domain.article.entity.Article;
 import hu.webshop.engine.webshopbe.domain.article.repository.ArticleRepository;
 import hu.webshop.engine.webshopbe.domain.image.ImageService;
-import hu.webshop.engine.webshopbe.domain.image.value.ImageIdentifier;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +37,7 @@ public class ArticleService {
 
     public Article create(Article article, MultipartFile image) {
         log.info("create > article: [{}]", article);
-        ImageIdentifier imageId = imageService.saveImageToFolder(image);
-        article.setImageUrl(imageService.getImageUrl(imageId));
+        article.setImageUrl(imageService.save(image));
         return articleRepository.save(article);
     }
 
@@ -48,7 +46,7 @@ public class ArticleService {
         articleRepository.findById(id).ifPresent(article -> {
             String imageUrl = article.getImageUrl();
             if (imageUrl != null && !imageUrl.isEmpty()) {
-                imageService.deleteImageFromFolder(imageUrl);
+                imageService.deleteByUrl(imageUrl);
             }
             articleRepository.delete(article);
         });

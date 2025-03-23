@@ -43,7 +43,7 @@ class EmailServiceTest {
                 .firstname("first")
                 .lastname("last")
                 .email("email@email.com")
-                .saved(List.of(Product.builder().discountPercentage(10.0).imageUrls("url").build()))
+                .saved(List.of(Product.builder().discountPercentage(10.0).imageUrls(List.of("url")).build()))
                 .build();
         user.setId(UUID.randomUUID());
         when(emailProperties.getUnsubscribe()).thenReturn("url");

@@ -1,10 +1,14 @@
 package hu.webshop.engine.webshopbe.domain.product.entity;
 
-import static hu.webshop.engine.webshopbe.domain.util.Constants.IMAGE_URL_SEPARATOR;
+import java.util.ArrayList;
+import java.util.List;
 
 import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
+import hu.webshop.engine.webshopbe.domain.base.entity.StringListConverter;
 import hu.webshop.engine.webshopbe.domain.product.value.Gender;
+import hu.webshop.engine.webshopbe.domain.util.Constants;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -54,13 +58,19 @@ public class Product extends BaseEntity {
     @Column(name = "discount_percentage", nullable = false)
     private Double discountPercentage;
 
+    @Builder.Default
+    @Convert(converter = StringListConverter.class)
     @Column(name = "image_url_list")
-    private String imageUrls;
+    private List<String> imageUrls = new ArrayList<>();
 
     @Column(name = "item_number", nullable = false)
     private String itemNumber;
 
     public String getThumbNailUrl() {
-        return imageUrls != null ? imageUrls.split(IMAGE_URL_SEPARATOR)[0] : null;
+        return !imageUrls.isEmpty() ? imageUrls.get(0) : null;
+    }
+
+    public String getExportImageUrls() {
+        return imageUrls.isEmpty() ? "" : String.join(Constants.IMAGE_URL_SEPARATOR, imageUrls);
     }
 }

@@ -16,8 +16,8 @@ public class ImageAdapter {
 
     private final ImageService imageService;
 
-    public ByteArrayResource getImage(UUID id, String fileExtension) {
+    public ByteArrayResource getById(UUID id, String fileExtension) {
         log.info("getImage > id: [{}]", id);
-        return new ByteArrayResource(imageService.getImageFromFolder(id, fileExtension));
+        return new ByteArrayResource(imageService.get(id, fileExtension));
     }
 }

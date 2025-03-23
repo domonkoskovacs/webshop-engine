@@ -10,7 +10,6 @@ import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +40,6 @@ import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChangeType;
 import hu.webshop.engine.webshopbe.domain.util.CSVReader;
 import hu.webshop.engine.webshopbe.domain.util.CSVWriter;
-import hu.webshop.engine.webshopbe.domain.util.Constants;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -90,8 +88,8 @@ public class ProductService {
         List<Product> products = productRepository.findAllById(ids);
         products.stream()
                 .map(Product::getImageUrls)
-                .filter(imageUrls -> imageUrls != null && !imageUrls.isEmpty())
-                .forEach(imageService::deleteImagesFromFolder);
+                .filter(imageUrls -> !imageUrls.isEmpty())
+                .forEach(imageService::deleteByUrls);
         productRepository.deleteAllById(ids);
     }
 
@@ -110,12 +108,10 @@ public class ProductService {
 
     private void setImageUrls(Product product, List<MultipartFile> images) {
         if (images != null) {
-            List<String> ids = images.stream()
-                    .map(imageService::saveImageToFolder)
-                    .map(imageService::getImageUrl)
+            List<String> imageUrls = images.stream()
+                    .map(imageService::save)
                     .toList();
-            String imageIds = String.join(Constants.IMAGE_URL_SEPARATOR, ids);
-            product.setImageUrls(imageIds);
+            product.setImageUrls(imageUrls);
         }
     }
 
@@ -131,19 +127,18 @@ public class ProductService {
         List<String> newImageUrls = new ArrayList<>();
         if (productUpdate.newImages() != null) {
             newImageUrls.addAll(productUpdate.newImages().stream()
-                    .map(imageService::saveImageToFolder)
-                    .map(imageService::getImageUrl)
+                    .map(imageService::save)
                     .toList());
         }
 
         List<String> mergedImages = Stream.concat(preservedImages.stream(), newImageUrls.stream()).toList();
         if (old.getImageUrls() != null && !old.getImageUrls().isEmpty()) {
-            Arrays.stream(old.getImageUrls().split(Constants.IMAGE_URL_SEPARATOR))
+            old.getImageUrls().stream()
                     .filter(url -> !mergedImages.contains(url))
-                    .forEach(imageService::deleteImagesFromFolder);
+                    .forEach(imageService::deleteByUrl);
         }
 
-        updatedProduct.setImageUrls(String.join(Constants.IMAGE_URL_SEPARATOR, mergedImages));
+        updatedProduct.setImageUrls(mergedImages);
         updatedProduct.setSubCategory(categoryService.getSubCategoryById(productUpdate.subCategoryId()));
         updatedProduct.setBrand(brandService.getByName(productUpdate.brand()));
 
@@ -250,7 +245,7 @@ public class ProductService {
                 Product::getCount,
                 Product::getPrice,
                 Product::getDiscountPercentage,
-                Product::getImageUrls,
+                Product::getExportImageUrls,
                 Product::getItemNumber
         );
         return new CSVWriter<>(
@@ -266,7 +261,7 @@ public class ProductService {
         products.stream()
                 .map(Product::getImageUrls)
                 .filter(imageUrls -> imageUrls != null && !imageUrls.isEmpty())
-                .forEach(imageService::deleteImagesFromFolder);
+                .forEach(imageService::deleteByUrls);
         productRepository.deleteAll(products);
     }
 }
