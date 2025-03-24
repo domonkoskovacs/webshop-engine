@@ -25,11 +25,11 @@ public class UnusedImagesJob {
     @Scheduled(cron = "${application.schedule.unused-images.cron}")
     @SchedulerLock(name = "deleteUnusedImages", lockAtMostFor = "50s", lockAtLeastFor = "30s")
     public void deleteUnusedImages() {
-        log.info("UnusedImagesJob started");
+        log.debug("deleteUnusedImages fired");
         boolean deleteEnabled = Boolean.TRUE.equals(storeService.getStore().getDeleteUnusedPictures());
         if (deleteEnabled) {
             imageCleanUpService.deleteUnusedImages();
+            log.debug("deleteUnusedImages completed");
         }
-        log.info("UnusedImagesJob completed");
     }
 }

@@ -30,12 +30,12 @@ public class OutOfStockProductJob {
     @Scheduled(cron = "${application.schedule.out-of-stock-product.cron}")
     @SchedulerLock(name = "deleteOutOfStockProducts", lockAtMostFor = "50s", lockAtLeastFor = "30s")
     public void deleteOutOfStockProducts() {
-        log.debug("deleting out of stocks job started");
+        log.debug("deleteOutOfStockProducts fired");
         int daysBefore = 30;
         if (Boolean.TRUE.equals(storeService.getStore().getDeleteOutOfStockProducts())) {
             productService.deleteAllByStockAndDate(0,
                     OffsetDateTime.of(LocalDate.now().minusDays(daysBefore), LocalTime.MIDNIGHT, ZoneOffset.UTC));
-            log.debug("out of stock products were deleted before [{}] days", daysBefore);
+            log.debug("deleteOutOfStockProducts completed");
         }
     }
 }

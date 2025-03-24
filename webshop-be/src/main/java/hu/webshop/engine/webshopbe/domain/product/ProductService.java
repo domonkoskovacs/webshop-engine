@@ -132,7 +132,7 @@ public class ProductService {
         }
 
         List<String> mergedImages = Stream.concat(preservedImages.stream(), newImageUrls.stream()).toList();
-        if (old.getImageUrls() != null && !old.getImageUrls().isEmpty()) {
+        if (!old.getImageUrls().isEmpty()) {
             old.getImageUrls().stream()
                     .filter(url -> !mergedImages.contains(url))
                     .forEach(imageService::deleteByUrl);

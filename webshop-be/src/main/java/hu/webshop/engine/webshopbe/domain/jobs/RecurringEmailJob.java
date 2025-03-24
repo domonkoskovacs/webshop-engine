@@ -31,10 +31,10 @@ public class RecurringEmailJob {
     @Scheduled(cron = "${application.schedule.recurring-email.cron}")
     @SchedulerLock(name = "sendRecurringMarketingEmail", lockAtMostFor = "50s", lockAtLeastFor = "30s")
     public void sendRecurringMarketingEmail() {
-        log.info("sendRecurringMarketingEmail > job");
+       log.debug("sendRecurringMarketingEmail fired");
         if (Boolean.TRUE.equals(storeService.getStore().getEnableBuiltInMarketingEmails())) {
             userService.getSubscribedUsers().forEach(emailService::sendRecurringMarketingEmail);
-            log.info("Recurring emails sent successfully");
+            log.debug("sendRecurringMarketingEmail completed");
         }
     }
 
@@ -46,10 +46,10 @@ public class RecurringEmailJob {
     @Scheduled(cron = "${application.schedule.promotion-email.cron}")
     @SchedulerLock(name = "sendPromotionEmails", lockAtMostFor = "50s", lockAtLeastFor = "30s")
     public void sendPromotionEmails() {
-        log.info("sendPromotionEmails > job");
+        log.debug("sendPromotionEmails fired");
         List<PromotionEmail> promotionEmails = emailService.getAllPromotionEmail().stream().filter(PromotionEmail::needsToBeSent).toList();
         List<User> subscribedUsers = userService.getSubscribedUsers();
         promotionEmails.forEach(email -> subscribedUsers.forEach(user -> emailService.sendRecurringPromotionEmail(email, user)));
-        log.info("Promotional emails sent successfully");
+        log.debug("sendPromotionEmails completed");
     }
 }
