@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import hu.webshop.engine.webshopbe.domain.email.EmailService;
+import hu.webshop.engine.webshopbe.domain.email.PromotionEmailService;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.EmailMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.PromotionEmailRequest;
@@ -18,31 +18,31 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class EmailAdapter {
 
-    private final EmailService emailService;
+    private final PromotionEmailService promotionEmailService;
     private final EmailMapper emailMapper;
 
     public PromotionEmailResponse create(PromotionEmailRequest request) {
         log.info("create > request: [{}]", request);
-        return emailMapper.toResponse(emailService.createPromotionEmail(emailMapper.fromRequest(request)));
+        return emailMapper.toResponse(promotionEmailService.createPromotionEmail(emailMapper.fromRequest(request)));
     }
 
     public List<PromotionEmailResponse> getAll() {
         log.info("getAll");
-        return emailMapper.toResponseList(emailService.getAllPromotionEmail());
+        return emailMapper.toResponseList(promotionEmailService.getAllPromotionEmail());
     }
 
     public PromotionEmailResponse get(UUID id) {
         log.info("get > id: [{}]", id);
-        return emailMapper.toResponse(emailService.getPromotionEmail(id));
+        return emailMapper.toResponse(promotionEmailService.getPromotionEmail(id));
     }
 
     public void delete(UUID id) {
         log.info("delete > id: [{}]", id);
-        emailService.deletePromotionEmail(id);
+        promotionEmailService.deletePromotionEmail(id);
     }
 
     public void test(UUID id, EmailRequest request) {
         log.info("test > id: [{}]", id);
-        emailService.testPromotionEmail(id, request.email());
+        promotionEmailService.testPromotionEmail(id, request.email());
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import hu.webshop.engine.webshopbe.domain.email.EmailService;
+import hu.webshop.engine.webshopbe.domain.email.PromotionEmailService;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
 import hu.webshop.engine.webshopbe.domain.store.StoreService;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
@@ -20,7 +20,7 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 public class RecurringEmailJob {
 
     private final UserService userService;
-    private final EmailService emailService;
+    private final PromotionEmailService promotionEmailService;
     private final StoreService storeService;
 
     /**
@@ -33,7 +33,7 @@ public class RecurringEmailJob {
     public void sendRecurringMarketingEmail() {
        log.debug("sendRecurringMarketingEmail fired");
         if (Boolean.TRUE.equals(storeService.getStore().getEnableBuiltInMarketingEmails())) {
-            userService.getSubscribedUsers().forEach(emailService::sendRecurringMarketingEmail);
+            userService.getSubscribedUsers().forEach(promotionEmailService::sendRecurringMarketingEmail);
             log.debug("sendRecurringMarketingEmail completed");
         }
     }
@@ -47,9 +47,9 @@ public class RecurringEmailJob {
     @SchedulerLock(name = "sendPromotionEmails", lockAtMostFor = "50s", lockAtLeastFor = "30s")
     public void sendPromotionEmails() {
         log.debug("sendPromotionEmails fired");
-        List<PromotionEmail> promotionEmails = emailService.getAllPromotionEmail().stream().filter(PromotionEmail::needsToBeSent).toList();
+        List<PromotionEmail> promotionEmails = promotionEmailService.getAllPromotionEmail().stream().filter(PromotionEmail::needsToBeSent).toList();
         List<User> subscribedUsers = userService.getSubscribedUsers();
-        promotionEmails.forEach(email -> subscribedUsers.forEach(user -> emailService.sendRecurringPromotionEmail(email, user)));
+        promotionEmails.forEach(email -> subscribedUsers.forEach(user -> promotionEmailService.sendRecurringPromotionEmail(email, user)));
         log.debug("sendPromotionEmails completed");
     }
 }

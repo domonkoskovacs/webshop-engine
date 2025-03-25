@@ -15,7 +15,6 @@ import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
-import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChangeType;
 import hu.webshop.engine.webshopbe.domain.store.StoreService;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
@@ -74,10 +73,7 @@ public class OrderCreationService {
 
     private boolean isThereInvalidProducts(List<Cart> cart) {
         log.info("isThereInvalidProducts > cart: [{}]", cart);
-        return cart.stream().anyMatch(cartItem -> {
-            Product product = productService.getById(cartItem.getProduct().getId());
-            return product.getCount() < cartItem.getCount();
-        });
+        return cart.stream().anyMatch(cartItem -> cartItem.getProduct().getCount() < cartItem.getCount());
     }
 
     private static Double calculateOrderItemsTotalPrice(List<OrderItem> products) {

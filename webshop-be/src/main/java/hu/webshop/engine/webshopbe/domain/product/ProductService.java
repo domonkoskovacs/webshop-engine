@@ -181,42 +181,31 @@ public class ProductService {
     }
 
     public void importAndSave(String csv) {
-        final Pattern pricePattern = Pattern.compile("\\d+(\\.\\d{1,2})?");
-        final Pattern countPattern = Pattern.compile("\\d+");
+        final Pattern doublePattern = Pattern.compile("\\d+(\\.\\d{1,2})?");
+        final Pattern integerPattern = Pattern.compile("\\d+");
 
-        List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"itemNumber", "brand", "name", "description", "subCategoryName", "gender", "count", "price", "discountPercentage", "imagesUrls"})
+        List<ProductCsv> parsedProducts = new CSVReader<>(ProductCsv.class, new String[]{"itemNumber", "brand", "name", "description", "subCategoryName", "gender", "count", "price", "discountPercentage", "imageUrls"})
                 .base64()
                 .csv(csv)
                 .registerValidator("brand", brandService::existsByName)
                 .registerValidator("subCategoryName", categoryService::subCategoryExistsByName)
                 .registerValidator("price",
-                        s -> pricePattern.matcher(s).matches(),
+                        s -> doublePattern.matcher(s).matches(),
                         s -> {
-                            try {
-                                double price = Double.parseDouble(s);
-                                return price > 0;
-                            } catch (NumberFormatException e) {
-                                return false;
-                            }
+                            double price = Double.parseDouble(s);
+                            return price > 0;
                         })
                 .registerValidator("count",
-                        s -> countPattern.matcher(s).matches(),
+                        s -> integerPattern.matcher(s).matches(),
                         s -> {
-                            try {
-                                int count = Integer.parseInt(s);
-                                return count >= 0;
-                            } catch (NumberFormatException e) {
-                                return false;
-                            }
+                            int count = Integer.parseInt(s);
+                            return count >= 0;
                         })
                 .registerValidator("discountPercentage",
+                        s -> doublePattern.matcher(s).matches(),
                         s -> {
-                            try {
-                                double discount = Double.parseDouble(s);
-                                return discount >= 0 && discount <= 100;
-                            } catch (NumberFormatException e) {
-                                return false;
-                            }
+                            double discount = Double.parseDouble(s);
+                            return discount >= 0 && discount <= 100;
                         })
                 .validate()
                 .parse();

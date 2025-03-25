@@ -86,7 +86,6 @@ public class StripeService {
 
     public Refund createRefund(String intentId, Double totalPrice) {
         log.info("createRefund > intentId: [{}], totalPrice: [{}]", intentId, totalPrice);
-
         try {
             long amountInCents = Math.round(totalPrice * 100);
 

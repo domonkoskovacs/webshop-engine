@@ -173,29 +173,29 @@ class ProductControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("product can be updated")
+    @DisplayName("product can be updated with keeping existing image ids")
     @DataSet("adminAndProducts.yml")
-    void productCanBeUpdated() throws Exception {
+    void productCanBeUpdatedWithKeepingExistingImageIds() throws Exception {
         //Given
         ProductUpdateRequest request = new ProductUpdateRequest("newBrand", "name", "des",
-                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, null, "000");
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, List.of("http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d?fileExtension=jpg"), "000");
 
         //When
-        ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_ADMIN));
+        ResultActions resultActions = mockMvc.perform(getMultipartRequest(request));
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.brand.name").value("newBrand"));
     }
 
     @NotNull
-    private MockHttpServletRequestBuilder getMultipartRequest(HttpMethod httpMethod, String url, ProductUpdateRequest request, Role role) throws Exception {
+    private MockHttpServletRequestBuilder getMultipartRequest(ProductUpdateRequest request) throws Exception {
         byte[] pngBytes = Files.readAllBytes(Paths.get("src/test/resources/images/e3ee6173-d53a-46c0-aea8-2de257e47089.png"));
-        MockMultipartFile image1 = new MockMultipartFile("images", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
-        MockMultipartFile image2 = new MockMultipartFile("images", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
-        return multipart(httpMethod, url)
+        MockMultipartFile image1 = new MockMultipartFile("newImages", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
+        MockMultipartFile image2 = new MockMultipartFile("newImages", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
+        return multipart(HttpMethod.PUT, "/api/product/b7f86506-8ea8-4908-b8f4-668c5ec6a7e1")
                 .file(image1)
                 .file(image2)
-                //.param("existingImageIds", String.valueOf(List.of()))
+                .param("existingImageIds", request.existingImageIds().toString())
                 .param("brand", request.brand())
                 .param("name", request.name())
                 .param("description", request.description())
@@ -204,7 +204,7 @@ class ProductControllerIT extends IntegrationTest {
                 .param("count", request.count().toString())
                 .param("price", request.price().toString())
                 .param("discountPercentage", request.discountPercentage().toString())
-                .header(AUTHORIZATION, "Bearer " + getToken(role));
+                .header(AUTHORIZATION, "Bearer " + getToken(Role.ROLE_ADMIN));
     }
 
     @Test
@@ -305,7 +305,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeImported() throws Exception {
         //Given
         if (!productRepository.findAll().isEmpty()) fail();
-        CsvRequest request = new CsvRequest("aXRlbU51bWJlcjticmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5TmFtZTtnZW5kZXI7Y291bnQ7cHJpY2U7ZGlzY291bnRQZXJjZW50YWdlO2ltYWdlc1VybHMNCml0ZW0wMDA7YnJhbmQ7c2hpcnQ7dGhpcyBpcyBhIHNoaXJ0O3N1YkNhdGVnb3J5O1VOSVNFWDsxMDsxMC4wOzEuMDtpbWFnZVVybA");
+        CsvRequest request = new CsvRequest("aXRlbU51bWJlcjticmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5TmFtZTtnZW5kZXI7Y291bnQ7cHJpY2U7ZGlzY291bnRQZXJjZW50YWdlO2ltYWdlc1VybHMNCml0ZW0wMDA7YnJhbmQ7c2hpcnQ7dGhpcyBpcyBhIHNoaXJ0O3N1YkNhdGVnb3J5O1VOSVNFWDsxMDsxMC4wOzEuMDtpbWFnZVVybCxpbWFnZVVybDI");
 
         //When
         ResultActions resultActions = performPost(BASE_URL + "/import", request, Role.ROLE_ADMIN);
@@ -325,7 +325,7 @@ class ProductControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQo="));
+                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDtodHRwOi8vbG9jYWxob3N0OjgwODAvYXBpL2ltYWdlLzkxZmNkZDU3LWE1ZTUtNDVkMC1iNjk5LTYyMjA3OGRjMGIxZD9maWxlRXh0ZW5zaW9uPWpwZztpdGVtTm8wMDANCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7VU5JU0VYOzI7MTAuMDsxMC4wO2h0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvaW1hZ2UvOTFmY2RkNTctYTVlNS00NWQwLWI2OTktNjIyMDc4ZGMwYjFkP2ZpbGVFeHRlbnNpb249anBnO2l0ZW1ObzAwMA0K"));
 
     }
 
@@ -352,6 +352,6 @@ class ProductControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDs7aXRlbU5vMDAwDQo="));
+                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDtodHRwOi8vbG9jYWxob3N0OjgwODAvYXBpL2ltYWdlLzkxZmNkZDU3LWE1ZTUtNDVkMC1iNjk5LTYyMjA3OGRjMGIxZD9maWxlRXh0ZW5zaW9uPWpwZztpdGVtTm8wMDANCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7VU5JU0VYOzI7MTAuMDsxMC4wO2h0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvaW1hZ2UvOTFmY2RkNTctYTVlNS00NWQwLWI2OTktNjIyMDc4ZGMwYjFkP2ZpbGVFeHRlbnNpb249anBnO2l0ZW1ObzAwMA0K"));
     }
 }

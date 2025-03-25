@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +25,7 @@ import hu.webshop.engine.webshopbe.domain.user.entity.User;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("EmailService unit tests")
 class EmailServiceTest {
+
     @InjectMocks
     private EmailService emailService;
     @Mock
@@ -36,20 +36,15 @@ class EmailServiceTest {
     private AsyncEmailSenderService emailSender;
 
     @Test
-    @DisplayName("send reoccurring email")
-    void testSendRecurringMarketingEmail() {
+    @DisplayName("send marketing email")
+    void sendMarketingEmail() {
         //Given
-        User user = User.builder()
-                .firstname("first")
-                .lastname("last")
-                .email("email@email.com")
-                .saved(List.of(Product.builder().discountPercentage(10.0).imageUrls(List.of("url")).build()))
-                .build();
+        User user = User.builder().build();
         user.setId(UUID.randomUUID());
-        when(emailProperties.getUnsubscribe()).thenReturn("url");
-
+        Product product = Product.builder().build();
+        when(emailProperties.getUnsubscribe()).thenReturn("unsubscribe/{id}");
         //When
-        emailService.sendRecurringMarketingEmail(user);
+        emailService.sendMarketingEmail(user, product);
 
         //Then
         verify(emailSender, times(1)).sendNoReplyMail(any(Email.class));

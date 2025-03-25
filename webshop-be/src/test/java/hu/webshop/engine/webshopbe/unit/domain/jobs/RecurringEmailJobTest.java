@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import hu.webshop.engine.webshopbe.domain.email.EmailService;
+import hu.webshop.engine.webshopbe.domain.email.PromotionEmailService;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
 import hu.webshop.engine.webshopbe.domain.jobs.RecurringEmailJob;
 import hu.webshop.engine.webshopbe.domain.store.StoreService;
@@ -32,7 +32,7 @@ class RecurringEmailJobTest {
     @Mock
     private UserService userService;
     @Mock
-    private EmailService emailService;
+    private PromotionEmailService promotionEmailService;
     @Mock
     private StoreService storeService;
 
@@ -47,7 +47,7 @@ class RecurringEmailJobTest {
         recurringEmailJob.sendRecurringMarketingEmail();
 
         //Then
-        verify(emailService, times(2)).sendRecurringMarketingEmail(any(User.class));
+        verify(promotionEmailService, times(2)).sendRecurringMarketingEmail(any(User.class));
     }
 
     @Test
@@ -61,7 +61,7 @@ class RecurringEmailJobTest {
         recurringEmailJob.sendRecurringMarketingEmail();
 
         //Then
-        verify(emailService, times(0)).sendRecurringMarketingEmail(any(User.class));
+        verify(promotionEmailService, times(0)).sendRecurringMarketingEmail(any(User.class));
     }
 
     @Test
@@ -74,7 +74,7 @@ class RecurringEmailJobTest {
         recurringEmailJob.sendRecurringMarketingEmail();
 
         //Then
-        verify(emailService, times(0)).sendRecurringMarketingEmail(any(User.class));
+        verify(promotionEmailService, times(0)).sendRecurringMarketingEmail(any(User.class));
     }
 
     @Test
@@ -88,13 +88,13 @@ class RecurringEmailJobTest {
                 .hour(now.getHour())
                 .minute(now.getMinute()).build();
         when(userService.getSubscribedUsers()).thenReturn(List.of(User.builder().build(), User.builder().build()));
-        when(emailService.getAllPromotionEmail()).thenReturn(List.of(email));
+        when(promotionEmailService.getAllPromotionEmail()).thenReturn(List.of(email));
 
         //When
         recurringEmailJob.sendPromotionEmails();
 
         //Then
-        verify(emailService, times(2)).sendRecurringPromotionEmail(any(PromotionEmail.class), any(User.class));
+        verify(promotionEmailService, times(2)).sendRecurringPromotionEmail(any(PromotionEmail.class), any(User.class));
     }
 
     @Test
@@ -102,12 +102,12 @@ class RecurringEmailJobTest {
     void ifNoEmailCreatedNothingCalled() {
         //Given
         when(userService.getSubscribedUsers()).thenReturn(List.of(User.builder().build(), User.builder().build()));
-        when(emailService.getAllPromotionEmail()).thenReturn(List.of());
+        when(promotionEmailService.getAllPromotionEmail()).thenReturn(List.of());
 
         //When
         recurringEmailJob.sendPromotionEmails();
 
         //Then
-        verify(emailService, times(0)).sendRecurringPromotionEmail(any(PromotionEmail.class), any(User.class));
+        verify(promotionEmailService, times(0)).sendRecurringPromotionEmail(any(PromotionEmail.class), any(User.class));
     }
 }
