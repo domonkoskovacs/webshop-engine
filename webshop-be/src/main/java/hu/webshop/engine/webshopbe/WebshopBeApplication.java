@@ -11,7 +11,7 @@ import hu.webshop.engine.webshopbe.infrastructure.config.logging.PropertiesLogge
 public class WebshopBeApplication {
 
     public static void main(String[] args) {
-        Locale.setDefault(new Locale("hu", "HU"));
+        Locale.setDefault(Locale.forLanguageTag("hu-HU"));
         SpringApplication application = new SpringApplication(WebshopBeApplication.class);
         application.addListeners(new PropertiesLogger());
         application.run(args);

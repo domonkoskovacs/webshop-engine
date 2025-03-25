@@ -30,6 +30,8 @@ public enum ReasonCode {
     INVALID_ORDER_PRICE,
     CSV_ERROR,
     CSV_UPLOAD_ERROR,
+    ORDER_NOT_RETURNABLE,
+    EXPIRED_RETURN_PERIOD,
     PROMOTION_EMAIL_NAME_OCCUPIED;
 
     private static final EnumMap<ReasonCode, Integer> reasonStatus = new EnumMap<>(ReasonCode.class);
@@ -63,6 +65,8 @@ public enum ReasonCode {
         reasonStatus.put(CSV_UPLOAD_ERROR, 4009);
         reasonStatus.put(PROMOTION_EMAIL_NAME_OCCUPIED, 40010);
         reasonStatus.put(ALREADY_VERIFIED_USER, 40011);
+        reasonStatus.put(ORDER_NOT_RETURNABLE, 40012);
+        reasonStatus.put(EXPIRED_RETURN_PERIOD, 40012);
     }
 
     public int reasonStatus() {

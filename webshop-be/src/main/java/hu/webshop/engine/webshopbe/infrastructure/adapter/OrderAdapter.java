@@ -8,8 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import hu.webshop.engine.webshopbe.domain.order.OrderCreationService;
-import hu.webshop.engine.webshopbe.domain.order.OrderQueryService;
 import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
+import hu.webshop.engine.webshopbe.domain.order.OrderQueryService;
 import hu.webshop.engine.webshopbe.domain.order.OrderStatusService;
 import hu.webshop.engine.webshopbe.domain.order.filters.OrderSorting;
 import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
@@ -31,10 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OrderAdapter {
 
+    private final OrderStatusService orderStatusService;
     private final OrderPaymentService orderPaymentService;
     private final OrderCreationService orderCreationService;
     private final OrderQueryService orderQueryService;
-    private final OrderStatusService orderStatusService;
     private final OrderMapper orderMapper;
 
     public OrderPage<OrderResponse> getAll(
@@ -70,7 +70,7 @@ public class OrderAdapter {
 
     public OrderResponse cancel(UUID id) {
         log.info("cancel > id: [{}]", id);
-        return orderMapper.toResponse(orderPaymentService.cancel(id));
+        return orderMapper.toResponse(orderStatusService.cancel(id));
     }
 
     public CsvResponse export(LocalDate from, LocalDate to) {
@@ -80,11 +80,11 @@ public class OrderAdapter {
 
     public OrderResponse returnOrder(UUID id) {
         log.info("returnOrder > id: [{}]", id);
-        return orderMapper.toResponse(orderPaymentService.returnOrder(id));
+        return orderMapper.toResponse(orderStatusService.returnOrder(id));
     }
 
     public OrderResponse createRefund(UUID id, List<@Valid RefundOrderItemRequest> refundRequest) {
         log.info("createRefund > id: [{}], refundRequest: [{}]", id, refundRequest);
-        return orderMapper.toResponse(orderPaymentService.createRefund(id, orderMapper.fromRequestlist(refundRequest)));
+        return orderMapper.toResponse(orderStatusService.createRefund(id, orderMapper.fromRequestlist(refundRequest)));
     }
 }

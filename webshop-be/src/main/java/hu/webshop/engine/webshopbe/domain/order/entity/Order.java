@@ -74,6 +74,9 @@ public class Order extends BaseEntity {
     @Column(name = "refunded_date")
     private OffsetDateTime refundedDate;
 
+    @Column(name = "delivered_date")
+    private OffsetDateTime deliveredDate;
+
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;

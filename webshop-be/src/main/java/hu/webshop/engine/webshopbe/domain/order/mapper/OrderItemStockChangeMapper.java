@@ -11,4 +11,10 @@ import hu.webshop.engine.webshopbe.domain.product.value.StockChange;
 public interface OrderItemStockChangeMapper {
     StockChange orderItemToStockChange(OrderItem orderItem);
     List<StockChange> orderItemsToStockChanges(List<OrderItem> orderItems);
+    default List<StockChange> orderItemsToReturnedStockChanges(List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .filter(item -> item.getReturnedCount() != null && item.getReturnedCount() > 0)
+                .map(item -> new StockChange(item.getProductId(), item.getReturnedCount()))
+                .toList();
+    }
 }

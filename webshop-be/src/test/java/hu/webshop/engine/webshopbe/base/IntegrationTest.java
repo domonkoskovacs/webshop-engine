@@ -3,6 +3,7 @@ package hu.webshop.engine.webshopbe.base;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -20,7 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -99,7 +103,9 @@ public abstract class IntegrationTest {
     @MockitoBean
     protected StripeService stripeService;
     @MockitoSpyBean
-    InitDataConfig initDataConfig;
+    protected InitDataConfig initDataConfig;
+    @MockitoBean
+    protected Clock clock;
 
     @DynamicPropertySource
     public static void properties(DynamicPropertyRegistry registry) {
@@ -160,6 +166,8 @@ public abstract class IntegrationTest {
         lenient().when(stripeService.cancelPaymentIntent(any())).thenReturn(intent);
         lenient().when(stripeService.createRefund(any(), any())).thenReturn(refund);
         initDataConfig.run();
+        when(clock.instant()).thenReturn(Instant.parse("2025-03-25T00:00:00Z"));
+        when(clock.getZone()).thenReturn(ZoneId.of("UTC"));
     }
 
     protected void awaitFor(Callable<Boolean> condition) {

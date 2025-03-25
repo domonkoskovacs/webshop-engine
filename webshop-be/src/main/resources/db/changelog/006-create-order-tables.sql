@@ -11,6 +11,7 @@ create table webshop_order
     refund_id          varchar,
     paid_date          timestamp,
     refunded_date      timestamp,
+    delivered_date      timestamp,
     user_id            uuid references webshop_user (id) not null,
     creation_time      timestamp                         not null,
     last_modified_time timestamp

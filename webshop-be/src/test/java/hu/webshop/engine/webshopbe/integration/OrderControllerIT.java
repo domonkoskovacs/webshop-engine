@@ -204,8 +204,7 @@ class OrderControllerIT extends IntegrationTest {
         ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/return", Role.ROLE_USER);
 
         //Then
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(OrderStatus.RETURN_REQUESTED.toString()));
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.status").value(OrderStatus.RETURN_REQUESTED.toString()));
     }
 
     @Test
@@ -229,10 +228,14 @@ class OrderControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("user can get payment intent for order")
+    @DisplayName("user can retrieve payment intent for order")
     @DataSet("userWithOrder.yml")
-    void userCanGetPaymentIntentForOrder() throws Exception {
+    void userCanRetrievePaymentIntentForOrder() throws Exception {
         //Given //When
+        awaitFor(() -> {
+            Optional<Order> byId = orderRepository.findById(UUID.fromString(ORDER_ID));
+            return byId.isPresent() && byId.get().getPaymentIntentId() != null;
+        });
         ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/paymentIntent", Role.ROLE_USER);
         transaction();
 
@@ -243,5 +246,37 @@ class OrderControllerIT extends IntegrationTest {
             Optional<Order> byId = orderRepository.findById(UUID.fromString(ORDER_ID));
             return byId.isPresent() && byId.get().getPaymentIntentId() != null;
         });
+    }
+
+    @Test
+    @DisplayName("user can create intent for order")
+    @DataSet("userWithOrderWithoutPaymentIntent.yml")
+    void userCanCreateIntentForOrder() throws Exception {
+        //Given //When
+        awaitFor(() -> {
+            Optional<Order> byId = orderRepository.findById(UUID.fromString(ORDER_ID));
+            return byId.isPresent() && byId.get().getPaymentIntentId() == null;
+        });
+        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/paymentIntent", Role.ROLE_USER);
+        transaction();
+
+        //Then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.clientSecret").isNotEmpty());
+        awaitFor(() -> {
+            Optional<Order> byId = orderRepository.findById(UUID.fromString(ORDER_ID));
+            return byId.isPresent() && byId.get().getPaymentIntentId() != null;
+        });
+    }
+
+    @Test
+    @DisplayName("user cannot retrieve paid intent")
+    @DataSet("userWithPaidOrder.yml")
+    void userCannotRetrievePaidIntent() throws Exception {
+        //Given //When
+        ResultActions resultActions = performPost(BASE_URL + "/" + ORDER_ID + "/paymentIntent", Role.ROLE_USER);
+
+        //Then
+        resultActions.andExpect(status().isBadRequest());
     }
 }
