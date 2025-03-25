@@ -17,6 +17,7 @@ export const FormSchema = z.object({
     deleteOutOfStockProducts: z.boolean(),
     deleteUnusedPictures: z.boolean(),
     enableBuiltInMarketingEmails: z.boolean(),
+    unpaidOrderCancelHours: z.number().min(1, "Unpaid order cancel hours is at least 1"),
 });
 
 const StoreForm: React.FC = () => {
@@ -45,6 +46,7 @@ const StoreForm: React.FC = () => {
                 deleteOutOfStockProducts: store.deleteOutOfStockProducts,
                 deleteUnusedPictures: store.deleteUnusedPictures,
                 enableBuiltInMarketingEmails: store.enableBuiltInMarketingEmails,
+                unpaidOrderCancelHours: store.unpaidOrderCancelHours,
             });
         }
     }, [form, store]);
@@ -68,8 +70,10 @@ const StoreForm: React.FC = () => {
                               placeholder="Add the minimum order price"/>
             <NumberInputField form={form} name="shippingPrice" label="Shipping price"
                               placeholder="Add the shipping price"/>
-            <NumberInputField form={form} name="returnPeriod" label="Return period"
+            <NumberInputField form={form} name="returnPeriod" label="Return period (day)"
                               placeholder="Add the return period"/>
+            <NumberInputField form={form} name="unpaidOrderCancelHours" label="Unpaid order wait period (h)"
+                              placeholder="Add hours"/>
         </div>
         <div className="flex flex-col gap-2">
             <SwitchField form={form} name="deleteOutOfStockProducts" label="Out of stock job"

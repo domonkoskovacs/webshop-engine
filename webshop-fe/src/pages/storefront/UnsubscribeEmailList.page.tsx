@@ -5,7 +5,7 @@ import {ApiError} from "../../shared/ApiError";
 import {BellOff, CheckCircle, Loader2, XCircle} from "lucide-react";
 import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardHeader} from "../../components/ui/Card";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const UnsubscribeEmailList: React.FC = () => {
     const [searchParams] = useSearchParams();

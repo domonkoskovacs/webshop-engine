@@ -1,6 +1,6 @@
 import {ApiConfig} from "../shared/ApiConfig";
 import {handleApiCall} from "../shared/ApiCall";
-import {OrderServiceApi, OrderServiceApiGetAll1Request, OrderStatusRequestOrderStatusEnum} from "../shared/api";
+import {OrderServiceApi, OrderServiceApiGetAll4Request, OrderStatusRequestOrderStatusEnum} from "../shared/api";
 
 class OrderService {
     private orderApi: OrderServiceApi
@@ -12,9 +12,9 @@ class OrderService {
     /**
      * Get all orders by filters
      */
-    async getAll(orderRequest: OrderServiceApiGetAll1Request) {
+    async getAll(orderRequest: OrderServiceApiGetAll4Request) {
         return handleApiCall(() =>
-            this.orderApi.getAll1(orderRequest)
+            this.orderApi.getAll4(orderRequest)
                 .then(res => res?.data)
         );
     }
@@ -24,7 +24,7 @@ class OrderService {
      */
     async getById(id: string) {
         return handleApiCall(() =>
-            this.orderApi.getById1({id})
+            this.orderApi.getById2({id})
                 .then(res => res?.data)
         );
     }

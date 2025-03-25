@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                 setCookie("role", role, {path: "/"});
                 setCookie("refreshToken", refreshToken, {maxAge: refreshTokenTimeout, path: "/"});
                 if (role === "ROLE_ADMIN") {
-                    navigate("/admin/dashboard")
+                    navigate("/dashboard")
                 } else {
                     navigate("/")
                 }

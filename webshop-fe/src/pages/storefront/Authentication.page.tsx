@@ -3,7 +3,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/Tabs
 import RegistrationForm from "../../components/storefront/forms/RegistrationForm.component";
 import LoginForm from "../../components/storefront/forms/LoginForm.component";
 import {useSearchParams} from "react-router-dom";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const Authentication: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();

@@ -24,7 +24,7 @@ class EmailService {
      */
     async getAll() {
         return handleApiCall(() =>
-            this.emailApi.getAll2()
+            this.emailApi.getAll1()
                 .then(res => res?.data)
         );
     }
@@ -34,7 +34,7 @@ class EmailService {
      */
     async delete(id: string) {
         return handleApiCall(() =>
-            this.emailApi.delete1({id})
+            this.emailApi.delete2({id})
                 .then(res => res?.data)
         );
     }

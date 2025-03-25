@@ -14,7 +14,7 @@ class CategoryService {
      */
     async getAll() {
         return handleApiCall(() =>
-            this.categoryApi.getAll3()
+            this.categoryApi.getAll2()
                 .then(res => res?.data)
         );
     }
@@ -25,7 +25,7 @@ class CategoryService {
      */
     async getById(id: string) {
         return handleApiCall(() =>
-            this.categoryApi.getById2({id: id})
+            this.categoryApi.getById1({id: id})
                 .then(res => res?.data)
         );
     }
@@ -65,7 +65,7 @@ class CategoryService {
      */
     async delete(id: string) {
         return handleApiCall(() =>
-            this.categoryApi.delete2({id: id})
+            this.categoryApi._delete({id: id})
                 .then(res => res?.data)
         );
     }

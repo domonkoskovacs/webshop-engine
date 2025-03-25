@@ -66,7 +66,7 @@ const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
                 ) : (
                     products.length > 0 ? (
                         products.slice(0, 4).map(product => (
-                            <ProductCard product={product}/>
+                            <ProductCard key={product.id} product={product}/>
                         ))
                     ) : (
                         Array.from({length: 4}).map((_, index) => <SkeletonProductCard key={index}/>)

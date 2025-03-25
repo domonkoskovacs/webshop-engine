@@ -1,13 +1,13 @@
 import React, {createContext, ReactNode, useCallback, useEffect, useState} from "react";
-import {OrderResponse, OrderServiceApiGetAll1Request, OrderStatusRequestOrderStatusEnum} from "../shared/api";
+import {OrderResponse, OrderServiceApiGetAll4Request, OrderStatusRequestOrderStatusEnum} from "../shared/api";
 import {orderService} from "../services/OrderService";
 import {downloadCSV} from "../lib/file.utils";
 import {toast} from "../hooks/UseToast";
 
 interface OrderContextType {
     orders: OrderResponse[];
-    filters: OrderServiceApiGetAll1Request;
-    updateFilters: (newFilters: Partial<OrderServiceApiGetAll1Request>) => void;
+    filters: OrderServiceApiGetAll4Request;
+    updateFilters: (newFilters: Partial<OrderServiceApiGetAll4Request>) => void;
     resetFilters: () => void;
     totalPages: number;
     nextPage: () => void;
@@ -27,7 +27,7 @@ interface OrderProviderProps {
 
 export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
     const [orders, setOrders] = useState<OrderResponse[]>([]);
-    const [filters, setFilters] = useState<OrderServiceApiGetAll1Request>({
+    const [filters, setFilters] = useState<OrderServiceApiGetAll4Request>({
         page: 1,
         size: 10,
     });
@@ -57,7 +57,7 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
         })();
     }, [fetchOrders]);
 
-    const updateFilters = (newFilters: Partial<OrderServiceApiGetAll1Request>) => {
+    const updateFilters = (newFilters: Partial<OrderServiceApiGetAll4Request>) => {
         setFilters((prev) => ({...prev, ...newFilters, page: 1}));
     };
 

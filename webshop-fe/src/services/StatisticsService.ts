@@ -12,9 +12,9 @@ class StatisticsService {
     /**
      * Get statistics
      */
-    async get(from: string, to: string, mostSavedProductCount: number, mostOrderedProductCount: number, topUserCount: number) {
+    async get(from: string, to: string, topCount: number) {
         return handleApiCall(() =>
-            this.statisticsApi.getStatistics({from, to, mostSavedProductCount, mostOrderedProductCount, topUserCount})
+            this.statisticsApi.getStatistics({from, to, topCount})
                 .then(res => res?.data)
         );
     }

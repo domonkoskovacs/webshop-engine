@@ -1,12 +1,12 @@
 import React from 'react';
 import StoreForm from "../../components/admin/store/StoreForm.component";
-import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const StoreDashboard: React.FC = () => {
     return (
-        <DashboardPageContainer>
+        <PageContainer>
             <StoreForm/>
-        </DashboardPageContainer>
+        </PageContainer>
     );
 };
 

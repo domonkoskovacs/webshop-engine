@@ -1,5 +1,5 @@
 import React from "react";
-import {cn} from "../../../lib/utils";
+import {cn} from "../../lib/utils";
 
 const layoutVariants = {
     default: "h-full w-full flex flex-col items-center justify-center",

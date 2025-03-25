@@ -4,7 +4,7 @@ import {ProductResponse} from "../../../shared/api";
 import {useProduct} from "../../../hooks/UseProduct";
 import {Button} from "../../ui/Button";
 
-import PageContainer from "../shared/PageContainer.component";
+import PageContainer from "../../shared/PageContainer.component";
 import EmptyState from "../shared/EmptyPage.component";
 import ProductGallery from "./ProductGallery.componenet";
 import {generateProductBreadcrumbSegments, generateProductListUrl} from "../../../lib/url.utils";
@@ -71,7 +71,7 @@ const ProductDetails: React.FC = () => {
 
     return (
         <PageContainer layout="spacious"
-                       className="mx-4 flex flex-col items-center justify-center md:flex-row gap-3 relative">
+                       className="mx-4 flex flex-col items-center justify-center md:flex-row gap-3 relative max-w-6xl">
             <div className="w-full md:w-auto md:sticky top-2 self-start">
                 <ProductGallery product={product}/>
             </div>

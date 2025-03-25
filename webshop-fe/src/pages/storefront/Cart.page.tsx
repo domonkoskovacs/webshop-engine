@@ -10,10 +10,10 @@ import {Separator} from "../../components/ui/Separator";
 import {calculateCartTotals} from "../../lib/price.utils";
 import {Link} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageTitle from "../../components/storefront/shared/PageTitle";
-import PageContent from "../../components/storefront/shared/PageContent";
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageTitle from "../../components/shared/PageTitle";
+import PageContent from "../../components/shared/PageContent";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()

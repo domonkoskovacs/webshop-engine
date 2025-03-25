@@ -4,10 +4,10 @@ import {Button} from "../../components/ui/Button";
 import {ApiError} from "../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../shared/api";
 import {useSearchParams} from "react-router-dom";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageTitle from "../../components/storefront/shared/PageTitle";
-import PageContent from "../../components/storefront/shared/PageContent";
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageTitle from "../../components/shared/PageTitle";
+import PageContent from "../../components/shared/PageContent";
 
 const VerifyEmailResend: React.FC = () => {
     const [searchParams] = useSearchParams();

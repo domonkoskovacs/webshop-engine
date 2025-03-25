@@ -45,11 +45,11 @@ const AccountHoverContent: React.FC = () => {
         return <div className="flex flex-col text-center space-y-1">
             <h1>Welcome back!</h1>
             <Button variant="ghost" className="flex items-center justify-start"
-                    onClick={() => navigate("/admin/dashboard")}>
+                    onClick={() => navigate("/dashboard")}>
                 <LayoutDashboard className="mr-2"/>Dashboard
             </Button>
             <Button variant="ghost" className="flex items-center justify-start"
-                    onClick={() => navigate("/admin/dashboard/settings")}>
+                    onClick={() => navigate("/dashboard/store")}>
                 <Settings className="mr-2"/>Settings
             </Button>
             <Separator className="my-4"/>

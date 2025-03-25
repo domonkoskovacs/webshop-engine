@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageTitle from "../../components/storefront/shared/PageTitle";
-import PageContent from 'src/components/storefront/shared/PageContent';
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageTitle from "../../components/shared/PageTitle";
+import PageContent from 'src/components/shared/PageContent';
 
 const PrivacyPolicy: React.FC = () => {
     const {store} = usePublicStore()

@@ -1,13 +1,13 @@
 import React from 'react';
 import CategoryTable from "../../components/admin/category/CategoryTable.component";
-import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const CategoryDashboard: React.FC = () => {
 
     return (
-        <DashboardPageContainer className="justify-start">
+        <PageContainer layout="start">
             <CategoryTable/>
-        </DashboardPageContainer>
+        </PageContainer>
     );
 };
 

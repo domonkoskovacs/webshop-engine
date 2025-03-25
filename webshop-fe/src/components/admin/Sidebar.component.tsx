@@ -1,4 +1,4 @@
-import {ChartLine, LogOut, Mail, Newspaper, Shirt, ShoppingBag, Store, UserCog} from "lucide-react"
+import {ChartLine, LogOut, Mail, Newspaper, Shirt, ShoppingBag, Store} from "lucide-react"
 import {Link} from "react-router-dom";
 
 import {
@@ -21,15 +21,15 @@ import {ScrollArea} from "../ui/ScrollArea";
 
 // Menu items.
 const storefront = [
-    {icon: Newspaper, label: "Articles", path: "/admin/dashboard/article"},
-    {icon: ShoppingBag, label: "Categories", path: "/admin/dashboard/category"},
-    {icon: Shirt, label: "Products", path: "/admin/dashboard/products"},
-    {icon: Store, label: "Store", path: "/admin/dashboard/store"},
+    {icon: Newspaper, label: "Articles", path: "/dashboard/article"},
+    {icon: ShoppingBag, label: "Categories", path: "/dashboard/category"},
+    {icon: Shirt, label: "Products", path: "/dashboard/products"},
+    {icon: Store, label: "Store", path: "/dashboard/store"},
 ];
 const salesOperations = [
-    {icon: Mail, label: "Promotions", path: "/admin/dashboard/promotion-email"},
-    {icon: ShoppingBag, label: "Orders", path: "/admin/dashboard/orders"},
-    {icon: ChartLine, label: "Statistics", path: "/admin/dashboard/statistics"},
+    {icon: Mail, label: "Promotions", path: "/dashboard/promotion-email"},
+    {icon: ShoppingBag, label: "Orders", path: "/dashboard/orders"},
+    {icon: ChartLine, label: "Statistics", path: "/dashboard/statistics"},
 ];
 
 export function AppSidebar() {
@@ -45,10 +45,6 @@ export function AppSidebar() {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <Avatar className="h-8 w-8 rounded-lg">
-                                {/*<AvatarImage
-                                src={data.user.avatar}
-                                alt={data.user.name}
-                            />*/}
                                 <AvatarFallback className="rounded-lg">AD</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -144,14 +140,8 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                             <Link to="/">
-                                <Store />
+                                <Store/>
                                 Storefront
-                            </Link>
-                        </SidebarMenuButton>
-                        <SidebarMenuButton asChild>
-                            <Link to="/admin/dashboard/settings">
-                                <UserCog/>
-                                Settings
                             </Link>
                         </SidebarMenuButton>
                         <SidebarMenuButton asChild onClick={() => logout()} className="hover:cursor-pointer">

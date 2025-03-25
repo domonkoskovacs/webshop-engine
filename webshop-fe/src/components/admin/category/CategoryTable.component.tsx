@@ -148,7 +148,7 @@ const CategoryTable: React.FC = () => {
                 </SheetContent>
             </Sheet>
 
-            <div className="flex items-center py-4">
+            <div className="flex items-center my-2">
                 <Input
                     placeholder="Filter categories..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}

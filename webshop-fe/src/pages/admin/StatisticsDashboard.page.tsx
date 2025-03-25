@@ -1,11 +1,11 @@
 import React from 'react';
-import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const StatisticsDashboard: React.FC = () => {
     return (
-        <DashboardPageContainer>
+        <PageContainer>
             statistics
-        </DashboardPageContainer>
+        </PageContainer>
     );
 };
 

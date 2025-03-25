@@ -252,7 +252,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({childr
         try {
             const requestParams: ProductServiceApiGetAllRequest = {
                 categories: [category],
-                page: 1,
+                page: 0,
                 size: 4,
                 showOutOfStock: false,
                 sortType: "DESC_PRICE"

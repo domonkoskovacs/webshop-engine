@@ -19,9 +19,11 @@ import ProductForm from "../../components/admin/product/ProductForm.component";
 import {Checkbox} from "../../components/ui/Checkbox";
 import DiscountForm from "../../components/admin/product/DiscountForm.component";
 import ImportForm from "../../components/admin/product/ImportForm.component";
-import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'src/components/ui/Dialog';
 import ProductCard from "../../components/storefront/product/ProductCard.component";
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageContent from "../../components/shared/PageContent";
 
 const ProductsDashboard: React.FC = () => {
     const {
@@ -190,16 +192,16 @@ const ProductsDashboard: React.FC = () => {
 
 
     return (
-        <DashboardPageContainer className="justify-start">
+        <PageContainer layout="start">
             <Dialog open={isProductCardOpen} onOpenChange={setIsProductCardOpen}>
                 <DialogContent className="w-1/4 h-auto">
                     <DialogHeader>
                         <DialogTitle>Product View</DialogTitle>
                     </DialogHeader>
-                        <ProductCard product={product}/>
+                    <ProductCard product={product}/>
                 </DialogContent>
             </Dialog>
-            <div className="my-2 flex w-full justify-between">
+            <PageHeader className="pt-2 mb-0">
                 <Sheet open={isDiscountFormOpen} onOpenChange={setIsDiscountFormOpen}>
                     <SheetTrigger asChild>
 
@@ -244,20 +246,20 @@ const ProductsDashboard: React.FC = () => {
                         </SheetContent>
                     </Sheet>
                 </div>
-            </div>
-            <div className="w-full">
+            </PageHeader>
+            <PageContent>
                 <DataTable key={products.length} columns={columns} data={products} customElement={itemNoFilter}
                            totalElements={totalElements}/>
-            </div>
-            <PaginationComponent
-                className="my-2"
-                currentPage={filters.page ?? 0}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                onNext={nextPage}
-                onPrev={prevPage}
-            />
-        </DashboardPageContainer>
+                <PaginationComponent
+                    className="my-2"
+                    currentPage={filters.page ?? 0}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    onNext={nextPage}
+                    onPrev={prevPage}
+                />
+            </PageContent>
+        </PageContainer>
     );
 };
 

@@ -9,9 +9,9 @@ import FilterForm from "../../components/storefront/product/FilterForm.component
 import ProductList from "../../components/storefront/product/ProductList.component";
 import {useProductScroll} from "../../hooks/useProductScroll";
 import {useGender} from "../../hooks/useGender";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageContent from "../../components/storefront/shared/PageContent";
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageContent from "../../components/shared/PageContent";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
 import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersFromUrl} from "../../lib/url.utils";
 
@@ -56,7 +56,7 @@ const Products: React.FC = () => {
 
     return name && id ?
         <ProductDetails/> :
-        <PageContainer layout="spacious">
+        <PageContainer layout="spacious" className="self-start">
             <PageHeader>
                 <div className="flex items-center gap-3">
                     <div className="hidden sm:flex sm:items-center sm:gap-3">

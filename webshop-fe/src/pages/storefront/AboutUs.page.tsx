@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageTitle from "../../components/storefront/shared/PageTitle";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageContent from "../../components/storefront/shared/PageContent";
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageTitle from "../../components/shared/PageTitle";
+import PageHeader from "../../components/shared/PageHeader";
+import PageContent from "../../components/shared/PageContent";
 
 const AboutUs: React.FC = () => {
     const {store} = usePublicStore()

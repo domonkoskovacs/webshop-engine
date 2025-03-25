@@ -12,7 +12,6 @@ import OrdersDashboard from "../pages/admin/OrdersDashboard.page";
 import ProductsDashboard from "../pages/admin/ProductsDashboard.page";
 import StatisticsDashboard from "../pages/admin/StatisticsDashboard.page";
 import StoreDashboard from "../pages/admin/StoreDashboard.page";
-import SettingsDashboard from "../pages/admin/SettingsDashboard.page";
 import StorefrontLayout from "../layouts/Storefront.layout";
 import ForgotPassword from "../pages/storefront/ForgotPassword.page";
 import NewPassword from "../pages/storefront/NewPassword.page";
@@ -88,7 +87,7 @@ const AppRouter: React.FC = () => {
             />
 
             <Route
-                path="/admin/dashboard/*"
+                path="/dashboard/*"
                 element={
                     <ProtectedRoute allowedRole="ROLE_ADMIN">
                         <AdminProviders>
@@ -107,7 +106,6 @@ const AppRouter: React.FC = () => {
                 <Route path="products" element={<ProductsDashboard/>}/>
                 <Route path="statistics" element={<StatisticsDashboard/>}/>
                 <Route path="store" element={<StoreDashboard/>}/>
-                <Route path="settings" element={<SettingsDashboard/>}/>
             </Route>
         </Routes>
     );

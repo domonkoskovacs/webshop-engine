@@ -31,7 +31,7 @@ export function isCancelable(order: OrderResponse): boolean {
  * (For example, orders in the FINISHED state are considered returnable.)
  */
 export function isReturnable(order: OrderResponse): boolean {
-    return order.status === OrderResponseStatusEnum.Finished;
+    return order.status === OrderResponseStatusEnum.Completed;
 }
 
 /**

@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {Facebook, Instagram, Twitter} from "lucide-react";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageTitle from "../../components/storefront/shared/PageTitle";
-import PageContent from 'src/components/storefront/shared/PageContent';
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageTitle from "../../components/shared/PageTitle";
+import PageContent from 'src/components/shared/PageContent';
 
 const ContactUs: React.FC = () => {
     return (
@@ -35,7 +35,7 @@ const ContactUs: React.FC = () => {
                     </p>
                     <p className="text-lg">
                         <strong>Website:</strong> <br/>
-                        <a href="http://www.example.com" target="_blank" rel="noopener noreferrer"
+                        <a href="https://www.example.com" target="_blank" rel="noopener noreferrer"
                            className="text-blue-500 hover:underline">
                             www.example.com
                         </a>

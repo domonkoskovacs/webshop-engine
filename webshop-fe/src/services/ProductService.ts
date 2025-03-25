@@ -61,7 +61,7 @@ class ProductService {
      */
     async delete(ids: string[]) {
         return handleApiCall(() =>
-            this.productApi._delete({deleteProductRequest: {ids}})
+            this.productApi.delete1({deleteProductRequest: {ids}})
                 .then(res => res?.data)
         );
     }

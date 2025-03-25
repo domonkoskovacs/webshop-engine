@@ -5,7 +5,7 @@ import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import SheetFormContainer from "../shared/SheetFormContainer.componenet";
 import {useOrder} from "../../../hooks/UseOrder";
-import {GetAll1PaymentMethodsEnum, GetAll1SortTypeEnum, GetAll1StatusesEnum} from "../../../shared/api";
+import {GetAll4PaymentMethodsEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "../../../shared/api";
 import DatePickerField from "../../ui/fields/DatePickerField";
 import SliderField from "../../ui/fields/SliderField";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
@@ -20,9 +20,9 @@ export const FormSchema = z.object({
     }).optional(),
     minPrice: z.number().min(0, {message: "Min price must be at least 0"}).optional(),
     maxPrice: z.number().optional(),
-    paymentMethods: z.array(z.nativeEnum(GetAll1PaymentMethodsEnum)).optional(),
-    statuses: z.array(z.nativeEnum(GetAll1StatusesEnum)).optional(),
-    sortType: z.nativeEnum(GetAll1SortTypeEnum).optional(),
+    paymentMethods: z.array(z.nativeEnum(GetAll4PaymentMethodsEnum)).optional(),
+    statuses: z.array(z.nativeEnum(GetAll4StatusesEnum)).optional(),
+    sortType: z.nativeEnum(GetAll4SortTypeEnum).optional(),
     size: z.number().positive({message: "Size must be a positive number"}).optional()
 });
 
@@ -87,11 +87,11 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
                          range={[priceRange[0], priceRange[1]]}/>
             <ComboBoxMultipleValueField form={form} name="paymentMethods" label="Payment Methods"
-                                        options={mapEnumToOptions(GetAll1PaymentMethodsEnum)}/>
+                                        options={mapEnumToOptions(GetAll4PaymentMethodsEnum)}/>
             <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
-                                        options={mapEnumToOptions(GetAll1StatusesEnum)}/>
+                                        options={mapEnumToOptions(GetAll4StatusesEnum)}/>
             <SelectField form={form} name="sortType" label="Sorting" placeholder="Select sorting..."
-                         options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
+                         options={mapEnumToOptions(GetAll4SortTypeEnum)}/>
             <NumberInputField form={form} name="size" label="Pgae size" min={1} placeholder="Add page size..."/>
         </SheetFormContainer>
     );

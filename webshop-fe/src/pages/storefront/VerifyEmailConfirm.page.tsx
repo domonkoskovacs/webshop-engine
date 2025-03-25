@@ -7,7 +7,7 @@ import {CheckCircle, Loader2, MailCheck, XCircle} from "lucide-react";
 import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardHeader} from "../../components/ui/Card";
 import {toLogin} from "../../lib/url.utils";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const VerifyEmailConfirmation: React.FC = () => {
     const [searchParams] = useSearchParams();

@@ -1,8 +1,9 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "../../lib/utils";
 
 const headerVariants = {
     default: "flex flex-row justify-between items-center mb-6",
+    full: "w-full flex flex-row justify-between items-center mb-6",
     centered: "flex flex-col items-center justify-center mb-6",
 };
 

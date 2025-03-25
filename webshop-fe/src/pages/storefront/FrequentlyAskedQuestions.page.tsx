@@ -1,9 +1,9 @@
 import React from 'react';
-import PageContent from 'src/components/storefront/shared/PageContent';
+import PageContent from 'src/components/shared/PageContent';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from 'src/components/ui/Accordition';
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageTitle from "../../components/storefront/shared/PageTitle";
+import PageContainer from "../../components/shared/PageContainer.component";
+import PageHeader from "../../components/shared/PageHeader";
+import PageTitle from "../../components/shared/PageTitle";
 
 const FrequentlyAskedQuestions: React.FC = () => {
     return (

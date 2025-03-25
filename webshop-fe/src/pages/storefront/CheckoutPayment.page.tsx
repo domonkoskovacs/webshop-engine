@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { orderService } from "../../services/OrderService";
 import { stripePromise } from "../../lib/stripe.utils";
-import PageContainer from "../../components/storefront/shared/PageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 import PaymentForm from "../../components/storefront/order/PaymentForm.componenet";
 import { Button } from "../../components/ui/Button";
 import { ArrowLeft } from "lucide-react";

@@ -8,10 +8,10 @@ import {Button} from "../../components/ui/Button";
 import {toast} from "../../hooks/UseToast";
 import {useNavigate} from "react-router-dom";
 import {usePublicStore} from "../../hooks/UsePublicStore";
-import PageContainer from 'src/components/storefront/shared/PageContainer.component';
-import PageHeader from "../../components/storefront/shared/PageHeader";
-import PageTitle from "../../components/storefront/shared/PageTitle";
-import PageContent from "../../components/storefront/shared/PageContent";
+import PageContainer from 'src/components/shared/PageContainer.component';
+import PageHeader from "../../components/shared/PageHeader";
+import PageTitle from "../../components/shared/PageTitle";
+import PageContent from "../../components/shared/PageContent";
 
 const Checkout: React.FC = () => {
     const {user, cart, placeOrder} = useUser()

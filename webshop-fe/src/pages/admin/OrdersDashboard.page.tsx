@@ -1,5 +1,4 @@
 import React from 'react';
-import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
 import {useOrder} from "../../hooks/UseOrder";
 import {ColumnDef} from "@tanstack/react-table";
 import {OrderStatusRequestOrderStatusEnum, ProductResponse} from "../../shared/api";
@@ -16,6 +15,7 @@ import PaginationComponent from "../../components/ui/Pagination";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import ExportForm from "../../components/admin/order/ExportForm.componenet";
 import FilterForm from "../../components/admin/order/FilterForm.componenet";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const OrdersDashboard: React.FC = () => {
     const {orders, filters, changeStatus, totalPages, nextPage, prevPage, setPage, totalElements} = useOrder()
@@ -120,7 +120,7 @@ const OrdersDashboard: React.FC = () => {
     </div>
 
     return (
-        <DashboardPageContainer className="justify-start">
+        <PageContainer layout="start">
             <DataTable key={orders.length} columns={columns} data={orders} enableSelect={false}
                        enableDefaultFilter={true} defaultFilterColumn={"status"} customElement={actionButtons}
                        totalElements={totalElements}/>
@@ -132,7 +132,7 @@ const OrdersDashboard: React.FC = () => {
                 onNext={nextPage}
                 onPrev={prevPage}
             />
-        </DashboardPageContainer>
+        </PageContainer>
     );
 };
 

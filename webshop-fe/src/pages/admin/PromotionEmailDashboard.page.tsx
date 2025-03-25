@@ -14,7 +14,7 @@ import {useUser} from "../../hooks/UseUser";
 import {DataTable} from "../../components/ui/DataTable";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import EmailForm from "../../components/admin/email/EmailForm.component";
-import DashboardPageContainer from "../../components/admin/shared/DashboardPageContainer.component";
+import PageContainer from "../../components/shared/PageContainer.component";
 
 const PromotionEmailDashboard: React.FC = () => {
     const {emails, deleteEmail, testEmail} = useEmail();
@@ -97,19 +97,19 @@ const PromotionEmailDashboard: React.FC = () => {
     ]
 
     const emailForm = <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <SheetTrigger asChild>
-                <Button>New</Button>
-            </SheetTrigger>
-            <SheetContent>
-                <EmailForm setIsOpen={setIsFormOpen}/>
-            </SheetContent>
-        </Sheet>
+        <SheetTrigger asChild>
+            <Button>New</Button>
+        </SheetTrigger>
+        <SheetContent>
+            <EmailForm setIsOpen={setIsFormOpen}/>
+        </SheetContent>
+    </Sheet>
 
     return (
-        <DashboardPageContainer className="justify-start">
-                <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false}
-                           enableDefaultFilter={true} defaultFilterColumn={"name"} customElement={emailForm}/>
-        </DashboardPageContainer>
+        <PageContainer layout="start">
+            <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false}
+                       enableDefaultFilter={true} defaultFilterColumn={"name"} customElement={emailForm}/>
+        </PageContainer>
     );
 };
 

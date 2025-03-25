@@ -14,7 +14,7 @@ class ArticleService {
      */
     async getAll() {
         return handleApiCall(() =>
-            this.articleApi.getAll4()
+            this.articleApi.getAll3()
                 .then(res => res?.data)
         );
     }
