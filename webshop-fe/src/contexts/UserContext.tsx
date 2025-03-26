@@ -33,10 +33,11 @@ interface UserContextType {
     updateCart: (cartItem: CartItemRequest) => Promise<void>;
     increaseOneInCart: (id: string) => Promise<void>;
     placeOrder: () => Promise<OrderResponse>;
-    //payOrder: (id: string, paymentToken: string) => Promise<void>;
     cancelOrder: (id: string) => Promise<void>;
+    returnOrder: (id: string) => Promise<void>;
     toggleSaved: (id: string) => Promise<void>;
     addItemToCart: (id: string) => Promise<void>;
+    loadingOrders: boolean;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -50,6 +51,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     const [saved, setSaved] = useState<ProductResponse[]>([])
     const [cart, setCart] = useState<CartItemResponse[]>([])
     const [orders, setOrders] = useState<OrderResponse[]>([])
+    const [loadingOrders, setLoadingOrders] = useState(true);
     const {loggedIn, logout} = useAuth()
 
     const fetchUser = useCallback(async () => {
@@ -101,6 +103,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             }
         } catch (error) {
             console.error("Error fetching orders:", error);
+        } finally {
+            setLoadingOrders(false);
         }
     }, [loggedIn, user]);
 
@@ -321,20 +325,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     };
 
-
-    /*const payOrder = async (id: string, paymentToken: string) => {
-        try {
-            const updatedOrder = await orderService.pay(id, paymentToken);
-            setOrders((prevOrders) =>
-                prevOrders.map((order) =>
-                    order.id === id ? updatedOrder : order
-                )
-            );
-        } catch (error) {
-            throw error
-        }
-    }*/
-
     const cancelOrder = async (id: string) => {
         try {
             const updatedOrder = await orderService.cancel(id);
@@ -343,6 +333,21 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                     order.id === id ? updatedOrder : order
                 )
             );
+            toast({description: "Order cancelled successfully."});
+        } catch (error) {
+            throw error
+        }
+    }
+
+    const returnOrder = async(id: string) => {
+        try {
+            const updatedOrder = await orderService.returnOrder(id);
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === id ? updatedOrder : order
+                )
+            );
+            toast({description: "Order return requested successfully."});
         } catch (error) {
             throw error
         }
@@ -402,10 +407,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 updateCart,
                 increaseOneInCart,
                 placeOrder,
-                // payOrder,
                 cancelOrder,
+                returnOrder,
                 toggleSaved,
                 addItemToCart,
+                loadingOrders,
             }}>
             {children}
         </UserContext.Provider>

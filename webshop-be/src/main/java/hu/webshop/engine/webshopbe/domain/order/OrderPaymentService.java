@@ -34,7 +34,7 @@ public class OrderPaymentService {
 
     public PaymentIntent paymentIntent(UUID id) {
         log.info("createPaymentIntent > id: [{}]", id);
-        Order order = orderQueryService.getById(id);
+        Order order = orderQueryService.getByIdForUpdate(id);
         if (order.getStatus().equals(CREATED) || OrderStatus.PAYMENT_FAILED.equals(order.getStatus())) {
             PaymentIntent intent;
             if (order.getPaymentIntentId() == null) {

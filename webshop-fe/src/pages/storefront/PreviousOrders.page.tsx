@@ -2,7 +2,7 @@ import React from 'react';
 import EmptyState from "../../components/storefront/shared/EmptyPage.component";
 import {useUser} from "../../hooks/UseUser";
 import {OrderResponse} from "../../shared/api";
-import OrderItem from "../../components/storefront/order/OrderItem.component";
+import OrderItem from "../../components/storefront/order/Order.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";

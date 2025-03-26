@@ -1,5 +1,4 @@
-import { OrderResponse } from "../shared/api";
-import { OrderResponseStatusEnum } from "../shared/api";
+import {OrderResponse, OrderResponseStatusEnum} from "../shared/api";
 
 /**
  * Formats a date string for display.
@@ -12,26 +11,27 @@ export function formatDate(date: string | undefined): string {
 
 /**
  * Returns true if the order can be paid.
- * (Only orders in the CREATED state are considered payable.)
  */
 export function isPayable(order: OrderResponse): boolean {
-    return order.status === OrderResponseStatusEnum.Created;
+    return order.status === OrderResponseStatusEnum.Created || order.status === OrderResponseStatusEnum.PaymentFailed;
 }
 
 /**
  * Returns true if the order can be cancelled.
- * (Only orders in the CREATED state are considered cancellable.)
  */
 export function isCancelable(order: OrderResponse): boolean {
-    return order.status === OrderResponseStatusEnum.Created;
+    return order.status === OrderResponseStatusEnum.Created ||
+        order.status === OrderResponseStatusEnum.PaymentFailed ||
+        order.status === OrderResponseStatusEnum.Paid ||
+        order.status === OrderResponseStatusEnum.Processing ||
+        order.status === OrderResponseStatusEnum.Packaged;
 }
 
 /**
  * Returns true if the order can be returned.
- * (For example, orders in the FINISHED state are considered returnable.)
  */
 export function isReturnable(order: OrderResponse): boolean {
-    return order.status === OrderResponseStatusEnum.Completed;
+    return order.status === OrderResponseStatusEnum.Delivered;
 }
 
 /**

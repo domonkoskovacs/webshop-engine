@@ -63,6 +63,11 @@ public class OrderQueryService {
         return orderRepository.findById(id).orElseThrow(this::entityNotFoundException);
     }
 
+    public Order getByIdForUpdate(UUID id) {
+        log.info("getByIdForUpdate > id: [{}]", id);
+        return orderRepository.findByIdForUpdate(id).orElseThrow(this::entityNotFoundException);
+    }
+
     private EntityNotFoundException entityNotFoundException() {
         return new EntityNotFoundException("Order was not found");
     }

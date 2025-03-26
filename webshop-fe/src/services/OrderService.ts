@@ -70,6 +70,16 @@ class OrderService {
     }
 
     /**
+     * return an existing order
+     */
+    async returnOrder(id: string) {
+        return handleApiCall(() =>
+            this.orderApi.returnOrder({id})
+                .then(res => res?.data)
+        );
+    }
+
+    /**
      * export orders
      */
     async export(from: string, to: string) {
