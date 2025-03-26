@@ -8,7 +8,7 @@ import {useProduct} from "../../../hooks/UseProduct";
 import {useCategory} from "../../../hooks/UseCategory";
 import {FileListInputField, NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
-import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {UpdateGenderEnum} from "../../../shared/api";
 import {mapBrandsToOptions, mapEnumToOptions, mapSubCategoriesToOptions} from "../../../lib/options.utils";
 import ImageCard from "./ImageCard.component";

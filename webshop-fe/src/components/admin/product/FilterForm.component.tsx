@@ -7,7 +7,7 @@ import {z} from "zod";
 import {useToast} from "../../../hooks/UseToast";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import {
     mapBrandsToOptions,

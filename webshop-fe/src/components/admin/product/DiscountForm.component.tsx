@@ -5,7 +5,7 @@ import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {useProduct} from "../../../hooks/UseProduct";
 import {NumberInputField} from "../../ui/fields/InputField";
-import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 
 export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),

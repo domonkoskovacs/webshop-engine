@@ -45,7 +45,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ order }) => {
             toast({
                 description: "Payment successful",
             });
-            navigate("/order-confirmation");
+            navigate("/previous-orders");
         }
     };
 

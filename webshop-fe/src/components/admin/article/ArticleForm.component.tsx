@@ -3,7 +3,7 @@ import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {useArticle} from "../../../hooks/UseArticle";
 import {FileInputField, TextInputField} from "../../ui/fields/InputField";
-import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 

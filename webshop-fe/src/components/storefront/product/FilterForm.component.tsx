@@ -6,13 +6,12 @@ import {useToast} from "../../../hooks/UseToast";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import {useProductScroll} from "../../../hooks/useProductScroll";
 import {GetAllSortTypeEnum} from "../../../shared/api";
-import SheetFormContainer from "../../admin/shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {mapBrandsToOptions, mapEnumToOptions} from "../../../lib/options.utils";
 import SliderField from "../../ui/fields/SliderField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import SelectField from "../../ui/fields/SelectField";
 import {useLocation, useNavigate} from "react-router-dom";
-import {parseFiltersFromUrl} from "../../../lib/url.utils";
 
 export const FormSchema = z.object({
     brands: z.array(z.string().min(1, "Brand is required"), {message: "Brands must be an array of strings"}).optional(),
@@ -94,7 +93,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
                 pathname: location.pathname,
                 search: queryParams.toString(),
             },
-            { replace: true }
+            {replace: true}
         );
     }
 
@@ -105,7 +104,8 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
         <ComboBoxMultipleValueField form={form} name="brands" label="Brands" options={mapBrandsToOptions(brands)}/>
         <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
                      range={[priceRange[0], priceRange[1]]}/>
-        <SliderField form={form} nameMin="minDiscountPercentage" nameMax="maxDiscountPercentage" label="Discount percentage"
+        <SliderField form={form} nameMin="minDiscountPercentage" nameMax="maxDiscountPercentage"
+                     label="Discount percentage"
                      range={[discountRange[0], discountRange[1]]}/>
         <SwitchField form={form} name="showOutOfStock" label="Show out of stock products?"/>
         <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAllSortTypeEnum)}/>

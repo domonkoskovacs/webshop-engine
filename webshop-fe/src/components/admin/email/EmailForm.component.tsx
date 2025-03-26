@@ -8,7 +8,7 @@ import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
-import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {mapEnumToOptions} from "../../../lib/options.utils";
 
 export const FormSchema = z.object({

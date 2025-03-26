@@ -7,7 +7,7 @@ import {useProduct} from "../../../hooks/UseProduct";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {FileInputField} from "../../ui/fields/InputField";
-import SheetFormContainer from "../shared/SheetFormContainer.componenet";
+import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {downloadSampleCSV, fileToBase64, FileToBase64Error} from "../../../lib/file.utils";
 
 export const FormSchema = z.object({
