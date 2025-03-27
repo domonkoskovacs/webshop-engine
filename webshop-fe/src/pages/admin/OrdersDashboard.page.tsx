@@ -1,7 +1,7 @@
 import React from 'react';
 import {useOrder} from "../../hooks/UseOrder";
 import {ColumnDef} from "@tanstack/react-table";
-import {OrderStatusRequestOrderStatusEnum, ProductResponse} from "../../shared/api";
+import {OrderResponse} from "../../shared/api";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,13 +16,14 @@ import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import ExportForm from "../../components/admin/order/ExportForm.componenet";
 import FilterForm from "../../components/admin/order/FilterForm.componenet";
 import PageContainer from "../../components/shared/PageContainer.component";
+import {getNextAdminStatuses} from "../../lib/order.utils";
 
 const OrdersDashboard: React.FC = () => {
     const {orders, filters, changeStatus, totalPages, nextPage, prevPage, setPage, totalElements} = useOrder()
     const [isExportFormOpen, setIsExportFormOpen] = React.useState(false);
     const [isFilterFormOpen, setIsFilterFormOpen] = React.useState(false);
 
-    const columns: ColumnDef<ProductResponse>[] = [
+    const columns: ColumnDef<OrderResponse>[] = [
         {
             accessorKey: "status",
             header: "Status",
@@ -72,6 +73,8 @@ const OrdersDashboard: React.FC = () => {
             header: () => <div className="text-right">Change Status</div>,
             cell: ({row}) => {
                 const id = row.original.id!
+                const currentStatus = row.original.status;
+                const allowedStatuses = getNextAdminStatuses(currentStatus!);
 
                 return (
                     <div className="text-right">
@@ -83,14 +86,20 @@ const OrdersDashboard: React.FC = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => changeStatus(id, OrderStatusRequestOrderStatusEnum.Packaged)}>
-                                    Packaged
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() => changeStatus(id, OrderStatusRequestOrderStatusEnum.Shipping)}>
-                                    Shipping
-                                </DropdownMenuItem>
+                                {allowedStatuses.length > 0 ? (
+                                    allowedStatuses.map(status => (
+                                        <DropdownMenuItem
+                                            key={status}
+                                            onClick={() => changeStatus(id, status)}
+                                        >
+                                            {status}
+                                        </DropdownMenuItem>
+                                    ))
+                                ) : (
+                                    <DropdownMenuItem disabled>
+                                        No operations available
+                                    </DropdownMenuItem>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

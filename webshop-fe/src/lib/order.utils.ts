@@ -44,3 +44,35 @@ export function getOrderActions(order: OrderResponse) {
         canReturn: isReturnable(order),
     };
 }
+
+export function getNextAdminStatuses(
+    currentStatus: typeof OrderResponseStatusEnum[keyof typeof OrderResponseStatusEnum]
+): typeof OrderResponseStatusEnum[keyof typeof OrderResponseStatusEnum][] {
+    switch (currentStatus) {
+        case OrderResponseStatusEnum.Paid:
+            return [OrderResponseStatusEnum.Processing];
+        case OrderResponseStatusEnum.Processing:
+            return [OrderResponseStatusEnum.Packaged];
+        case OrderResponseStatusEnum.Packaged:
+            return [OrderResponseStatusEnum.Shipping];
+        case OrderResponseStatusEnum.Shipping:
+            return [OrderResponseStatusEnum.Delivered];
+        case OrderResponseStatusEnum.ReturnRequested:
+            return [OrderResponseStatusEnum.ReturnApproved, OrderResponseStatusEnum.ReturnRejected];
+        case OrderResponseStatusEnum.ReturnApproved:
+            return [OrderResponseStatusEnum.ReturnReceived];
+        default:
+            return [];
+    }
+}
+
+export function countOrdersNeedingAttention(orders: OrderResponse[]): number {
+    const statusesNeedingAttention: OrderResponseStatusEnum[] = [
+        OrderResponseStatusEnum.Paid,
+        OrderResponseStatusEnum.ReturnRequested,
+    ];
+
+    return orders.filter((order) =>
+        order.status && statusesNeedingAttention.includes(order.status)
+    ).length;
+}

@@ -3,6 +3,7 @@ import {OrderResponse, OrderServiceApiGetAll4Request, OrderStatusRequestOrderSta
 import {orderService} from "../services/OrderService";
 import {downloadCSV} from "../lib/file.utils";
 import {toast} from "../hooks/UseToast";
+import {countOrdersNeedingAttention} from "../lib/order.utils";
 
 interface OrderContextType {
     orders: OrderResponse[];
@@ -17,6 +18,7 @@ interface OrderContextType {
     exportOrders: (from: string, to: string) => Promise<void>;
     priceRange: number[];
     totalElements: number;
+    ordersNeedingAttention: number;
 }
 
 export const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -34,6 +36,7 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
     const [totalPages, setTotalPages] = useState(1);
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
     const [totalElements, setTotalElements] = useState(1);
+    const [ordersNeedingAttention, setOrdersNeedingAttention] = useState(0);
 
     const fetchOrders = useCallback(async () => {
         try {
@@ -56,6 +59,10 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
             await fetchOrders();
         })();
     }, [fetchOrders]);
+
+    useEffect(() => {
+        setOrdersNeedingAttention(countOrdersNeedingAttention(orders));
+    }, [orders]);
 
     const updateFilters = (newFilters: Partial<OrderServiceApiGetAll4Request>) => {
         setFilters((prev) => ({...prev, ...newFilters, page: 1}));
@@ -122,7 +129,8 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({children}) => {
                 changeStatus,
                 exportOrders,
                 priceRange,
-                totalElements
+                totalElements,
+                ordersNeedingAttention
             }}>
             {children}
         </OrderContext.Provider>
