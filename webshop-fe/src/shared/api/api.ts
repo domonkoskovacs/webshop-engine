@@ -520,6 +520,31 @@ export interface NewPasswordRequest {
 /**
  * 
  * @export
+ * @interface OrderCountStatisticsResponse
+ */
+export interface OrderCountStatisticsResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderCountStatisticsResponse
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderCountStatisticsResponse
+     */
+    'totalOrderCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderCountStatisticsResponse
+     */
+    'completedOrderCount'?: number;
+}
+/**
+ * 
+ * @export
  * @interface OrderItemResponse
  */
 export interface OrderItemResponse {
@@ -669,6 +694,31 @@ export interface OrderPageOrderResponse {
 /**
  * 
  * @export
+ * @interface OrderPriceStatisticsResponse
+ */
+export interface OrderPriceStatisticsResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderPriceStatisticsResponse
+     */
+    'date'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPriceStatisticsResponse
+     */
+    'totalOrderPriceSum'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPriceStatisticsResponse
+     */
+    'completedOrderPriceSum'?: number;
+}
+/**
+ * 
+ * @export
  * @interface OrderResponse
  */
 export interface OrderResponse {
@@ -787,31 +837,6 @@ export type OrderResponseStatusEnum = typeof OrderResponseStatusEnum[keyof typeo
 /**
  * 
  * @export
- * @interface OrderStatisticsResponse
- */
-export interface OrderStatisticsResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderStatisticsResponse
-     */
-    'date'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderStatisticsResponse
-     */
-    'orderPriceSum'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderStatisticsResponse
-     */
-    'orderCount'?: number;
-}
-/**
- * 
- * @export
  * @interface OrderStatusDistributionResponse
  */
 export interface OrderStatusDistributionResponse {
@@ -904,13 +929,13 @@ export interface PageableObject {
      * @type {boolean}
      * @memberof PageableObject
      */
-    'unpaged'?: boolean;
+    'paged'?: boolean;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageNumber'?: number;
     /**
      * 
      * @type {number}
@@ -919,10 +944,10 @@ export interface PageableObject {
     'pageSize'?: number;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'unpaged'?: boolean;
 }
 /**
  * 
@@ -1456,13 +1481,13 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'unsorted'?: boolean;
+    'sorted'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof SortObject
      */
-    'sorted'?: boolean;
+    'unsorted'?: boolean;
 }
 /**
  * 
@@ -1502,10 +1527,16 @@ export interface StatisticsResponse {
     'topOrderingUsers'?: Array<UserStatisticsResponse>;
     /**
      * 
-     * @type {Array<OrderStatisticsResponse>}
+     * @type {Array<OrderCountStatisticsResponse>}
      * @memberof StatisticsResponse
      */
-    'orderStatistics'?: Array<OrderStatisticsResponse>;
+    'orderCounts'?: Array<OrderCountStatisticsResponse>;
+    /**
+     * 
+     * @type {Array<OrderPriceStatisticsResponse>}
+     * @memberof StatisticsResponse
+     */
+    'orderPrices'?: Array<OrderPriceStatisticsResponse>;
     /**
      * 
      * @type {Array<WeeklyOrderStatisticsResponse>}

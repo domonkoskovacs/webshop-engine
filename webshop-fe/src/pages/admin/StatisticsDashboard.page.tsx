@@ -10,6 +10,7 @@ import ListStatistics from "../../components/admin/statistics/ListStatistics.com
 import OrderWeekdayChart from "../../components/admin/statistics/OrderWeekdayChart.component";
 import CustomerTypeChart from "../../components/admin/statistics/CustomerTypeChart.component";
 import {OrderStatusChart} from "../../components/admin/statistics/OrderStatusDistribution.component";
+import OrderPriceChart from "../../components/admin/statistics/OrderPriceChart.component";
 
 const StatisticsDashboard: React.FC = () => {
     const {statistics, statisticsRequest} = useStatistics()
@@ -28,7 +29,7 @@ const StatisticsDashboard: React.FC = () => {
                     </div>
                     <div
                         className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-sm">
-                        <span className="font-medium text-foreground">Top Count:</span>
+                        <span className="font-medium text-foreground">Top:</span>
                         <span>{statisticsRequest.topCount}</span>
                     </div>
                 </div>
@@ -45,6 +46,7 @@ const StatisticsDashboard: React.FC = () => {
             </PageHeader>
             <PageContent className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
 
+                <OrderPriceChart data={statistics.orderPrices ?? []} className="col-span-full" />
 
                 <OrderWeekdayChart className="col-span-1 sm:col-span-2" data={statistics.orderByDayOfWeek ?? []}/>
                 {statistics.orderStatusDistribution && <OrderStatusChart data={statistics.orderStatusDistribution}/>}

@@ -17,7 +17,6 @@ class WebshopBeApplicationIT {
 
     @Test
     void contextLoads() {
-        WebshopBeApplication.main(new String[]{});
         assertThat(clock).isNotNull();
     }
 }

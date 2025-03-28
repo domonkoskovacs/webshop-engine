@@ -2,9 +2,9 @@ package hu.webshop.engine.webshopbe.domain.statistics.value;
 
 import java.time.LocalDate;
 
-public record OrderStatistics(
+public record OrderCountStatistics(
         LocalDate date,
-        Double orderPriceSum,
-        Integer orderCount
+        int totalOrderCount,
+        int completedOrderCount
 ) {
 }

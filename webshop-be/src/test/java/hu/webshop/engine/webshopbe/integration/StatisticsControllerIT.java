@@ -40,7 +40,8 @@ class StatisticsControllerIT extends IntegrationTest {
                 .andExpect(jsonPath("$.mostReturnedProducts").isArray()).andExpect(jsonPath("$.mostReturnedProducts").isNotEmpty())
                 .andExpect(jsonPath("$.topSpendingUsers").isArray()).andExpect(jsonPath("$.topSpendingUsers").isNotEmpty())
                 .andExpect(jsonPath("$.topOrderingUsers").isArray()).andExpect(jsonPath("$.topOrderingUsers").isNotEmpty())
-                .andExpect(jsonPath("$.orderStatistics").isArray()).andExpect(jsonPath("$.orderStatistics").isNotEmpty())
+                .andExpect(jsonPath("$.orderCounts").isArray()).andExpect(jsonPath("$.orderCounts").isNotEmpty())
+                .andExpect(jsonPath("$.orderPrices").isArray()).andExpect(jsonPath("$.orderPrices").isNotEmpty())
                 .andExpect(jsonPath("$.orderByDayOfWeek").isArray()).andExpect(jsonPath("$.orderByDayOfWeek").isNotEmpty())
                 .andExpect(jsonPath("$.customerTypeDistribution.newCustomers").value(1))
                 .andExpect(jsonPath("$.orderStatusDistribution.pendingOrders").value(1))
@@ -48,7 +49,7 @@ class StatisticsControllerIT extends IntegrationTest {
                 .andExpect(jsonPath("$.orderStatusDistribution.shippedOrders").value(1))
                 .andExpect(jsonPath("$.orderStatusDistribution.returnedOrders").value(1))
                 .andExpect(jsonPath("$.orderStatusDistribution.cancelledOrders").value(1))
-                .andExpect(jsonPath("$.averageOrderValue").value(20))
+                .andExpect(jsonPath("$.averageOrderValue").value(15))
                 .andExpect(jsonPath("$.totalRevenue").value(100));
     }
 }

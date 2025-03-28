@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import hu.webshop.engine.webshopbe.domain.order.OrderQueryService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
+import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.statistics.value.CustomerTypeDistribution;
-import hu.webshop.engine.webshopbe.domain.statistics.value.OrderStatistics;
+import hu.webshop.engine.webshopbe.domain.statistics.value.OrderCountStatistics;
+import hu.webshop.engine.webshopbe.domain.statistics.value.OrderPriceStatistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.OrderStatusDistribution;
 import hu.webshop.engine.webshopbe.domain.statistics.value.ProductStatistics;
 import hu.webshop.engine.webshopbe.domain.statistics.value.Statistics;
@@ -50,7 +52,8 @@ public class StatisticsService {
                 getMostReturnedProducts(orders, topCount),
                 getTopSpendingUsers(orders, topCount),
                 getTopOrderingUsers(orders, topCount),
-                createOrderStatistics(orders),
+                createOrderCountStatistics(orders),
+                createOrderPriceStatistics(orders),
                 createWeeklyOrderStatistics(orders),
                 createCustomerTypeDistribution(orders, from),
                 createOrderStatusDistribution(orders),
@@ -128,20 +131,39 @@ public class StatisticsService {
                 .toList();
     }
 
-    private List<OrderStatistics> createOrderStatistics(List<Order> orders) {
+    private List<OrderCountStatistics> createOrderCountStatistics(List<Order> orders) {
         return orders.stream()
                 .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate()))
                 .entrySet().stream()
                 .map(entry -> {
                     LocalDate date = entry.getKey();
                     List<Order> ordersForDate = entry.getValue();
-                    double totalPriceSum = ordersForDate.stream()
-                            .mapToDouble(Order::getTotalPrice)
-                            .sum();
-                    int orderCount = ordersForDate.size();
-                    return new OrderStatistics(date, totalPriceSum, orderCount);
+                    int totalCount = ordersForDate.size();
+                    int completedCount = (int) ordersForDate.stream()
+                            .filter(order -> order.getStatus() == OrderStatus.COMPLETED)
+                            .count();
+                    return new OrderCountStatistics(date, totalCount, completedCount);
                 })
-                .sorted(Comparator.comparing(OrderStatistics::date))
+                .sorted(Comparator.comparing(OrderCountStatistics::date))
+                .toList();
+    }
+    private List<OrderPriceStatistics> createOrderPriceStatistics(List<Order> orders) {
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate()))
+                .entrySet().stream()
+                .map(entry -> {
+                    LocalDate date = entry.getKey();
+                    List<Order> ordersForDate = entry.getValue();
+                    double totalProductValue = ordersForDate.stream()
+                            .mapToDouble(order -> order.getTotalPrice() - order.getShippingPrice())
+                            .sum();
+                    double completedProductValue = ordersForDate.stream()
+                            .filter(order -> order.getStatus() == OrderStatus.COMPLETED)
+                            .mapToDouble(order -> order.getTotalPrice() - order.getShippingPrice())
+                            .sum();
+                    return new OrderPriceStatistics(date, totalProductValue, completedProductValue);
+                })
+                .sorted(Comparator.comparing(OrderPriceStatistics::date))
                 .toList();
     }
 
@@ -187,7 +209,7 @@ public class StatisticsService {
     private Double computeAverageOrderValue(List<Order> orders) {
         return orders.stream()
                 .collect(Collectors.teeing(
-                        Collectors.summingDouble(Order::getTotalPrice),
+                        Collectors.summingDouble(order -> order.getTotalPrice() - order.getShippingPrice()),
                         Collectors.counting(),
                         (total, count) -> count > 0 ? total / count : 0.0
                 ));
