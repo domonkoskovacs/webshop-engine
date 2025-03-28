@@ -4,7 +4,14 @@ import {TrendingUp} from "lucide-react"
 import {Label, Pie, PieChart, Sector} from "recharts"
 
 import {OrderStatusDistributionResponse} from "../../../shared/api"
-import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "../../ui/Chart";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
+    ChartTooltip,
+    ChartTooltipContent
+} from "../../ui/Chart";
 import React from "react";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/Card";
 import {PieSectorDataItem} from "recharts/types/polar/Pie";
@@ -43,27 +50,27 @@ const chartConfig = {
 export const OrderStatusChart: React.FC<Props> = ({data, className}) => {
     const chartData = [
         {
-            status: "Pending",
+            status: "pending",
             orders: data.pendingOrders,
             fill: "var(--color-pending)",
         },
         {
-            status: "Processing",
+            status: "processing",
             orders: data.processingOrders,
             fill: "var(--color-processing)",
         },
         {
-            status: "Shipped",
+            status: "shipped",
             orders: data.shippedOrders,
             fill: "var(--color-shipped)",
         },
         {
-            status: "Returned",
+            status: "returned",
             orders: data.returnedOrders,
             fill: "var(--color-returned)",
         },
         {
-            status: "Cancelled",
+            status: "cancelled",
             orders: data.cancelledOrders,
             fill: "var(--color-cancelled)",
         },
@@ -81,7 +88,7 @@ export const OrderStatusChart: React.FC<Props> = ({data, className}) => {
             <CardHeader className="items-center pb-0">
                 <CardTitle>Order Status Breakdown</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="flex justify-center items-center">
                 <ChartContainer
                     config={chartConfig}
                     className="mx-auto aspect-square max-h-[250px] w-full px-0"
@@ -148,6 +155,11 @@ export const OrderStatusChart: React.FC<Props> = ({data, className}) => {
                                     }
                                 }}/>
                         </Pie>
+                        <ChartLegend
+                            content={<ChartLegendContent/>}
+                            className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                        />
+
                     </PieChart>
                 </ChartContainer>
             </CardContent>

@@ -926,10 +926,10 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageSize'?: number;
     /**
      * 
      * @type {number}
@@ -938,10 +938,10 @@ export interface PageableObject {
     'pageNumber'?: number;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageSize'?: number;
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1567,6 +1567,12 @@ export interface StatisticsResponse {
      * @memberof StatisticsResponse
      */
     'totalRevenue'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof StatisticsResponse
+     */
+    'totalShippingCost'?: number;
 }
 /**
  * 

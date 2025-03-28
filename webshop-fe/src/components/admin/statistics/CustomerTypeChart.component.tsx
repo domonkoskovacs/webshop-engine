@@ -52,7 +52,7 @@ const CustomerTypeChart: React.FC<Props> = ({data, className}) => {
     ];
 
     return (
-        <Card className={cn("", className)}>
+        <Card className={className}>
             <CardHeader className="items-center pb-0">
                 <CardTitle>Customer Type Distribution</CardTitle>
             </CardHeader>

@@ -15,6 +15,7 @@ public record Statistics(
         CustomerTypeDistribution customerTypeDistribution,
         OrderStatusDistribution orderStatusDistribution,
         Double averageOrderValue,
-        Double totalRevenue
+        Double totalRevenue,
+        Double totalShippingCost
 ) {
 }

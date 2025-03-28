@@ -12,7 +12,7 @@ import {
     ChartTooltip,
     ChartTooltipContent
 } from "../../ui/Chart";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../../ui/Card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/Card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
 import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts";
 import {cn} from "../../../lib/utils";
@@ -69,20 +69,20 @@ const OrderPriceChart: React.FC<Props> = ({data, className}) => {
     return (
         <Card className={cn("", className)}>
             <CardHeader className="flex items-center gap-2 space-y-0 border-b flex-row">
-                <div className="grid flex-1 gap-1 text-center sm:text-left">
+                <div className="grid flex-1 gap-1 sm:text-left">
                     <CardTitle>Order Value Over Time</CardTitle>
                     <CardDescription>Track total vs completed order amounts</CardDescription>
                 </div>
                 <div className="flex flex-col lg:flex-row gap-4 justify-center sm:items-center ml-auto">
                     <div className="flex items-center gap-2">
+                        <label htmlFor="completed-only-switch" className="text-sm">
+                            Show only completed
+                        </label>
                         <Switch
                             id="completed-only-switch"
                             checked={showCompletedOnly}
                             onCheckedChange={setShowCompletedOnly}
                         />
-                        <label htmlFor="completed-only-switch" className="text-sm">
-                            Completed only
-                        </label>
                     </div>
 
                     <Select value={timeRange} onValueChange={setTimeRange}>
@@ -193,6 +193,11 @@ const OrderPriceChart: React.FC<Props> = ({data, className}) => {
                     </AreaChart>
                 </ChartContainer>
             </CardContent>
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="leading-none text-muted-foreground">
+                    Based on order totals in the selected time period
+                </div>
+            </CardFooter>
         </Card>
     )
 }

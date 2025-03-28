@@ -11,6 +11,8 @@ import OrderWeekdayChart from "../../components/admin/statistics/OrderWeekdayCha
 import CustomerTypeChart from "../../components/admin/statistics/CustomerTypeChart.component";
 import {OrderStatusChart} from "../../components/admin/statistics/OrderStatusDistribution.component";
 import OrderPriceChart from "../../components/admin/statistics/OrderPriceChart.component";
+import OrderCountChart from "../../components/admin/statistics/OrderCountChart.componenet";
+import SummaryCard from "../../components/admin/statistics/SummaryCard.componenet";
 
 const StatisticsDashboard: React.FC = () => {
     const {statistics, statisticsRequest} = useStatistics()
@@ -46,9 +48,14 @@ const StatisticsDashboard: React.FC = () => {
             </PageHeader>
             <PageContent className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
 
-                <OrderPriceChart data={statistics.orderPrices ?? []} className="col-span-full" />
-
+                <OrderPriceChart data={statistics.orderPrices ?? []} className="col-span-full"/>
+                <OrderCountChart
+                    data={statistics.orderCounts ?? []}
+                    averageOrderValue={statistics.averageOrderValue}
+                    className="col-span-full"
+                />
                 <OrderWeekdayChart className="col-span-1 sm:col-span-2" data={statistics.orderByDayOfWeek ?? []}/>
+                <SummaryCard totalRevenue={statistics.totalRevenue} averageOrderValue={statistics.averageOrderValue} totalShippingCost={statistics.totalShippingCost}/>
                 {statistics.orderStatusDistribution && <OrderStatusChart data={statistics.orderStatusDistribution}/>}
                 {statistics.customerTypeDistribution && <CustomerTypeChart data={statistics.customerTypeDistribution}/>}
 

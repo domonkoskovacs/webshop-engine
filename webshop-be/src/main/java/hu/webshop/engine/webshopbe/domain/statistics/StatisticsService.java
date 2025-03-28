@@ -58,7 +58,8 @@ public class StatisticsService {
                 createCustomerTypeDistribution(orders, from),
                 createOrderStatusDistribution(orders),
                 computeAverageOrderValue(orders),
-                computeTotalRevenue(orders)
+                computeTotalRevenue(orders),
+                computeTotalShippingCost(orders)
         );
     }
 
@@ -213,6 +214,12 @@ public class StatisticsService {
                         Collectors.counting(),
                         (total, count) -> count > 0 ? total / count : 0.0
                 ));
+    }
+
+    private Double computeTotalShippingCost(List<Order> orders) {
+        return orders.stream()
+                .mapToDouble(Order::getShippingPrice)
+                .sum();
     }
 
 }
