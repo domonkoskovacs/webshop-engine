@@ -7,6 +7,9 @@ import {useStatistics} from "../../hooks/UseStatistics";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import CustomizeViewForm from "../../components/admin/statistics/CustomizeViewForm.component";
 import ListStatistics from "../../components/admin/statistics/ListStatistics.component";
+import OrderWeekdayChart from "../../components/admin/statistics/OrderWeekdayChart.component";
+import CustomerTypeChart from "../../components/admin/statistics/CustomerTypeChart.component";
+import {OrderStatusChart} from "../../components/admin/statistics/OrderStatusDistribution.component";
 
 const StatisticsDashboard: React.FC = () => {
     const {statistics, statisticsRequest} = useStatistics()
@@ -40,7 +43,13 @@ const StatisticsDashboard: React.FC = () => {
                     </SheetContent>
                 </Sheet>
             </PageHeader>
-            <PageContent className="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-3 gap-6 mb-6">
+            <PageContent className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+
+
+                <OrderWeekdayChart className="col-span-1 sm:col-span-2" data={statistics.orderByDayOfWeek ?? []}/>
+                {statistics.orderStatusDistribution && <OrderStatusChart data={statistics.orderStatusDistribution}/>}
+                {statistics.customerTypeDistribution && <CustomerTypeChart data={statistics.customerTypeDistribution}/>}
+
                 <ListStatistics
                     title="Most Ordered Products"
                     items={statistics.mostOrderedProducts ?? []}

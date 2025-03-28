@@ -164,7 +164,7 @@ public class StatisticsService {
 
         int newCustomers = (int) usersInTimeframe.stream()
                 .filter(user -> user.getOrders().stream()
-                        .map(Order::getCreationTime)
+                        .map(Order::getOrderDate)
                         .noneMatch(orderDate -> orderDate.isBefore(from.atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime())))
                 .count();
 

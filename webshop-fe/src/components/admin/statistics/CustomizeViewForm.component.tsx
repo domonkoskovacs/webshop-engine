@@ -1,24 +1,11 @@
 import React, {useEffect} from "react";
-import {useProduct} from "../../../hooks/UseProduct";
-import {useCategory} from "../../../hooks/UseCategory";
-import {GetAllSortTypeEnum, UpdateGenderEnum} from "../../../shared/api";
 
 import {z} from "zod";
 import {useToast} from "../../../hooks/UseToast";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
-import {
-    mapBrandsToOptions,
-    mapCategoryNamesToOptions,
-    mapEnumToOptions,
-    mapSubCategoryNamesToOptions
-} from "../../../lib/options.utils";
-import SliderField from "../../ui/fields/SliderField";
-import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
-import {SwitchField} from "../../ui/fields/SwitchField";
-import SelectField from "../../ui/fields/SelectField";
+import {NumberInputField} from "../../ui/fields/InputField";
 import {useStatistics} from "../../../hooks/UseStatistics";
 import DatePickerField from "../../ui/fields/DatePickerField";
 
