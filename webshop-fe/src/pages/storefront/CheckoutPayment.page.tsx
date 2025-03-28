@@ -12,8 +12,10 @@ import {OrderResponse} from "../../shared/api";
 import {Separator} from "../../components/ui/Separator";
 import {Card, CardContent, CardFooter} from "../../components/ui/Card";
 import OrderItem from "../../components/storefront/order/OrderItem.component";
+import {usePublicStore} from "../../hooks/UsePublicStore";
 
 const CheckoutPayment: React.FC = () => {
+    const {store} = usePublicStore()
     const [searchParams] = useSearchParams();
     const orderId = searchParams.get('orderId');
     const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -80,14 +82,14 @@ const CheckoutPayment: React.FC = () => {
             </Button>
             <div className="flex flex-col sm:flex-row h-full w-2/3  items-center justify-center gap-3 my-4">
                 <Card className="w-full md:w-1/2">
-                    <CardContent className="mb-0 pb-0">
+                    <CardContent className="mb-0 pb-0 max-h-[80vh] overflow-auto scrollbar">
                         {order.items?.map((item, index) => (
                             <OrderItem item={item} key={index}/>
                         ))}
                     </CardContent>
                     <CardFooter className="flex flex-col items-start py-2">
                         <p className="text-sm">
-                            Shipping: <span> ${(order.totalPrice ?? NaN).toFixed(2)}</span>
+                            Shipping: <span> ${(store?.shippingPrice ?? NaN).toFixed(2)}</span>
                         </p>
                         <p className="text-lg">
                             <strong>Total:</strong> <span> ${(order.totalPrice ?? NaN).toFixed(2)}</span>

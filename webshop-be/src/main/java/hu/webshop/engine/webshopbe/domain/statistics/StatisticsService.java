@@ -92,6 +92,7 @@ public class StatisticsService {
                         Collectors.summingInt(valueExtractor)
                 ))
                 .entrySet().stream()
+                .filter(entry -> entry.getValue() > 0)
                 .sorted(Map.Entry.<UUID, Integer>comparingByValue().reversed())
                 .limit(limit)
                 .map(entry -> new ProductStatistics(
@@ -108,8 +109,8 @@ public class StatisticsService {
                         Collectors.summingDouble(Order::getTotalPrice)
                 ))
                 .entrySet().stream()
-                .map(entry -> new UserStatistics(entry.getKey().getEmail(), entry.getValue()))
-                .sorted(Comparator.comparingDouble(UserStatistics::amountOrdered).reversed())
+                .map(entry -> new UserStatistics(entry.getKey().getEmail(), entry.getKey().getFullName(), entry.getValue()))
+                .sorted(Comparator.comparingDouble(UserStatistics::amount).reversed())
                 .limit(topUserCount)
                 .toList();
     }
@@ -121,8 +122,8 @@ public class StatisticsService {
                         Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
                 ))
                 .entrySet().stream()
-                .map(entry -> new UserStatistics(entry.getKey().getEmail(), entry.getValue().doubleValue()))
-                .sorted(Comparator.comparingDouble(UserStatistics::amountOrdered).reversed())
+                .map(entry -> new UserStatistics(entry.getKey().getEmail(), entry.getKey().getFullName(), entry.getValue().doubleValue()))
+                .sorted(Comparator.comparingDouble(UserStatistics::amount).reversed())
                 .limit(topUserCount)
                 .toList();
     }

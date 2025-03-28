@@ -1,6 +1,6 @@
 import {ApiConfig} from "../shared/ApiConfig";
 import {handleApiCall} from "../shared/ApiCall";
-import {StatisticsServiceApi} from "../shared/api";
+import {StatisticsServiceApi, StatisticsServiceApiGetStatisticsRequest} from "../shared/api";
 
 class StatisticsService {
     private statisticsApi: StatisticsServiceApi
@@ -12,9 +12,9 @@ class StatisticsService {
     /**
      * Get statistics
      */
-    async get(from: string, to: string, topCount: number) {
+    async get(request: StatisticsServiceApiGetStatisticsRequest) {
         return handleApiCall(() =>
-            this.statisticsApi.getStatistics({from, to, topCount})
+            this.statisticsApi.getStatistics(request)
                 .then(res => res?.data)
         );
     }

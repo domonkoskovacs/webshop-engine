@@ -24,7 +24,7 @@ const ArticleDashboard: React.FC = () => {
                 </div>
                 <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
                     <SheetTrigger asChild>
-                        <Button variant={"outline"}>Add Slide</Button>
+                        <Button>Add Slide</Button>
                     </SheetTrigger>
                     <SheetContent>
                         <ArticleForm setIsOpen={setIsFormOpen}/>

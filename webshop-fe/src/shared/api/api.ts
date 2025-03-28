@@ -901,18 +901,6 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
-    /**
-     * 
      * @type {boolean}
      * @memberof PageableObject
      */
@@ -923,6 +911,18 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'paged'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageNumber'?: number;
 }
 /**
  * 
@@ -1456,13 +1456,13 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'sorted'?: boolean;
+    'unsorted'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof SortObject
      */
-    'unsorted'?: boolean;
+    'sorted'?: boolean;
 }
 /**
  * 
@@ -1899,10 +1899,16 @@ export interface UserStatisticsResponse {
     'email'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof UserStatisticsResponse
+     */
+    'fullName'?: string;
+    /**
+     * 
      * @type {number}
      * @memberof UserStatisticsResponse
      */
-    'amountOrdered'?: number;
+    'amount'?: number;
 }
 /**
  * 
