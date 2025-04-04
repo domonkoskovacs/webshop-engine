@@ -34,7 +34,6 @@ create table product
     count               integer                           not null,
     price               float                             not null,
     discount_percentage float                             not null,
-    image_url_list      varchar(1000),
     item_number         varchar(255)                      not null,
     creation_time       timestamp                         not null,
     last_modified_time  timestamp

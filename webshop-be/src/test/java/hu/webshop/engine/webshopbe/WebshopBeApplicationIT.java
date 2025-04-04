@@ -8,7 +8,11 @@ import java.time.Clock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+import hu.webshop.engine.webshopbe.base.IntegrationTest;
+
+@ActiveProfiles(IntegrationTest.TEST_PROFILE)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class WebshopBeApplicationIT {
 

@@ -11,9 +11,10 @@ import hu.webshop.engine.webshopbe.infrastructure.model.response.ArticleResponse
 
 @Mapper
 public interface ArticleMapper {
-    @Mapping(target = "imageUrl", ignore = true)
+    @Mapping(target = "image", ignore = true)
     Article fromRequest(ArticleRequest request);
 
+    @Mapping(target = "imageUrl", expression = "java(entity.getImage() != null ? entity.getImage().getUrl() : null)")
     ArticleResponse toResponse(Article entity);
 
     List<ArticleResponse> toResponseList(List<Article> entities);

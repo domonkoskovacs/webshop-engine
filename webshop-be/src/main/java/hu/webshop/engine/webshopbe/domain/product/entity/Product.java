@@ -2,19 +2,21 @@ package hu.webshop.engine.webshopbe.domain.product.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
-import hu.webshop.engine.webshopbe.domain.base.entity.StringListConverter;
+import hu.webshop.engine.webshopbe.domain.image.entity.ImageMetadata;
 import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import hu.webshop.engine.webshopbe.domain.util.Constants;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,18 +61,21 @@ public class Product extends BaseEntity {
     private Double discountPercentage;
 
     @Builder.Default
-    @Convert(converter = StringListConverter.class)
-    @Column(name = "image_url_list")
-    private List<String> imageUrls = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
+    private List<ImageMetadata> images = new ArrayList<>();
 
     @Column(name = "item_number", nullable = false)
     private String itemNumber;
 
     public String getThumbNailUrl() {
-        return !imageUrls.isEmpty() ? imageUrls.get(0) : null;
+        return images.isEmpty() ? null : images.get(0).getUrl();
     }
 
     public String getExportImageUrls() {
-        return imageUrls.isEmpty() ? "" : String.join(Constants.IMAGE_URL_SEPARATOR, imageUrls);
+        return images.stream()
+                .map(ImageMetadata::getUrl)
+                .collect(Collectors.joining(Constants.IMAGE_URL_SEPARATOR));
     }
+
 }

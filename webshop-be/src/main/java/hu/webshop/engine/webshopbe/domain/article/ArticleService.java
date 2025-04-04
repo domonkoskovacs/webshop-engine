@@ -37,18 +37,12 @@ public class ArticleService {
 
     public Article create(Article article, MultipartFile image) {
         log.info("create > article: [{}]", article);
-        article.setImageUrl(imageService.save(image));
+        article.setImage(imageService.save(image));
         return articleRepository.save(article);
     }
 
     public void delete(UUID id) {
         log.info("delete > id: [{}]", id);
-        articleRepository.findById(id).ifPresent(article -> {
-            String imageUrl = article.getImageUrl();
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                imageService.deleteByUrl(imageUrl);
-            }
-            articleRepository.delete(article);
-        });
+        articleRepository.deleteById(id);
     }
 }

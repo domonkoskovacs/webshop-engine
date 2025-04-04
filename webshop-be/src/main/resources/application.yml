@@ -77,13 +77,12 @@ application:
   image:
     folder-name: images
     server-domain: ${SERVER_HOST:localhost}
+    storage-type: local
   stripe:
     private-key: ${STRIPE_PRIVATE_KEY:MUST_BE_SPECIFIED}
     endpoint-secret: ${ENDPOINT_SECRET:MUST_BE_SPECIFIED}
   schedule:
     out-of-stock-product:
-      cron: "* 0 0 * * *" #every midnight
-    unused-images:
       cron: "* 0 0 * * *" #every midnight
     recurring-email:
       cron: "* 0 14 * * 4" #every thursday 14:00

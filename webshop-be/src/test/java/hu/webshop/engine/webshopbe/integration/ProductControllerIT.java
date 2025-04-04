@@ -178,7 +178,7 @@ class ProductControllerIT extends IntegrationTest {
     void productCanBeUpdatedWithKeepingExistingImageIds() throws Exception {
         //Given
         ProductUpdateRequest request = new ProductUpdateRequest("newBrand", "name", "des",
-                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, List.of("http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d?fileExtension=jpg"), "000");
+                SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, List.of("http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d"), "000");
 
         //When
         ResultActions resultActions = mockMvc.perform(getMultipartRequest(request));
@@ -325,7 +325,7 @@ class ProductControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDtodHRwOi8vbG9jYWxob3N0OjgwODAvYXBpL2ltYWdlLzkxZmNkZDU3LWE1ZTUtNDVkMC1iNjk5LTYyMjA3OGRjMGIxZD9maWxlRXh0ZW5zaW9uPWpwZztpdGVtTm8wMDANCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7VU5JU0VYOzI7MTAuMDsxMC4wO2h0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvaW1hZ2UvOTFmY2RkNTctYTVlNS00NWQwLWI2OTktNjIyMDc4ZGMwYjFkP2ZpbGVFeHRlbnNpb249anBnO2l0ZW1ObzAwMA0K"));
+                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDtodHRwOi8vbG9jYWxob3N0OjgwODAvYXBpL2ltYWdlLzkxZmNkZDU3LWE1ZTUtNDVkMC1iNjk5LTYyMjA3OGRjMGIxZDtpdGVtTm8wMDANCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7VU5JU0VYOzI7MTAuMDsxMC4wO2h0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvaW1hZ2UvOTFmY2RkNTctYTVlNS00NWQwLWI2OTktNjIyMDc4ZGMwYjFkO2l0ZW1ObzAwMA0K"));
 
     }
 
@@ -352,6 +352,6 @@ class ProductControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
-                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDtodHRwOi8vbG9jYWxob3N0OjgwODAvYXBpL2ltYWdlLzkxZmNkZDU3LWE1ZTUtNDVkMC1iNjk5LTYyMjA3OGRjMGIxZD9maWxlRXh0ZW5zaW9uPWpwZztpdGVtTm8wMDANCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7VU5JU0VYOzI7MTAuMDsxMC4wO2h0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvaW1hZ2UvOTFmY2RkNTctYTVlNS00NWQwLWI2OTktNjIyMDc4ZGMwYjFkP2ZpbGVFeHRlbnNpb249anBnO2l0ZW1ObzAwMA0K"));
+                .value("QnJhbmQ7TmFtZTtEZXNjcmlwdGlvbjtTdWJDYXRlZ29yeTtHZW5kZXI7Q291bnQ7UHJpY2U7RGlzY291bnRQZXJjZW50YWdlO0ltYWdlVXJscztJdGVtTnVtYmVyDQpicmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5O1VOSVNFWDsyOzEwLjA7MTAuMDtodHRwOi8vbG9jYWxob3N0OjgwODAvYXBpL2ltYWdlLzkxZmNkZDU3LWE1ZTUtNDVkMC1iNjk5LTYyMjA3OGRjMGIxZDtpdGVtTm8wMDANCmJyYW5kO25hbWU7ZGVzY3JpcHRpb247c3ViQ2F0ZWdvcnk7VU5JU0VYOzI7MTAuMDsxMC4wO2h0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvaW1hZ2UvOTFmY2RkNTctYTVlNS00NWQwLWI2OTktNjIyMDc4ZGMwYjFkO2l0ZW1ObzAwMA0K"));
     }
 }

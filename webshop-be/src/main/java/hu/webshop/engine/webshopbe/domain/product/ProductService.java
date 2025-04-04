@@ -7,16 +7,16 @@ import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSpecific
 import static hu.webshop.engine.webshopbe.domain.product.filters.ProductSpecification.getSpecificationsWithoutPrice;
 import static hu.webshop.engine.webshopbe.domain.util.CSVWriter.valueOfNullable;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import hu.webshop.engine.webshopbe.domain.image.ImageService;
+import hu.webshop.engine.webshopbe.domain.image.entity.ImageMetadata;
 import hu.webshop.engine.webshopbe.domain.product.entity.Brand;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.product.entity.SubCategory;
@@ -85,11 +86,6 @@ public class ProductService {
 
     public void delete(List<UUID> ids) {
         log.info("delete > ids: [{}]", ids);
-        List<Product> products = productRepository.findAllById(ids);
-        products.stream()
-                .map(Product::getImageUrls)
-                .filter(imageUrls -> !imageUrls.isEmpty())
-                .forEach(imageService::deleteByUrls);
         productRepository.deleteAllById(ids);
     }
 
@@ -100,18 +96,18 @@ public class ProductService {
 
     @NotNull
     private Product setProductValues(UUID subCategoryId, String brandName, List<MultipartFile> images, Product product) {
-        setImageUrls(product, images);
+        setImages(product, images);
         product.setSubCategory(categoryService.getSubCategoryById(subCategoryId));
         product.setBrand(brandService.getByName(brandName));
         return productRepository.save(product);
     }
 
-    private void setImageUrls(Product product, List<MultipartFile> images) {
+    private void setImages(Product product, List<MultipartFile> images) {
         if (images != null) {
-            List<String> imageUrls = images.stream()
+            List<ImageMetadata> imageMetadataList = images.stream()
                     .map(imageService::save)
                     .toList();
-            product.setImageUrls(imageUrls);
+            product.setImages(imageMetadataList);
         }
     }
 
@@ -120,29 +116,41 @@ public class ProductService {
         Product old = getById(uuid);
         Product updatedProduct = productUpdateMapper.update(old, productUpdate);
 
-        List<String> preservedImages = productUpdate.existingImageIds() != null
-                ? productUpdate.existingImageIds()
-                : new ArrayList<>();
+        List<UUID> preservedImageIds = productUpdate.existingImageIds() != null
+                ? productUpdate.existingImageIds().stream()
+                .map(this::extractIdFromUrl)
+                .filter(Objects::nonNull)
+                .toList()
+                : List.of();
 
-        List<String> newImageUrls = new ArrayList<>();
-        if (productUpdate.newImages() != null) {
-            newImageUrls.addAll(productUpdate.newImages().stream()
-                    .map(imageService::save)
-                    .toList());
-        }
+        List<ImageMetadata> newImages = productUpdate.newImages() != null
+                ? productUpdate.newImages().stream().map(imageService::save).toList()
+                : List.of();
 
-        List<String> mergedImages = Stream.concat(preservedImages.stream(), newImageUrls.stream()).toList();
-        if (!old.getImageUrls().isEmpty()) {
-            old.getImageUrls().stream()
-                    .filter(url -> !mergedImages.contains(url))
-                    .forEach(imageService::deleteByUrl);
-        }
-
-        updatedProduct.setImageUrls(mergedImages);
+        List<ImageMetadata> images = old.getImages();
+        images.clear();
+        images.addAll(
+                old.getImages().stream()
+                        .filter(img -> preservedImageIds.contains(img.getId()))
+                        .toList()
+        );
+        images.addAll(newImages);
         updatedProduct.setSubCategory(categoryService.getSubCategoryById(productUpdate.subCategoryId()));
         updatedProduct.setBrand(brandService.getByName(productUpdate.brand()));
 
         return productRepository.save(updatedProduct);
+    }
+
+    private UUID extractIdFromUrl(String url) {
+        try {
+            URI uri = new URI(url);
+            String path = uri.getPath();
+            String uuidPart = path.substring(path.lastIndexOf('/') + 1);
+            return UUID.fromString(uuidPart);
+        } catch (Exception e) {
+            log.warn("Invalid image URL: {}", url, e);
+            return null;
+        }
     }
 
     public Product getById(UUID uuid) {
@@ -247,10 +255,6 @@ public class ProductService {
     public void deleteAllByStockAndDate(int stock, OffsetDateTime dateTime) {
         log.info("deleteAllByStockAndDate > stock: [{}], dateTime: [{}]", stock, dateTime);
         List<Product> products = productRepository.findAllByCountIsLessThanEqualAndCreationTimeLessThan(stock, dateTime);
-        products.stream()
-                .map(Product::getImageUrls)
-                .filter(imageUrls -> imageUrls != null && !imageUrls.isEmpty())
-                .forEach(imageService::deleteByUrls);
         productRepository.deleteAll(products);
     }
 }

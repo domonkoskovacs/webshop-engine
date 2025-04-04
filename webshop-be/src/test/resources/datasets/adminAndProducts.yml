@@ -21,7 +21,6 @@ PRODUCT:
     COUNT: 2
     PRICE: 10
     DISCOUNT_PERCENTAGE: 10
-    IMAGE_URL_LIST: http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d?fileExtension=jpg
     ITEM_NUMBER: itemNo000
     CREATION_TIME: 2023-09-10 17:28:26.411442
   - ID: "b7f86506-8ea8-4908-b8f4-668c5ec6a7e2"
@@ -33,6 +32,23 @@ PRODUCT:
     COUNT: 2
     PRICE: 10
     DISCOUNT_PERCENTAGE: 10
-    IMAGE_URL_LIST: http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d?fileExtension=jpg
     ITEM_NUMBER: itemNo000
     CREATION_TIME: 2023-09-10 17:28:26.411442
+IMAGE_METADATA:
+  - ID: 91fcdd57-a5e5-45d0-b699-622078dc0b1d
+    URL: "http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d"
+    FILENAME: "91fcdd57-a5e5-45d0-b699-622078dc0b1d.jpg"
+    EXTENSION: "jpg"
+    STORAGE_TYPE: "LOCAL"
+    PRODUCT_ID: b7f86506-8ea8-4908-b8f4-668c5ec6a7e1
+    CREATION_TIME: 2023-09-10 17:28:26.411000
+    LAST_MODIFIED_TIME: null
+  - ID: 91fcdd57-a5e5-45d0-b699-622078dc0b1e
+    URL: "http://localhost:8080/api/image/91fcdd57-a5e5-45d0-b699-622078dc0b1d"
+    FILENAME: "91fcdd57-a5e5-45d0-b699-622078dc0b1d.png"
+    EXTENSION: "png"
+    STORAGE_TYPE: "LOCAL"
+    PRODUCT_ID: b7f86506-8ea8-4908-b8f4-668c5ec6a7e2
+    CREATION_TIME: 2023-09-10 17:28:26.411000
+    LAST_MODIFIED_TIME: null
+

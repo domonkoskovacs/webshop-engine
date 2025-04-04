@@ -11,6 +11,7 @@ import org.thymeleaf.spring6.ISpringTemplateEngine;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
 import hu.webshop.engine.webshopbe.domain.email.properties.EmailProperties;
 import hu.webshop.engine.webshopbe.domain.email.value.Email;
+import hu.webshop.engine.webshopbe.domain.image.entity.ImageMetadata;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
@@ -101,7 +102,7 @@ public class EmailService {
                 FULL_NAME, user.getFullName(),
                 "product", product,
                 "unsubscribeUrl", emailProperties.getUnsubscribe().replace("{id}", user.getId().toString()),
-                "productImageUrl", product.getImageUrls().stream().findFirst().orElse("")
+                "productImageUrl", product.getImages().stream().findFirst().map(ImageMetadata::getUrl).orElse("")
         );
         String body = createEmailBody("recurring.html", variables);
         Email email = new Email(user.getEmail(), "Discounts", body);

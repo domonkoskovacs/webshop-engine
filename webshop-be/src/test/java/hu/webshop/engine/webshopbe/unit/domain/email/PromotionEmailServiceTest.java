@@ -21,6 +21,7 @@ import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.email.PromotionEmailService;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
 import hu.webshop.engine.webshopbe.domain.email.repository.PromotionalEmailRepository;
+import hu.webshop.engine.webshopbe.domain.image.entity.ImageMetadata;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 
@@ -68,11 +69,19 @@ class PromotionEmailServiceTest {
     @DisplayName("send recurring email")
     void testSendRecurringMarketingEmail() {
         //Given
+        Product product = Product.builder()
+                .discountPercentage(10.0)
+                .images(List.of(
+                        ImageMetadata.builder()
+                                .url("url")
+                                .build()
+                ))
+                .build();
         User user = User.builder()
                 .firstname("first")
                 .lastname("last")
                 .email("email@email.com")
-                .saved(List.of(Product.builder().discountPercentage(10.0).imageUrls(List.of("url")).build()))
+                .saved(List.of(product))
                 .build();
         user.setId(UUID.randomUUID());
 
