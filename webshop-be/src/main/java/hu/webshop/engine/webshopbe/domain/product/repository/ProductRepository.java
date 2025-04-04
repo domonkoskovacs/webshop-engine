@@ -13,6 +13,5 @@ import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
-
     List<Product> findAllByCountIsLessThanEqualAndCreationTimeLessThan(int minCount, OffsetDateTime before);
 }

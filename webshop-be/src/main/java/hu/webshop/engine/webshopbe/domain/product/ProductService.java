@@ -127,13 +127,13 @@ public class ProductService {
                 ? productUpdate.newImages().stream().map(imageService::save).toList()
                 : List.of();
 
+        List<ImageMetadata> preservedImages = old.getImages().stream()
+                .filter(img -> preservedImageIds.contains(img.getId()))
+                .toList();
+
         List<ImageMetadata> images = old.getImages();
         images.clear();
-        images.addAll(
-                old.getImages().stream()
-                        .filter(img -> preservedImageIds.contains(img.getId()))
-                        .toList()
-        );
+        images.addAll(preservedImages);
         images.addAll(newImages);
         updatedProduct.setSubCategory(categoryService.getSubCategoryById(productUpdate.subCategoryId()));
         updatedProduct.setBrand(brandService.getByName(productUpdate.brand()));
