@@ -9,6 +9,7 @@ interface SheetFormContainerProps<T extends z.ZodType<any, any>> {
     form: UseFormReturn<z.infer<T>>;
     formId: string;
     onSubmit: (data: z.infer<T>) => Promise<void>;
+    submitButtonDisabled?: boolean;
     submitButtonText: string;
     secondaryButtonClick: () => void;
     secondaryButtonText: string;
@@ -20,6 +21,7 @@ const SheetFormContainer = <T extends z.ZodType<any, any>>({
                                                                form,
                                                                formId,
                                                                onSubmit,
+                                                               submitButtonDisabled = false,
                                                                submitButtonText,
                                                                secondaryButtonClick,
                                                                secondaryButtonText,
@@ -43,7 +45,7 @@ const SheetFormContainer = <T extends z.ZodType<any, any>>({
                 <Button variant="outline" className="w-full" onClick={secondaryButtonClick}>
                     {secondaryButtonText}
                 </Button>
-                <Button type="submit" className="w-full" form={formId}>
+                <Button type="submit" className="w-full" form={formId} disabled={submitButtonDisabled}>
                     {submitButtonText}
                 </Button>
             </div>

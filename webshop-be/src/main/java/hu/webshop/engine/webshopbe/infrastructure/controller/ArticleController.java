@@ -48,17 +48,6 @@ public class ArticleController {
 
     @Operation(
             tags = {"Article service"},
-            summary = "Get an article",
-            description = "Get an article by id"
-    )
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<ArticleResponse> get(@PathVariable UUID id) {
-        log.info("get > id: [{}]", id);
-        return ResponseEntity.ok(articleAdapter.get(id));
-    }
-
-    @Operation(
-            tags = {"Article service"},
             summary = "Create a new article",
             description = "Administrator creates a new article"
     )

@@ -61,7 +61,7 @@ public class Product extends BaseEntity {
     private Double discountPercentage;
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id")
     private List<ImageMetadata> images = new ArrayList<>();
 

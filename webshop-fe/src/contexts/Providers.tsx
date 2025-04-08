@@ -5,7 +5,6 @@ import {UserProvider} from "./UserContext";
 import {CategoryProvider} from "./CategoryContext";
 import {ProductProvider} from "./ProductContext";
 import {ProductInfiniteScrollProvider} from "./ProductInfiniteScrollContext";
-import {ArticleProvider} from "./ArticleContext";
 import {PublicStoreProvider} from "./PublicStoreContext";
 
 interface ProvidersProps {
@@ -21,9 +20,7 @@ const Providers: React.FC<ProvidersProps> = ({children}) => {
                         <CategoryProvider>
                             <ProductProvider>
                                 <ProductInfiniteScrollProvider>
-                                    <ArticleProvider>
                                         {children}
-                                    </ArticleProvider>
                                 </ProductInfiniteScrollProvider>
                             </ProductProvider>
                         </CategoryProvider>

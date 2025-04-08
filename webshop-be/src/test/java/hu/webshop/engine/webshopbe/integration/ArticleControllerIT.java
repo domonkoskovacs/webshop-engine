@@ -45,29 +45,6 @@ class ArticleControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("article can be retrieved by id")
-    @DataSet("article.yml")
-    void articleCanBeRetrievedById() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/" + VALID_ARTICLE_ID);
-
-        //Then
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("name"));
-    }
-
-    @Test
-    @DisplayName("not found article return 404")
-    @DataSet("article.yml")
-    void notFoundArticleReturn404() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/a40ce50d-531e-4205-84b0-3244b983a8a1");
-
-        //Then
-        resultActions.andExpect(status().isNotFound());
-    }
-
-    @Test
     @DisplayName("Admin can create an article")
     void adminCanCreateAnArticle() throws Exception {
         //Given

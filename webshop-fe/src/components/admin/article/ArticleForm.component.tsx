@@ -1,11 +1,12 @@
 import {z} from "zod"
-import {useToast} from "../../../hooks/UseToast";
 import React from "react";
-import {useArticle} from "../../../hooks/UseArticle";
+import {useCreateArticle} from "../../../hooks/article/useCreateArticle";
 import {FileInputField, TextInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {toast} from "../../../hooks/UseToast";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 export const FormSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -23,8 +24,7 @@ interface ProductFormProps {
 }
 
 const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {create} = useArticle()
-    const {toast} = useToast()
+    const {mutateAsync: createArticle, isPending} = useCreateArticle();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -32,11 +32,19 @@ const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await create(data.name, data.title, data.buttonText, data.buttonLink, data.image)
-        toast({
-            description: "Slide created successfully.",
-        })
-        setIsOpen(false)
+        try {
+            await createArticle({
+                name: data.name,
+                text: data.title,
+                buttonText: data.buttonText,
+                buttonLink: data.buttonLink,
+                image: data.image,
+            });
+            toast({description: 'Slide created successfully!'});
+            setIsOpen(false);
+        } catch (error) {
+            handleGenericApiError(error);
+        }
     }
 
     return (
@@ -45,7 +53,8 @@ const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             form={form}
             formId="createArticleForm"
             onSubmit={onSubmit}
-            submitButtonText="Add"
+            submitButtonDisabled={isPending}
+            submitButtonText={isPending ? "Creating..." : "Add"}
             secondaryButtonClick={() => setIsOpen(false)}
             secondaryButtonText="Back"
         >

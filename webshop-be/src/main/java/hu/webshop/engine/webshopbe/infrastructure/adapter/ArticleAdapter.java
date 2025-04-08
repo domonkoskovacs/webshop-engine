@@ -25,11 +25,6 @@ public class ArticleAdapter {
         return articleMapper.toResponseList(articleService.getAll());
     }
 
-    public ArticleResponse get(UUID id) {
-        log.info("get > id: [{}]", id);
-        return articleMapper.toResponse(articleService.get(id));
-    }
-
     public ArticleResponse create(ArticleRequest request) {
         log.info("create > request: [{}]", request);
         return articleMapper.toResponse(articleService.create(articleMapper.fromRequest(request), request.image()));

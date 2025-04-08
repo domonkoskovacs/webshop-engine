@@ -1,5 +1,6 @@
 import {ResultEntry, ResultEntryReasonCodeEnum} from "./api";
 import axios from "axios";
+import {toast} from "../hooks/UseToast";
 
 /**
  * Represents an API error response with structured information.
@@ -67,4 +68,27 @@ export function handleApiError(error: unknown): never {
 
     // Fallback for unexpected errors
     throw ApiError.createDefaultError()
+}
+
+/**
+ * Displays a user-facing toast based on the given error.
+ * Supports both ApiError and generic Error objects.
+ *
+ * @param error - The error object caught in a try/catch block or React Query mutation.
+ * @param fallbackMessage - An optional fallback message for unknown errors.
+ */
+export function handleGenericApiError(error: unknown, fallbackMessage = 'Something went wrong.') {
+    if (error instanceof ApiError) {
+        toast({
+            variant: 'destructive',
+            title: `Error [${error.status}]`,
+            description: error.error?.[0]?.message || error.message,
+        });
+    } else {
+        toast({
+            variant: 'destructive',
+            title: 'Unexpected error',
+            description: error instanceof Error ? error.message : fallbackMessage,
+        });
+    }
 }

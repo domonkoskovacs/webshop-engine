@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import hu.webshop.engine.webshopbe.domain.article.entity.Article;
 import hu.webshop.engine.webshopbe.domain.article.repository.ArticleRepository;
 import hu.webshop.engine.webshopbe.domain.image.ImageService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,14 +24,6 @@ public class ArticleService {
 
     public List<Article> getAll() {
         return articleRepository.findAll();
-    }
-
-    public Article get(UUID id) {
-        return articleRepository.findById(id).orElseThrow(this::entityNotFoundException);
-    }
-
-    private EntityNotFoundException entityNotFoundException() {
-        return new EntityNotFoundException("Article was not found");
     }
 
     public Article create(Article article, MultipartFile image) {
