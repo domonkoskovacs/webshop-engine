@@ -4,8 +4,9 @@ import {z} from "zod"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {useOrder} from "../../../hooks/UseOrder";
 import DatePickerField from "../../ui/fields/DatePickerField";
+import {useExportOrders} from "../../../hooks/order/useExportOrders";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 export const FormSchema = z.object({
     from: z.date({
@@ -24,7 +25,7 @@ interface ExportFormProps {
 }
 
 const ExportForm: React.FC<ExportFormProps> = ({setIsOpen}) => {
-    const {exportOrders} = useOrder()
+    const {mutateAsync: exportOrders, isPending} = useExportOrders();
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -32,15 +33,20 @@ const ExportForm: React.FC<ExportFormProps> = ({setIsOpen}) => {
         defaultValues: {},
     })
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await exportOrders(
-            data.from.toISOString().split("T")[0],
-            data.to.toISOString().split("T")[0])
-        toast({
-            description: "Orders exported successfully.",
-        })
-        setIsOpen(false)
-    }
+    const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+        try {
+            await exportOrders({
+                from: data.from.toISOString().split("T")[0],
+                to: data.to.toISOString().split("T")[0],
+            });
+            toast({
+                description: "Orders exported successfully.",
+            });
+            setIsOpen(false);
+        } catch (error) {
+            handleGenericApiError(error);
+        }
+    };
 
     return (
         <SheetFormContainer
@@ -48,7 +54,8 @@ const ExportForm: React.FC<ExportFormProps> = ({setIsOpen}) => {
             form={form}
             formId="exportOrderForm"
             onSubmit={onSubmit}
-            submitButtonText="Export"
+            submitButtonDisabled={isPending}
+            submitButtonText={isPending ? "Exporting..." : "Export"}
             secondaryButtonClick={() => setIsOpen(false)}
             secondaryButtonText="Back"
         >

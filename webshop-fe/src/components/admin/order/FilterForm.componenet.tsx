@@ -4,7 +4,6 @@ import {z} from "zod"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {useOrder} from "../../../hooks/UseOrder";
 import {GetAll4PaymentMethodsEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "../../../shared/api";
 import DatePickerField from "../../ui/fields/DatePickerField";
 import SliderField from "../../ui/fields/SliderField";
@@ -12,6 +11,7 @@ import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueF
 import {mapEnumToOptions} from "../../../lib/options.utils";
 import SelectField from "../../ui/fields/SelectField";
 import {NumberInputField} from "../../ui/fields/InputField";
+import {useOrdersPagination} from "../../../hooks/order/useOrdersPagination";
 
 export const FormSchema = z.object({
     minDate: z.date().optional(),
@@ -31,7 +31,7 @@ interface ProductFormProps {
 }
 
 const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {updateFilters, filters, resetFilters, priceRange} = useOrder()
+    const {updateFilters, filters, resetFilters, priceRange} = useOrdersPagination()
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({

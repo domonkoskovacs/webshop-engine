@@ -25,6 +25,10 @@ interface DataTableProps<TData, TValue> {
     enableDefaultFilter?: boolean
     defaultFilterColumn?: string
     totalElements?: number
+    isLoading?: boolean;
+    isError?: boolean;
+    errorMessage?: string;
+    emptyMessage?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -34,7 +38,11 @@ export function DataTable<TData, TValue>({
                                              enableSelect = true,
                                              enableDefaultFilter = false,
                                              defaultFilterColumn,
-                                             totalElements
+                                             totalElements,
+                                             isLoading = false,
+                                             isError = false,
+                                             errorMessage = "An error occurred.",
+                                             emptyMessage = "No results.",
                                          }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -60,16 +68,21 @@ export function DataTable<TData, TValue>({
     return (
         <div className="w-full">
             <div className="flex items-center my-2 gap-2">
-                {enableDefaultFilter && defaultFilterColumn && <div className="flex items-center">
-                    <Input
-                        placeholder={`Filter ${defaultFilterColumn}...`}
-                        value={(table.getColumn(defaultFilterColumn)?.getFilterValue() as string) ?? ""}
-                        onChange={(event) =>
-                            table.getColumn(defaultFilterColumn)?.setFilterValue(event.target.value)
-                        }
-                        className="max-w-sm"
-                    />
-                </div>}
+                {enableDefaultFilter && defaultFilterColumn && (
+                    <div className="flex items-center">
+                        <Input
+                            placeholder={`Filter ${defaultFilterColumn}...`}
+                            value={
+                                (table.getColumn(defaultFilterColumn)?.getFilterValue() as string) ??
+                                ""
+                            }
+                            onChange={(event) =>
+                                table.getColumn(defaultFilterColumn)?.setFilterValue(event.target.value)
+                            }
+                            className="max-w-sm"
+                        />
+                    </div>
+                )}
                 {customElement}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -80,23 +93,17 @@ export function DataTable<TData, TValue>({
                     <DropdownMenuContent align="end">
                         {table
                             .getAllColumns()
-                            .filter(
-                                (column) => column.getCanHide()
-                            )
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
+                            .filter((column) => column.getCanHide())
+                            .map((column) => (
+                                <DropdownMenuCheckboxItem
+                                    key={column.id}
+                                    className="capitalize"
+                                    checked={column.getIsVisible()}
+                                    onCheckedChange={(value) => column.toggleVisibility(value)}
+                                >
+                                    {column.id}
+                                </DropdownMenuCheckboxItem>
+                            ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
@@ -105,23 +112,33 @@ export function DataTable<TData, TValue>({
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                ))}
                             </TableRow>
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    Loading…
+                                </TableCell>
+                            </TableRow>
+                        ) : isError ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center text-destructive">
+                                    {errorMessage}
+                                </TableCell>
+                            </TableRow>
+                        ) : table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
@@ -129,7 +146,10 @@ export function DataTable<TData, TValue>({
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
                                         </TableCell>
                                     ))}
                                 </TableRow>
@@ -137,7 +157,7 @@ export function DataTable<TData, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    {emptyMessage}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -145,17 +165,18 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div className="w-full flex flex-row justify-between">
-                {enableSelect &&
+                {enableSelect && (
                     <div className="text-sm text-muted-foreground">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s) selected.
-                    </div>}
-                {totalElements !== undefined && totalElements > 0 &&
+                    </div>
+                )}
+                {totalElements !== undefined && totalElements > 0 && (
                     <div className="text-sm text-muted-foreground">
                         {totalElements} elements found.
                     </div>
-                 }
+                )}
             </div>
         </div>
-    )
+    );
 }

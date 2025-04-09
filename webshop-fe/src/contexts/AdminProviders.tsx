@@ -1,5 +1,4 @@
 import React from "react";
-import {OrderProvider} from "./OrderContext";
 import {StoreProvider} from "./StoreContext";
 
 interface AdminProvidersProps {
@@ -9,9 +8,7 @@ interface AdminProvidersProps {
 const AdminProviders: React.FC<AdminProvidersProps> = ({children}) => {
     return (
         <StoreProvider>
-            <OrderProvider>
                 {children}
-            </OrderProvider>
         </StoreProvider>
     );
 };

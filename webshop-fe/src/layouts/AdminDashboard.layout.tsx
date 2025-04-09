@@ -6,15 +6,15 @@ import DashboardBreadcrumb from "../components/shared/PathBreadcrumb.component";
 import {Bell} from "lucide-react";
 import DarkModeToggle from "../components/ui/DarkModeToggle";
 import {Badge} from "../components/ui/Badge";
-import {useOrder} from "../hooks/UseOrder";
 import {useNavigate} from "react-router-dom";
+import {useOrdersPagination} from "../hooks/order/useOrdersPagination";
 
 interface LayoutProps {
     children: ReactNode;
 }
 
 const AdminDashboardLayout: React.FC<LayoutProps> = ({children}) => {
-    const {ordersNeedingAttention} = useOrder();
+    const {ordersNeedingAttention} = useOrdersPagination();
     const navigate = useNavigate()
 
     return (

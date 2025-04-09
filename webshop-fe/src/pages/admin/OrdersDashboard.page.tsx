@@ -1,5 +1,4 @@
 import React from 'react';
-import {useOrder} from "../../hooks/UseOrder";
 import {ColumnDef} from "@tanstack/react-table";
 import {OrderResponse} from "../../shared/api";
 import {
@@ -17,9 +16,23 @@ import ExportForm from "../../components/admin/order/ExportForm.componenet";
 import FilterForm from "../../components/admin/order/FilterForm.componenet";
 import PageContainer from "../../components/shared/PageContainer.component";
 import {getNextAdminStatuses} from "../../lib/order.utils";
+import {useOrdersPagination} from "../../hooks/order/useOrdersPagination";
+import {handleGenericApiError} from "../../shared/ApiError";
+import {useChangeOrderStatus} from "../../hooks/order/useChangeOrderStatus";
 
 const OrdersDashboard: React.FC = () => {
-    const {orders, filters, changeStatus, totalPages, nextPage, prevPage, setPage, totalElements} = useOrder()
+    const {mutateAsync: changeStatus, isPending} = useChangeOrderStatus();
+    const {
+        orders,
+        filters,
+        totalPages,
+        nextPage,
+        prevPage,
+        setPage,
+        totalElements,
+        isLoading,
+        isError,
+    } = useOrdersPagination();
     const [isExportFormOpen, setIsExportFormOpen] = React.useState(false);
     const [isFilterFormOpen, setIsFilterFormOpen] = React.useState(false);
 
@@ -89,8 +102,15 @@ const OrdersDashboard: React.FC = () => {
                                 {allowedStatuses.length > 0 ? (
                                     allowedStatuses.map(status => (
                                         <DropdownMenuItem
+                                            disabled={isPending}
                                             key={status}
-                                            onClick={() => changeStatus(id, status)}
+                                            onClick={async () => {
+                                                try {
+                                                    await changeStatus({id, status});
+                                                } catch (error) {
+                                                    handleGenericApiError(error);
+                                                }
+                                            }}
                                         >
                                             {status}
                                         </DropdownMenuItem>
@@ -132,7 +152,7 @@ const OrdersDashboard: React.FC = () => {
         <PageContainer layout="start">
             <DataTable key={orders.length} columns={columns} data={orders} enableSelect={false}
                        enableDefaultFilter={true} defaultFilterColumn={"status"} customElement={actionButtons}
-                       totalElements={totalElements}/>
+                       totalElements={totalElements} isError={isError} isLoading={isLoading}/>
             <PaginationComponent
                 className="my-2"
                 currentPage={filters.page ?? 0}
