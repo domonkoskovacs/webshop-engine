@@ -5,13 +5,13 @@ import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {ComboBoxField} from "../../ui/fields/ComboBoxField";
 import {useProduct} from "../../../hooks/UseProduct";
-import {useCategory} from "../../../hooks/UseCategory";
 import {FileListInputField, NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {UpdateGenderEnum} from "../../../shared/api";
 import {mapBrandsToOptions, mapEnumToOptions, mapSubCategoriesToOptions} from "../../../lib/options.utils";
 import ImageCard from "./ImageCard.component";
+import {useCategories} from "../../../hooks/category/useCategories";
 
 const MAX_IMAGES = 5;
 
@@ -54,7 +54,7 @@ interface ProductFormProps {
 
 const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     const {brands, create, update, getById} = useProduct();
-    const {categories} = useCategory();
+    const {data: categories = []} = useCategories();
     const {toast} = useToast();
 
     const form = useForm<z.infer<typeof FormSchema>>({

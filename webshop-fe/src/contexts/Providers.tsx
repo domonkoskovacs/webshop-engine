@@ -2,7 +2,6 @@ import React from "react";
 import {AuthProvider} from "./AuthContext";
 import {GenderProvider} from "./GenderContext";
 import {UserProvider} from "./UserContext";
-import {CategoryProvider} from "./CategoryContext";
 import {ProductProvider} from "./ProductContext";
 import {ProductInfiniteScrollProvider} from "./ProductInfiniteScrollContext";
 import {PublicStoreProvider} from "./PublicStoreContext";
@@ -17,13 +16,11 @@ const Providers: React.FC<ProvidersProps> = ({children}) => {
             <AuthProvider>
                 <GenderProvider>
                     <UserProvider>
-                        <CategoryProvider>
-                            <ProductProvider>
-                                <ProductInfiniteScrollProvider>
-                                        {children}
-                                </ProductInfiniteScrollProvider>
-                            </ProductProvider>
-                        </CategoryProvider>
+                        <ProductProvider>
+                            <ProductInfiniteScrollProvider>
+                                {children}
+                            </ProductInfiniteScrollProvider>
+                        </ProductProvider>
                     </UserProvider>
                 </GenderProvider>
             </AuthProvider>

@@ -12,7 +12,8 @@ export const useCreateArticle = () => {
         mutationFn: async (data) => {
             assertAdmin();
             return articleService.create(data);
-        }, onSuccess: async () => {
+        },
+        onSuccess: async () => {
             await queryClient.invalidateQueries({queryKey: ['articles']});
         },
     });

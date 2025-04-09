@@ -41,29 +41,6 @@ class CategoryControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("get category by id")
-    @DataSet("category.yml")
-    void getCategoryById() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/" + CATEGORY_ID);
-
-        //Then
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("category"))
-                .andExpect(jsonPath("$.subCategories[0].name").value("subCategory"));
-    }
-
-    @Test
-    @DisplayName("not found category throws 404")
-    void notFoundCategoryThrows404() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/a40ce50d-531e-4205-84b0-3244b983a8a2");
-
-        //Then
-        resultActions.andExpect(status().isNotFound());
-    }
-
-    @Test
     @DisplayName("category can be created")
     void categoryCanBeCreated() throws Exception {
         //Given

@@ -4,8 +4,9 @@ import {z} from "zod"
 import {Form,} from "src/components/ui/Form"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
-import {useCategory} from "../../../hooks/UseCategory";
 import {TextInputField} from "../../ui/fields/InputField";
+import {useUpdateCategory} from "../../../hooks/category/useUpdateCategory";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {
@@ -21,7 +22,7 @@ interface UpdateCategoryFormProps {
 
 const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({id, placeholder, toggleEdit}) => {
     const {toast} = useToast()
-    const {update} = useCategory();
+    const {mutateAsync: updateCategory} = useUpdateCategory();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -31,11 +32,15 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({id, placeholder,
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await update(id, data.categoryName);
-        toggleEdit()
-        toast({
-            description: "Category updated successfully.",
-        })
+        try {
+            await updateCategory({id, name: data.categoryName});
+            toggleEdit();
+            toast({
+                description: "Category updated successfully.",
+            });
+        } catch (error) {
+            handleGenericApiError(error);
+        }
     }
 
     return (

@@ -13,16 +13,21 @@ import {
 } from "@tanstack/react-table";
 import {CategoryResponse} from "../../../shared/api";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../ui/Table";
-import {useCategory} from "../../../hooks/UseCategory";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/DropdownMenu";
 import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react";
 import UpdateCategoryForm from "./UpdateCategoryForm.component";
 import SubCategoryRows from "./SubCategoryTable.component";
 import {Sheet, SheetContent, SheetTrigger} from "../../ui/Sheet";
 import CategoryForm from "./CategoryForm.component";
+import {useToast} from "../../../hooks/UseToast";
+import {useCategories} from "../../../hooks/category/useCategories";
+import {useDeleteCategory} from "../../../hooks/category/useDeleteCategory";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 const CategoryTable: React.FC = () => {
-    const {categories, deleteCategory} = useCategory();
+    const {toast} = useToast();
+    const {data: categories = [], isLoading} = useCategories();
+    const {mutateAsync: deleteCategory} = useDeleteCategory();
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [openRows, setOpenRows] = useState<{ [key: string]: boolean }>({});
@@ -81,14 +86,15 @@ const CategoryTable: React.FC = () => {
 
                 return (
                     <div className="text-right">
-                        {category.subCategories && category.subCategories.length > 0 && <Button variant="ghost" className="h-8 w-8 p-0"
-                                onClick={() => toggleOpenRow(category.id ?? '')}>
-                            <ChevronDown
-                                className={`h-4 w-4 transition-transform duration-200 ${
-                                    openRows[category.id ?? ''] ? "rotate-180" : "rotate-0"
-                                }`}
-                            />
-                        </Button>}
+                        {category.subCategories && category.subCategories.length > 0 &&
+                            <Button variant="ghost" className="h-8 w-8 p-0"
+                                    onClick={() => toggleOpenRow(category.id ?? '')}>
+                                <ChevronDown
+                                    className={`h-4 w-4 transition-transform duration-200 ${
+                                        openRows[category.id ?? ''] ? "rotate-180" : "rotate-0"
+                                    }`}
+                                />
+                            </Button>}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -114,8 +120,16 @@ const CategoryTable: React.FC = () => {
                                         Edit category
                                     </DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem onClick={() => deleteCategory(category.id ?? '')}>Delete
-                                    category</DropdownMenuItem>
+                                <DropdownMenuItem onClick={async () => {
+                                    try {
+                                        await deleteCategory(category.id ?? '');
+                                        toast({description: 'Category deleted successfully.'});
+                                    } catch (error) {
+                                        handleGenericApiError(error);
+                                    }
+                                }}>
+                                    Delete category
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -137,6 +151,8 @@ const CategoryTable: React.FC = () => {
             columnFilters,
         },
     })
+
+    if (isLoading) return <div>Loading categories...</div>;
 
     return (
         <div className="w-full">

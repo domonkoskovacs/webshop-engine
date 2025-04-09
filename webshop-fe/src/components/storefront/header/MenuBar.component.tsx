@@ -13,11 +13,11 @@ import {
     navigationMenuTriggerStyle,
 } from "src/components/ui/NavigationMenu"
 import {Link} from "react-router-dom";
-import {useCategory} from "../../../hooks/UseCategory";
 import {useGender} from "../../../hooks/useGender";
+import {useCategories} from "../../../hooks/category/useCategories";
 
 const MenuBar: React.FC = () => {
-    const {categories} = useCategory()
+    const {data: categories = []} = useCategories();
     const {gender} = useGender()
 
     return (

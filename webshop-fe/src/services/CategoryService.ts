@@ -20,17 +20,6 @@ class CategoryService {
     }
 
     /**
-     * Get category by id
-     * @param id
-     */
-    async getById(id: string) {
-        return handleApiCall(() =>
-            this.categoryApi.getById1({id: id})
-                .then(res => res?.data)
-        );
-    }
-
-    /**
      * Create category
      */
     async create(name: string) {

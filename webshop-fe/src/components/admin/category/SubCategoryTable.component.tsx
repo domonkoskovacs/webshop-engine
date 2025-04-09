@@ -7,15 +7,18 @@ import {SubCategoryResponse} from "../../../shared/api";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/DropdownMenu";
 import {Button} from "../../ui/Button";
 import {MoreHorizontal} from "lucide-react";
-import {useCategory} from "../../../hooks/UseCategory";
 import {Badge} from "../../ui/Badge";
+import {useToast} from "../../../hooks/UseToast";
+import {useDeleteSubCategory} from "../../../hooks/category/useDeleteSubCategory";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 interface SubCategoryTableProps {
     data: SubCategoryResponse[]
 }
 
 function SubCategoryRows({data}: SubCategoryTableProps) {
-    const {deleteSubCategory} = useCategory();
+    const {toast} = useToast();
+    const {mutateAsync: deleteSubCategory} = useDeleteSubCategory();
 
     const columns: ColumnDef<SubCategoryResponse>[] = [
         {
@@ -44,8 +47,16 @@ function SubCategoryRows({data}: SubCategoryTableProps) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => deleteSubCategory(subcategory.id ?? '')}>Delete
-                                    subcategory</DropdownMenuItem>
+                                <DropdownMenuItem onClick={async () => {
+                                    try {
+                                        await deleteSubCategory(subcategory.id ?? "");
+                                        toast({description: "Subcategory deleted successfully."});
+                                    } catch (error) {
+                                        handleGenericApiError(error);
+                                    }
+                                }}>
+                                    Delete subcategory
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {useProduct} from "../../../hooks/UseProduct";
-import {useCategory} from "../../../hooks/UseCategory";
 import {GetAllSortTypeEnum, UpdateGenderEnum} from "../../../shared/api";
 
 import {z} from "zod";
@@ -19,6 +18,7 @@ import SliderField from "../../ui/fields/SliderField";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import SelectField from "../../ui/fields/SelectField";
+import {useCategories} from "../../../hooks/category/useCategories";
 
 const FormSchema = z.object({
     brands: z.array(z.string()).optional(),
@@ -41,7 +41,7 @@ interface FilterFormProps {
 
 const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
     const {brands, filters, updateFilters, resetFilters, priceRange, discountRange} = useProduct();
-    const {categories} = useCategory()
+    const {data: categories = []} = useCategories();
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({

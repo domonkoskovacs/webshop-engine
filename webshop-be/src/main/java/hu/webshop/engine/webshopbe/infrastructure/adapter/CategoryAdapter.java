@@ -25,11 +25,6 @@ public class CategoryAdapter {
         return categoryMapper.toResponseList(categoryService.getAll());
     }
 
-    public CategoryResponse getById(UUID id) {
-        log.info("getById > id: [{}]", id);
-        return categoryMapper.toResponse(categoryService.getById(id));
-    }
-
     public CategoryResponse create(CategoryRequest request) {
         log.info("create > request: [{}]", request);
         return categoryMapper.toResponse(categoryService.create(categoryMapper.fromRequest(request)));

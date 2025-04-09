@@ -49,17 +49,6 @@ public class CategoryController {
 
     @Operation(
             tags = {"Category service"},
-            summary = "Get a category",
-            description = "Public endpoint returns a category"
-    )
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryResponse> getById(@PathVariable UUID id) {
-        log.info("getById > id: [{}]", id);
-        return ResponseEntity.ok(categoryAdapter.getById(id));
-    }
-
-    @Operation(
-            tags = {"Category service"},
             summary = "Create a category",
             description = "Admins can create a category"
     )
