@@ -75,18 +75,6 @@ class EmailControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("promotion email can be retrieved")
-    @DataSet("promotionEmail.yml")
-    void promotionEmailCanBeRetrieved() throws Exception {
-        //Given //When
-
-        ResultActions resultActions = performGet(BASE_URL + "/" + EMAIL_ID, Role.ROLE_ADMIN);
-
-        //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("name"));
-    }
-
-    @Test
     @DisplayName("promotion email can be deleted")
     @DataSet("promotionEmail.yml")
     void promotionEmailCanBeDeleted() throws Exception {

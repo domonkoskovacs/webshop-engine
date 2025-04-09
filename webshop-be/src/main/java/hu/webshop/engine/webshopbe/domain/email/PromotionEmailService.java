@@ -39,11 +39,6 @@ public class PromotionEmailService {
         return promotionalEmailRepository.findAll();
     }
 
-    public PromotionEmail getPromotionEmail(UUID id) {
-        log.info("getPromotionEmail > id: [{}]", id);
-        return promotionalEmailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("promotional email was not found"));
-    }
-
     public void deletePromotionEmail(UUID id) {
         log.info("deletePromotionEmail > id: [{}]", id);
         promotionalEmailRepository.deleteById(id);

@@ -24,7 +24,7 @@ class OrderService {
      */
     async getById(id: string) {
         return handleApiCall(() =>
-            this.orderApi.getById2({id})
+            this.orderApi.getById1({id})
                 .then(res => res?.data)
         );
     }

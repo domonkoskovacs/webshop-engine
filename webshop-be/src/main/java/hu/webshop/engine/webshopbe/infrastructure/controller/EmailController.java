@@ -62,18 +62,6 @@ public class EmailController {
 
     @Operation(
             tags = {"Email service"},
-            summary = "Get a promotion email",
-            description = "Admins can a promotion email"
-    )
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Admin
-    public ResponseEntity<PromotionEmailResponse> get(@PathVariable UUID id) {
-        log.info("get > id: [{}]", id);
-        return ResponseEntity.ok(emailAdapter.get(id));
-    }
-
-    @Operation(
-            tags = {"Email service"},
             summary = "Delete a promotion email",
             description = "Admins can delete a promotion email"
     )

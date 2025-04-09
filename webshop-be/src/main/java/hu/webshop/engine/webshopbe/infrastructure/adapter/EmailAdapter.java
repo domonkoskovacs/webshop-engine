@@ -31,11 +31,6 @@ public class EmailAdapter {
         return emailMapper.toResponseList(promotionEmailService.getAllPromotionEmail());
     }
 
-    public PromotionEmailResponse get(UUID id) {
-        log.info("get > id: [{}]", id);
-        return emailMapper.toResponse(promotionEmailService.getPromotionEmail(id));
-    }
-
     public void delete(UUID id) {
         log.info("delete > id: [{}]", id);
         promotionEmailService.deletePromotionEmail(id);

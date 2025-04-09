@@ -3,13 +3,14 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 import {useToast} from "../../../hooks/UseToast";
 import React from "react";
-import {useEmail} from "../../../hooks/UseEmail";
 import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {mapEnumToOptions} from "../../../lib/options.utils";
+import {useCreateEmail} from "../../../hooks/email/useCreateEmail";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 export const FormSchema = z.object({
     name: z.string().min(1, {message: "Name is required."}),
@@ -28,7 +29,7 @@ interface ProductFormProps {
 }
 
 const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const {createEmail} = useEmail()
+    const { mutateAsync: createEmail } = useCreateEmail();
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -37,19 +38,25 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        await createEmail({
-            name: data.name,
-            text: data.text,
-            subject: data.subject,
-            imageUrl: data.imageUrl,
-            dayOfWeek: data.dayOfWeek,
-            hour: data.hour,
-            minute: data.minute
-        })
-        toast({
-            description: "Email promotion created successfully.",
-        })
-        setIsOpen(false)
+        try {
+            await createEmail({
+                name: data.name,
+                subject: data.subject,
+                text: data.text,
+                imageUrl: data.imageUrl,
+                dayOfWeek: data.dayOfWeek,
+                hour: data.hour,
+                minute: data.minute,
+            });
+
+            toast({
+                description: "Email promotion created successfully.",
+            });
+
+            setIsOpen(false);
+        } catch (error) {
+            handleGenericApiError(error);
+        }
     }
 
     return (

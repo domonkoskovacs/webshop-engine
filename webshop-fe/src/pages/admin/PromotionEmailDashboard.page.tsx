@@ -1,5 +1,4 @@
 import React from 'react';
-import {useEmail} from "../../hooks/UseEmail";
 import {ColumnDef} from "@tanstack/react-table";
 import {ProductResponse, PromotionEmailRequestDayOfWeekEnum} from "../../shared/api";
 import {
@@ -15,9 +14,17 @@ import {DataTable} from "../../components/ui/DataTable";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import EmailForm from "../../components/admin/email/EmailForm.component";
 import PageContainer from "../../components/shared/PageContainer.component";
+import {useEmails} from "../../hooks/email/useEmails";
+import {useDeleteEmail} from "../../hooks/email/useDeleteEmail";
+import {useTestEmail} from "../../hooks/email/useTestEmail";
+import {handleGenericApiError} from "../../shared/ApiError";
+import {useToast} from "../../hooks/UseToast";
 
 const PromotionEmailDashboard: React.FC = () => {
-    const {emails, deleteEmail, testEmail} = useEmail();
+    const {data: emails = [], isLoading} = useEmails();
+    const {mutateAsync: deleteEmail} = useDeleteEmail();
+    const {mutateAsync: testEmail} = useTestEmail();
+    const {toast} = useToast();
     const {user} = useUser();
     const [isFormOpen, setIsFormOpen] = React.useState(false);
 
@@ -71,6 +78,24 @@ const PromotionEmailDashboard: React.FC = () => {
             cell: ({row}) => {
                 const id = row.original.id!
 
+                const handleTest = async () => {
+                    try {
+                        await testEmail({id, email: user.email!});
+                        toast({description: "Test email sent successfully!"});
+                    } catch (error) {
+                        handleGenericApiError(error);
+                    }
+                };
+
+                const handleDelete = async () => {
+                    try {
+                        await deleteEmail(id);
+                        toast({description: "Email deleted successfully!"});
+                    } catch (error) {
+                        handleGenericApiError(error);
+                    }
+                };
+
                 return (
                     <div className="text-right">
                         <DropdownMenu>
@@ -81,10 +106,10 @@ const PromotionEmailDashboard: React.FC = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => testEmail(id, user.email!)}>
+                                <DropdownMenuItem onClick={handleTest}>
                                     Test
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => deleteEmail(id)}>
+                                <DropdownMenuItem onClick={handleDelete}>
                                     Delete
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

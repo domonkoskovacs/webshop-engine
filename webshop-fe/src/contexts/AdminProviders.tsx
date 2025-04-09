@@ -1,5 +1,4 @@
 import React from "react";
-import {EmailProvider} from "./EmailContext";
 import {OrderProvider} from "./OrderContext";
 import {StoreProvider} from "./StoreContext";
 import {StatisticsProvider} from "./StatisticsContext";
@@ -11,13 +10,11 @@ interface AdminProvidersProps {
 const AdminProviders: React.FC<AdminProvidersProps> = ({children}) => {
     return (
         <StoreProvider>
-            <EmailProvider>
-                <OrderProvider>
-                    <StatisticsProvider>
-                        {children}
-                    </StatisticsProvider>
-                </OrderProvider>
-            </EmailProvider>
+            <OrderProvider>
+                <StatisticsProvider>
+                    {children}
+                </StatisticsProvider>
+            </OrderProvider>
         </StoreProvider>
     );
 };
