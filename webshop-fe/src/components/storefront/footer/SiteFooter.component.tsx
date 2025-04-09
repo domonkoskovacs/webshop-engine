@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {usePublicStore} from "../../../hooks/UsePublicStore";
+import {usePublicStore} from "../../../hooks/store/usePublicStore";
 
 const SiteFooter: React.FC = () => {
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
 
     return (
         <div className="shrink-0 border-t border-border bg-muted p-4 text-center text-sm">

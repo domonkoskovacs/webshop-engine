@@ -12,14 +12,14 @@ import PathBreadcrumb from "../../shared/PathBreadcrumb.component";
 import {useGender} from "../../../hooks/useGender";
 import {ChevronLeft, Container, CornerDownLeft, Heart, PlusIcon} from "lucide-react";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../../ui/Accordition";
-import {usePublicStore} from "../../../hooks/UsePublicStore";
 import {calculateDiscountedPrice} from "../../../lib/price.utils";
 import {Badge} from "../../ui/Badge";
 import {useUser} from "../../../hooks/UseUser";
+import {usePublicStore} from "../../../hooks/store/usePublicStore";
 
 const ProductDetails: React.FC = () => {
     const {toggleSaved, addItemToCart, isSaved} = useUser();
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
     const navigate = useNavigate();
     const {getById} = useProduct();
     const {gender} = useGender()

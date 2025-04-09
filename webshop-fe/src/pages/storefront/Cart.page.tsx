@@ -9,16 +9,16 @@ import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Car
 import {Separator} from "../../components/ui/Separator";
 import {calculateCartTotals} from "../../lib/price.utils";
 import {Link} from "react-router-dom";
-import {usePublicStore} from "../../hooks/UsePublicStore";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
+import {usePublicStore} from "../../hooks/store/usePublicStore";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
     const {cart} = useUser()
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
 
     const {
         fullPrice,

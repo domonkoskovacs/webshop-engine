@@ -4,11 +4,11 @@ import {useUser} from "../../../hooks/UseUser";
 import {useNavigate} from "react-router-dom";
 import CartItem from "../cart/CartItem.component";
 import {calculateCartTotals} from "../../../lib/price.utils";
-import {usePublicStore} from "../../../hooks/UsePublicStore";
+import {usePublicStore} from "../../../hooks/store/usePublicStore";
 
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
     const {cart} = useUser()
 
     const {discountedPrice} = calculateCartTotals(cart, store?.shippingPrice ?? NaN);

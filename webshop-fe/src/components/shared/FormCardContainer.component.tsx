@@ -16,6 +16,7 @@ interface FormCardContainerProps<T extends z.ZodType<any, any>> {
     formId: string;
     onSubmit: (data: z.infer<T>) => Promise<void>;
     submitButtonText: string;
+    submitButtonDisabled?: boolean;
     singleColumn?: boolean;
     profileChangesNeeded?: boolean
     className?: string
@@ -29,6 +30,7 @@ const FormCardContainer = <T extends z.ZodType<any, any>>({
                                                               formId,
                                                               onSubmit,
                                                               submitButtonText,
+                                                              submitButtonDisabled = false,
                                                               singleColumn = false,
                                                               profileChangesNeeded = false,
                                                               className,
@@ -59,7 +61,7 @@ const FormCardContainer = <T extends z.ZodType<any, any>>({
                 </Form>
             </CardContent>
             <CardFooter className="p-0 border-t">
-                <Button className="w-full rounded-t-none" type="submit" form={formId}>
+                <Button className="w-full rounded-t-none" type="submit" form={formId} disabled={submitButtonDisabled}>
                     {submitButtonText}
                 </Button>
             </CardFooter>

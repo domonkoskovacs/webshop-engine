@@ -28,7 +28,6 @@ import Cart from "../pages/storefront/Cart.page";
 import Profile from "../pages/storefront/Profile.page";
 import PreviousOrders from "../pages/storefront/PreviousOrders.page";
 import Checkout from "../pages/storefront/Checkout.page";
-import AdminProviders from "../contexts/AdminProviders";
 import VerifyEmailResend from "../pages/storefront/VerifyEmailResend.page";
 import UnsubscribeEmailList from "../pages/storefront/UnsubscribeEmailList.page";
 import CheckoutPayment from "../pages/storefront/CheckoutPayment.page";
@@ -90,11 +89,9 @@ const AppRouter: React.FC = () => {
                 path="/dashboard/*"
                 element={
                     <ProtectedRoute allowedRole="ROLE_ADMIN">
-                        <AdminProviders>
                             <AdminDashboardLayout>
                                 <Outlet/>
                             </AdminDashboardLayout>
-                        </AdminProviders>
                     </ProtectedRoute>
                 }
             >

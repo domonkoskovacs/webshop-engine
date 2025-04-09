@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Facebook, Instagram, Twitter} from "lucide-react";
-import {usePublicStore} from "../../../hooks/UsePublicStore";
+import {usePublicStore} from "../../../hooks/store/usePublicStore";
 
 const FooterDetails: React.FC = () => {
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
     return (
         <div className="flex justify-between items-center py-4 px-8 shadow-md">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">

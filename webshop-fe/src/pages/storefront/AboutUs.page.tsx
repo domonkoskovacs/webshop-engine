@@ -1,13 +1,13 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {usePublicStore} from "../../hooks/UsePublicStore";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageTitle from "../../components/shared/PageTitle";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
+import {usePublicStore} from "../../hooks/store/usePublicStore";
 
 const AboutUs: React.FC = () => {
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
 
     return (
         <PageContainer layout="readable">

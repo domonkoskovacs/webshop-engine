@@ -1,6 +1,5 @@
 import {z} from "zod"
 import React, {useEffect} from "react";
-import {useStore} from "../../../hooks/useStore";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {StoreRequest} from "../../../shared/api";
@@ -8,6 +7,8 @@ import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {useStore} from "../../../hooks/store/useStore";
+import {useUpdateStore} from "../../../hooks/store/useUpdateStore";
 
 export const FormSchema = z.object({
     name: z.string().min(1, "Store name is required"),
@@ -21,7 +22,8 @@ export const FormSchema = z.object({
 });
 
 const StoreForm: React.FC = () => {
-    const {store, updateStore} = useStore()
+    const {data: store, isLoading} = useStore();
+    const {mutateAsync: updateStore, isPending} = useUpdateStore();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -61,8 +63,12 @@ const StoreForm: React.FC = () => {
         }
     }
 
+    if (isLoading) {
+        return <p className="text-center py-10 text-gray-500">Loading store settings...</p>;
+    }
+
     return <FormCardContainer title="Store configuration" form={form} formId="store-form" onSubmit={onSubmit}
-                              submitButtonText="Update">
+                              submitButtonText={isPending ? "Updating..." : "Update"} submitButtonDisabled={isPending}>
         <div className="flex flex-col gap-2">
             <TextInputField form={form} name="name" label="Store name"
                             placeholder="Add the name of your store"/>

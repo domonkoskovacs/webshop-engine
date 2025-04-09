@@ -1,13 +1,13 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {usePublicStore} from "../../hooks/UsePublicStore";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from 'src/components/shared/PageContent';
+import {usePublicStore} from "../../hooks/store/usePublicStore";
 
 const PrivacyPolicy: React.FC = () => {
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
     return (
         <PageContainer layout="readable">
             <PageHeader variant="centered">

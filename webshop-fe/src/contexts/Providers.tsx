@@ -4,7 +4,6 @@ import {GenderProvider} from "./GenderContext";
 import {UserProvider} from "./UserContext";
 import {ProductProvider} from "./ProductContext";
 import {ProductInfiniteScrollProvider} from "./ProductInfiniteScrollContext";
-import {PublicStoreProvider} from "./PublicStoreContext";
 
 interface ProvidersProps {
     children: React.ReactNode;
@@ -12,19 +11,17 @@ interface ProvidersProps {
 
 const Providers: React.FC<ProvidersProps> = ({children}) => {
     return (
-        <PublicStoreProvider>
-            <AuthProvider>
-                <GenderProvider>
-                    <UserProvider>
-                        <ProductProvider>
-                            <ProductInfiniteScrollProvider>
-                                {children}
-                            </ProductInfiniteScrollProvider>
-                        </ProductProvider>
-                    </UserProvider>
-                </GenderProvider>
-            </AuthProvider>
-        </PublicStoreProvider>
+        <AuthProvider>
+            <GenderProvider>
+                <UserProvider>
+                    <ProductProvider>
+                        <ProductInfiniteScrollProvider>
+                            {children}
+                        </ProductInfiniteScrollProvider>
+                    </ProductProvider>
+                </UserProvider>
+            </GenderProvider>
+        </AuthProvider>
     );
 };
 

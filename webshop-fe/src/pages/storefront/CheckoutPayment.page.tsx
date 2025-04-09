@@ -12,10 +12,10 @@ import {OrderResponse} from "../../shared/api";
 import {Separator} from "../../components/ui/Separator";
 import {Card, CardContent, CardFooter} from "../../components/ui/Card";
 import OrderItem from "../../components/storefront/order/OrderItem.component";
-import {usePublicStore} from "../../hooks/UsePublicStore";
+import {usePublicStore} from "../../hooks/store/usePublicStore";
 
 const CheckoutPayment: React.FC = () => {
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
     const [searchParams] = useSearchParams();
     const orderId = searchParams.get('orderId');
     const [clientSecret, setClientSecret] = useState<string | null>(null);

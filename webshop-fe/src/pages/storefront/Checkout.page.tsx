@@ -7,15 +7,15 @@ import {calculateCartTotals} from "../../lib/price.utils";
 import {Button} from "../../components/ui/Button";
 import {toast} from "../../hooks/UseToast";
 import {useNavigate} from "react-router-dom";
-import {usePublicStore} from "../../hooks/UsePublicStore";
 import PageContainer from 'src/components/shared/PageContainer.component';
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
+import {usePublicStore} from "../../hooks/store/usePublicStore";
 
 const Checkout: React.FC = () => {
     const {user, cart, placeOrder} = useUser()
-    const {store} = usePublicStore()
+    const {data: store} = usePublicStore()
     const navigate = useNavigate();
 
     const {
