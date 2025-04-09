@@ -3,7 +3,6 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
 import {Button} from "../../components/ui/Button";
-import {useStatistics} from "../../hooks/UseStatistics";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import CustomizeViewForm from "../../components/admin/statistics/CustomizeViewForm.component";
 import ListStatistics from "../../components/admin/statistics/ListStatistics.component";
@@ -13,9 +12,21 @@ import {OrderStatusChart} from "../../components/admin/statistics/OrderStatusDis
 import OrderPriceChart from "../../components/admin/statistics/OrderPriceChart.component";
 import OrderCountChart from "../../components/admin/statistics/OrderCountChart.componenet";
 import SummaryCard from "../../components/admin/statistics/SummaryCard.componenet";
+import {useStatistics} from "../../hooks/statistics/useStatistics";
+import {StatisticsServiceApiGetStatisticsRequest} from "../../shared/api";
 
 const StatisticsDashboard: React.FC = () => {
-    const {statistics, statisticsRequest} = useStatistics()
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
+
+    const [request, setRequest] = useState<StatisticsServiceApiGetStatisticsRequest>({
+        from: startOfMonth,
+        to: endOfMonth,
+        topCount: 5,
+    });
+
+    const {data: statistics = {}} = useStatistics(request);
     const [isFormOpen, setIsFormOpen] = useState(false);
 
     return (
@@ -25,14 +36,14 @@ const StatisticsDashboard: React.FC = () => {
                     <div
                         className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-sm">
                         <span className="hidden sm:block font-medium text-foreground">Period:</span>
-                        <span>{statisticsRequest.from}</span>
+                        <span>{request.from}</span>
                         <span className="mx-1">-</span>
-                        <span>{statisticsRequest.to}</span>
+                        <span>{request.to}</span>
                     </div>
                     <div
                         className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-sm">
                         <span className="font-medium text-foreground">Top:</span>
-                        <span>{statisticsRequest.topCount}</span>
+                        <span>{request.topCount}</span>
                     </div>
                 </div>
                 <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
@@ -42,7 +53,11 @@ const StatisticsDashboard: React.FC = () => {
                         </Button>
                     </SheetTrigger>
                     <SheetContent>
-                        <CustomizeViewForm setIsOpen={setIsFormOpen}/>
+                        <CustomizeViewForm
+                            setIsOpen={setIsFormOpen}
+                            currentRequest={request}
+                            setRequest={setRequest}
+                        />
                     </SheetContent>
                 </Sheet>
             </PageHeader>
@@ -55,7 +70,8 @@ const StatisticsDashboard: React.FC = () => {
                     className="col-span-full"
                 />
                 <OrderWeekdayChart className="col-span-1 sm:col-span-2" data={statistics.orderByDayOfWeek ?? []}/>
-                <SummaryCard totalRevenue={statistics.totalRevenue} averageOrderValue={statistics.averageOrderValue} totalShippingCost={statistics.totalShippingCost}/>
+                <SummaryCard totalRevenue={statistics.totalRevenue} averageOrderValue={statistics.averageOrderValue}
+                             totalShippingCost={statistics.totalShippingCost}/>
                 {statistics.orderStatusDistribution && <OrderStatusChart data={statistics.orderStatusDistribution}/>}
                 {statistics.customerTypeDistribution && <CustomerTypeChart data={statistics.customerTypeDistribution}/>}
 

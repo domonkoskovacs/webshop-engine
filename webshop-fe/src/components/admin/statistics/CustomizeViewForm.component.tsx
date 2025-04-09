@@ -6,8 +6,8 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {NumberInputField} from "../../ui/fields/InputField";
-import {useStatistics} from "../../../hooks/UseStatistics";
 import DatePickerField from "../../ui/fields/DatePickerField";
+import {StatisticsServiceApiGetStatisticsRequest} from "../../../shared/api";
 
 export const FormSchema = z.object({
     from: z.date({
@@ -24,10 +24,15 @@ export const FormSchema = z.object({
 
 interface FilterFormProps {
     setIsOpen: (open: boolean) => void;
+    currentRequest: StatisticsServiceApiGetStatisticsRequest;
+    setRequest: React.Dispatch<React.SetStateAction<StatisticsServiceApiGetStatisticsRequest>>;
 }
 
-const CustomizeViewForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {statisticsRequest, updateRequest} = useStatistics();
+const CustomizeViewForm: React.FC<FilterFormProps> = ({
+                                                          setIsOpen,
+                                                          currentRequest,
+                                                          setRequest,
+                                                      }) => {
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -37,19 +42,23 @@ const CustomizeViewForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
 
     useEffect(() => {
         form.reset({
-            from: statisticsRequest.from ? new Date(statisticsRequest.from) : undefined,
-            to: statisticsRequest.to ? new Date(statisticsRequest.to) : undefined,
-            topCount: statisticsRequest.topCount,
+            from: currentRequest.from ? new Date(currentRequest.from) : undefined,
+            to: currentRequest.to ? new Date(currentRequest.to) : undefined,
+            topCount: currentRequest.topCount,
         });
-    }, [form, statisticsRequest.from, statisticsRequest.to, statisticsRequest.topCount])
+    }, [form, currentRequest]);
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        updateRequest(data.from.toISOString().split("T")[0], data.to.toISOString().split("T")[0], data.topCount)
-        toast({
-            description: "Filters applied successfully.",
-        })
-        setIsOpen(false)
-    }
+    const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+        const formattedRequest = {
+            from: data.from.toISOString().split("T")[0],
+            to: data.to.toISOString().split("T")[0],
+            topCount: data.topCount,
+        };
+
+        setRequest(formattedRequest);
+        toast({description: "Filters applied successfully."});
+        setIsOpen(false);
+    };
 
     return (
         <SheetFormContainer
