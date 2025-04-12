@@ -44,10 +44,16 @@ const PasswordForm: React.FC = () => {
                               onSubmit={onSubmit}
                               submitButtonText="Update"
                               singleColumn={true}>
+        <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            className="hidden"
+        />
         <TextInputField form={form} name="password" label="Password" placeholder="Add new password"
-                        type="password"/>
+                        type="password" autoComplete="new-password"/>
         <TextInputField form={form} name="passwordAgain" label="Password again"
-                        placeholder="Password again" type="password"/>
+                        placeholder="Password again" type="password" autoComplete="new-password"/>
     </FormCardContainer>
 }
 

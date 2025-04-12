@@ -40,13 +40,12 @@ const MenuBar: React.FC = () => {
                             </NavigationMenuContent>
                         </NavigationMenuItem> :
                         <NavigationMenuItem key={category.id} className="flex-shrink-0">
-                            <Link to={`/products/${gender}/${category.name}`}>
-                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                <Link to={`/products/${gender}/${category.name}`}>
                                     {category.name}
-                                </NavigationMenuLink>
-                            </Link>
+                                </Link>
+                            </NavigationMenuLink>
                         </NavigationMenuItem>
-
                 ))}
             </NavigationMenuList>
         </NavigationMenu>

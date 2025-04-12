@@ -37,6 +37,7 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon" variant="floating">
+
             <SidebarHeader>
                 <SidebarMenu>
                     <Link to={"/dashboard"}>

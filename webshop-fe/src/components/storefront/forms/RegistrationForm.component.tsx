@@ -104,19 +104,19 @@ const RegistrationForm: React.FC = () => {
                               className="w-full">
         <div className="flex flex-col justify-between gap-2">
             <TextInputField form={form} name="email" label="Email"
-                            placeholder="Please enter your email"/>
+                            placeholder="Please enter your email" autoComplete="email"/>
             <TextInputField form={form} name="firstname" label="Firstname"
-                            placeholder="Please enter your firstname"/>
+                            placeholder="Please enter your firstname" autoComplete="given-name"/>
             <TextInputField form={form} name="lastname" label="Lastname"
-                            placeholder="Please enter your lastname"/>
+                            placeholder="Please enter your lastname" autoComplete="family-name"/>
             <TextInputField form={form} name="password" label="Password"
                             placeholder="*****"
-                            type="password"/>
+                            type="password" autoComplete="new-password"/>
             <TextInputField form={form} name="passwordAgain" label="Password Again"
                             placeholder="*****"
-                            type="password"/>
+                            type="password" autoComplete="new-password"/>
             <TextInputField form={form} name="phoneNumber" label="Phone number"
-                            placeholder="Please enter your phone number"/>
+                            placeholder="Please enter your phone number" autoComplete="tel"/>
         </div>
         <div className="flex flex-col justify-between gap-2">
             <RadioGroupField form={form} name="gender" label="What type of clothes do we recommend for you?"

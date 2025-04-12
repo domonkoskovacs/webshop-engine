@@ -1,5 +1,5 @@
 import React from 'react';
-import {Outlet, Route, Routes} from 'react-router-dom';
+import {Navigate, Outlet, Route, Routes} from 'react-router-dom';
 import Forbidden from '../pages/storefront/Forbidden.page';
 import Home from '../pages/storefront/Home.page';
 import NotFound from '../pages/storefront/NotFound.page';
@@ -95,6 +95,7 @@ const AppRouter: React.FC = () => {
                     </ProtectedRoute>
                 }
             >
+                <Route index element={<Navigate to="article" replace />} />
                 {/* Protected admin routes */}
                 <Route path="article" element={<ArticleDashboard/>}/>
                 <Route path="category" element={<CategoryDashboard/>}/>

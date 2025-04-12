@@ -10,6 +10,7 @@ import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useUser} from "../../../hooks/user/useUser";
 import {useUpdateUser} from "../../../hooks/user/useUpdateUser";
+import {RadioGroupField} from "../../ui/fields/RadioGroupField";
 
 const FormSchema = z.object({
     email: z.string().email({message: "Invalid email format."}),
@@ -21,11 +22,18 @@ const FormSchema = z.object({
 });
 
 const AccountInfoForm: React.FC = () => {
-    const { data: user } = useUser();
-    const { updateUserUserInfo, isPending } = useUpdateUser();
+    const {data: user} = useUser();
+    const {updateUserUserInfo, isPending} = useUpdateUser();
 
     const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+        resolver: zodResolver(FormSchema), defaultValues: {
+            email: "",
+            firstname: "",
+            lastname: "",
+            phoneNumber: "",
+            gender: UpdateUserRequestGenderEnum.Female,
+            subscribedToEmail: false,
+        },
     })
 
     useEffect(() => {
@@ -72,7 +80,15 @@ const AccountInfoForm: React.FC = () => {
         <TextInputField form={form} name="lastname" label="Lastname" placeholder="Add your lastname"/>
         <TextInputField form={form} name="phoneNumber" label="PhoneNumber"
                         placeholder="Add your phoneNumber"/>
-        <TextInputField form={form} name="gender" label="Gender" placeholder="Add your gender"/>
+        <RadioGroupField
+            form={form}
+            name="gender"
+            label="What type of clothes do we recommend for you?"
+            options={[
+                {value: UpdateUserRequestGenderEnum.Male, label: "Men"},
+                {value: UpdateUserRequestGenderEnum.Female, label: "Women"},
+            ]}
+        />
         <SwitchField form={form} name="subscribedToEmail" label="Subscribe to email list."
                      description={<>You can change this anytime for more information please<Link
                          to={"/terms-and-conditions"}>contact us</Link>.</>}/>

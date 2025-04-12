@@ -84,10 +84,9 @@ const ProductDetails: React.FC = () => {
                     {discountPercentage > 0 ? (
                         <div>
                             <p className="text-xl line-through text-gray-500">${fullPrice.toFixed(2)}</p>
-                            <p className="text-2xl font-bold text-red-600 ">
-                                ${discountedPrice.toFixed(2)} <Badge
-                                className="text-sm font-normal bg-red-600 text-white">(-{discountPercentage}%)</Badge>
-                            </p>
+                            <div className="text-2xl font-bold text-red-600 flex items-center">
+                                <p>${discountedPrice.toFixed(2)}</p> <Badge className="h-6 ml-1 text-sm font-normal bg-red-600 text-white">(-{discountPercentage}%)</Badge>
+                            </div>
                         </div>
                     ) : (
                         <p className="text-xl font-semibold">Price: ${fullPrice.toFixed(2)}</p>

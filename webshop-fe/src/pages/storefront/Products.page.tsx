@@ -55,7 +55,7 @@ const Products: React.FC = () => {
     }, [name, id, gender, category, subcategory, navigate, genderPathSegment]);
 
     useEffect(() => {
-        if (!id) {
+        if (!id && !urlFiltersApplied) {
             const filter = parseFiltersFromUrl(location.pathname, location.search);
             updateFilters(filter);
             setUrlFiltersApplied(true);

@@ -13,6 +13,7 @@ import {Separator} from "src/components/ui/Separator"
 import {Sheet, SheetContent} from "src/components/ui/Sheet"
 import {Skeleton} from "src/components/ui/Skeleton"
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "src/components/ui/Tooltip"
+import {DialogDescription, DialogTitle} from "./Dialog";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -201,6 +202,11 @@ const Sidebar = React.forwardRef<
                         }
                         side={side}
                     >
+                        <DialogTitle className="sr-only">Sidebar Navigation</DialogTitle>
+                        <DialogDescription className="sr-only">
+                            Use this menu to navigate between admin dashboard pages such as Articles, Categories,
+                            Products, Store, Orders, and more.
+                        </DialogDescription>
                         <div className="flex h-full w-full flex-col">{children}</div>
                     </SheetContent>
                 </Sheet>

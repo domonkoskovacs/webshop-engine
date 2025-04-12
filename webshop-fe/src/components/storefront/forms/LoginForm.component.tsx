@@ -73,15 +73,15 @@ const LoginForm: React.FC = () => {
                               className="w-full">
         <div className="flex flex-col gap-2">
             <TextInputField form={form} name="email" label="Email"
-                            placeholder="Please enter your email"/>
+                            placeholder="Please enter your email" autoComplete="email"/>
             <TextInputField form={form} name="password" label="Password"
-                            placeholder="*****"
+                            placeholder="*****" autoComplete="current-password"
                             description={<Link to="/forgot-password">I forgot my password!</Link>}
                             type="password"/>
         </div>
         <div className="hidden sm:flex flex-col justify-center items-center p-4">
-                <h2 className="text-xl font-semibold text-center">Welcome Back!</h2>
-                <p className="text-center">Sign in to start shopping.</p>
+            <h2 className="text-xl font-semibold text-center">Welcome Back!</h2>
+            <p className="text-center">Sign in to start shopping.</p>
         </div>
     </FormCardContainer>
 }

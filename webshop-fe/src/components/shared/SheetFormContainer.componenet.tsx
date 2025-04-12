@@ -3,6 +3,7 @@ import {z} from "zod";
 import {Button} from "src/components/ui/Button";
 import {Form} from "src/components/ui/Form";
 import React from "react";
+import {DialogDescription, DialogTitle} from "../ui/Dialog";
 
 interface SheetFormContainerProps<T extends z.ZodType<any, any>> {
     title: string;
@@ -13,6 +14,7 @@ interface SheetFormContainerProps<T extends z.ZodType<any, any>> {
     submitButtonText: string;
     secondaryButtonClick: () => void;
     secondaryButtonText: string;
+    description?: string;
     children: React.ReactNode;
 }
 
@@ -25,12 +27,15 @@ const SheetFormContainer = <T extends z.ZodType<any, any>>({
                                                                submitButtonText,
                                                                secondaryButtonClick,
                                                                secondaryButtonText,
+                                                               description,
                                                                children
                                                            }: SheetFormContainerProps<T>) => {
     return (
         <div className="flex flex-col h-full">
             <div className="flex justify-between items-center border-b pb-3">
-                <h2 className="text-lg font-semibold">{title}</h2>
+                <DialogTitle className="text-lg font-semibold">
+                    {title}
+                </DialogTitle>
             </div>
             <div className="flex-1 overflow-y-auto scrollbar">
                 <Form {...form}>
@@ -49,6 +54,13 @@ const SheetFormContainer = <T extends z.ZodType<any, any>>({
                     {submitButtonText}
                 </Button>
             </div>
+            {description ? (
+                <DialogDescription className="sr-only">{description}</DialogDescription>
+            ) : (
+                <DialogDescription className="sr-only">
+                    This dialog contains a form that allows you to enter and submit data.
+                </DialogDescription>
+            )}
         </div>
     );
 };

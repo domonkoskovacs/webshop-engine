@@ -33,7 +33,7 @@ const seeAllPhrases = [
 
 const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
     const {gender} = useGender()
-    const {data: products = [], isLoading} = useProductsByCategory(category, gender);
+    const {data: products = [], isLoading} = useProductsByCategory(category);
 
     const randomMarketingText = marketingPhrases[Math.floor(Math.random() * marketingPhrases.length)];
     const randomSeeAllText = seeAllPhrases[Math.floor(Math.random() * seeAllPhrases.length)];

@@ -11,6 +11,7 @@ interface TextInputFieldProps {
     placeholder: string;
     description?: string | React.ReactNode;
     type?: string
+    autoComplete?: string;
 }
 
 interface NumberInputFieldProps {
@@ -31,7 +32,7 @@ interface FileInputFieldProps {
     description?: string | React.ReactNode;
 }
 
-const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description, type}) => {
+const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description, type, autoComplete}) => {
     return <FormField
         control={form.control}
         name={name}
@@ -39,7 +40,7 @@ const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, place
             <FormItem>
                 {label && <FormLabel>{label}</FormLabel>}
                 <FormControl>
-                    <Input type={type} placeholder={placeholder} {...field} />
+                    <Input type={type} placeholder={placeholder} {...field} autoComplete={autoComplete}/>
                 </FormControl>
                 {description && <FormDescription>{description}</FormDescription>}
                 <FormMessage/>

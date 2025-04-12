@@ -53,9 +53,9 @@ const NewPasswordForm: React.FC = () => {
                               singleColumn={true}
                               className="w-full sm:w-1/2 md:w-1/3 mx-6">
         <TextInputField form={form} name="password" label="Password"
-                        placeholder="Add new password" type="password"/>
+                        placeholder="Add new password" type="password" autoComplete="new-password"/>
         <TextInputField form={form} name="passwordAgain" label="Password again"
-                        placeholder="Password again" type="password"/>
+                        placeholder="Password again" type="password" autoComplete="new-password"/>
     </FormCardContainer>
 }
 
