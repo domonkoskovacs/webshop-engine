@@ -2,7 +2,6 @@ import React, {createContext, ReactNode, useCallback, useEffect, useState} from 
 import {
     AddressRequest,
     OrderResponse,
-    ProductResponse,
     UpdateUserRequest,
     UpdateUserRequestGenderEnum,
     UserResponse
@@ -14,20 +13,14 @@ import {toast} from "../hooks/UseToast";
 
 interface UserContextType {
     user: UserResponse
-    saved: ProductResponse[];
     orders: OrderResponse[];
     changePassword: (password: string) => Promise<void>;
     updateUserUserInfo: (email: string, firstname: string, lastname: string, phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
-    deleteUser: () => Promise<void>;
     updateShippingAddress: (newShippingAddress: AddressRequest) => Promise<void>;
     updateBillingAddress: (newBillingAddress: AddressRequest) => Promise<void>;
-    addToSaved: (id: string) => Promise<void>;
-    removeFromSaved: (id: string) => Promise<void>;
-    isSaved: (id: string) => boolean;
     placeOrder: () => Promise<OrderResponse>;
     cancelOrder: (id: string) => Promise<void>;
     returnOrder: (id: string) => Promise<void>;
-    toggleSaved: (id: string) => Promise<void>;
     loadingOrders: boolean;
 }
 
@@ -39,7 +32,6 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     const [user, setUser] = useState<UserResponse>({});
-    const [saved, setSaved] = useState<ProductResponse[]>([])
     const [orders, setOrders] = useState<OrderResponse[]>([])
     const [loadingOrders, setLoadingOrders] = useState(true);
     const {loggedIn, logout} = useAuth()
@@ -56,19 +48,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             console.error("Error fetching user:", error);
         }
     }, [loggedIn]);
-
-    const fetchSaved = useCallback(async () => {
-        try {
-            if (loggedIn && user) {
-                const data = await userService.getSaved();
-                setSaved(data);
-            } else {
-                setSaved([]);
-            }
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    }, [loggedIn, user]);
 
     const fetchOrders = useCallback(async () => {
         try {
@@ -90,12 +69,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             await fetchUser();
         })();
     }, [fetchUser]);
-
-    useEffect(() => {
-        (async () => {
-            await fetchSaved();
-        })();
-    }, [fetchSaved]);
 
     useEffect(() => {
         (async () => {
@@ -218,42 +191,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     };
 
-    const addToSaved = async (id: string) => {
-        try {
-            await userService.addSaved([id]);
-            setUser((prevUser) => {
-                if (!prevUser) return prevUser;
-                const updatedSaved = saved ? [...saved] : [];
-                if (!updatedSaved.some((item) => item.id === id)) {
-                    const product = {id};
-                    updatedSaved.push(product);
-                }
-                return {...prevUser, saved: updatedSaved};
-            });
-        } catch (error) {
-            throw error
-        }
-    };
-
-    const removeFromSaved = async (id: string) => {
-        try {
-            await userService.removeSaved([id]);
-            setUser((prevUser) => {
-                if (!prevUser) return prevUser;
-                return {
-                    ...prevUser,
-                    saved: saved?.filter((item) => item.id !== id) || [],
-                };
-            });
-        } catch (error) {
-            throw error
-        }
-    };
-
-    const isSaved = (id: string): boolean => {
-        return !!saved?.some((item) => item.id === id);
-    };
-
     const placeOrder = async () => {
         try {
             const order = await orderService.create();
@@ -293,40 +230,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     }
 
-    const toggleSaved = async (id: string) => {
-        if (!loggedIn) {
-            toast({description: "You need to log in to update saved products."});
-            return;
-        }
-        try {
-            if (isSaved(id)) {
-                await removeFromSaved(id);
-            } else {
-                await addToSaved(id);
-            }
-        } catch (error) {
-            toast({variant: "destructive", description: "Error updating saved products."});
-        }
-    };
-
     return (
         <UserContext.Provider
             value={{
                 user,
-                saved,
                 orders,
                 changePassword,
                 updateUserUserInfo,
-                deleteUser,
                 updateShippingAddress,
                 updateBillingAddress,
-                addToSaved,
-                removeFromSaved,
-                isSaved,
                 placeOrder,
                 cancelOrder,
                 returnOrder,
-                toggleSaved,
                 loadingOrders,
             }}>
             {children}

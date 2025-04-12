@@ -5,7 +5,6 @@ import {Button} from "../../ui/Button";
 import {HeartIcon, PlusIcon, TrashIcon} from "lucide-react";
 import {ProductResponse, ProductResponseGenderEnum} from "../../../shared/api";
 import {useGender} from "../../../hooks/useGender";
-import {useUser} from "../../../hooks/UseUser";
 import {generateProductListUrl, generateProductUrl} from "../../../lib/url.utils";
 import {calculateDiscountedPrice} from "../../../lib/price.utils";
 import {Swiper, SwiperSlide} from "swiper/react";
@@ -13,6 +12,8 @@ import "swiper/css";
 import {Badge} from "../../ui/Badge";
 import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
 import {useAuth} from "../../../hooks/UseAuth";
+import {useModifySaved} from "../../../hooks/user/useModifySaved";
+import {useSaved} from "../../../hooks/user/useSaved";
 
 interface ProductCardProps {
     product: ProductResponse;
@@ -21,8 +22,9 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const {gender} = useGender();
     const {addItemToCart, isPending} = useUpdateCart();
-    const  {loggedIn} = useAuth()
-    const {toggleSaved, isSaved} = useUser();
+    const {loggedIn} = useAuth()
+    const {isSaved} = useSaved();
+    const {toggleSaved, isToggling} = useModifySaved();
     const location = useLocation();
     const isSavedPage = location.pathname === "/saved";
     const savedProduct = isSaved(product.id!);
@@ -53,6 +55,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                 <Button
                     variant="ghost"
                     size="icon"
+                    disabled={isToggling}
                     onClick={() => toggleSaved(product.id!)}
                     className={`absolute top-3 end-3 rounded-full z-10 transition ${
                         isSavedPage ? "" : savedProduct ? "bg-red-500" : "hover:bg-red-500"

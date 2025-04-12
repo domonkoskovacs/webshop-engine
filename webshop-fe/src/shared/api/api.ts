@@ -638,6 +638,12 @@ export interface OrderPageOrderResponse {
     'maxPrice'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'last'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
@@ -648,12 +654,6 @@ export interface OrderPageOrderResponse {
      * @memberof OrderPageOrderResponse
      */
     'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -674,16 +674,16 @@ export interface OrderPageOrderResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {number}
-     * @memberof OrderPageOrderResponse
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
      * @type {boolean}
      * @memberof OrderPageOrderResponse
      */
     'first'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderPageOrderResponse
+     */
+    'numberOfElements'?: number;
     /**
      * 
      * @type {boolean}
@@ -914,30 +914,6 @@ export type OrderStatusRequestOrderStatusEnum = typeof OrderStatusRequestOrderSt
 export interface PageableObject {
     /**
      * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'unpaged'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageableObject
      */
@@ -948,6 +924,30 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'unpaged'?: boolean;
 }
 /**
  * 
@@ -1006,6 +1006,12 @@ export interface ProductPageProductResponse {
     'maxDiscount'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'last'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -1016,12 +1022,6 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -1042,16 +1042,16 @@ export interface ProductPageProductResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {number}
-     * @memberof ProductPageProductResponse
-     */
-    'numberOfElements'?: number;
-    /**
-     * 
      * @type {boolean}
      * @memberof ProductPageProductResponse
      */
     'first'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductPageProductResponse
+     */
+    'numberOfElements'?: number;
     /**
      * 
      * @type {boolean}
@@ -1475,6 +1475,12 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
+    'empty'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
     'sorted'?: boolean;
     /**
      * 
@@ -1482,12 +1488,6 @@ export interface SortObject {
      * @memberof SortObject
      */
     'unsorted'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'empty'?: boolean;
 }
 /**
  * 
@@ -6833,78 +6833,6 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
             };
         },
         /**
-         * User can be retrieved by an id with an admin
-         * @summary Get user
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getUserById', 'id', id)
-            const localVarPath = `/api/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Users can be retrieved
-         * @summary Get users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUsers: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Update a user password with a new one
          * @summary Update users password
          * @param {NewPasswordRequest} newPasswordRequest 
@@ -7319,31 +7247,6 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * User can be retrieved by an id with an admin
-         * @summary Get user
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserById(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.getUserById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Users can be retrieved
-         * @summary Get users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUsers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.getUsers']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Update a user password with a new one
          * @summary Update users password
          * @param {NewPasswordRequest} newPasswordRequest 
@@ -7523,25 +7426,6 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
             return localVarFp.getSaved(options).then((request) => request(axios, basePath));
         },
         /**
-         * User can be retrieved by an id with an admin
-         * @summary Get user
-         * @param {UserServiceApiGetUserByIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById(requestParameters: UserServiceApiGetUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
-            return localVarFp.getUserById(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Users can be retrieved
-         * @summary Get users
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUsers(options?: RawAxiosRequestConfig): AxiosPromise<Array<UserResponse>> {
-            return localVarFp.getUsers(options).then((request) => request(axios, basePath));
-        },
-        /**
          * Update a user password with a new one
          * @summary Update users password
          * @param {UserServiceApiNewPasswordRequest} requestParameters Request parameters.
@@ -7650,20 +7534,6 @@ export interface UserServiceApiForgottenPasswordRequest {
      * @memberof UserServiceApiForgottenPassword
      */
     readonly forgottenPasswordRequest: ForgottenPasswordRequest
-}
-
-/**
- * Request parameters for getUserById operation in UserServiceApi.
- * @export
- * @interface UserServiceApiGetUserByIdRequest
- */
-export interface UserServiceApiGetUserByIdRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserServiceApiGetUserById
-     */
-    readonly id: string
 }
 
 /**
@@ -7862,29 +7732,6 @@ export class UserServiceApi extends BaseAPI {
      */
     public getSaved(options?: RawAxiosRequestConfig) {
         return UserServiceApiFp(this.configuration).getSaved(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * User can be retrieved by an id with an admin
-     * @summary Get user
-     * @param {UserServiceApiGetUserByIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserServiceApi
-     */
-    public getUserById(requestParameters: UserServiceApiGetUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).getUserById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Users can be retrieved
-     * @summary Get users
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserServiceApi
-     */
-    public getUsers(options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).getUsers(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

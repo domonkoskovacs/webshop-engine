@@ -5,21 +5,21 @@ import {Link, useLocation, useNavigate} from 'react-router-dom';
 import DarkModeToggle from "../../ui/DarkModeToggle";
 import GenderSelector from "./GenderSelector.component";
 import AccountHoverIcon from "./AccountHoverIcon.component";
-import {useUser} from "../../../hooks/UseUser";
 import {Badge} from "../../ui/Badge";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard";
 import CartHoverContent from "./CartHoverContent.component";
 import {useAuth} from "../../../hooks/UseAuth";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
 import {useCart} from "../../../hooks/user/useCart";
+import {useSaved} from "../../../hooks/user/useSaved";
 
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
-    const {saved} = useUser();
+    const {saved = []} = useSaved();
     const {data: cart = []} = useCart();
     const {data: store} = usePublicStore();
     const location = useLocation();
-    const { loggedIn } = useAuth();
+    const {loggedIn} = useAuth();
     const isCartHoverDisabled = location.pathname === "/checkout" || !loggedIn;
 
     return (

@@ -7,7 +7,7 @@ import { useUserGuard } from "../useUserGuard";
 export const useSaved = () => {
     const { assertUser } = useUserGuard();
 
-    return useQuery<ProductResponse[], ApiError>({
+    const { data: saved = [] } = useQuery<ProductResponse[], ApiError>({
         queryKey: ["saved"],
         queryFn: async () => {
             assertUser();
@@ -15,4 +15,10 @@ export const useSaved = () => {
         },
         staleTime: 60 * 1000,
     });
+
+    const isSaved = (id: string): boolean => {
+        return saved.some(item => item.id === id);
+    };
+
+    return { saved, isSaved };
 };

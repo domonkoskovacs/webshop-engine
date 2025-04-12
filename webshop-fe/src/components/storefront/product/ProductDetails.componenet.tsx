@@ -12,16 +12,18 @@ import {ChevronLeft, Container, CornerDownLeft, Heart, PlusIcon} from "lucide-re
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../../ui/Accordition";
 import {calculateDiscountedPrice} from "../../../lib/price.utils";
 import {Badge} from "../../ui/Badge";
-import {useUser} from "../../../hooks/UseUser";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
 import {useProductById} from "../../../hooks/product/useProductById";
 import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
 import {useAuth} from "../../../hooks/UseAuth";
+import {useSaved} from "../../../hooks/user/useSaved";
+import {useModifySaved} from "../../../hooks/user/useModifySaved";
 
 const ProductDetails: React.FC = () => {
     const {addItemToCart, isPending} = useUpdateCart();
-    const {toggleSaved, isSaved} = useUser();
-    const  {loggedIn} = useAuth()
+    const {isSaved} = useSaved();
+    const {toggleSaved, isToggling} = useModifySaved();
+    const {loggedIn} = useAuth()
     const {data: store} = usePublicStore()
     const navigate = useNavigate();
     const {gender} = useGender()
@@ -92,11 +94,13 @@ const ProductDetails: React.FC = () => {
                     )}
                 </div>
                 <div className="w-full flex flex-row gap-2">
-                    <Button className="w-full" disabled={isPending} onClick={() => addItemToCart(product.id!, loggedIn)}><PlusIcon
+                    <Button className="w-full" disabled={isPending}
+                            onClick={() => addItemToCart(product.id!, loggedIn)}><PlusIcon
                         className="size-4 me-1"/> Add to
                         cart</Button>
                     <Button
                         variant="ghost"
+                        disabled={isToggling}
                         onClick={() => toggleSaved(product.id!)}
                         className={`transition ${
                             savedProduct ? "bg-red-500" : "hover:bg-red-500"

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.UserAdapter;
-import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
@@ -67,30 +66,6 @@ public class UserController {
         log.info("forgottenPassword > forgottenPasswordRequest: [{}]", forgottenPasswordRequest);
         userAdapter.forgottenPassword(forgottenPasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @Operation(
-            tags = {"User service"},
-            summary = "Get users",
-            description = "Users can be retrieved"
-    )
-    @GetMapping(produces = "application/json")
-    @Admin
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        log.info("getUsers");
-        return ResponseEntity.status(HttpStatus.OK).body(userAdapter.getUsers());
-    }
-
-    @Operation(
-            tags = {"User service"},
-            summary = "Get user",
-            description = "User can be retrieved by an id with an admin"
-    )
-    @GetMapping(value = "/{id}", produces = "application/json")
-    @Admin
-    public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
-        log.info("getUserById > id: [{}]", id);
-        return ResponseEntity.status(HttpStatus.OK).body(userAdapter.getById(id));
     }
 
     @Operation(
