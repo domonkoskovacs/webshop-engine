@@ -3,9 +3,11 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
-import {useProduct} from "../../../hooks/UseProduct";
 import {NumberInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
+import {useProductById} from "../../../hooks/product/useProductById";
+import {useSetProductDiscounts} from "../../../hooks/product/useSetProductDiscounts";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),
@@ -17,7 +19,9 @@ interface DiscountFormProps {
 }
 
 const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
-    const {setDiscounts, getById} = useProduct()
+    const {mutateAsync: setDiscounts, isPending} = useSetProductDiscounts();
+    const singleProductId = productIds.length === 1 ? productIds[0] : "";
+    const {data: productData} = useProductById(singleProductId);
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -28,26 +32,26 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
     })
 
     useEffect(() => {
-        if (productIds.length === 1) {
-            getById(productIds[0])
-                .then(async (product) => {
-                    form.reset({
-                        discountPercentage: product.discountPercentage,
-                    });
-                })
-                .catch(() => toast({description: "Error fetching product."}))
+        if (productIds.length === 1 && productData) {
+            form.reset({
+                discountPercentage: productData.discountPercentage,
+            });
         }
-    }, [form, getById, productIds, toast]);
+    }, [productIds, productData, form]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        setDiscounts(productIds.map(id => ({
-            id,
-            discount: data.discountPercentage,
-        })));
-        toast({
-            description: "Discount applied successfully.",
-        })
-        setIsOpen(false)
+        try {
+            await setDiscounts(productIds.map(id => ({
+                id,
+                discount: data.discountPercentage,
+            })));
+            toast({
+                description: "Discount applied successfully.",
+            });
+            setIsOpen(false);
+        } catch (error) {
+            handleGenericApiError(error)
+        }
     }
 
     return (
@@ -56,7 +60,8 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
             form={form}
             formId="discountForm"
             onSubmit={onSubmit}
-            submitButtonText="Save"
+            submitButtonText={isPending ? "Saving..." : "Save"}
+            submitButtonDisabled={isPending}
             secondaryButtonClick={() => setIsOpen(false)}
             secondaryButtonText="Back"
         >

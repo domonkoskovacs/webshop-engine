@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Button} from "../../ui/Button";
 import {Link} from "react-router-dom";
-import {useProduct} from "../../../hooks/UseProduct";
-import {ProductResponse} from "../../../shared/api";
 import SkeletonProductCard from "./SkeletonCard.component";
 import {useGender} from "../../../hooks/useGender";
 import ProductCard from "../product/ProductCard.component";
+import {useProductsByCategory} from "../../../hooks/product/useProductsByCategory";
 
 interface ProductSwiperProps {
     category: string;
@@ -33,18 +32,8 @@ const seeAllPhrases = [
 ];
 
 const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
-    const {getProductsByCategory} = useProduct()
-    const [loading, setLoading] = useState(true);
-    const [products, setProducts] = useState<ProductResponse[]>([]);
     const {gender} = useGender()
-
-    useEffect(() => {
-        setLoading(true);
-        getProductsByCategory(category)
-            .then(fetchedProducts => setProducts(fetchedProducts))
-            .catch(console.error)
-            .finally(() => setLoading(false));
-    }, [category, getProductsByCategory]);
+    const {data: products = [], isLoading} = useProductsByCategory(category, gender);
 
     const randomMarketingText = marketingPhrases[Math.floor(Math.random() * marketingPhrases.length)];
     const randomSeeAllText = seeAllPhrases[Math.floor(Math.random() * seeAllPhrases.length)];
@@ -61,7 +50,7 @@ const HomeProductBlock: React.FC<ProductSwiperProps> = ({category}) => {
             </div>
             <div
                 className="grid grid-cols-1 mx-10 16 sm:grid-cols-2 sm:mx-8 md:grid-cols-4 md:mx-2 gap-4 mb-10 place-items-center">
-                {loading ? (
+                {isLoading ? (
                     Array.from({length: 4}).map((_, index) => <SkeletonProductCard key={index}/>)
                 ) : (
                     products.length > 0 ? (

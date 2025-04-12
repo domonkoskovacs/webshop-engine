@@ -4,7 +4,6 @@ import {z} from "zod";
 import {useToast} from "../../../hooks/UseToast";
 import React, {useEffect} from "react";
 import {ComboBoxField} from "../../ui/fields/ComboBoxField";
-import {useProduct} from "../../../hooks/UseProduct";
 import {FileListInputField, NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -12,6 +11,11 @@ import {UpdateGenderEnum} from "../../../shared/api";
 import {mapBrandsToOptions, mapEnumToOptions, mapSubCategoriesToOptions} from "../../../lib/options.utils";
 import ImageCard from "./ImageCard.component";
 import {useCategories} from "../../../hooks/category/useCategories";
+import {useCreateProduct} from "../../../hooks/product/useCreateProduct";
+import {useUpdateProduct} from "../../../hooks/product/useUpdateProduct";
+import {handleGenericApiError} from "../../../shared/ApiError";
+import {useProductById} from "../../../hooks/product/useProductById";
+import {useProductBrands} from "../../../hooks/product/useProductBrands";
 
 const MAX_IMAGES = 5;
 
@@ -53,7 +57,10 @@ interface ProductFormProps {
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
-    const {brands, create, update, getById} = useProduct();
+    const {data: brands = []} = useProductBrands();
+    const {mutateAsync: createProduct, isPending: isCreating} = useCreateProduct();
+    const {mutateAsync: updateProduct, isPending: isUpdating} = useUpdateProduct();
+    const {data: productData} = useProductById(productId ?? "");
     const {data: categories = []} = useCategories();
     const {toast} = useToast();
 
@@ -66,67 +73,64 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     });
 
     useEffect(() => {
-        if (productId) {
-            getById(productId)
-                .then((product) => {
-                    const existingImages = product.imageUrls || [];
-                    form.reset({
-                        brand: product.brand?.name || "",
-                        name: product.name,
-                        description: product.description,
-                        subCategoryId: product.subCategory?.id,
-                        gender: product.gender,
-                        count: product.count,
-                        price: product.price,
-                        discountPercentage: product.discountPercentage,
-                        images: existingImages,
-                        itemNumber: product.itemNumber,
-                    });
-                })
-                .catch(() =>
-                    toast({description: "Error fetching product."})
-                );
+        if (productId && productData) {
+            const existingImages = productData.imageUrls || [];
+            form.reset({
+                brand: productData.brand?.name || "",
+                name: productData.name,
+                description: productData.description,
+                subCategoryId: productData.subCategory?.id,
+                gender: productData.gender,
+                count: productData.count,
+                price: productData.price,
+                discountPercentage: productData.discountPercentage,
+                images: existingImages,
+                itemNumber: productData.itemNumber,
+            });
         }
-    }, [productId, form, getById, toast]);
+    }, [productId, productData, form]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         const newImages = data.images.filter((img) => img instanceof File) as File[];
         const existingImageIds = data.images.filter(
             (img) => typeof img === "string"
         ) as string[];
-
-        if (productId) {
-            update({
-                id: productId,
-                brand: data.brand,
-                name: data.name,
-                description: data.description,
-                subCategoryId: data.subCategoryId,
-                gender: data.gender,
-                count: data.count,
-                price: data.price,
-                discountPercentage: data.discountPercentage,
-                newImages: newImages,
-                existingImageIds: existingImageIds,
-                itemNumber: data.itemNumber,
-            });
-            toast({description: "Product updated successfully."});
-        } else {
-            create({
-                brand: data.brand,
-                name: data.name,
-                description: data.description,
-                subCategoryId: data.subCategoryId,
-                gender: data.gender,
-                count: data.count,
-                price: data.price,
-                discountPercentage: data.discountPercentage,
-                images: data.images as File[],
-                itemNumber: data.itemNumber,
-            });
-            toast({description: "Product created successfully."});
+        try {
+            if (productId) {
+                await updateProduct({
+                    id: productId,
+                    brand: data.brand,
+                    name: data.name,
+                    description: data.description,
+                    subCategoryId: data.subCategoryId,
+                    gender: data.gender,
+                    count: data.count,
+                    price: data.price,
+                    discountPercentage: data.discountPercentage,
+                    newImages: newImages,
+                    existingImageIds: existingImageIds,
+                    itemNumber: data.itemNumber,
+                });
+                toast({description: "Product updated successfully."});
+            } else {
+                await createProduct({
+                    brand: data.brand,
+                    name: data.name,
+                    description: data.description,
+                    subCategoryId: data.subCategoryId,
+                    gender: data.gender,
+                    count: data.count,
+                    price: data.price,
+                    discountPercentage: data.discountPercentage,
+                    images: data.images as File[],
+                    itemNumber: data.itemNumber,
+                });
+                toast({description: "Product created successfully."});
+            }
+            setIsOpen(false);
+        } catch (error) {
+            handleGenericApiError(error);
         }
-        setIsOpen(false);
     }
 
     return (
@@ -135,7 +139,8 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
             form={form}
             formId="createProductForm"
             onSubmit={onSubmit}
-            submitButtonText="Save"
+            submitButtonText={isCreating || isUpdating ? "Saving..." : "Save"}
+            submitButtonDisabled={isCreating || isUpdating}
             secondaryButtonClick={() => setIsOpen(false)}
             secondaryButtonText="Back"
         >
@@ -146,6 +151,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                 placeholder="Item Number..."
             />
             <ComboBoxField
+                key={brands.length}
                 form={form}
                 name="brand"
                 label="Brand"

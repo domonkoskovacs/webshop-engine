@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
-import {useProduct} from "../../../hooks/UseProduct";
-import {GetAllSortTypeEnum, UpdateGenderEnum} from "../../../shared/api";
+import {GetAllSortTypeEnum, ProductServiceApiGetAllRequest, UpdateGenderEnum} from "../../../shared/api";
 
 import {z} from "zod";
 import {useToast} from "../../../hooks/UseToast";
@@ -19,6 +18,8 @@ import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import SelectField from "../../ui/fields/SelectField";
 import {useCategories} from "../../../hooks/category/useCategories";
+import {useProductBrands} from "../../../hooks/product/useProductBrands";
+import {useProducts} from "../../../hooks/product/useProducts";
 
 const FormSchema = z.object({
     brands: z.array(z.string()).optional(),
@@ -36,18 +37,26 @@ const FormSchema = z.object({
 });
 
 interface FilterFormProps {
-    setIsOpen: (open: boolean) => void;
+    setIsOpen: (val: boolean) => void;
+    filters: ProductServiceApiGetAllRequest;
+    updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
+    resetFilters: () => void;
 }
 
-const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {brands, filters, updateFilters, resetFilters, priceRange, discountRange} = useProduct();
+
+const FilterForm: React.FC<FilterFormProps> = ({setIsOpen, updateFilters, filters, resetFilters}) => {
+    const {data} = useProducts(filters);
+    const priceRange: [number, number] = [data?.minPrice ?? 0, data?.maxPrice ?? 0];
+    const discountRange: [number, number] = [data?.minDiscount ?? 0, data?.maxDiscount ?? 0];
+    const {data: brands = []} = useProductBrands();
     const {data: categories = []} = useCategories();
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            showOutOfStock: false
+            showOutOfStock: false,
+            size: filters.size,
         },
     })
 
@@ -66,27 +75,11 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
             sortType: filters.sortType,
             size: filters.size,
         });
-    }, [filters.brands, filters.categories, filters.genders, filters.itemNumber, filters.maxDiscountPercentage,
-        filters.maxPrice, filters.minDiscountPercentage, filters.minPrice, filters.showOutOfStock, filters.size, filters.sortType, filters.subCategories, form])
+    }, [filters, form]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        updateFilters({
-            brands: data.brands,
-            categories: data.categories,
-            subCategories: data.subCategories,
-            genders: data.genders,
-            maxPrice: data.maxPrice,
-            minPrice: data.minPrice,
-            maxDiscountPercentage: data.maxDiscountPercentage,
-            minDiscountPercentage: data.minDiscountPercentage,
-            itemNumber: data.itemNumber,
-            showOutOfStock: data.showOutOfStock,
-            sortType: data.sortType,
-            size: data.size,
-        })
-        toast({
-            description: "Filters applied successfully.",
-        })
+        updateFilters({...data});
+        toast({description: "Filters applied successfully.",})
         setIsOpen(false)
     }
 
@@ -95,7 +88,8 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
         resetFilters();
         form.reset();
     }} secondaryButtonText="Reset">
-        <ComboBoxMultipleValueField form={form} name="brands" label="Brands" options={mapBrandsToOptions(brands)}/>
+        <ComboBoxMultipleValueField key={brands.length} form={form} name="brands" label="Brands"
+                                    options={mapBrandsToOptions(brands)}/>
         <ComboBoxMultipleValueField form={form} name="categories" label="Categories"
                                     options={mapCategoryNamesToOptions(categories)}/>
         <ComboBoxMultipleValueField form={form} name="subCategories" label="Subcategories"

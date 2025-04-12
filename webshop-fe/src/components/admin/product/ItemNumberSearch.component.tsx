@@ -1,14 +1,15 @@
 import React from "react";
 import {Input} from "src/components/ui/Input";
-import {useProduct} from "../../../hooks/UseProduct";
+import {ProductServiceApiGetAllRequest} from "../../../shared/api";
 
 interface ItemNumberSearchProps {
     inputRef: React.RefObject<HTMLInputElement>;
-    setIsInputFocused: (val: boolean) => void
+    setIsInputFocused: (val: boolean) => void;
+    filters: ProductServiceApiGetAllRequest;
+    updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
 }
 
-const ItemNumberSearch: React.FC<ItemNumberSearchProps> = ({inputRef, setIsInputFocused}) => {
-    const {filters, updateFilters} = useProduct()
+const ItemNumberSearch: React.FC<ItemNumberSearchProps> = ({inputRef, setIsInputFocused, filters, updateFilters}) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         updateFilters({itemNumber: e.target.value});

@@ -1,7 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ColumnDef} from "@tanstack/react-table";
 import {ProductResponse} from "../../shared/api";
-import {useProduct} from "../../hooks/UseProduct";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -24,19 +23,37 @@ import ProductCard from "../../components/storefront/product/ProductCard.compone
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
+import {useDeleteProducts} from "../../hooks/product/useDeleteProducts";
+import {useToast} from "../../hooks/UseToast";
+import {handleGenericApiError} from "../../shared/ApiError";
+import {useExportProducts} from "../../hooks/product/useExportProducts";
+import {downloadCSV} from 'src/lib/file.utils';
+import {mapFiltersToExportRequest} from "../../lib/product.utils";
+import {useProductFilters} from "../../hooks/product/useProductFilters";
+import {useProducts} from "../../hooks/product/useProducts";
 
 const ProductsDashboard: React.FC = () => {
     const {
-        products,
         filters,
-        setPage,
+        updateFilters,
+        resetFilters,
         nextPage,
         prevPage,
-        totalPages,
-        deleteProducts,
-        exportProducts,
-        totalElements
-    } = useProduct()
+        setPage,
+    } = useProductFilters();
+
+    const {
+        data: productsData,
+        isLoading,
+        isError,
+    } = useProducts(filters);
+
+    const products = useMemo(() => productsData?.content ?? [], [productsData?.content]);
+    const totalPages = productsData?.totalPages ?? 0;
+    const totalElements = productsData?.totalElements ?? 0;
+
+    const {mutateAsync: exportProducts, isPending: isExporting} = useExportProducts();
+    const {mutateAsync: deleteProductsMutation, isPending: isDeleting} = useDeleteProducts();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isProductFormOpen, setIsProductFormOpen] = useState(false);
     const [isDiscountFormOpen, setIsDiscountFormOpen] = useState(false);
@@ -45,6 +62,19 @@ const ProductsDashboard: React.FC = () => {
     const [product, setProduct] = useState<ProductResponse>({});
     const [id, setId] = useState<string | undefined>(undefined);
     const [ids, setIds] = useState<string[]>([]);
+    const {toast} = useToast();
+
+    const handleExport = async () => {
+        try {
+            const exportRequest = mapFiltersToExportRequest(filters);
+            const response = await exportProducts(exportRequest);
+            if (response.csv) {
+                downloadCSV(response.csv, "products.csv");
+            }
+        } catch (error) {
+            handleGenericApiError(error)
+        }
+    };
 
     const columns: ColumnDef<ProductResponse>[] = [
         {
@@ -138,6 +168,7 @@ const ProductsDashboard: React.FC = () => {
                 const product = row.original
                 const selectedRowCount = table.getFilteredSelectedRowModel().rows.length
                 const selectedIds = table.getFilteredSelectedRowModel().rows.map(row => row.original.id ?? '');
+                const targetIds = selectedIds.length > 0 ? selectedIds : [product.id ?? ''];
 
                 return (
                     <div className="text-right">
@@ -159,16 +190,26 @@ const ProductsDashboard: React.FC = () => {
                                 }}>Edit product</DropdownMenuItem>}
                                 <DropdownMenuItem onClick={() => {
                                     setIsDiscountFormOpen(true);
-                                    if (selectedRowCount > 1) {
-                                        setIds(selectedIds)
-                                    } else {
-                                        setIds([product.id ?? ''])
-                                    }
+                                    setIds(targetIds);
                                 }}>
                                     {selectedRowCount > 1 ? "Set discount for selected" : "Set discount"}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => deleteProducts(selectedIds)}>
-                                    {selectedRowCount > 1 ? "Delete selected products" : "Delete product"}
+                                <DropdownMenuItem
+                                    disabled={isDeleting}
+                                    onClick={async () => {
+                                        try {
+                                            await deleteProductsMutation(targetIds);
+                                            toast({description: "Product(s) successfully deleted!"});
+                                        } catch (error) {
+                                            handleGenericApiError(error);
+                                        }
+                                    }}
+                                >
+                                    {isDeleting
+                                        ? "Deleting..."
+                                        : selectedRowCount > 1
+                                            ? "Delete selected products"
+                                            : "Delete product"}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -188,8 +229,8 @@ const ProductsDashboard: React.FC = () => {
         }
     }, [inputRef, isFilterOpen, isInputFocused, products]);
 
-    const itemNoFilter = <ItemNumberSearch inputRef={inputRef} setIsInputFocused={setIsInputFocused}/>
-
+    const itemNoFilter = <ItemNumberSearch inputRef={inputRef} setIsInputFocused={setIsInputFocused} filters={filters}
+                                           updateFilters={updateFilters}/>
 
     return (
         <PageContainer layout="start">
@@ -221,8 +262,13 @@ const ProductsDashboard: React.FC = () => {
                             <ImportForm setIsOpen={setIsImportFormOpen}/>
                         </SheetContent>
                     </Sheet>
-                    <Button variant="ghost" onClick={() => exportProducts()}>
-                        <ArrowRightFromLine className="h-4 w-4 mr-2"/> Export
+                    <Button
+                        variant="ghost"
+                        onClick={handleExport}
+                        disabled={isExporting}
+                    >
+                        <ArrowRightFromLine className="h-4 w-4 mr-2"/>
+                        {isExporting ? "Exporting..." : "Export"}
                     </Button>
                 </div>
                 <div className="flex gap-2">
@@ -242,7 +288,12 @@ const ProductsDashboard: React.FC = () => {
                             <Button onClick={() => setIsFilterOpen(true)}>Filter</Button>
                         </SheetTrigger>
                         <SheetContent>
-                            <FilterForm setIsOpen={setIsFilterOpen}/>
+                            <FilterForm
+                                setIsOpen={setIsFilterOpen}
+                                filters={filters}
+                                updateFilters={updateFilters}
+                                resetFilters={resetFilters}
+                            />
                         </SheetContent>
                     </Sheet>
                 </div>
@@ -254,8 +305,8 @@ const ProductsDashboard: React.FC = () => {
                     className="my-2"
                     currentPage={filters.page ?? 0}
                     totalPages={totalPages}
-                    onPageChange={setPage}
-                    onNext={nextPage}
+                    onPageChange={(page) => setPage(page, totalPages)}
+                    onNext={() => nextPage(totalPages)}
                     onPrev={prevPage}
                 />
             </PageContent>

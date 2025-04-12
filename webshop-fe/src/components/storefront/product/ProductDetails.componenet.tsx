@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {ProductResponse} from "../../../shared/api";
-import {useProduct} from "../../../hooks/UseProduct";
 import {Button} from "../../ui/Button";
 
 import PageContainer from "../../shared/PageContainer.component";
@@ -16,15 +14,13 @@ import {calculateDiscountedPrice} from "../../../lib/price.utils";
 import {Badge} from "../../ui/Badge";
 import {useUser} from "../../../hooks/UseUser";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
+import {useProductById} from "../../../hooks/product/useProductById";
 
 const ProductDetails: React.FC = () => {
     const {toggleSaved, addItemToCart, isSaved} = useUser();
     const {data: store} = usePublicStore()
     const navigate = useNavigate();
-    const {getById} = useProduct();
     const {gender} = useGender()
-    const [product, setProduct] = useState<ProductResponse | null>(null);
-    const [loading, setLoading] = useState(true);
     const location = useLocation();
     const pathSegments = location.pathname.split("/").filter(Boolean);
     const category = pathSegments[2] || null;
@@ -32,29 +28,14 @@ const ProductDetails: React.FC = () => {
     const name = pathSegments[4] || null;
     const id = pathSegments[5] || null;
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
+    const {data: product, isLoading, isError} = useProductById(id ?? "");
     const savedProduct = isSaved(product?.id!);
 
-    useEffect(() => {
-        if (!id) return;
-        (async () => {
-            try {
-                const response = await getById(id);
-                if (response) {
-                    setProduct(response);
-                }
-            } catch (error) {
-                console.error("Failed to fetch product:", error);
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [id, getById, navigate]);
-
-    if (loading) {
+    if (isLoading) {
         return <PageContainer className="my-10"><EmptyState title=""/></PageContainer>
     }
 
-    if (!product) {
+    if (isError || !product) {
         return (
             <PageContainer className="my-10 gap-3">
                 <h1 className="text-5xl font-bold text-red-600">404</h1>

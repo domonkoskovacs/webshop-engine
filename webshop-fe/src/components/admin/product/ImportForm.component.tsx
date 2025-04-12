@@ -3,12 +3,12 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 import {unexpectedErrorToast, useToast} from "../../../hooks/UseToast";
 import React from "react";
-import {useProduct} from "../../../hooks/UseProduct";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {FileInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {downloadSampleCSV, fileToBase64, FileToBase64Error} from "../../../lib/file.utils";
+import {useImportProducts} from "../../../hooks/product/useImportProducts";
 
 export const FormSchema = z.object({
     csv: z
@@ -24,7 +24,7 @@ interface ImportFormProps {
 }
 
 const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
-    const {importProducts} = useProduct()
+    const {mutateAsync: importProducts, isPending} = useImportProducts();
     const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -34,7 +34,7 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const base64Csv = await fileToBase64(data.csv);
-            importProducts(base64Csv);
+            await importProducts(base64Csv);
             toast({
                 description: "Products imported successfully.",
             })
@@ -68,7 +68,8 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
             form={form}
             formId="importProductForm"
             onSubmit={onSubmit}
-            submitButtonText="Import"
+            submitButtonText={isPending ? "Importing..." : "Import"}
+            submitButtonDisabled={isPending}
             secondaryButtonClick={() => setIsOpen(false)}
             secondaryButtonText="Back"
         >
