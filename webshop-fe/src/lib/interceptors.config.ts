@@ -1,5 +1,6 @@
 import type {AxiosInstance} from 'axios';
 import {ResultEntryReasonCodeEnum} from "../shared/api";
+import {handleApiError} from "../shared/ApiError";
 
 export function setupServiceInterceptors(
     axios: AxiosInstance,
@@ -23,7 +24,8 @@ export function setupServiceInterceptors(
     const resInterceptor = axios.interceptors.response.use(
         (response) => response,
         async (error) => {
-            if (!error.response) return Promise.reject(error);
+            if (!error.response) handleApiError(error);
+
             const originalRequest = error.config;
             const {status, data} = error.response;
 
@@ -34,29 +36,23 @@ export function setupServiceInterceptors(
             if ((isJwtExpired || status === 403) && !originalRequest._retry) {
                 originalRequest._retry = true;
 
-                try {
-                    const refreshToken = getRefreshToken();
-                    if (!refreshToken) {
-                        onAuthError("No refresh token found");
-                        return Promise.reject(error);
-                    }
-
-                    const newAccessToken = await refreshAccessToken(refreshToken);
-                    if (!newAccessToken) {
-                        onAuthError("Unable to refresh token.");
-                        return Promise.reject(error);
-                    }
-
-                    setAccessToken(newAccessToken);
-                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                    return axios(originalRequest);
-                } catch (refreshErr) {
-                    onAuthError("Session expired. Please log in again.");
-                    return Promise.reject(refreshErr);
+                const refreshToken = getRefreshToken();
+                if (!refreshToken) {
+                    onAuthError("No refresh token found");
+                    handleApiError(error);
                 }
-            }
 
-            return Promise.reject(error);
+                const newAccessToken = await refreshAccessToken(refreshToken);
+                if (!newAccessToken) {
+                    onAuthError("Unable to refresh token.");
+                    handleApiError(error);
+                }
+
+                setAccessToken(newAccessToken);
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                return axios(originalRequest);
+            }
+            handleApiError(error);
         }
     );
 

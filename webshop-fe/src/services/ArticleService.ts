@@ -1,20 +1,17 @@
 import {ArticleServiceApi, ArticleServiceApiCreate4Request} from "../shared/api";
-import {handleApiCall} from "../shared/ApiCall";
 import {ApiBaseService} from "../shared/ApiBaseService";
+import axiosInstance from "../lib/axios";
 
 class ArticleService extends ApiBaseService<ArticleServiceApi> {
     constructor() {
-        super(ArticleServiceApi);
+        super(ArticleServiceApi, axiosInstance);
     }
 
     /**
      * Get all article
      */
     async getAll() {
-        return handleApiCall(() =>
-            this.api.getAll3()
-                .then(res => res?.data)
-        );
+        return this.api.getAll3().then(res => res?.data)
     }
 
     /**
@@ -22,10 +19,7 @@ class ArticleService extends ApiBaseService<ArticleServiceApi> {
      * @param article
      */
     async create(article: ArticleServiceApiCreate4Request) {
-        return handleApiCall(() =>
-            this.api.create4(article)
-                .then(res => res?.data)
-        );
+        return this.api.create4(article).then(res => res?.data)
     }
 
     /**
@@ -33,10 +27,7 @@ class ArticleService extends ApiBaseService<ArticleServiceApi> {
      * @param id
      */
     async delete(id: string) {
-        return handleApiCall(() =>
-            this.api.delete3({id})
-                .then(res => res?.data)
-        );
+        return this.api.delete3({id}).then(res => res?.data)
     }
 
 }

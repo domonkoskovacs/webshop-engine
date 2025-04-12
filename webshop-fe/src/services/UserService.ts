@@ -1,12 +1,10 @@
 import {CartItemRequest, RegistrationRequestGenderEnum, UpdateUserRequest, UserServiceApi} from "../shared/api";
-import {ApiConfig} from "../shared/ApiConfig";
-import {handleApiCall} from "../shared/ApiCall";
+import {ApiBaseService} from "../shared/ApiBaseService";
+import axiosInstance from "../lib/axios";
 
-class UserService {
-    private userApi: UserServiceApi
-
+class UserService extends ApiBaseService<UserServiceApi> {
     constructor() {
-        this.userApi = new UserServiceApi(ApiConfig.getConfig());
+        super(UserServiceApi, axiosInstance);
     }
 
     /**
@@ -26,19 +24,17 @@ class UserService {
             : gender === "women"
                 ? RegistrationRequestGenderEnum.Female
                 : undefined;
-        return handleApiCall(() =>
-            this.userApi.register({
-                registrationRequest: {
-                    email,
-                    firstname,
-                    lastname,
-                    password,
-                    phoneNumber,
-                    gender: genderEnum,
-                    subscribedToEmail,
-                },
-            }).then(res => res?.data)
-        );
+        return this.api.register({
+            registrationRequest: {
+                email,
+                firstname,
+                lastname,
+                password,
+                phoneNumber,
+                gender: genderEnum,
+                subscribedToEmail,
+            },
+        }).then(res => res?.data)
     }
 
     /**
@@ -46,10 +42,7 @@ class UserService {
      * @param email
      */
     async sendForgotPasswordEmail(email: string) {
-        return handleApiCall(() =>
-            this.userApi.forgottenPassword({forgottenPasswordRequest: {email}})
-                .then(res => res?.data)
-        );
+        return this.api.forgottenPassword({forgottenPasswordRequest: {email}}).then(res => res?.data)
     }
 
     /**
@@ -58,10 +51,7 @@ class UserService {
      * @param password
      */
     async newPassword(id: string, password: string) {
-        return handleApiCall(() =>
-            this.userApi.newPassword({newPasswordRequest: {id, password}})
-                .then(res => res?.data)
-        );
+        return this.api.newPassword({newPasswordRequest: {id, password}}).then(res => res?.data)
     }
 
     /**
@@ -69,10 +59,7 @@ class UserService {
      * @param id
      */
     async verifyEmail(id: string) {
-        return handleApiCall(() =>
-            this.userApi.verify({verificationRequest: {id}})
-                .then(res => res?.data)
-        );
+        return this.api.verify({verificationRequest: {id}}).then(res => res?.data)
     }
 
     /**
@@ -80,20 +67,14 @@ class UserService {
      * @param email
      */
     async resendVerifyEmail(email: string) {
-        return handleApiCall(() =>
-            this.userApi.resendVerify({emailRequest: {email}})
-                .then(res => res?.data)
-        );
+        return this.api.resendVerify({emailRequest: {email}}).then(res => res?.data)
     }
 
     /**
      * Get current user
      */
     async getCurrent() {
-        return handleApiCall(() =>
-            this.userApi.getCurrentUser()
-                .then(res => res?.data)
-        );
+        return this.api.getCurrentUser().then(res => res?.data)
     }
 
     /**
@@ -101,50 +82,35 @@ class UserService {
      * @param updateUserRequest rq
      */
     async updateUser(updateUserRequest: UpdateUserRequest) {
-        return handleApiCall(() =>
-            this.userApi.updateUser({updateUserRequest})
-                .then(res => res?.data)
-        );
+        return this.api.updateUser({updateUserRequest}).then(res => res?.data)
     }
 
     /**
      * Delete current user
      */
     async deleteUser() {
-        return handleApiCall(() =>
-            this.userApi.deleteUser()
-                .then(res => res?.data)
-        );
+        return this.api.deleteUser().then(res => res?.data)
     }
 
     /**
      * Get saved products
      */
     async getSaved() {
-        return handleApiCall(() =>
-            this.userApi.getSaved()
-                .then(res => res?.data)
-        );
+        return this.api.getSaved().then(res => res?.data)
     }
 
     /**
      * Get cart products
      */
     async getCart() {
-        return handleApiCall(() =>
-            this.userApi.getCart()
-                .then(res => res?.data)
-        );
+        return this.api.getCart().then(res => res?.data)
     }
 
     /**
      * Get orders
      */
     async getOrders() {
-        return handleApiCall(() =>
-            this.userApi.getOrders()
-                .then(res => res?.data)
-        );
+        return this.api.getOrders().then(res => res?.data)
     }
 
     /**
@@ -152,10 +118,7 @@ class UserService {
      * @param productIds
      */
     async addSaved(productIds: string[]) {
-        return handleApiCall(() =>
-            this.userApi.addSaved({requestBody: productIds})
-                .then(res => res?.data)
-        );
+        return this.api.addSaved({requestBody: productIds}).then(res => res?.data)
     }
 
     /**
@@ -163,10 +126,7 @@ class UserService {
      * @param productIds
      */
     async removeSaved(productIds: string[]) {
-        return handleApiCall(() =>
-            this.userApi.removeSaved({requestBody: productIds})
-                .then(res => res?.data)
-        );
+        return this.api.removeSaved({requestBody: productIds}).then(res => res?.data)
     }
 
     /**
@@ -174,10 +134,7 @@ class UserService {
      * @param cartItemRequests
      */
     async updateCart(cartItemRequests: CartItemRequest[]) {
-        return handleApiCall(() =>
-            this.userApi.updateCart({cartItemRequest: cartItemRequests})
-                .then(res => res?.data)
-        );
+        return this.api.updateCart({cartItemRequest: cartItemRequests}).then(res => res?.data)
     }
 
     /**
@@ -185,10 +142,7 @@ class UserService {
      * @param id
      */
     async unsubscribeById(id: string) {
-        return handleApiCall(() =>
-            this.userApi.unSubscribeToEmailListWithId({id})
-                .then(res => res?.data)
-        );
+        return this.api.unSubscribeToEmailListWithId({id}).then(res => res?.data)
     }
 }
 

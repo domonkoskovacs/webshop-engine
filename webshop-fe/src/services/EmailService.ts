@@ -1,52 +1,38 @@
-import {ApiConfig} from "../shared/ApiConfig";
-import {handleApiCall} from "../shared/ApiCall";
 import {EmailServiceApi, PromotionEmailRequest} from "../shared/api";
+import {ApiBaseService} from "../shared/ApiBaseService";
+import axiosInstance from "../lib/axios";
 
-class EmailService {
-    private emailApi: EmailServiceApi
-
+class EmailService extends ApiBaseService<EmailServiceApi> {
     constructor() {
-        this.emailApi = new EmailServiceApi(ApiConfig.getConfig());
+        super(EmailServiceApi, axiosInstance);
     }
 
     /**
      * Create promotion email
      */
     async create(promotionEmailRequest: PromotionEmailRequest) {
-        return handleApiCall(() =>
-            this.emailApi.create2({promotionEmailRequest})
-                .then(res => res?.data)
-        );
+        return this.api.create2({promotionEmailRequest}).then(res => res?.data)
     }
 
     /**
      * Get all emails
      */
     async getAll() {
-        return handleApiCall(() =>
-            this.emailApi.getAll1()
-                .then(res => res?.data)
-        );
+        return this.api.getAll1().then(res => res?.data)
     }
 
     /**
      * Delete email by id
      */
     async delete(id: string) {
-        return handleApiCall(() =>
-            this.emailApi.delete2({id})
-                .then(res => res?.data)
-        );
+        return this.api.delete2({id}).then(res => res?.data)
     }
 
     /**
      * Send test email
      */
     async test(id: string, email: string) {
-        return handleApiCall(() =>
-            this.emailApi.test({id, emailRequest: {email}})
-                .then(res => res?.data)
-        );
+        return this.api.test({id, emailRequest: {email}}).then(res => res?.data)
     }
 
 }

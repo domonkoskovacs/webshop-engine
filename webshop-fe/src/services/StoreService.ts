@@ -1,42 +1,31 @@
-import {ApiConfig} from "../shared/ApiConfig";
-import {handleApiCall} from "../shared/ApiCall";
 import {StoreRequest, StoreServiceApi} from "../shared/api";
+import {ApiBaseService} from "../shared/ApiBaseService";
+import axiosInstance from "../lib/axios";
 
-class StoreService {
-    private storeApi: StoreServiceApi
-
+class StoreService extends ApiBaseService<StoreServiceApi> {
     constructor() {
-        this.storeApi = new StoreServiceApi(ApiConfig.getConfig());
+        super(StoreServiceApi, axiosInstance);
     }
 
     /**
      * Get store configuration
      */
     async get() {
-        return handleApiCall(() =>
-            this.storeApi.getStore()
-                .then(res => res?.data)
-        );
+        return this.api.getStore().then(res => res?.data)
     }
 
     /**
      * Get store configuration
      */
     async update(storeRequest: StoreRequest) {
-        return handleApiCall(() =>
-            this.storeApi.updateStore({storeRequest})
-                .then(res => res?.data)
-        );
+        return this.api.updateStore({storeRequest}).then(res => res?.data)
     }
 
     /**
      * Get public store configuration
      */
     async getPublic() {
-        return handleApiCall(() =>
-            this.storeApi.getPublicStore()
-                .then(res => res?.data)
-        );
+        return this.api.getPublicStore().then(res => res?.data)
     }
 
 }

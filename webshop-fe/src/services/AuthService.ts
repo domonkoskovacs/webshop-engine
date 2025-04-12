@@ -1,10 +1,10 @@
 import {AuthServiceApi} from "../shared/api";
-import {handleApiCall} from "../shared/ApiCall";
 import {ApiBaseService} from "../shared/ApiBaseService";
+import axiosInstance from "../lib/axios";
 
 class AuthService extends ApiBaseService<AuthServiceApi> {
     constructor() {
-        super(AuthServiceApi);
+        super(AuthServiceApi, axiosInstance);
     }
 
     /**
@@ -13,10 +13,7 @@ class AuthService extends ApiBaseService<AuthServiceApi> {
      * @param password
      */
     async login(email: string, password: string) {
-        return handleApiCall(() =>
-            this.api.login({loginRequest: {email, password}})
-                .then(res => res?.data)
-        );
+        return this.api.login({loginRequest: {email, password}}).then(res => res?.data)
     }
 
     /**
@@ -24,10 +21,7 @@ class AuthService extends ApiBaseService<AuthServiceApi> {
      * @param token
      */
     async refresh(token: string) {
-        return handleApiCall(() =>
-            this.api.refreshToken({tokenRequest: {token}}, {withCredentials: true})
-                .then(res => res?.data)
-        );
+        return this.api.refreshToken({tokenRequest: {token}}, {withCredentials: true}).then(res => res?.data)
     }
 
 }

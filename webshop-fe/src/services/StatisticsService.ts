@@ -1,22 +1,17 @@
-import {ApiConfig} from "../shared/ApiConfig";
-import {handleApiCall} from "../shared/ApiCall";
 import {StatisticsServiceApi, StatisticsServiceApiGetStatisticsRequest} from "../shared/api";
+import {ApiBaseService} from "../shared/ApiBaseService";
+import axiosInstance from "../lib/axios";
 
-class StatisticsService {
-    private statisticsApi: StatisticsServiceApi
-
+class StatisticsService extends ApiBaseService<StatisticsServiceApi> {
     constructor() {
-        this.statisticsApi = new StatisticsServiceApi(ApiConfig.getConfig());
+        super(StatisticsServiceApi, axiosInstance);
     }
 
     /**
      * Get statistics
      */
     async get(request: StatisticsServiceApiGetStatisticsRequest) {
-        return handleApiCall(() =>
-            this.statisticsApi.getStatistics(request)
-                .then(res => res?.data)
-        );
+        return this.api.getStatistics(request).then(res => res?.data)
     }
 
 }
