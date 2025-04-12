@@ -3,7 +3,6 @@ import PasswordForm from "./RenewPasswordForm.component";
 import AddressForm from "./AddressForm.component";
 import AccountInfoForm from "./AccountInfoForm.component";
 import {Card, CardContent, CardFooter} from "../../ui/Card";
-import {useUser} from "../../../hooks/UseUser";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,10 +15,12 @@ import {
     AlertDialogTrigger
 } from "../../ui/AlertDialog";
 import {Button} from "src/components/ui/Button";
+import {useDeleteUser} from "../../../hooks/user/useDeleteUser";
+import {toast} from "../../../hooks/UseToast";
 
 
 const ProfileForm: React.FC = () => {
-    const {deleteUser} = useUser()
+    const {mutateAsync: deleteUser} = useDeleteUser()
     return (
         <div className="w-full flex items-center justify-center">
             <div className="w-full space-y-6 mb-6">
@@ -53,8 +54,24 @@ const ProfileForm: React.FC = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction asChild className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                <Button variant="destructive" onClick={deleteUser}>Continue</Button>
+                                            <AlertDialogAction asChild
+                                                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                <Button
+                                                    variant="destructive"
+                                                    onClick={async () => {
+                                                        try {
+                                                            await deleteUser();
+                                                            toast({description: "Account successfully deleted."});
+                                                        } catch (error) {
+                                                            toast({
+                                                                variant: "destructive",
+                                                                description: "There was an error deleting your account.",
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    Continue
+                                                </Button>
                                             </AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>

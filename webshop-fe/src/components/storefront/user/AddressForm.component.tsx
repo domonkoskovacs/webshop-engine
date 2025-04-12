@@ -2,12 +2,13 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {AddressRequest} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {useAuth} from "../../../hooks/UseAuth";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {useUpdateUser} from "../../../hooks/user/useUpdateUser";
+import {useUser} from "../../../hooks/user/useUser";
 
 export const FormSchema = z.object({
     country: z.string().min(1, {message: "Country is required."}),
@@ -23,11 +24,12 @@ interface AddressFormProps {
 }
 
 const AddressForm: React.FC<AddressFormProps> = ({type}) => {
-    const {user, updateShippingAddress, updateBillingAddress} = useUser()
-    const {loggedIn} = useAuth()
+    const {data: user} = useUser();
+    const {loggedIn} = useAuth();
+    const {updateBillingAddress, updateShippingAddress} = useUpdateUser();
     const profileChangesNeeded = loggedIn && (
-        (type === "billing" && !user.billingAddress) ||
-        (type === "shipping" && !user.shippingAddress)
+        (type === "billing" && !user?.billingAddress) ||
+        (type === "shipping" && !user?.shippingAddress)
     );
 
     const form = useForm<z.infer<typeof FormSchema>>({

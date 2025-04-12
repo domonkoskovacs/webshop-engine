@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useUser} from "../../hooks/UseUser";
 import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Card";
 import CartItem from "../../components/storefront/cart/CartItem.component";
 import {Separator} from "../../components/ui/Separator";
@@ -13,10 +12,13 @@ import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
 import {usePublicStore} from "../../hooks/store/usePublicStore";
 import {useCart} from "../../hooks/user/useCart";
+import {useUser} from "../../hooks/user/useUser";
+import {useCreateOrder} from "../../hooks/order/useCreateOrder";
 
 const Checkout: React.FC = () => {
     const {data: cart = []} = useCart();
-    const {user, placeOrder} = useUser()
+    const {mutateAsync: placeOrder} = useCreateOrder()
+    const {data: user} = useUser()
     const {data: store} = usePublicStore()
     const navigate = useNavigate();
 
@@ -26,8 +28,8 @@ const Checkout: React.FC = () => {
         discountAmount,
         finalPrice
     } = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
-    const shippingAddress = user.shippingAddress!
-    const billingAddress = user.billingAddress!
+    const shippingAddress = user?.shippingAddress!
+    const billingAddress = user?.billingAddress!
 
     const [errors, setErrors] = useState<string[]>([]);
     const [addressError, setAddressError] = useState(false);
@@ -104,9 +106,9 @@ const Checkout: React.FC = () => {
                         <CardContent className="flex flex-col w-full gap-4">
                             <div>
                                 <h3 className="text-lg font-semibold">Account Information</h3>
-                                <p>Name: {user.firstname} {user.lastname}</p>
-                                <p>Email: {user.email}</p>
-                                <p>Phone: {user.phoneNumber ?? "N/A"}</p>
+                                <p>Name: {user?.firstname} {user?.lastname}</p>
+                                <p>Email: {user?.email}</p>
+                                <p>Phone: {user?.phoneNumber ?? "N/A"}</p>
                             </div>
                             <Separator/>
                             <div>

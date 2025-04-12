@@ -1,24 +1,12 @@
 import React, {createContext, ReactNode, useCallback, useEffect, useState} from "react";
-import {
-    AddressRequest,
-    OrderResponse,
-    UpdateUserRequest,
-    UpdateUserRequestGenderEnum,
-    UserResponse
-} from "../shared/api";
+import {OrderResponse} from "../shared/api";
 import {userService} from "../services/UserService";
 import {useAuth} from "../hooks/UseAuth";
 import {orderService} from "../services/OrderService";
 import {toast} from "../hooks/UseToast";
 
 interface UserContextType {
-    user: UserResponse
     orders: OrderResponse[];
-    changePassword: (password: string) => Promise<void>;
-    updateUserUserInfo: (email: string, firstname: string, lastname: string, phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
-    updateShippingAddress: (newShippingAddress: AddressRequest) => Promise<void>;
-    updateBillingAddress: (newBillingAddress: AddressRequest) => Promise<void>;
-    placeOrder: () => Promise<OrderResponse>;
     cancelOrder: (id: string) => Promise<void>;
     returnOrder: (id: string) => Promise<void>;
     loadingOrders: boolean;
@@ -31,27 +19,13 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
-    const [user, setUser] = useState<UserResponse>({});
     const [orders, setOrders] = useState<OrderResponse[]>([])
     const [loadingOrders, setLoadingOrders] = useState(true);
-    const {loggedIn, logout} = useAuth()
-
-    const fetchUser = useCallback(async () => {
-        try {
-            if (loggedIn) {
-                const data = await userService.getCurrent();
-                setUser(data);
-            } else {
-                setUser({});
-            }
-        } catch (error) {
-            console.error("Error fetching user:", error);
-        }
-    }, [loggedIn]);
+    const {loggedIn} = useAuth()
 
     const fetchOrders = useCallback(async () => {
         try {
-            if (loggedIn && user) {
+            if (loggedIn) {
                 const data = await userService.getOrders();
                 setOrders(data);
             } else {
@@ -62,134 +36,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         } finally {
             setLoadingOrders(false);
         }
-    }, [loggedIn, user]);
-
-    useEffect(() => {
-        (async () => {
-            await fetchUser();
-        })();
-    }, [fetchUser]);
+    }, [loggedIn]);
 
     useEffect(() => {
         (async () => {
             await fetchOrders();
         })();
     }, [fetchOrders]);
-
-    const changePassword = async (password: string) => {
-        try {
-            await userService.newPassword(user?.id ?? '', password);
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    const deleteUser = async () => {
-        try {
-            await userService.deleteUser();
-            setUser({});
-            logout()
-        } catch (error) {
-            console.error("Error deleting user:", error);
-        }
-    };
-
-    const updateShippingAddress = async (newShippingAddress: AddressRequest) => {
-        try {
-            if (user) {
-                const updateUserRequest: UpdateUserRequest = {
-                    email: user.email,
-                    firstname: user.firstname ?? '',
-                    lastname: user.lastname ?? '',
-                    phoneNumber: user.phoneNumber ?? '',
-                    gender: user.gender,
-                    subscribedToEmail: user.subscribedToEmail,
-                    shippingAddress: newShippingAddress,
-                    billingAddress: user.billingAddress ? {
-                        city: user.billingAddress.city!,
-                        country: user?.billingAddress.country!,
-                        zipCode: user?.billingAddress.zipCode!,
-                        street: user?.billingAddress.street!,
-                        streetNumber: user?.billingAddress.streetNumber!,
-                        floorNumber: user?.billingAddress.floorNumber!,
-                    } : undefined,
-                };
-                const updatedUser = await userService.updateUser(updateUserRequest);
-                if (updatedUser) {
-                    setUser(updatedUser)
-                }
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    const updateBillingAddress = async (newBillingAddress: AddressRequest) => {
-        try {
-            if (user) {
-                const updateUserRequest: UpdateUserRequest = {
-                    email: user.email,
-                    firstname: user.firstname ?? '',
-                    lastname: user.lastname ?? '',
-                    phoneNumber: user.phoneNumber ?? '',
-                    gender: user.gender,
-                    subscribedToEmail: user.subscribedToEmail,
-                    billingAddress: newBillingAddress,
-                    shippingAddress: user.shippingAddress ? {
-                        city: user.shippingAddress.city!,
-                        country: user?.shippingAddress.country!,
-                        zipCode: user?.shippingAddress.zipCode!,
-                        street: user?.shippingAddress.street!,
-                        streetNumber: user?.shippingAddress.streetNumber!,
-                        floorNumber: user?.shippingAddress.floorNumber!,
-                    } : undefined,
-                };
-                const updatedUser = await userService.updateUser(updateUserRequest);
-                if (updatedUser) {
-                    setUser(updatedUser)
-                }
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    const updateUserUserInfo = async (email: string, firstname: string, lastname: string, phoneNumber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => {
-        try {
-            if (user) {
-                const updateUserRequest: UpdateUserRequest = {
-                    email: email,
-                    firstname: firstname,
-                    lastname: lastname,
-                    phoneNumber: phoneNumber,
-                    gender: gender,
-                    subscribedToEmail: subscribedToEmail,
-                    billingAddress: user.billingAddress ? {
-                        city: user.billingAddress.city!,
-                        country: user.billingAddress.country!,
-                        zipCode: user.billingAddress.zipCode!,
-                        street: user.billingAddress.street!,
-                        streetNumber: user.billingAddress.streetNumber!,
-                        floorNumber: user.billingAddress.floorNumber!,
-                    } : undefined,
-                    shippingAddress: user.shippingAddress ? {
-                        city: user.shippingAddress.city!,
-                        country: user.shippingAddress.country!,
-                        zipCode: user.shippingAddress.zipCode!,
-                        street: user.shippingAddress.street!,
-                        streetNumber: user.shippingAddress.streetNumber!,
-                        floorNumber: user.shippingAddress.floorNumber!,
-                    } : undefined,
-                };
-                const updatedUser = await userService.updateUser(updateUserRequest);
-                if (updatedUser) {
-                    setUser(updatedUser)
-                }
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
 
     const placeOrder = async () => {
         try {
@@ -233,13 +86,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     return (
         <UserContext.Provider
             value={{
-                user,
                 orders,
-                changePassword,
-                updateUserUserInfo,
-                updateShippingAddress,
-                updateBillingAddress,
-                placeOrder,
                 cancelOrder,
                 returnOrder,
                 loadingOrders,

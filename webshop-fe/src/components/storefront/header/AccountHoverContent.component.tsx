@@ -4,19 +4,21 @@ import {LayoutDashboard, Settings, ShoppingBag, UserPen} from "lucide-react";
 import {Separator} from "../../ui/Separator";
 import {useAuth} from "../../../hooks/UseAuth";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useUser} from "../../../hooks/UseUser";
 import {Badge} from "../../ui/Badge";
 import {toLogin} from "../../../lib/url.utils";
+import {useUser} from "../../../hooks/user/useUser";
 
 const AccountHoverContent: React.FC = () => {
     const {loggedIn, role, logout} = useAuth()
     const navigate = useNavigate();
-    const {user} = useUser()
+    const { data: user } = useUser();
     const location = useLocation();
 
     const profileChangesNeeded = loggedIn &&
+        user &&
         (!user.shippingAddress || !user.billingAddress) &&
         location.pathname !== "/profile";
+
     if (loggedIn && role === "ROLE_USER") {
         return <div className="flex flex-col text-center space-y-1">
             <h1>Welcome back!</h1>

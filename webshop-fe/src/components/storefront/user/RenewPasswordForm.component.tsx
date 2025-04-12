@@ -2,10 +2,10 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React from "react";
-import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {useChangePassword} from "../../../hooks/user/useChangePassword";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -19,7 +19,7 @@ const FormSchema = z.object({
     path: ["passwordAgain"]
 });
 const PasswordForm: React.FC = () => {
-    const {changePassword} = useUser()
+    const {mutateAsync: changePassword} = useChangePassword()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),

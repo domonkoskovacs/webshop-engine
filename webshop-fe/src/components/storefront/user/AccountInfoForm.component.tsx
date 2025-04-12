@@ -2,13 +2,14 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {useUser} from "../../../hooks/UseUser";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import {UpdateUserRequestGenderEnum} from "../../../shared/api";
 import {Link} from "react-router-dom";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {useUser} from "../../../hooks/user/useUser";
+import {useUpdateUser} from "../../../hooks/user/useUpdateUser";
 
 const FormSchema = z.object({
     email: z.string().email({message: "Invalid email format."}),
@@ -20,7 +21,8 @@ const FormSchema = z.object({
 });
 
 const AccountInfoForm: React.FC = () => {
-    const {user, updateUserUserInfo} = useUser()
+    const { data: user } = useUser();
+    const { updateUserUserInfo, isPending } = useUpdateUser();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -43,11 +45,14 @@ const AccountInfoForm: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             await updateUserUserInfo(
-                data.email, data.firstname, data.lastname, data.phoneNumber, data.gender, data.subscribedToEmail
-            )
-            toast({
-                description: "Your account information was successfully updated.",
-            })
+                data.email,
+                data.firstname,
+                data.lastname,
+                data.phoneNumber,
+                data.gender,
+                data.subscribedToEmail
+            );
+            toast({description: "Your account information was successfully updated.",})
         } catch (error) {
             unexpectedErrorToast()
         }
@@ -58,7 +63,8 @@ const AccountInfoForm: React.FC = () => {
                               form={form}
                               formId="account-info-form"
                               onSubmit={onSubmit}
-                              submitButtonText="Update"
+                              submitButtonText={isPending ? "Updating..." : "Update"}
+                              submitButtonDisabled={isPending}
                               singleColumn={true}>
         <TextInputField form={form} name="email" label="Email" placeholder="Add your email"/>
         <TextInputField form={form} name="firstname" label="Firstname"

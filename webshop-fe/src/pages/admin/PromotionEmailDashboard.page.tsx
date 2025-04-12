@@ -9,7 +9,6 @@ import {
 } from "../../components/ui/DropdownMenu";
 import {Button} from "../../components/ui/Button";
 import {MoreHorizontal} from "lucide-react";
-import {useUser} from "../../hooks/UseUser";
 import {DataTable} from "../../components/ui/DataTable";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import EmailForm from "../../components/admin/email/EmailForm.component";
@@ -19,13 +18,14 @@ import {useDeleteEmail} from "../../hooks/email/useDeleteEmail";
 import {useTestEmail} from "../../hooks/email/useTestEmail";
 import {handleGenericApiError} from "../../shared/ApiError";
 import {useToast} from "../../hooks/UseToast";
+import {useUser} from "../../hooks/user/useUser";
 
 const PromotionEmailDashboard: React.FC = () => {
     const {data: emails = [], isLoading} = useEmails();
     const {mutateAsync: deleteEmail} = useDeleteEmail();
     const {mutateAsync: testEmail} = useTestEmail();
     const {toast} = useToast();
-    const {user} = useUser();
+    const {data: user} = useUser();
     const [isFormOpen, setIsFormOpen] = React.useState(false);
 
     const columns: ColumnDef<ProductResponse>[] = [
@@ -80,7 +80,7 @@ const PromotionEmailDashboard: React.FC = () => {
 
                 const handleTest = async () => {
                     try {
-                        await testEmail({id, email: user.email!});
+                        await testEmail({id, email: user?.email!});
                         toast({description: "Test email sent successfully!"});
                     } catch (error) {
                         handleGenericApiError(error);

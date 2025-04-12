@@ -3,20 +3,21 @@ import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard"
 import {Button} from "../../ui/Button";
 import {User} from "lucide-react";
 import AccountHoverContent from "./AccountHoverContent.component";
-import {useUser} from "../../../hooks/UseUser";
 import {Badge} from "../../ui/Badge";
 import {useAuth} from "../../../hooks/UseAuth";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../../ui/Tooltip";
 import {useLocation} from "react-router-dom";
+import {useUser} from "../../../hooks/user/useUser";
 
 const AccountHoverIcon: React.FC = () => {
-    const {user} = useUser()
+    const {data: user} = useUser();
     const {loggedIn, role} = useAuth()
     const location = useLocation();
 
     const profileChangesNeeded = loggedIn && role !== "ROLE_ADMIN" &&
-        (!user.shippingAddress || !user.billingAddress) &&
+        user && (!user.shippingAddress || !user.billingAddress) &&
         location.pathname !== "/profile";
+
     return <HoverCard>
         <HoverCardTrigger>
             <TooltipProvider>
