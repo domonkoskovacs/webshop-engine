@@ -15,9 +15,13 @@ import {Badge} from "../../ui/Badge";
 import {useUser} from "../../../hooks/UseUser";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
 import {useProductById} from "../../../hooks/product/useProductById";
+import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
+import {useAuth} from "../../../hooks/UseAuth";
 
 const ProductDetails: React.FC = () => {
-    const {toggleSaved, addItemToCart, isSaved} = useUser();
+    const {addItemToCart, isPending} = useUpdateCart();
+    const {toggleSaved, isSaved} = useUser();
+    const  {loggedIn} = useAuth()
     const {data: store} = usePublicStore()
     const navigate = useNavigate();
     const {gender} = useGender()
@@ -88,7 +92,7 @@ const ProductDetails: React.FC = () => {
                     )}
                 </div>
                 <div className="w-full flex flex-row gap-2">
-                    <Button className="w-full" onClick={() => addItemToCart(product.id!)}><PlusIcon
+                    <Button className="w-full" disabled={isPending} onClick={() => addItemToCart(product.id!, loggedIn)}><PlusIcon
                         className="size-4 me-1"/> Add to
                         cart</Button>
                     <Button

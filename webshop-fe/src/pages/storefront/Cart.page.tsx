@@ -1,7 +1,6 @@
 import React from 'react';
 import {useAuth} from "../../hooks/UseAuth";
 import EmptyState from "../../components/storefront/shared/EmptyPage.component";
-import {useUser} from "../../hooks/UseUser";
 import PublicEmptyPage from "../../components/storefront/shared/PublicEmptyPage.component";
 import CartItem from "../../components/storefront/cart/CartItem.component";
 import {Button} from "../../components/ui/Button";
@@ -14,10 +13,11 @@ import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
 import {usePublicStore} from "../../hooks/store/usePublicStore";
+import {useCart} from "../../hooks/user/useCart";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
-    const {cart} = useUser()
+    const {data: cart = []} = useCart();
     const {data: store} = usePublicStore()
 
     const {

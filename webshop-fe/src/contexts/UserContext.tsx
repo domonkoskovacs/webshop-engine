@@ -1,11 +1,8 @@
 import React, {createContext, ReactNode, useCallback, useEffect, useState} from "react";
 import {
     AddressRequest,
-    CartItemRequest,
-    CartItemResponse,
     OrderResponse,
     ProductResponse,
-    ResultEntryReasonCodeEnum,
     UpdateUserRequest,
     UpdateUserRequestGenderEnum,
     UserResponse
@@ -14,29 +11,23 @@ import {userService} from "../services/UserService";
 import {useAuth} from "../hooks/UseAuth";
 import {orderService} from "../services/OrderService";
 import {toast} from "../hooks/UseToast";
-import {ApiError} from "../shared/ApiError";
 
 interface UserContextType {
     user: UserResponse
     saved: ProductResponse[];
-    cart: CartItemResponse[];
     orders: OrderResponse[];
     changePassword: (password: string) => Promise<void>;
-    updateUserUserInfo: (email: string, firstname: string, lastname: string,
-                         phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
+    updateUserUserInfo: (email: string, firstname: string, lastname: string, phoneNUmber: string, gender: UpdateUserRequestGenderEnum, subscribedToEmail: boolean) => Promise<void>;
     deleteUser: () => Promise<void>;
     updateShippingAddress: (newShippingAddress: AddressRequest) => Promise<void>;
     updateBillingAddress: (newBillingAddress: AddressRequest) => Promise<void>;
     addToSaved: (id: string) => Promise<void>;
     removeFromSaved: (id: string) => Promise<void>;
     isSaved: (id: string) => boolean;
-    updateCart: (cartItem: CartItemRequest) => Promise<void>;
-    increaseOneInCart: (id: string) => Promise<void>;
     placeOrder: () => Promise<OrderResponse>;
     cancelOrder: (id: string) => Promise<void>;
     returnOrder: (id: string) => Promise<void>;
     toggleSaved: (id: string) => Promise<void>;
-    addItemToCart: (id: string) => Promise<void>;
     loadingOrders: boolean;
 }
 
@@ -49,7 +40,6 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     const [user, setUser] = useState<UserResponse>({});
     const [saved, setSaved] = useState<ProductResponse[]>([])
-    const [cart, setCart] = useState<CartItemResponse[]>([])
     const [orders, setOrders] = useState<OrderResponse[]>([])
     const [loadingOrders, setLoadingOrders] = useState(true);
     const {loggedIn, logout} = useAuth()
@@ -74,19 +64,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 setSaved(data);
             } else {
                 setSaved([]);
-            }
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    }, [loggedIn, user]);
-
-    const fetchCart = useCallback(async () => {
-        try {
-            if (loggedIn && user) {
-                const data = await userService.getCart();
-                setCart(data);
-            } else {
-                setCart([]);
             }
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -119,12 +96,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             await fetchSaved();
         })();
     }, [fetchSaved]);
-
-    useEffect(() => {
-        (async () => {
-            await fetchCart();
-        })();
-    }, [fetchCart]);
 
     useEffect(() => {
         (async () => {
@@ -252,7 +223,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
             await userService.addSaved([id]);
             setUser((prevUser) => {
                 if (!prevUser) return prevUser;
-                const updatedSaved = prevUser.saved ? [...prevUser.saved] : [];
+                const updatedSaved = saved ? [...saved] : [];
                 if (!updatedSaved.some((item) => item.id === id)) {
                     const product = {id};
                     updatedSaved.push(product);
@@ -271,7 +242,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 if (!prevUser) return prevUser;
                 return {
                     ...prevUser,
-                    saved: prevUser.saved?.filter((item) => item.id !== id) || [],
+                    saved: saved?.filter((item) => item.id !== id) || [],
                 };
             });
         } catch (error) {
@@ -280,44 +251,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
     };
 
     const isSaved = (id: string): boolean => {
-        return !!user?.saved?.some((item) => item.id === id);
-    };
-
-    const updateCart = async (cartItem: CartItemRequest) => {
-        try {
-            const data = await userService.updateCart([cartItem]);
-            setCart(data)
-        } catch (error) {
-            throw error
-        }
-    };
-
-    const increaseOneInCart = async (id: string) => {
-        try {
-            const existingItem = cart.find(item => item.product!.id === id);
-
-            if (existingItem) {
-                const updatedCartItem = {
-                    productId: id,
-                    count: existingItem.count! + 1,
-                };
-                await updateCart(updatedCartItem);
-            } else {
-                const cartItem = {
-                    productId: id,
-                    count: 1,
-                };
-                await updateCart(cartItem);
-            }
-        } catch (error) {
-            throw error
-        }
+        return !!saved?.some((item) => item.id === id);
     };
 
     const placeOrder = async () => {
         try {
             const order = await orderService.create();
-            setCart([]);
+            //setCart([]);
             setOrders((prevOrders) => [...prevOrders, order]);
             return order;
         } catch (error) {
@@ -339,7 +279,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     }
 
-    const returnOrder = async(id: string) => {
+    const returnOrder = async (id: string) => {
         try {
             const updatedOrder = await orderService.returnOrder(id);
             setOrders((prevOrders) =>
@@ -369,32 +309,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         }
     };
 
-    const addItemToCart = async (id: string) => {
-        if (!loggedIn) {
-            toast({description: "You need to log in to update your cart."});
-            return;
-        }
-        try {
-            await increaseOneInCart(id);
-            toast({description: "Item added to cart."});
-        } catch (error) {
-            if (error instanceof ApiError && error.error) {
-                const errorMap = new Map(error.error.map(err => [err.reasonCode, true]));
-                if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
-                    toast({description: "Not enough products in stock."});
-                }
-            } else {
-                toast({variant: "destructive", description: "Error updating cart."});
-            }
-        }
-    };
-
     return (
         <UserContext.Provider
             value={{
                 user,
                 saved,
-                cart,
                 orders,
                 changePassword,
                 updateUserUserInfo,
@@ -404,13 +323,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
                 addToSaved,
                 removeFromSaved,
                 isSaved,
-                updateCart,
-                increaseOneInCart,
                 placeOrder,
                 cancelOrder,
                 returnOrder,
                 toggleSaved,
-                addItemToCart,
                 loadingOrders,
             }}>
             {children}

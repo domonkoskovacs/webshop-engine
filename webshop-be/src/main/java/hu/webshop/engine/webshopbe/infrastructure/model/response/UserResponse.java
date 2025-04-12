@@ -1,6 +1,5 @@
 package hu.webshop.engine.webshopbe.infrastructure.model.response;
 
-import java.util.List;
 import java.util.UUID;
 
 import hu.webshop.engine.webshopbe.domain.user.value.Gender;
@@ -18,9 +17,6 @@ public record UserResponse(
         Gender gender,
         boolean subscribedToEmail,
         AddressResponse shippingAddress,
-        AddressResponse billingAddress,
-        List<CartItemResponse> cart,
-        List<ProductResponse> saved,
-        List<OrderResponse> orders
+        AddressResponse billingAddress
 ) {
 }

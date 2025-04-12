@@ -1,11 +1,11 @@
 import React from "react";
 import {CartItemResponse, ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {Badge} from "../../ui/Badge";
-import {useUser} from "../../../hooks/UseUser";
 import {Minus, Plus} from "lucide-react";
 import {Button} from "src/components/ui/Button";
 import {ApiError} from "../../../shared/ApiError";
 import {toast} from "../../../hooks/UseToast";
+import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
 
 interface CartHoverItemProps {
     item: CartItemResponse;
@@ -14,7 +14,7 @@ interface CartHoverItemProps {
 }
 
 const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountModifiable = true}) => {
-    const {updateCart} = useUser()
+    const {mutateAsync: updateCart, isPending} = useUpdateCart();
 
     const handleUpdate = async (newCount: number) => {
         try {
@@ -73,7 +73,7 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
                     variant="outline"
                     size="icon"
                     className="w-6 h-6 p-0"
-                    disabled={item.count! < 1}
+                    disabled={item.count! < 1 || isPending}
                     onClick={() => handleUpdate(item.count! - 1)}
                 >
                     <Minus size={14}/>
@@ -82,6 +82,7 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
                 {amountModifiable && <Button
                     variant="outline"
                     size="icon"
+                    disabled={isPending}
                     className="w-6 h-6 p-0"
                     onClick={() => handleUpdate(item.count! + 1)}
                 >

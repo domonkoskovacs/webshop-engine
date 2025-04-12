@@ -638,12 +638,6 @@ export interface OrderPageOrderResponse {
     'maxPrice'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
@@ -659,7 +653,7 @@ export interface OrderPageOrderResponse {
      * @type {boolean}
      * @memberof OrderPageOrderResponse
      */
-    'first'?: boolean;
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -684,6 +678,12 @@ export interface OrderPageOrderResponse {
      * @memberof OrderPageOrderResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -914,18 +914,6 @@ export type OrderStatusRequestOrderStatusEnum = typeof OrderStatusRequestOrderSt
 export interface PageableObject {
     /**
      * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'offset'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageableObject
-     */
-    'sort'?: SortObject;
-    /**
-     * 
      * @type {boolean}
      * @memberof PageableObject
      */
@@ -948,6 +936,18 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'unpaged'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'offset'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof PageableObject
+     */
+    'sort'?: SortObject;
 }
 /**
  * 
@@ -1006,12 +1006,6 @@ export interface ProductPageProductResponse {
     'maxDiscount'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -1027,7 +1021,7 @@ export interface ProductPageProductResponse {
      * @type {boolean}
      * @memberof ProductPageProductResponse
      */
-    'first'?: boolean;
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -1052,6 +1046,12 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1475,12 +1475,6 @@ export interface SortObject {
      * @type {boolean}
      * @memberof SortObject
      */
-    'empty'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
     'sorted'?: boolean;
     /**
      * 
@@ -1488,6 +1482,12 @@ export interface SortObject {
      * @memberof SortObject
      */
     'unsorted'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
+    'empty'?: boolean;
 }
 /**
  * 
@@ -1887,24 +1887,6 @@ export interface UserResponse {
      * @memberof UserResponse
      */
     'billingAddress'?: AddressResponse;
-    /**
-     * 
-     * @type {Array<CartItemResponse>}
-     * @memberof UserResponse
-     */
-    'cart'?: Array<CartItemResponse>;
-    /**
-     * 
-     * @type {Array<ProductResponse>}
-     * @memberof UserResponse
-     */
-    'saved'?: Array<ProductResponse>;
-    /**
-     * 
-     * @type {Array<OrderResponse>}
-     * @memberof UserResponse
-     */
-    'orders'?: Array<OrderResponse>;
 }
 
 export const UserResponseRoleEnum = {

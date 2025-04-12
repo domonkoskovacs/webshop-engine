@@ -11,6 +11,8 @@ import {calculateDiscountedPrice} from "../../../lib/price.utils";
 import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/css";
 import {Badge} from "../../ui/Badge";
+import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
+import {useAuth} from "../../../hooks/UseAuth";
 
 interface ProductCardProps {
     product: ProductResponse;
@@ -18,7 +20,9 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const {gender} = useGender();
-    const {toggleSaved, addItemToCart, isSaved} = useUser();
+    const {addItemToCart, isPending} = useUpdateCart();
+    const  {loggedIn} = useAuth()
+    const {toggleSaved, isSaved} = useUser();
     const location = useLocation();
     const isSavedPage = location.pathname === "/saved";
     const savedProduct = isSaved(product.id!);
@@ -143,7 +147,8 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                 <Button
                     variant="ghost"
                     className="w-full"
-                    onClick={() => addItemToCart(product.id!)}
+                    disabled={isPending}
+                    onClick={() => addItemToCart(product.id!, loggedIn)}
                 >
                     <PlusIcon className="size-4 me-1"/> Add to Cart
                 </Button>

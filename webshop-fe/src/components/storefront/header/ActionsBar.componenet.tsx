@@ -11,11 +11,13 @@ import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard"
 import CartHoverContent from "./CartHoverContent.component";
 import {useAuth} from "../../../hooks/UseAuth";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
+import {useCart} from "../../../hooks/user/useCart";
 
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
-    const {saved, cart} = useUser()
-    const {data: store} = usePublicStore()
+    const {saved} = useUser();
+    const {data: cart = []} = useCart();
+    const {data: store} = usePublicStore();
     const location = useLocation();
     const { loggedIn } = useAuth();
     const isCartHoverDisabled = location.pathname === "/checkout" || !loggedIn;

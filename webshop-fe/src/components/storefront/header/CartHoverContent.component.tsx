@@ -1,15 +1,15 @@
 import React from "react";
 import {Button} from "../../ui/Button";
-import {useUser} from "../../../hooks/UseUser";
 import {useNavigate} from "react-router-dom";
 import CartItem from "../cart/CartItem.component";
 import {calculateCartTotals} from "../../../lib/price.utils";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
+import {useCart} from "../../../hooks/user/useCart";
 
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();
     const {data: store} = usePublicStore()
-    const {cart} = useUser()
+    const {data: cart = []} = useCart();
 
     const {discountedPrice} = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
     const sortedCart = [...cart].sort((a, b) => (a.product?.name || '').localeCompare(b.product?.name || ''));
