@@ -1,17 +1,18 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useToast} from "../../../hooks/UseToast";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
-import {useProductScroll} from "../../../hooks/useProductScroll";
-import {GetAllSortTypeEnum} from "../../../shared/api";
+import {GetAllSortTypeEnum, ProductServiceApiGetAllRequest} from "../../../shared/api";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {mapBrandsToOptions, mapEnumToOptions} from "../../../lib/options.utils";
 import SliderField from "../../ui/fields/SliderField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import SelectField from "../../ui/fields/SelectField";
 import {useLocation, useNavigate} from "react-router-dom";
+import {useProductBrands} from "../../../hooks/product/useProductBrands";
+import {useProductScroll} from "../../../hooks/product/useProductScroll";
 
 export const FormSchema = z.object({
     brands: z.array(z.string().min(1, "Brand is required"), {message: "Brands must be an array of strings"}).optional(),
@@ -25,10 +26,21 @@ export const FormSchema = z.object({
 
 interface FilterFormProps {
     setIsOpen: (open: boolean) => void;
+    filters: ProductServiceApiGetAllRequest;
+    updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
+    setUrlFiltersApplied: (applied: boolean) => void;
+    resetFilters: () => void;
 }
 
-const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
-    const {brands, filters, priceRange, discountRange, setUrlFiltersApplied, updateFilters} = useProductScroll();
+const FilterForm: React.FC<FilterFormProps> = ({
+                                                   setIsOpen,
+                                                   filters,
+                                                   updateFilters,
+                                                   setUrlFiltersApplied,
+                                                   resetFilters
+                                               }) => {
+    const {priceRange, discountRange} = useProductScroll(filters);
+    const {data: brands = []} = useProductBrands();
     const {toast} = useToast()
     const navigate = useNavigate();
     const location = useLocation();
@@ -38,17 +50,26 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
         defaultValues: {},
     })
 
+    const prevFiltersRef = useRef<string | null>(null);
+
     useEffect(() => {
-        form.reset({
-            brands: filters.brands,
-            maxPrice: filters.maxPrice,
-            minPrice: filters.minPrice,
-            maxDiscountPercentage: filters.maxDiscountPercentage,
-            minDiscountPercentage: filters.minDiscountPercentage,
-            showOutOfStock: filters.showOutOfStock,
-            sortType: filters.sortType,
-        });
-    }, [filters.brands, filters.maxDiscountPercentage, filters.maxPrice, filters.minDiscountPercentage, filters.minPrice, filters.showOutOfStock, filters.sortType, form]);
+        const prev = prevFiltersRef.current;
+        const next = JSON.stringify(filters);
+
+        if (prev !== next) {
+            form.reset({
+                brands: filters.brands,
+                maxPrice: filters.maxPrice,
+                minPrice: filters.minPrice,
+                maxDiscountPercentage: filters.maxDiscountPercentage,
+                minDiscountPercentage: filters.minDiscountPercentage,
+                showOutOfStock: filters.showOutOfStock,
+                sortType: filters.sortType,
+            });
+            prevFiltersRef.current = next;
+        }
+    }, [filters, form]);
+
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         toast({
@@ -98,9 +119,16 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen}) => {
     }
 
     return <SheetFormContainer title="Filter Products" form={form} formId="productStoreFilterForm" onSubmit={onSubmit}
-                               submitButtonText="Apply" secondaryButtonClick={() => {
-        form.reset();
-    }} secondaryButtonText="Reset">
+                               submitButtonText="Apply"
+                               secondaryButtonClick={() => {
+                                   resetFilters();
+                                   form.reset();
+                                   navigate({
+                                       pathname: location.pathname,
+                                       search: "",
+                                   }, {replace: true});
+                               }}
+                               secondaryButtonText="Reset">
         <ComboBoxMultipleValueField form={form} name="brands" label="Brands" options={mapBrandsToOptions(brands)}/>
         <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
                      range={[priceRange[0], priceRange[1]]}/>

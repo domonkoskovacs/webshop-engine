@@ -7,18 +7,28 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
 import ProductList from "../../components/storefront/product/ProductList.component";
-import {useProductScroll} from "../../hooks/useProductScroll";
 import {useGender} from "../../hooks/useGender";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
 import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersFromUrl} from "../../lib/url.utils";
+import {useProductScrollFilters} from "../../hooks/product/useProductScrollFilters";
+import {useProductScroll} from "../../hooks/product/useProductScroll";
 
 const Products: React.FC = () => {
     const {gender, setGender} = useGender()
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const {totalElements, updateFilters, urlFiltersApplied, setUrlFiltersApplied} = useProductScroll();
+    const {
+        filters,
+        updateFilters,
+        resetFilters,
+        urlFiltersApplied,
+        setUrlFiltersApplied
+    } = useProductScrollFilters();
+    const {
+        totalElements,
+    } = useProductScroll(filters);
     const location = useLocation();
     const navigate = useNavigate();
     const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -50,7 +60,7 @@ const Products: React.FC = () => {
             updateFilters(filter);
             setUrlFiltersApplied(true);
         }
-    }, [id, location.pathname, location.search, updateFilters, setUrlFiltersApplied, urlFiltersApplied ]);
+    }, [id, location.pathname, location.search, updateFilters, setUrlFiltersApplied, urlFiltersApplied]);
 
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
 
@@ -73,12 +83,20 @@ const Products: React.FC = () => {
                         <Button>Filter Products</Button>
                     </SheetTrigger>
                     <SheetContent>
-                        <FilterForm setIsOpen={setIsFilterOpen}/>
+                        <FilterForm
+                            setIsOpen={setIsFilterOpen}
+                            filters={filters}
+                            updateFilters={updateFilters}
+                            setUrlFiltersApplied={setUrlFiltersApplied}
+                            resetFilters={resetFilters}
+                        />
                     </SheetContent>
                 </Sheet>
             </PageHeader>
             <PageContent>
-                <ProductList/>
+                <ProductList
+                    filters={filters}
+                />
             </PageContent>
         </PageContainer>;
 };
