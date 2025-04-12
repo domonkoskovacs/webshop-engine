@@ -39,7 +39,7 @@ export function AppSidebar() {
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>
                 <SidebarMenu>
-                    <Link to={"/admin/dashboard"}>
+                    <Link to={"/dashboard"}>
                         <SidebarMenuButton
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"

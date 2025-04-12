@@ -1,15 +1,15 @@
 import React from 'react';
 import EmptyState from "../../components/storefront/shared/EmptyPage.component";
-import {useUser} from "../../hooks/UseUser";
 import {OrderResponse} from "../../shared/api";
 import OrderItem from "../../components/storefront/order/Order.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
+import {useUserOrders} from "../../hooks/user/useUserOrders";
 
 const PreviousOrders: React.FC = () => {
-    const {orders} = useUser()
+    const {data: orders = []} = useUserOrders()
 
     return orders.length > 0 ? (
         <PageContainer layout="spacious" className="relative">

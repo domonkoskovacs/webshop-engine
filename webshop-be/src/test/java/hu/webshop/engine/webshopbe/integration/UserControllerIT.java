@@ -102,39 +102,6 @@ class UserControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("admin can retrieve all users")
-    void adminCanRetrieveAllUsers() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL, Role.ROLE_ADMIN);
-
-        //Then //there are one user initialized in initDataConfig
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$", hasSize(1)));
-    }
-
-    @Test
-    @DisplayName("user cannot retrieve all users")
-    @DataSet("verifiedUser.yml")
-    void userCannotRetrieveAllUsers() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL, Role.ROLE_USER);
-
-        //Then
-        resultActions.andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DisplayName("admin can get an user by id")
-    void adminCanGetAnUserById() throws Exception {
-        //Given //When
-        String adminId = userRepository.findAll().stream().filter(user -> user.getRole().equals(Role.ROLE_ADMIN)).findFirst()
-                .orElseThrow(AssertionError::new).getId().toString();
-        ResultActions resultActions = performGet(BASE_URL + "/" + adminId, Role.ROLE_ADMIN);
-
-        //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.email").value("admin@admin.com"));
-    }
-
-    @Test
     @DisplayName("bad id throws 404")
     void badIdThrows404() throws Exception {
         //Given //When

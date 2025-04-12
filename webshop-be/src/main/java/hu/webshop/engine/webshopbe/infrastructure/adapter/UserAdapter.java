@@ -48,16 +48,6 @@ public class UserAdapter {
         userService.forgottenPassword(userMapper.fromRequest(forgottenPasswordRequest));
     }
 
-    public List<UserResponse> getUsers() {
-        log.info("getUsers");
-        return userMapper.toResponseList(userService.getUsers());
-    }
-
-    public UserResponse getById(UUID id) {
-        log.info("getById > id: [{}]", id);
-        return userMapper.toResponse(userService.getById(id));
-    }
-
     public UserResponse getCurrent() {
         log.info("getCurrent");
         return userMapper.toResponse(userService.getCurrentUser());

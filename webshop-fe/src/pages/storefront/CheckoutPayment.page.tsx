@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {Elements} from '@stripe/react-stripe-js';
-import {orderService} from "../../services/OrderService";
 import {stripePromise} from "../../lib/stripe.utils";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PaymentForm from "../../components/storefront/order/PaymentForm.componenet";
 import {Button} from "../../components/ui/Button";
 import {ArrowLeft} from "lucide-react";
-import {useUser} from "../../hooks/UseUser";
 import {OrderResponse} from "../../shared/api";
 import {Separator} from "../../components/ui/Separator";
 import {Card, CardContent, CardFooter} from "../../components/ui/Card";
 import OrderItem from "../../components/storefront/order/OrderItem.component";
 import {usePublicStore} from "../../hooks/store/usePublicStore";
+import {useUserOrders} from "../../hooks/user/useUserOrders";
+import {useCreatePaymentIntent} from "../../hooks/order/useCreatePaymentIntent";
 
 const CheckoutPayment: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -20,10 +20,11 @@ const CheckoutPayment: React.FC = () => {
     const orderId = searchParams.get('orderId');
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const {orders, loadingOrders} = useUser();
+    const {data: orders = [], isLoading: loadingOrders} = useUserOrders();
     const [loadError, setLoadError] = useState<string | null>(null);
     const navigate = useNavigate();
     const [order, setOrder] = useState<OrderResponse>();
+    const {mutateAsync: createIntent, isPending} = useCreatePaymentIntent();
 
     useEffect(() => {
         if (loadingOrders || !orderId) {
@@ -43,20 +44,17 @@ const CheckoutPayment: React.FC = () => {
             setLoadError(null);
         }
 
-        orderService.paymentIntent(orderId)
-            .then(response => {
-                if (response?.clientSecret) {
-                    setClientSecret(response.clientSecret);
-                } else {
-                    setLoadError("Failed to retrieve payment details.");
-                }
-                setLoading(false);
+        createIntent(orderId)
+            .then(res => {
+                setClientSecret(res.clientSecret);
             })
             .catch(() => {
-                setLoadError("Failed to load payment details. Please try again.");
+                setLoadError("Failed to create payment intent.");
+            })
+            .finally(() => {
                 setLoading(false);
             });
-    }, [orders, loadingOrders, orderId]);
+    }, [orders, loadingOrders, orderId, createIntent]);
 
     if (loading) {
         return <PageContainer layout="centered">

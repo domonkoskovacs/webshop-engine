@@ -7,7 +7,6 @@ import {Separator} from "../../ui/Separator";
 import {Link, useNavigate} from "react-router-dom";
 import {generateProductUrl} from "../../../lib/url.utils";
 import {useGender} from "../../../hooks/useGender";
-import {useUser} from "../../../hooks/UseUser";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -30,6 +29,8 @@ import {
     DialogTitle,
     DialogTrigger
 } from "../../ui/Dialog";
+import {useCancelOrder} from "../../../hooks/order/useCancelOrder";
+import {useReturnOrder} from "../../../hooks/order/useReturnOrder";
 
 interface OrderItemProps {
     order: OrderResponse;
@@ -43,7 +44,9 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
     const secondItem = items[1];
     const actions = getOrderActions(order);
     const navigate = useNavigate();
-    const {cancelOrder, returnOrder} = useUser();
+    const {mutateAsync: returnOrder} = useReturnOrder();
+    const {mutateAsync: cancelOrder} = useCancelOrder();
+
 
     return (
         <Card className="w-full py-0 my-0">
@@ -131,7 +134,8 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                             <DialogHeader>
                                 <DialogTitle>Are you sure?</DialogTitle>
                                 <DialogDescription>
-                                    If you request a return, one of our colleagues will contact you shortly with the return shipping details.
+                                    If you request a return, one of our colleagues will contact you shortly with the
+                                    return shipping details.
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter>

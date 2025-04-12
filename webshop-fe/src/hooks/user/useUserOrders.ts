@@ -3,7 +3,7 @@ import { OrderResponse } from "../../shared/api";
 import { userService } from "../../services/UserService";
 import { useUserGuard } from "../useUserGuard";
 
-export const useOrders = () => {
+export const useUserOrders = () => {
     const { assertUser } = useUserGuard();
 
     return useQuery<OrderResponse[]>({
