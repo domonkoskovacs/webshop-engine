@@ -14,6 +14,10 @@ export class ApiConfig {
         if (!this.instance) {
             this.instance = new Configuration({
                 basePath: process.env.REACT_APP_BACKEND_URL,
+                baseOptions: {
+                    withCredentials: true,
+                    timeout: 10000,
+                },
             });
         }
         return this.instance;

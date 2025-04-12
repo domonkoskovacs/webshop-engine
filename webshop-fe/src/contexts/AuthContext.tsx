@@ -1,10 +1,11 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "../hooks/UseToast";
-import axios from "axios";
 import {useCookies} from "react-cookie";
+import {useLogin} from "../hooks/auth/useLogin";
+import {useRefresh} from "../hooks/auth/useRefresh";
+import {setupServiceInterceptors} from "../lib/interceptors.config";
 import {authService} from "../services/AuthService";
-import {ResultEntryReasonCodeEnum} from "../shared/api";
 
 interface AuthContextType {
     role: string | null;
@@ -23,11 +24,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const [cookies, setCookie, removeCookie] = useCookies(["role", "loggedIn", "refreshToken"]);
     const [loading, setLoading] = useState(true);
 
+    const {mutateAsync: loginForToken} = useLogin();
+    const {mutateAsync: refreshWithToken} = useRefresh();
+
     const navigate = useNavigate();
 
     const login = async (email: string, password: string) => {
         try {
-            const response = await authService.login(email, password);
+            const response = await loginForToken({email, password});
             const {accessToken, role, refreshToken, refreshTokenTimeout} = response;
             if (accessToken && role && refreshToken && refreshTokenTimeout) {
                 setAccessToken(accessToken);
@@ -97,62 +101,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }, [logout]);
 
     useEffect(() => {
-        const requestInterceptor = axios.interceptors.request.use(
-            (config) => {
-                if (accessToken && config.headers) {
-                    config.headers.Authorization = `Bearer ${accessToken}`;
-                }
-                return config;
+        const eject = setupServiceInterceptors(
+            authService.getAxiosInstance(),
+            () => accessToken,
+            () => cookies.refreshToken,
+            (token) => setAccessToken(token),
+            async (refreshToken) => {
+                const response = await refreshWithToken(refreshToken);
+                return response?.accessToken ?? null;
             },
-            (error) => Promise.reject(error)
-        );
-        
-        const responseInterceptor = axios.interceptors.response.use(
-            (response) => response,
-            async (error) => {
-                if (!error.response) {
-                    return Promise.reject(error);
-                }
-
-                const originalRequest = error.config;
-                const { status, data } = error.response;
-                const newAccessTokenNeeded = status === 401 &&
-                    data.error[0].reasonCode === ResultEntryReasonCodeEnum.JwtExpiredError
-                if ((newAccessTokenNeeded || status === 403) && !originalRequest._retry) {
-                    originalRequest._retry = true;
-
-                    try {
-                        const refreshToken = cookies.refreshToken;
-                        if (refreshToken && typeof refreshToken === 'string') {
-                            const response = await authService.refresh(refreshToken);
-                            const {accessToken} = response;
-                            if (accessToken) {
-                                setAccessToken(accessToken);
-                                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-                            } else {
-                                handleAuthError("Can't renew your your authentication please login again.")
-                                return Promise.reject(error);
-                            }
-                        } else {
-                            handleAuthError("Can't renew your your authentication please login again.")
-                            return Promise.reject(error);
-                        }
-                        return axios(originalRequest);
-                    } catch (refreshError) {
-                        handleAuthError("Can't renew your your authentication please login again.")
-                        return Promise.reject(refreshError);
-                    }
-                }
-
-                return Promise.reject(error);
-            }
+            handleAuthError
         );
 
-        return () => {
-            axios.interceptors.request.eject(requestInterceptor)
-            axios.interceptors.response.eject(responseInterceptor);
-        };
-    }, [accessToken, setAccessToken, cookies.refreshToken, handleAuthError]);
+        return () => eject();
+    }, [accessToken, cookies.refreshToken, refreshWithToken, handleAuthError]);
 
     return (
         <AuthContext.Provider value={{role, loggedIn, login, logout, loading}}>

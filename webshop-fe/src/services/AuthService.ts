@@ -1,12 +1,10 @@
 import {AuthServiceApi} from "../shared/api";
-import {ApiConfig} from "../shared/ApiConfig";
 import {handleApiCall} from "../shared/ApiCall";
+import {ApiBaseService} from "../shared/ApiBaseService";
 
-class AuthService {
-    private authApi: AuthServiceApi
-
+class AuthService extends ApiBaseService<AuthServiceApi> {
     constructor() {
-        this.authApi = new AuthServiceApi(ApiConfig.getConfig());
+        super(AuthServiceApi);
     }
 
     /**
@@ -16,7 +14,7 @@ class AuthService {
      */
     async login(email: string, password: string) {
         return handleApiCall(() =>
-            this.authApi.login({loginRequest: {email, password}})
+            this.api.login({loginRequest: {email, password}})
                 .then(res => res?.data)
         );
     }
@@ -27,7 +25,7 @@ class AuthService {
      */
     async refresh(token: string) {
         return handleApiCall(() =>
-            this.authApi.refreshToken({tokenRequest: {token}}, {withCredentials: true})
+            this.api.refreshToken({tokenRequest: {token}}, {withCredentials: true})
                 .then(res => res?.data)
         );
     }

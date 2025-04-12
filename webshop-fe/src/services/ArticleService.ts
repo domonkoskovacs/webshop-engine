@@ -1,12 +1,10 @@
 import {ArticleServiceApi, ArticleServiceApiCreate4Request} from "../shared/api";
-import {ApiConfig} from "../shared/ApiConfig";
 import {handleApiCall} from "../shared/ApiCall";
+import {ApiBaseService} from "../shared/ApiBaseService";
 
-class ArticleService {
-    private articleApi: ArticleServiceApi
-
+class ArticleService extends ApiBaseService<ArticleServiceApi> {
     constructor() {
-        this.articleApi = new ArticleServiceApi(ApiConfig.getConfig());
+        super(ArticleServiceApi);
     }
 
     /**
@@ -14,7 +12,7 @@ class ArticleService {
      */
     async getAll() {
         return handleApiCall(() =>
-            this.articleApi.getAll3()
+            this.api.getAll3()
                 .then(res => res?.data)
         );
     }
@@ -25,7 +23,7 @@ class ArticleService {
      */
     async create(article: ArticleServiceApiCreate4Request) {
         return handleApiCall(() =>
-            this.articleApi.create4(article)
+            this.api.create4(article)
                 .then(res => res?.data)
         );
     }
@@ -36,7 +34,7 @@ class ArticleService {
      */
     async delete(id: string) {
         return handleApiCall(() =>
-            this.articleApi.delete3({id})
+            this.api.delete3({id})
                 .then(res => res?.data)
         );
     }
