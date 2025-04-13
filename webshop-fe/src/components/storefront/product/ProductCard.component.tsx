@@ -14,6 +14,8 @@ import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
 import {useAuth} from "../../../hooks/UseAuth";
 import {useModifySaved} from "../../../hooks/user/useModifySaved";
 import {useSaved} from "../../../hooks/user/useSaved";
+import {useCart} from "../../../hooks/user/useCart";
+import {useUserOrders} from "../../../hooks/user/useUserOrders";
 
 interface ProductCardProps {
     product: ProductResponse;
@@ -21,6 +23,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     const {gender} = useGender();
+    const {isInCart} = useCart();
+    const {isOrdered} = useUserOrders();
     const {addItemToCart, isPending} = useUpdateCart();
     const {loggedIn} = useAuth()
     const {isSaved} = useSaved();
@@ -50,6 +54,22 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                         <Badge variant="secondary" className="w-auto">
                             Out of Stock
                         </Badge>
+                    )}
+                    {(product.count ?? 0) > 0 && (product.count ?? 0) <= 10 && (
+                        <Badge variant="warning" className="w-auto">
+                            Only {product.count} left!
+                        </Badge>
+                    )}
+                    {product.creationTime && new Date(product.creationTime) >= new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) && (
+                        <Badge variant="info" className="w-auto">
+                            New
+                        </Badge>
+                    )}
+                    {isOrdered(product.id!) && (
+                        <Badge variant="info">Ordered</Badge>
+                    )}
+                    {isInCart(product.id!) && (
+                        <Badge variant="default">In Cart</Badge>
                     )}
                 </div>
                 <Button

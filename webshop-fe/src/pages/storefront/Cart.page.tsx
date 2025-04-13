@@ -17,7 +17,7 @@ import {useCart} from "../../hooks/user/useCart";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
-    const {data: cart = []} = useCart();
+    const {cart} = useCart();
     const {data: store} = usePublicStore()
 
     const {

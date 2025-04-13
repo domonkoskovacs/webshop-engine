@@ -14,7 +14,7 @@ export const useUpdateCart = () => {
     const queryClient = useQueryClient();
     const { assertUser } = useUserGuard();
     const { toast } = useToast();
-    const { data: cart = [] } = useCart();
+    const { cart } = useCart();
 
     const mutation = useMutation<CartItemResponse[], ApiError, CartItemRequest>({
         mutationFn: async (cartItem) => {

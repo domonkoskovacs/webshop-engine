@@ -1,3 +1,29 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+
+# Block admin dashboard and all its subroutes
+Disallow: /dashboard
+
+# Block authentication-related pages
+Disallow: /authentication
+Disallow: /forgot-password
+Disallow: /new-password
+Disallow: /verify-email
+Disallow: /verify-email/confirm
+Disallow: /unsubcribe
+
+# Block checkout pages (user-specific)
+Disallow: /checkout
+Disallow: /checkout-payment
+
+# Block user-only pages
+Disallow: /profile
+Disallow: /previous-orders
+Disallow: /saved
+Disallow: /cart
+
+# Block error and utility pages
+Disallow: /403
+Disallow: /terms-and-conditions
+Disallow: /privacy-policy
+
+Allow: /

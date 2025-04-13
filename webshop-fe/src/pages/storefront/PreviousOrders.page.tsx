@@ -9,7 +9,7 @@ import PageContent from "../../components/shared/PageContent";
 import {useUserOrders} from "../../hooks/user/useUserOrders";
 
 const PreviousOrders: React.FC = () => {
-    const {data: orders = []} = useUserOrders()
+    const {orders} = useUserOrders()
 
     return orders.length > 0 ? (
         <PageContainer layout="spacious" className="relative">

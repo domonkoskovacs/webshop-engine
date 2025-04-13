@@ -6,11 +6,17 @@ import { useUserGuard } from "../useUserGuard";
 export const useCart = () => {
     const { assertUser } = useUserGuard();
 
-    return useQuery<CartItemResponse[]>({
+    const { data: cart = [] } = useQuery<CartItemResponse[]>({
         queryKey: ["cart"],
         queryFn: async () => {
             assertUser();
             return await userService.getCart();
         },
     });
+
+    const isInCart = (productId: string): boolean => {
+        return cart.some(item => item.product?.id === productId);
+    };
+
+    return { cart, isInCart };
 };

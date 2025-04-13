@@ -1,5 +1,6 @@
 package hu.webshop.engine.webshopbe.infrastructure.model.response;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public record ProductResponse(
         Double price,
         Double discountPercentage,
         List<String> imageUrls,
-        String itemNumber
+        String itemNumber,
+        OffsetDateTime creationTime
 ) {
 }

@@ -20,7 +20,7 @@ const CheckoutPayment: React.FC = () => {
     const orderId = searchParams.get('orderId');
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const {data: orders = [], isLoading: loadingOrders} = useUserOrders();
+    const {orders, isLoading: loadingOrders} = useUserOrders();
     const [loadError, setLoadError] = useState<string | null>(null);
     const navigate = useNavigate();
     const [order, setOrder] = useState<OrderResponse>();

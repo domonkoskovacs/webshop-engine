@@ -620,6 +620,12 @@ export interface OrderPageOrderResponse {
     'totalPages'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'first'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
@@ -642,12 +648,6 @@ export interface OrderPageOrderResponse {
      * @memberof OrderPageOrderResponse
      */
     'numberOfElements'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -890,10 +890,10 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageNumber'?: number;
     /**
      * 
      * @type {number}
@@ -902,10 +902,10 @@ export interface PageableObject {
     'pageSize'?: number;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -988,6 +988,12 @@ export interface ProductPageProductResponse {
     'totalPages'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'first'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -1010,12 +1016,6 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'numberOfElements'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1101,6 +1101,12 @@ export interface ProductResponse {
      * @memberof ProductResponse
      */
     'itemNumber'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductResponse
+     */
+    'creationTime'?: string;
 }
 
 export const ProductResponseGenderEnum = {

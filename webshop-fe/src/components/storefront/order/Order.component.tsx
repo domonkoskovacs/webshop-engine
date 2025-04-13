@@ -31,6 +31,7 @@ import {
 } from "../../ui/Dialog";
 import {useCancelOrder} from "../../../hooks/order/useCancelOrder";
 import {useReturnOrder} from "../../../hooks/order/useReturnOrder";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 interface OrderItemProps {
     order: OrderResponse;
@@ -46,7 +47,7 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
     const navigate = useNavigate();
     const {mutateAsync: returnOrder} = useReturnOrder();
     const {mutateAsync: cancelOrder} = useCancelOrder();
-
+    const [isReturnDialogOpen, setIsReturnDialogOpen] = useState(false);
 
     return (
         <Card className="w-full py-0 my-0">
@@ -126,8 +127,8 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-                    <Dialog>
-                        <DialogTrigger>
+                    <Dialog open={isReturnDialogOpen} onOpenChange={setIsReturnDialogOpen}>
+                        <DialogTrigger asChild>
                             {actions.canReturn && <Button>Return Items</Button>}
                         </DialogTrigger>
                         <DialogContent>
@@ -139,7 +140,18 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter>
-                                <Button onClick={() => returnOrder(order.id ?? '')}>Request Return</Button>
+                                <Button
+                                    onClick={async () => {
+                                        try {
+                                            await returnOrder(order.id ?? '');
+                                            setIsReturnDialogOpen(false);
+                                        } catch (error) {
+                                            handleGenericApiError(error)
+                                        }
+                                    }}
+                                >
+                                    Request Return
+                                </Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>

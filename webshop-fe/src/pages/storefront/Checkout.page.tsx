@@ -16,7 +16,7 @@ import {useUser} from "../../hooks/user/useUser";
 import {useCreateOrder} from "../../hooks/order/useCreateOrder";
 
 const Checkout: React.FC = () => {
-    const {data: cart = []} = useCart();
+    const {cart} = useCart();
     const {mutateAsync: placeOrder} = useCreateOrder()
     const {data: user} = useUser()
     const {data: store} = usePublicStore()

@@ -16,7 +16,7 @@ import {useSaved} from "../../../hooks/user/useSaved";
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
     const {saved = []} = useSaved();
-    const {data: cart = []} = useCart();
+    const {cart} = useCart();
     const {data: store} = usePublicStore();
     const location = useLocation();
     const {loggedIn} = useAuth();

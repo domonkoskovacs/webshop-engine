@@ -9,7 +9,7 @@ import {useCart} from "../../../hooks/user/useCart";
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();
     const {data: store} = usePublicStore()
-    const {data: cart = []} = useCart();
+    const {cart} = useCart();
 
     const {discountedPrice} = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
     const sortedCart = [...cart].sort((a, b) => (a.product?.name || '').localeCompare(b.product?.name || ''));
