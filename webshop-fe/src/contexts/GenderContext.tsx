@@ -1,6 +1,5 @@
 import React, {createContext, ReactNode, useEffect, useState} from "react";
-
-export type Gender = 'men' | 'women';
+import {Gender} from "../types/gender";
 
 interface GenderContextType {
     gender: Gender;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button} from "./Button";
 import {Moon, Sun} from "lucide-react";
-import {useTheme} from "src/contexts/theme-provider";
+import {useTheme} from "src/contexts/ThemeContext";
 
 interface DarkModeToggleProps {
     className?: string;

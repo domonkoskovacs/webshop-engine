@@ -20,7 +20,7 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
-export function ThemeProvider({
+export function ThemeContext({
                                   children,
                                   defaultTheme = "system",
                                   storageKey = "ui-theme",
@@ -67,7 +67,7 @@ export const useTheme = () => {
     const context = useContext(ThemeProviderContext)
 
     if (context === undefined)
-        throw new Error("useTheme must be used within a ThemeProvider")
+        throw new Error("useTheme must be used within a ThemeContext")
 
     return context
 }
