@@ -11,8 +11,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
-import hu.webshop.engine.webshopbe.domain.auth.JwtService;
-import hu.webshop.engine.webshopbe.domain.auth.properties.JwtProperties;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.TokenRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 class AuthControllerIT extends IntegrationTest {
 
     private static final String BASE_URL = "/api/auth";
-    private static final String USER_ID = "b7f86506-8ea8-4908-b8f4-668c5ec6a7ee";
 
     @Test
     @DisplayName("user can successfully log in")
@@ -75,62 +72,5 @@ class AuthControllerIT extends IntegrationTest {
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.accessToken").exists()).andExpect(jsonPath("$.refreshToken").exists());
-    }
-
-    @Test
-    @DisplayName("successful token authorization")
-    @DataSet("verifiedUser.yml")
-    void successfulTokenAuthorization() throws Exception {
-        //Given
-        MvcResult mvcResult = performPost(BASE_URL + "/login", createLoginRequest("pass")).andExpect(status().isOk()).andReturn();
-        String accessToken = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("accessToken").asText();
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/authorize", new TokenRequest(accessToken));
-
-        //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.userId").value(USER_ID));
-    }
-
-    @Test
-    @DisplayName("successful refresh token authorization")
-    @DataSet("verifiedUser.yml")
-    void successfulRefreshTokenAuthorization() throws Exception {
-        //Given
-        MvcResult mvcResult = performPost(BASE_URL + "/login", createLoginRequest("pass")).andExpect(status().isOk()).andReturn();
-        String refreshToken = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("refreshToken").asText();
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/authorize", new TokenRequest(refreshToken));
-
-        //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.userId").value(USER_ID));
-    }
-
-    @Test
-    @DisplayName("invalid token authorization")
-    @DataSet("verifiedUser.yml")
-    void invalidTokenAuthorization() throws Exception {
-        //Given
-        String invalidToken = "not a token";
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/authorize", new TokenRequest(invalidToken));
-
-        //Then
-        resultActions.andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @DisplayName("wrong signing key authorization")
-    void wringSigningKeyAuthorization() throws Exception {
-        //Given
-        String invalidToken = new JwtService(new JwtProperties()).generateAccessJwtToken("name", "email", "role");
-
-        //When
-        ResultActions resultActions = performPost(BASE_URL + "/authorize", new TokenRequest(invalidToken));
-
-        //Then
-        resultActions.andExpect(status().isUnauthorized());
     }
 }

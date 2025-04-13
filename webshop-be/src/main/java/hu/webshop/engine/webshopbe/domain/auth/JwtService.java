@@ -68,14 +68,6 @@ public class JwtService {
                 .compact();
     }
 
-    public String getEmailFromToken(String token, JwtTokenType tokenType) {
-        return switch (tokenType) {
-            case ACCESS_TOKEN -> getEmailFromAccessJwtToken(token);
-            case REFRESH_TOKEN -> getEmailFromRefreshJwtToken(token);
-            case INVALID_TOKEN -> throw new AuthenticationException(ReasonCode.BAD_TOKEN, "token type is invalid");
-        };
-    }
-
     public String getEmailFromAccessJwtToken(String token) {
         return getClaims(accessKey, token).get(JwtTokenClaims.EMAIL.name(), String.class);
     }

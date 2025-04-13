@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.AuthAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.TokenRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.response.AuthorizationResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,16 +47,5 @@ public class AuthController {
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody TokenRequest token) {
         log.info("refreshToken");
         return ResponseEntity.ok(authAdapter.refreshToken(token.token()));
-    }
-
-    @Operation(
-            tags = {"Auth service"},
-            summary = "Authorization of an access token",
-            description = "An access token can be authorized, and the user id can be extracted"
-    )
-    @PostMapping(value = "/authorize", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<AuthorizationResponse> authorize(@RequestBody TokenRequest token) {
-        log.info("authorize");
-        return ResponseEntity.ok(authAdapter.authorize(token.token()));
     }
 }

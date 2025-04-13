@@ -5,9 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hu.webshop.engine.webshopbe.domain.auth.value.Authorization;
 import hu.webshop.engine.webshopbe.domain.auth.value.Credentials;
-import hu.webshop.engine.webshopbe.domain.auth.value.JwtTokenType;
 import hu.webshop.engine.webshopbe.domain.auth.value.Login;
 import hu.webshop.engine.webshopbe.domain.base.exception.AuthenticationException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
@@ -68,20 +66,5 @@ public class AuthService {
         User user = userService.getByEmail(email);
         log.info("Refreshing access token was successful");
         return createLogin(user);
-    }
-
-    /**
-     * validates token and creates token info
-     *
-     * @param token access ot refresh token
-     * @return token info
-     */
-    public Authorization authorize(String token) {
-        log.info("authorize > token: [{}]", token);
-        JwtTokenType tokenType = jwtService.getJwtTokenType(token);
-        jwtService.validateJwtToken(token, tokenType);
-        log.info("[{}] token is valid", tokenType);
-        User user = userService.getByEmail(jwtService.getEmailFromToken(token, tokenType));
-        return new Authorization(user.getId().toString(), user.getRole(), tokenType);
     }
 }

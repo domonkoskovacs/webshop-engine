@@ -161,48 +161,6 @@ export interface ArticleResponse {
 /**
  * 
  * @export
- * @interface AuthorizationResponse
- */
-export interface AuthorizationResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthorizationResponse
-     */
-    'userId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthorizationResponse
-     */
-    'role'?: AuthorizationResponseRoleEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthorizationResponse
-     */
-    'tokenType'?: AuthorizationResponseTokenTypeEnum;
-}
-
-export const AuthorizationResponseRoleEnum = {
-    Admin: 'ROLE_ADMIN',
-    User: 'ROLE_USER',
-    Monitoring: 'ROLE_MONITORING',
-    Swagger: 'ROLE_SWAGGER'
-} as const;
-
-export type AuthorizationResponseRoleEnum = typeof AuthorizationResponseRoleEnum[keyof typeof AuthorizationResponseRoleEnum];
-export const AuthorizationResponseTokenTypeEnum = {
-    AccessToken: 'ACCESS_TOKEN',
-    RefreshToken: 'REFRESH_TOKEN',
-    InvalidToken: 'INVALID_TOKEN'
-} as const;
-
-export type AuthorizationResponseTokenTypeEnum = typeof AuthorizationResponseTokenTypeEnum[keyof typeof AuthorizationResponseTokenTypeEnum];
-
-/**
- * 
- * @export
  * @interface BrandResponse
  */
 export interface BrandResponse {
@@ -932,10 +890,10 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'paged'?: boolean;
     /**
      * 
      * @type {number}
@@ -944,10 +902,10 @@ export interface PageableObject {
     'pageSize'?: number;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageNumber'?: number;
     /**
      * 
      * @type {boolean}
@@ -2326,46 +2284,6 @@ export class ArticleServiceApi extends BaseAPI {
 export const AuthServiceApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * An access token can be authorized, and the user id can be extracted
-         * @summary Authorization of an access token
-         * @param {TokenRequest} tokenRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authorize: async (tokenRequest: TokenRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'tokenRequest' is not null or undefined
-            assertParamExists('authorize', 'tokenRequest', tokenRequest)
-            const localVarPath = `/api/auth/authorize`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(tokenRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Users can login with username and password and get an access token
          * @summary Login with an existing user
          * @param {LoginRequest} loginRequest 
@@ -2456,19 +2374,6 @@ export const AuthServiceApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthServiceApiAxiosParamCreator(configuration)
     return {
         /**
-         * An access token can be authorized, and the user id can be extracted
-         * @summary Authorization of an access token
-         * @param {TokenRequest} tokenRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async authorize(tokenRequest: TokenRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthorizationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authorize(tokenRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthServiceApi.authorize']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Users can login with username and password and get an access token
          * @summary Login with an existing user
          * @param {LoginRequest} loginRequest 
@@ -2505,16 +2410,6 @@ export const AuthServiceApiFactory = function (configuration?: Configuration, ba
     const localVarFp = AuthServiceApiFp(configuration)
     return {
         /**
-         * An access token can be authorized, and the user id can be extracted
-         * @summary Authorization of an access token
-         * @param {AuthServiceApiAuthorizeRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authorize(requestParameters: AuthServiceApiAuthorizeRequest, options?: RawAxiosRequestConfig): AxiosPromise<AuthorizationResponse> {
-            return localVarFp.authorize(requestParameters.tokenRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Users can login with username and password and get an access token
          * @summary Login with an existing user
          * @param {AuthServiceApiLoginRequest} requestParameters Request parameters.
@@ -2536,20 +2431,6 @@ export const AuthServiceApiFactory = function (configuration?: Configuration, ba
         },
     };
 };
-
-/**
- * Request parameters for authorize operation in AuthServiceApi.
- * @export
- * @interface AuthServiceApiAuthorizeRequest
- */
-export interface AuthServiceApiAuthorizeRequest {
-    /**
-     * 
-     * @type {TokenRequest}
-     * @memberof AuthServiceApiAuthorize
-     */
-    readonly tokenRequest: TokenRequest
-}
 
 /**
  * Request parameters for login operation in AuthServiceApi.
@@ -2586,18 +2467,6 @@ export interface AuthServiceApiRefreshTokenRequest {
  * @extends {BaseAPI}
  */
 export class AuthServiceApi extends BaseAPI {
-    /**
-     * An access token can be authorized, and the user id can be extracted
-     * @summary Authorization of an access token
-     * @param {AuthServiceApiAuthorizeRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthServiceApi
-     */
-    public authorize(requestParameters: AuthServiceApiAuthorizeRequest, options?: RawAxiosRequestConfig) {
-        return AuthServiceApiFp(this.configuration).authorize(requestParameters.tokenRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * Users can login with username and password and get an access token
      * @summary Login with an existing user

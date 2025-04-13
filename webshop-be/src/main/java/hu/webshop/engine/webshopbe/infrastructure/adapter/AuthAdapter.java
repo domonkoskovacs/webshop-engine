@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import hu.webshop.engine.webshopbe.domain.auth.AuthService;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.AuthMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.response.AuthorizationResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +27,5 @@ public class AuthAdapter {
     public LoginResponse refreshToken(String token) {
         log.info("refreshToken > token: [{}]", token);
         return authMapper.toResponse(authService.refreshToken(token));
-    }
-
-    public AuthorizationResponse authorize(String token) {
-        log.info("authorize > token: [{}]", token);
-        return authMapper.toResponse(authService.authorize(token));
     }
 }

@@ -37,8 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (!request.getRequestURI().contains("auth") && jwtService.isValidAccessToken(token)) {
             handleAccessToken(request, token);
-        } else {
-            log.warn("Cannot set security context for api endpoints, authentication failed, only public endpoints can be accessed");
         }
 
         filterChain.doFilter(request, response);
@@ -51,7 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @param jwt     token
      */
     private void handleAccessToken(HttpServletRequest request, String jwt) {
-        log.info("handleAccessToken");
         String email = jwtService.getEmailFromAccessJwtToken(jwt);
         //loads by email
         UserDetails userDetails = userService.loadUserByUsername(email);
@@ -62,6 +59,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //we specify the user in the context,
         //after this the token passes the security filter
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("authentication successful");
     }
 }

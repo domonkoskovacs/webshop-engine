@@ -125,17 +125,6 @@ class JwtServiceTest {
     }
 
     @Test
-    @DisplayName("invalid token type throws bad token exception")
-    void invalidTokenTypeThrowsBadTokenException() {
-        //Given
-        JwtTokenType jwtTokenType = JwtTokenType.INVALID_TOKEN;
-
-        //When //Then
-        assertThatThrownBy(() -> jwtService.getEmailFromToken("token", jwtTokenType))
-                .isInstanceOf(AuthenticationException.class);
-    }
-
-    @Test
     @DisplayName("invalid token gives back invalid token type")
     void invalidTokenGivesBackInvalidTokenType() {
         //Given
