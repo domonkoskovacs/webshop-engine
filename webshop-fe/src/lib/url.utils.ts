@@ -1,5 +1,5 @@
 import {BreadcrumbSegment} from "../components/shared/PathBreadcrumb.component";
-import {GetAllGendersEnum, ProductServiceApiGetAllRequest} from "../shared/api";
+import {GetAllGendersEnum, GetAllSortTypeEnum, ProductServiceApiGetAllRequest} from "../shared/api";
 
 /**
  * Extracts path segments from a given URL path.
@@ -182,6 +182,7 @@ export function parseFiltersFromUrl(
         "showOutOfStock",
         "sortType",
     ];
+
     queryFilterKeys.forEach((key) => {
         if (params.has(key)) {
             const value = params.get(key);
@@ -192,6 +193,11 @@ export function parseFiltersFromUrl(
                     filters[key] = value === "true";
                 } else if (key === "brands") {
                     filters[key] = value.split(",");
+                } else if (key === "sortType") {
+                    const isValidSort = Object.values(GetAllSortTypeEnum).includes(value as GetAllSortTypeEnum);
+                    if (isValidSort) {
+                        filters[key] = value as GetAllSortTypeEnum;
+                    }
                 } else {
                     filters[key] = value as any;
                 }

@@ -26,3 +26,10 @@ export const mapFiltersToExportRequest = (
         showOutOfStock: filters.showOutOfStock,
     };
 };
+
+export const SORT_OPTIONS = [
+    { label: "Price: Low to High", value: "ASC_PRICE" },
+    { label: "Price: High to Low", value: "DESC_PRICE" },
+    { label: "Discount: Low to High", value: "ASC_DISCOUNT" },
+    { label: "Discount: High to Low", value: "DESC_DISCOUNT" },
+];
