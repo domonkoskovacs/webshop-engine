@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {userService} from "../../services/UserService";
 import {ApiError} from "../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../shared/api";
 import {CheckCircle, Loader2, MailCheck, XCircle} from "lucide-react";
@@ -8,12 +7,14 @@ import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardHeader} from "../../components/ui/Card";
 import {toLogin} from "../../lib/url.utils";
 import PageContainer from "../../components/shared/PageContainer.component";
+import {useVerifyEmail} from "../../hooks/user/useVerifyEmail";
 
 const VerifyEmailConfirmation: React.FC = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [message, setMessage] = useState<string | null>(null);
     const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+    const {mutateAsync: verify} = useVerifyEmail();
 
     useEffect(() => {
         const id = searchParams.get("id");
@@ -27,7 +28,7 @@ const VerifyEmailConfirmation: React.FC = () => {
 
         (async () => {
             try {
-                await userService.verifyEmail(id);
+                await verify(id);
                 setMessage("Your email has been successfully verified!");
                 setStatus("success");
             } catch (error) {
@@ -49,7 +50,7 @@ const VerifyEmailConfirmation: React.FC = () => {
                 }
             }
         })();
-    }, [navigate, searchParams]);
+    }, [navigate, searchParams, verify]);
 
     return (
         <PageContainer className="my-10">

@@ -4,13 +4,13 @@ import {z} from "zod"
 import React from "react";
 import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
 import {Link, useNavigate} from "react-router-dom";
-import {userService} from "../../../services/UserService";
 import {ApiError} from "../../../shared/ApiError";
-import {ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {RegistrationRequestGenderEnum, ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import {RadioGroupField} from "../../ui/fields/RadioGroupField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {useRegister} from "../../../hooks/user/useRegister";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -48,6 +48,7 @@ const FormSchema = z.object({
 
 const RegistrationForm: React.FC = () => {
     const navigate = useNavigate()
+    const {mutateAsync: register, isPending} = useRegister();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -63,20 +64,27 @@ const RegistrationForm: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            await userService.register(
-                data.email,
-                data.firstname,
-                data.lastname,
-                data.password,
-                data.phoneNumber,
-                data.gender,
-                data.subscribe,
-            );
+            await register({
+                registrationRequest: {
+                    email: data.email,
+                    firstname: data.firstname,
+                    lastname: data.lastname,
+                    password: data.password,
+                    phoneNumber: data.phoneNumber,
+                    subscribedToEmail: data.subscribe,
+                    gender: data.gender === "men"
+                        ? RegistrationRequestGenderEnum.Male
+                        : data.gender === "women"
+                            ? RegistrationRequestGenderEnum.Female
+                            : undefined,
+                },
+            });
             toast({
                 description: "Successful registration.",
             })
             navigate(`/verify-email?email=${encodeURIComponent(data.email)}`);
-        } catch (error) {
+        } catch
+            (error) {
             if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(
                     error.error.map(err => [err.reasonCode, true])
@@ -99,7 +107,8 @@ const RegistrationForm: React.FC = () => {
                               form={form}
                               formId="register-form"
                               onSubmit={onSubmit}
-                              submitButtonText="Register"
+                              submitButtonText={isPending ? "Registering..." : "Register"}
+                              submitButtonDisabled={isPending}
                               singleColumn={false}
                               className="w-full">
         <div className="flex flex-col justify-between gap-2">

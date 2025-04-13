@@ -4,9 +4,10 @@ import {z} from "zod"
 import React from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {toast} from "../../../hooks/UseToast";
-import {userService} from "../../../services/UserService";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {useNewPassword} from "../../../hooks/user/useNewPassword";
+import {handleGenericApiError} from "../../../shared/ApiError";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -23,6 +24,7 @@ const FormSchema = z.object({
 const NewPasswordForm: React.FC = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const {mutateAsync: newPassword, isPending} = useNewPassword();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -33,15 +35,19 @@ const NewPasswordForm: React.FC = () => {
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        const id = searchParams.get("id");
-        if (id) {
-            await userService.newPassword(id, data.password);
-            toast({
-                variant: "success",
-                description: "Password renewed.",
-            })
-        } else {
-            navigate("/");
+        try {
+            const id = searchParams.get("id");
+            if (id) {
+                await newPassword({id, password: data.password});
+                toast({
+                    variant: "success",
+                    description: "Password renewed.",
+                })
+            } else {
+                navigate("/");
+            }
+        } catch (error) {
+            handleGenericApiError(error)
         }
     }
 
@@ -49,7 +55,8 @@ const NewPasswordForm: React.FC = () => {
                               form={form}
                               formId="new-password-form"
                               onSubmit={onSubmit}
-                              submitButtonText="Renew Password"
+                              submitButtonText={isPending ? "Renewing..." : "Renew Password"}
+                              submitButtonDisabled={isPending}
                               singleColumn={true}
                               className="w-full sm:w-1/2 md:w-1/3 mx-6">
         <TextInputField form={form} name="password" label="Password"

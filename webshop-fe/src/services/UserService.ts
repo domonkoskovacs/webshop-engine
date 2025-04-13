@@ -1,4 +1,4 @@
-import {CartItemRequest, RegistrationRequestGenderEnum, UpdateUserRequest, UserServiceApi} from "../shared/api";
+import {CartItemRequest, UpdateUserRequest, UserServiceApi, UserServiceApiRegisterRequest} from "../shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 
@@ -10,31 +10,8 @@ class UserService extends ApiBaseService<UserServiceApi> {
     /**
      * Registers a new user
      */
-    async register(
-        email: string,
-        firstname: string,
-        lastname: string,
-        password: string,
-        phoneNumber: string,
-        gender: string | undefined,
-        subscribedToEmail: boolean | undefined
-    ) {
-        const genderEnum = gender === "men"
-            ? RegistrationRequestGenderEnum.Male
-            : gender === "women"
-                ? RegistrationRequestGenderEnum.Female
-                : undefined;
-        return this.api.register({
-            registrationRequest: {
-                email,
-                firstname,
-                lastname,
-                password,
-                phoneNumber,
-                gender: genderEnum,
-                subscribedToEmail,
-            },
-        }).then(res => res?.data)
+    async register(request: UserServiceApiRegisterRequest) {
+        return this.api.register(request).then(res => res?.data);
     }
 
     /**

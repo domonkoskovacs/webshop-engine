@@ -5,7 +5,7 @@ import {useCookies} from "react-cookie";
 import {useLogin} from "../hooks/auth/useLogin";
 import {useRefresh} from "../hooks/auth/useRefresh";
 import {setupServiceInterceptors} from "../lib/interceptors.config";
-import {authService} from "../services/AuthService";
+import axiosInstance from "../lib/axios";
 
 interface AuthContextType {
     role: string | null;
@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
 
     useEffect(() => {
         const eject = setupServiceInterceptors(
-            authService.getAxiosInstance(),
+            axiosInstance,
             () => accessToken,
             () => cookies.refreshToken,
             (token) => setAccessToken(token),

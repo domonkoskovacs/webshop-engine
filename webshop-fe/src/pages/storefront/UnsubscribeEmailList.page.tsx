@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {userService} from "../../services/UserService";
 import {ApiError} from "../../shared/ApiError";
 import {BellOff, CheckCircle, Loader2, XCircle} from "lucide-react";
 import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardHeader} from "../../components/ui/Card";
 import PageContainer from "../../components/shared/PageContainer.component";
+import {useUnsubscribeById} from "../../hooks/user/useUnsubscribeById";
 
 const UnsubscribeEmailList: React.FC = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const {mutateAsync: unsubscribe} = useUnsubscribeById();
 
     const [message, setMessage] = useState<string | null>(null);
     const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
@@ -26,7 +27,7 @@ const UnsubscribeEmailList: React.FC = () => {
 
         (async () => {
             try {
-                await userService.unsubscribeById(id);
+                await unsubscribe(id);
                 setMessage("You have been successfully unsubscribed from our mailing list.");
                 setStatus("success");
             } catch (error) {
@@ -38,7 +39,7 @@ const UnsubscribeEmailList: React.FC = () => {
                 setStatus("error");
             }
         })();
-    }, [navigate, searchParams]);
+    }, [navigate, searchParams, unsubscribe]);
 
     return (
         <PageContainer className="my-10">
