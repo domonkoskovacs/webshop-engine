@@ -1,4 +1,9 @@
-import {OrderServiceApi, OrderServiceApiGetAll4Request, OrderStatusRequestOrderStatusEnum} from "../shared/api";
+import {
+    OrderServiceApi,
+    OrderServiceApiGetAll4Request,
+    OrderStatusRequestOrderStatusEnum,
+    RefundOrderItemRequest
+} from "../shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 
@@ -12,13 +17,6 @@ class OrderService extends ApiBaseService<OrderServiceApi> {
      */
     async getAll(orderRequest: OrderServiceApiGetAll4Request) {
         return this.api.getAll4(orderRequest).then(res => res?.data)
-    }
-
-    /**
-     * Get one order by id
-     */
-    async getById(id: string) {
-        return this.api.getById1({id}).then(res => res?.data)
     }
 
     /**
@@ -63,6 +61,12 @@ class OrderService extends ApiBaseService<OrderServiceApi> {
         return this.api.export1({from, to}).then(res => res?.data)
     }
 
+    /**
+     * create a refund for an order
+     */
+    async createRefund(id: string, refundRequests: RefundOrderItemRequest[]) {
+        return this.api.createRefund({id, refundOrderItemRequest: refundRequests}).then(res => res?.data);
+    }
 }
 
 export const orderService = new OrderService();

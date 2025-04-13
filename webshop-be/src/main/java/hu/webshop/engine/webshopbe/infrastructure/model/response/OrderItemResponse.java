@@ -5,6 +5,7 @@ import java.util.UUID;
 import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 
 public record OrderItemResponse(
+        UUID id,
         String productName,
         Double individualPrice,
         String thumbNailUrl,

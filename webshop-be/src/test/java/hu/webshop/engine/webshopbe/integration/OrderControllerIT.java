@@ -120,17 +120,6 @@ class OrderControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("admin can get a product by id")
-    @DataSet("existingOrderAndAdmin.yml")
-    void adminCanGetAProductById() throws Exception {
-        //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/" + ORDER_ID, Role.ROLE_ADMIN);
-
-        //Then
-        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.totalPrice").value(20));
-    }
-
-    @Test
     @DisplayName("not found order return 404")
     void notFoundOrderReturn404() throws Exception {
         //Given //When

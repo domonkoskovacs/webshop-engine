@@ -91,6 +91,10 @@ public class OrderStatusService {
 
         Order order = orderQueryService.getById(id);
 
+        if (!order.getStatus().isNewStatusApplicable(OrderStatus.RETURN_RECEIVED)) {
+            throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Cannot change status from " + order.getStatus() + " to RETURN_RECEIVED");
+        }
+
         Map<UUID, OrderItem> orderItemMap = order.getItems().stream().collect(Collectors.toMap(OrderItem::getId, Function.identity()));
 
         refundOrderItems.forEach(refundItem -> validateRefundItem(refundItem, orderItemMap));
@@ -144,7 +148,7 @@ public class OrderStatusService {
             }
             productService.updateStock(stockChanges, StockChangeType.INCREMENT);
         }
-        if(OrderStatus.DELIVERED.equals(order.getStatus())) {
+        if (OrderStatus.DELIVERED.equals(order.getStatus())) {
             order.setDeliveredDate(OffsetDateTime.now());
         }
     }

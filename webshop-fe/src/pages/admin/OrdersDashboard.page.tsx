@@ -1,6 +1,6 @@
 import React from 'react';
 import {ColumnDef} from "@tanstack/react-table";
-import {OrderResponse} from "../../shared/api";
+import {OrderItemResponse, OrderResponse, OrderResponseStatusEnum} from "../../shared/api";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,6 +19,7 @@ import {getNextAdminStatuses} from "../../lib/order.utils";
 import {useOrdersPagination} from "../../hooks/order/useOrdersPagination";
 import {handleGenericApiError} from "../../shared/ApiError";
 import {useChangeOrderStatus} from "../../hooks/order/useChangeOrderStatus";
+import RefundForm from "../../components/admin/order/RefundForm.component";
 
 const OrdersDashboard: React.FC = () => {
     const {mutateAsync: changeStatus, isPending} = useChangeOrderStatus();
@@ -35,6 +36,9 @@ const OrdersDashboard: React.FC = () => {
     } = useOrdersPagination();
     const [isExportFormOpen, setIsExportFormOpen] = React.useState(false);
     const [isFilterFormOpen, setIsFilterFormOpen] = React.useState(false);
+    const [isRefundFormOpen, setIsRefundFormOpen] = React.useState(false);
+    const [refundFormOrderId, setRefundFormOrderId] = React.useState<string | null>(null);
+    const [refundFormItems, setRefundFormItems] = React.useState<OrderItemResponse[]>([]);
 
     const columns: ColumnDef<OrderResponse>[] = [
         {
@@ -99,26 +103,40 @@ const OrdersDashboard: React.FC = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                {allowedStatuses.length > 0 ? (
-                                    allowedStatuses.map(status => (
-                                        <DropdownMenuItem
-                                            disabled={isPending}
-                                            key={status}
-                                            onClick={async () => {
-                                                try {
-                                                    await changeStatus({id, status});
-                                                } catch (error) {
-                                                    handleGenericApiError(error);
-                                                }
-                                            }}
-                                        >
-                                            {status}
-                                        </DropdownMenuItem>
-                                    ))
-                                ) : (
-                                    <DropdownMenuItem disabled>
-                                        No operations available
+                                {currentStatus === OrderResponseStatusEnum.ReturnApproved ? (
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                            setRefundFormOrderId(id);
+                                            setRefundFormItems(row.original.items ?? []);
+                                            setIsRefundFormOpen(true);
+                                        }}
+                                    >
+                                        Refund Items
                                     </DropdownMenuItem>
+                                ) : (
+                                    <>
+                                        {allowedStatuses.length > 0 ? (
+                                            allowedStatuses.map(status => (
+                                                <DropdownMenuItem
+                                                    disabled={isPending}
+                                                    key={status}
+                                                    onClick={async () => {
+                                                        try {
+                                                            await changeStatus({id, status});
+                                                        } catch (error) {
+                                                            handleGenericApiError(error);
+                                                        }
+                                                    }}
+                                                >
+                                                    {status}
+                                                </DropdownMenuItem>
+                                            ))
+                                        ) : (
+                                            <DropdownMenuItem disabled>
+                                                No operations available
+                                            </DropdownMenuItem>
+                                        )}
+                                    </>
                                 )}
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -146,6 +164,30 @@ const OrdersDashboard: React.FC = () => {
                 <FilterForm setIsOpen={setIsFilterFormOpen}/>
             </SheetContent>
         </Sheet>
+        <Sheet open={isRefundFormOpen} onOpenChange={(open) => {
+            setIsRefundFormOpen(open);
+            if (!open) {
+                setRefundFormOrderId(null);
+                setRefundFormItems([]);
+            }
+        }}>
+            <SheetContent>
+                {refundFormOrderId && (
+                    <RefundForm
+                        orderId={refundFormOrderId}
+                        items={refundFormItems}
+                        setIsOpen={(open) => {
+                            setIsRefundFormOpen(open);
+                            if (!open) {
+                                setRefundFormOrderId(null);
+                                setRefundFormItems([]);
+                            }
+                        }}
+                    />
+                )}
+            </SheetContent>
+        </Sheet>
+
     </div>
 
     return (

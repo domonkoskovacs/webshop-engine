@@ -553,6 +553,12 @@ export interface OrderItemResponse {
      * @type {string}
      * @memberof OrderItemResponse
      */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderItemResponse
+     */
     'productName'?: string;
     /**
      * 
@@ -674,16 +680,16 @@ export interface OrderPageOrderResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -926,10 +932,10 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageNumber'?: number;
     /**
      * 
      * @type {number}
@@ -938,10 +944,10 @@ export interface PageableObject {
     'pageSize'?: number;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageNumber'?: number;
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1042,16 +1048,16 @@ export interface ProductPageProductResponse {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -3584,9 +3590,9 @@ export const ImageServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getById2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getById1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getById2', 'id', id)
+            assertParamExists('getById1', 'id', id)
             const localVarPath = `/api/image/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3632,10 +3638,10 @@ export const ImageServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getById2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getById2(id, options);
+        async getById1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getById1(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ImageServiceApi.getById2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ImageServiceApi.getById1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -3651,26 +3657,26 @@ export const ImageServiceApiFactory = function (configuration?: Configuration, b
         /**
          * Public endpoint returns an image by id and extension
          * @summary Get an image
-         * @param {ImageServiceApiGetById2Request} requestParameters Request parameters.
+         * @param {ImageServiceApiGetById1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getById2(requestParameters: ImageServiceApiGetById2Request, options?: RawAxiosRequestConfig): AxiosPromise<File> {
-            return localVarFp.getById2(requestParameters.id, options).then((request) => request(axios, basePath));
+        getById1(requestParameters: ImageServiceApiGetById1Request, options?: RawAxiosRequestConfig): AxiosPromise<File> {
+            return localVarFp.getById1(requestParameters.id, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for getById2 operation in ImageServiceApi.
+ * Request parameters for getById1 operation in ImageServiceApi.
  * @export
- * @interface ImageServiceApiGetById2Request
+ * @interface ImageServiceApiGetById1Request
  */
-export interface ImageServiceApiGetById2Request {
+export interface ImageServiceApiGetById1Request {
     /**
      * 
      * @type {string}
-     * @memberof ImageServiceApiGetById2
+     * @memberof ImageServiceApiGetById1
      */
     readonly id: string
 }
@@ -3685,13 +3691,13 @@ export class ImageServiceApi extends BaseAPI {
     /**
      * Public endpoint returns an image by id and extension
      * @summary Get an image
-     * @param {ImageServiceApiGetById2Request} requestParameters Request parameters.
+     * @param {ImageServiceApiGetById1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ImageServiceApi
      */
-    public getById2(requestParameters: ImageServiceApiGetById2Request, options?: RawAxiosRequestConfig) {
-        return ImageServiceApiFp(this.configuration).getById2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getById1(requestParameters: ImageServiceApiGetById1Request, options?: RawAxiosRequestConfig) {
+        return ImageServiceApiFp(this.configuration).getById1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3995,44 +4001,6 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
-         * Admin can get an order by id
-         * @summary Get an order
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getById1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getById1', 'id', id)
-            const localVarPath = `/api/order/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Users can pay an order
          * @summary Pay an order
          * @param {string} id 
@@ -4207,19 +4175,6 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Admin can get an order by id
-         * @summary Get an order
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getById1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getById1(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getById1']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Users can pay an order
          * @summary Pay an order
          * @param {string} id 
@@ -4313,16 +4268,6 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          */
         getAll4(requestParameters: OrderServiceApiGetAll4Request = {}, options?: RawAxiosRequestConfig): AxiosPromise<OrderPageOrderResponse> {
             return localVarFp.getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Admin can get an order by id
-         * @summary Get an order
-         * @param {OrderServiceApiGetById1Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getById1(requestParameters: OrderServiceApiGetById1Request, options?: RawAxiosRequestConfig): AxiosPromise<OrderResponse> {
-            return localVarFp.getById1(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Users can pay an order
@@ -4495,20 +4440,6 @@ export interface OrderServiceApiGetAll4Request {
 }
 
 /**
- * Request parameters for getById1 operation in OrderServiceApi.
- * @export
- * @interface OrderServiceApiGetById1Request
- */
-export interface OrderServiceApiGetById1Request {
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderServiceApiGetById1
-     */
-    readonly id: string
-}
-
-/**
  * Request parameters for paymentIntent operation in OrderServiceApi.
  * @export
  * @interface OrderServiceApiPaymentIntentRequest
@@ -4612,18 +4543,6 @@ export class OrderServiceApi extends BaseAPI {
      */
     public getAll4(requestParameters: OrderServiceApiGetAll4Request = {}, options?: RawAxiosRequestConfig) {
         return OrderServiceApiFp(this.configuration).getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Admin can get an order by id
-     * @summary Get an order
-     * @param {OrderServiceApiGetById1Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OrderServiceApi
-     */
-    public getById1(requestParameters: OrderServiceApiGetById1Request, options?: RawAxiosRequestConfig) {
-        return OrderServiceApiFp(this.configuration).getById1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

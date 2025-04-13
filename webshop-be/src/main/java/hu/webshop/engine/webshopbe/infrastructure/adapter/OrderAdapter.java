@@ -48,11 +48,6 @@ public class OrderAdapter {
         return orderQueryService.getAll(args, pageRequest).map(orderMapper::toResponse);
     }
 
-    public OrderResponse getById(UUID id) {
-        log.info("getById > id: [{}]", id);
-        return orderMapper.toResponse(orderQueryService.getById(id));
-    }
-
     public OrderResponse create(PaymentMethod paymentMethod) {
         log.info("create > paymentMethod: [{}]", paymentMethod);
         return orderMapper.toResponse(orderCreationService.create(paymentMethod));

@@ -70,18 +70,6 @@ public class OrderController {
 
     @Operation(
             tags = {"Order service"},
-            summary = "Get an order",
-            description = "Admin can get an order by id"
-    )
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Admin
-    public ResponseEntity<OrderResponse> getById(@PathVariable UUID id) {
-        log.info("getById > id: [{}]", id);
-        return ResponseEntity.ok(orderAdapter.getById(id));
-    }
-
-    @Operation(
-            tags = {"Order service"},
             summary = "Create an order",
             description = "Users can create an order"
     )
