@@ -1,20 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { userService } from "../../services/UserService";
-import {
-    CartItemRequest,
-    CartItemResponse,
-    ResultEntryReasonCodeEnum,
-} from "../../shared/api";
-import { ApiError } from "../../shared/ApiError";
-import { useUserGuard } from "../useUserGuard";
-import { useToast } from "../UseToast";
-import { useCart } from "./useCart";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {userService} from "../../services/UserService";
+import {CartItemRequest, CartItemResponse, ResultEntryReasonCodeEnum,} from "../../shared/api";
+import {ApiError} from "../../shared/ApiError";
+import {useUserGuard} from "../useUserGuard";
+import {useCart} from "./useCart";
+import {toast} from "../useToast";
 
 export const useUpdateCart = () => {
     const queryClient = useQueryClient();
-    const { assertUser } = useUserGuard();
-    const { toast } = useToast();
-    const { cart } = useCart();
+    const {assertUser} = useUserGuard();
+    const {cart} = useCart();
 
     const mutation = useMutation<CartItemResponse[], ApiError, CartItemRequest>({
         mutationFn: async (cartItem) => {
@@ -22,7 +17,7 @@ export const useUpdateCart = () => {
             return await userService.updateCart([cartItem]);
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["cart"] });
+            await queryClient.invalidateQueries({queryKey: ["cart"]});
         },
     });
 
@@ -43,26 +38,23 @@ export const useUpdateCart = () => {
 
     const addItemToCart = async (productId: string, loggedIn: boolean) => {
         if (!loggedIn) {
-            toast({ description: "You need to log in to update your cart." });
+            toast.warn("You need to log in to update your cart.");
             return;
         }
 
         try {
             await increaseOneInCart(productId);
-            toast({ description: "Item added to cart." });
+            toast.success("Item added to cart.");
         } catch (error) {
             if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(error.error.map((err) => [err.reasonCode, true]));
                 if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
-                    toast({ description: "Not enough products in stock." });
+                    toast.warn("Not enough products in stock.");
                     return;
                 }
             }
 
-            toast({
-                variant: "destructive",
-                description: "Error updating cart.",
-            });
+            toast.error("Error", "Error updating cart.");
         }
     };
 

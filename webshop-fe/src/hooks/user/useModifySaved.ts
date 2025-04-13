@@ -3,14 +3,13 @@ import {userService} from "../../services/UserService";
 import {ApiError} from "../../shared/ApiError";
 import {useSaved} from "./useSaved";
 import {useUserGuard} from "../useUserGuard";
-import {useToast} from "../UseToast";
+import {toast} from "../useToast";
 import {useAuth} from "../UseAuth";
 
 export const useModifySaved = () => {
     const queryClient = useQueryClient();
     const {assertUser} = useUserGuard();
     const {isSaved} = useSaved();
-    const {toast} = useToast();
     const { loggedIn } = useAuth();
 
     const addMutation = useMutation<void, ApiError, string>({
@@ -35,7 +34,7 @@ export const useModifySaved = () => {
 
     const toggleSaved = async (id: string) => {
         if (!loggedIn) {
-            toast({description: "You need to log in to update saved products."});
+            toast.warn("You need to log in to update saved products.");
             return;
         }
 
@@ -46,10 +45,7 @@ export const useModifySaved = () => {
                 await addMutation.mutateAsync(id);
             }
         } catch {
-            toast({
-                variant: "destructive",
-                description: "Error updating saved products.",
-            });
+            toast.error("Error updating saved products.");
         }
     };
 

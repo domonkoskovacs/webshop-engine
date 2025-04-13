@@ -2,7 +2,7 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
 import {Link, useNavigate} from "react-router-dom";
 import {ApiError} from "../../../shared/ApiError";
 import {RegistrationRequestGenderEnum, ResultEntryReasonCodeEnum} from "../../../shared/api";
@@ -79,9 +79,7 @@ const RegistrationForm: React.FC = () => {
                             : undefined,
                 },
             });
-            toast({
-                description: "Successful registration.",
-            })
+            toast.success("Successful registration.")
             navigate(`/verify-email?email=${encodeURIComponent(data.email)}`);
         } catch
             (error) {

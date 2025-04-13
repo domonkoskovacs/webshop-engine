@@ -2,7 +2,7 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
-import {toast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useForgotPassword} from "../../../hooks/user/useForgotPassword";
@@ -27,10 +27,7 @@ const ForgotPasswordForm: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             await sendForgotPasswordEmail(data.email);
-            toast({
-                variant: "success",
-                description: "The password renewal email will arrive shortly, please check your inbox.",
-            });
+            toast.success("The password renewal email will arrive shortly, please check your inbox.",);
         } catch (error) {
             handleGenericApiError(error)
         }

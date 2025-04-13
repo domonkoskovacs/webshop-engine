@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {unexpectedErrorToast, useToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
 import React from "react";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
@@ -25,7 +25,6 @@ interface ImportFormProps {
 
 const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
     const {mutateAsync: importProducts, isPending} = useImportProducts();
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -35,9 +34,7 @@ const ImportForm: React.FC<ImportFormProps> = ({setIsOpen}) => {
         try {
             const base64Csv = await fileToBase64(data.csv);
             await importProducts(base64Csv);
-            toast({
-                description: "Products imported successfully.",
-            })
+            toast.success("Products imported successfully.");
             setIsOpen(false)
         } catch (error) {
             if (error instanceof FileToBase64Error) {

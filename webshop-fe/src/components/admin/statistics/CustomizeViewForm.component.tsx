@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 
 import {z} from "zod";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -33,7 +33,6 @@ const CustomizeViewForm: React.FC<FilterFormProps> = ({
                                                           currentRequest,
                                                           setRequest,
                                                       }) => {
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -56,7 +55,7 @@ const CustomizeViewForm: React.FC<FilterFormProps> = ({
         };
 
         setRequest(formattedRequest);
-        toast({description: "Filters applied successfully."});
+        toast.info("Filters applied successfully.");
         setIsOpen(false);
     };
 

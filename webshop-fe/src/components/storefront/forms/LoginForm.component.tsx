@@ -6,7 +6,7 @@ import {useAuth} from "../../../hooks/UseAuth";
 import {Link} from "react-router-dom";
 import {ApiError} from "../../../shared/ApiError";
 import {ResultEntryReasonCodeEnum} from "../../../shared/api";
-import {unexpectedErrorToast} from "../../../hooks/UseToast";
+import {unexpectedErrorToast} from "../../../hooks/useToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 

@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import React from "react";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import DatePickerField from "../../ui/fields/DatePickerField";
@@ -26,7 +26,6 @@ interface ExportFormProps {
 
 const ExportForm: React.FC<ExportFormProps> = ({setIsOpen}) => {
     const {mutateAsync: exportOrders, isPending} = useExportOrders();
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -39,9 +38,7 @@ const ExportForm: React.FC<ExportFormProps> = ({setIsOpen}) => {
                 from: data.from.toISOString().split("T")[0],
                 to: data.to.toISOString().split("T")[0],
             });
-            toast({
-                description: "Orders exported successfully.",
-            });
+            toast.success("Orders exported successfully.");
             setIsOpen(false);
         } catch (error) {
             handleGenericApiError(error);

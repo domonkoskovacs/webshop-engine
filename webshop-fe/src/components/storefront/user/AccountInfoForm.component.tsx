@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import {UpdateUserRequestGenderEnum} from "../../../shared/api";
 import {Link} from "react-router-dom";
@@ -60,7 +60,7 @@ const AccountInfoForm: React.FC = () => {
                 data.gender,
                 data.subscribedToEmail
             );
-            toast({description: "Your account information was successfully updated.",})
+            toast.success("Your account information was successfully updated.");
         } catch (error) {
             unexpectedErrorToast()
         }

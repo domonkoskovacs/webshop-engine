@@ -2,11 +2,11 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import {Form,} from "src/components/ui/Form"
-import {useToast} from "../../../hooks/UseToast";
 import React from "react";
 import {TextInputField} from "../../ui/fields/InputField";
 import {useUpdateCategory} from "../../../hooks/category/useUpdateCategory";
 import {handleGenericApiError} from "../../../shared/ApiError";
+import {toast} from "../../../hooks/useToast";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {
@@ -21,7 +21,6 @@ interface UpdateCategoryFormProps {
 }
 
 const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({id, placeholder, toggleEdit}) => {
-    const {toast} = useToast()
     const {mutateAsync: updateCategory} = useUpdateCategory();
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -35,9 +34,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({id, placeholder,
         try {
             await updateCategory({id, name: data.categoryName});
             toggleEdit();
-            toast({
-                description: "Category updated successfully.",
-            });
+            toast.success("Category updated successfully.",);
         } catch (error) {
             handleGenericApiError(error);
         }

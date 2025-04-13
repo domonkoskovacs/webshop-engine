@@ -1,6 +1,6 @@
 import {ResultEntry, ResultEntryReasonCodeEnum} from "./api";
 import axios from "axios";
-import {toast} from "../hooks/UseToast";
+import {toast} from "../hooks/useToast";
 
 /**
  * Represents an API error response with structured information.
@@ -55,7 +55,7 @@ export class ApiError extends Error {
  */
 export function handleApiError(error: unknown): never {
     if (axios.isAxiosError(error) && error.response) {
-        const { status, data } = error.response;
+        const {status, data} = error.response;
 
         throw new ApiError(
             status,
@@ -79,16 +79,10 @@ export function handleApiError(error: unknown): never {
  */
 export function handleGenericApiError(error: unknown, fallbackMessage = 'Something went wrong.') {
     if (error instanceof ApiError) {
-        toast({
-            variant: 'destructive',
-            title: `Error [${error.status}]`,
-            description: error.error?.[0]?.message || error.message,
-        });
+        toast.error(`Error [${error.status}]`,
+            error.error?.[0]?.message || error.message,);
     } else {
-        toast({
-            variant: 'destructive',
-            title: 'Unexpected error',
-            description: error instanceof Error ? error.message : fallbackMessage,
-        });
+        toast.error('Unexpected error',
+            error instanceof Error ? error.message : fallbackMessage,);
     }
 }

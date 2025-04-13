@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
 import {AddressRequest} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {useAuth} from "../../../hooks/UseAuth";
@@ -81,10 +81,10 @@ const AddressForm: React.FC<AddressFormProps> = ({type}) => {
             }
             if (type === "shipping" && user) {
                 await updateShippingAddress(addressRq);
-                toast({description: "Your shipping address was successfully updated."});
+                toast.success("Your shipping address was successfully updated.");
             } else if (type === "billing" && user) {
                 await updateBillingAddress(addressRq);
-                toast({description: "Your billing address was successfully updated."});
+                toast.success("Your billing address was successfully updated.");
             }
         } catch (error) {
             unexpectedErrorToast()

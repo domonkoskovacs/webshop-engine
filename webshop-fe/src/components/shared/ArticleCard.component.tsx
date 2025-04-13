@@ -4,7 +4,7 @@ import {Card, CardContent} from "src/components/ui/Card";
 import {Button} from "src/components/ui/Button";
 import {useDeleteArticle} from "src/hooks/article/useDeleteArticle";
 import {Trash} from "lucide-react";
-import {toast} from "../../hooks/UseToast";
+import {toast} from "../../hooks/useToast";
 import {handleGenericApiError} from "../../shared/ApiError";
 
 interface ArticleCardProps {
@@ -29,7 +29,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     const handleDelete = async () => {
         try {
             await deleteArticle(id);
-            toast({description: 'Article deleted successfully!'});
+            toast.success('Article deleted successfully!');
         } catch (error) {
             handleGenericApiError(error);
         }

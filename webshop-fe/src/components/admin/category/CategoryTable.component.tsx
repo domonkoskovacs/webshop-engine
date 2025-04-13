@@ -19,13 +19,12 @@ import UpdateCategoryForm from "./UpdateCategoryForm.component";
 import SubCategoryRows from "./SubCategoryTable.component";
 import {Sheet, SheetContent, SheetTrigger} from "../../ui/Sheet";
 import CategoryForm from "./CategoryForm.component";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {useCategories} from "../../../hooks/category/useCategories";
 import {useDeleteCategory} from "../../../hooks/category/useDeleteCategory";
 import {handleGenericApiError} from "../../../shared/ApiError";
 
 const CategoryTable: React.FC = () => {
-    const {toast} = useToast();
     const {data: categories = [], isLoading} = useCategories();
     const {mutateAsync: deleteCategory} = useDeleteCategory();
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -123,7 +122,7 @@ const CategoryTable: React.FC = () => {
                                 <DropdownMenuItem onClick={async () => {
                                     try {
                                         await deleteCategory(category.id ?? '');
-                                        toast({description: 'Category deleted successfully.'});
+                                        toast.success('Category deleted successfully.');
                                     } catch (error) {
                                         handleGenericApiError(error);
                                     }

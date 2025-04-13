@@ -8,7 +8,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Button} from "../../ui/Button";
 import {MoreHorizontal} from "lucide-react";
 import {Badge} from "../../ui/Badge";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {useDeleteSubCategory} from "../../../hooks/category/useDeleteSubCategory";
 import {handleGenericApiError} from "../../../shared/ApiError";
 
@@ -17,7 +17,6 @@ interface SubCategoryTableProps {
 }
 
 function SubCategoryRows({data}: SubCategoryTableProps) {
-    const {toast} = useToast();
     const {mutateAsync: deleteSubCategory} = useDeleteSubCategory();
 
     const columns: ColumnDef<SubCategoryResponse>[] = [
@@ -50,7 +49,7 @@ function SubCategoryRows({data}: SubCategoryTableProps) {
                                 <DropdownMenuItem onClick={async () => {
                                     try {
                                         await deleteSubCategory(subcategory.id ?? "");
-                                        toast({description: "Subcategory deleted successfully."});
+                                        toast.success("Subcategory deleted successfully.");
                                     } catch (error) {
                                         handleGenericApiError(error);
                                     }

@@ -4,7 +4,7 @@ import CartItem from "../../components/storefront/cart/CartItem.component";
 import {Separator} from "../../components/ui/Separator";
 import {calculateCartTotals} from "../../lib/price.utils";
 import {Button} from "../../components/ui/Button";
-import {toast} from "../../hooks/UseToast";
+import {toast} from "../../hooks/useToast";
 import {useNavigate} from "react-router-dom";
 import PageContainer from 'src/components/shared/PageContainer.component';
 import PageHeader from "../../components/shared/PageHeader";
@@ -56,15 +56,10 @@ const Checkout: React.FC = () => {
         try {
             const order = await placeOrder();
             navigate(`/checkout-payment?orderId=${order.id}`);
-            toast({
-                description: "Order placed successfully",
-            });
+            toast.success("Order placed successfully",);
         } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: "Can't place order. Please try again.",
-            });
+            toast.error("Uh oh! Something went wrong.",
+                "Can't place order. Please try again.",);
         }
     }
 

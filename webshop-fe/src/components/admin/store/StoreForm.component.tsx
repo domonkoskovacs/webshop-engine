@@ -3,7 +3,7 @@ import React, {useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {StoreRequest} from "../../../shared/api";
-import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
@@ -57,7 +57,7 @@ const StoreForm: React.FC = () => {
         try {
             const storeRq: StoreRequest = {...data}
             await updateStore(storeRq);
-            toast({description: "Store successfully updated."});
+            toast.success("Store successfully updated.");
         } catch (error) {
             unexpectedErrorToast()
         }

@@ -17,14 +17,13 @@ import {useEmails} from "../../hooks/email/useEmails";
 import {useDeleteEmail} from "../../hooks/email/useDeleteEmail";
 import {useTestEmail} from "../../hooks/email/useTestEmail";
 import {handleGenericApiError} from "../../shared/ApiError";
-import {useToast} from "../../hooks/UseToast";
+import {toast} from "../../hooks/useToast";
 import {useUser} from "../../hooks/user/useUser";
 
 const PromotionEmailDashboard: React.FC = () => {
     const {data: emails = [], isLoading} = useEmails();
     const {mutateAsync: deleteEmail} = useDeleteEmail();
     const {mutateAsync: testEmail} = useTestEmail();
-    const {toast} = useToast();
     const {data: user} = useUser();
     const [isFormOpen, setIsFormOpen] = React.useState(false);
 
@@ -81,7 +80,7 @@ const PromotionEmailDashboard: React.FC = () => {
                 const handleTest = async () => {
                     try {
                         await testEmail({id, email: user?.email!});
-                        toast({description: "Test email sent successfully!"});
+                        toast.success("Test email sent successfully!");
                     } catch (error) {
                         handleGenericApiError(error);
                     }
@@ -90,7 +89,7 @@ const PromotionEmailDashboard: React.FC = () => {
                 const handleDelete = async () => {
                     try {
                         await deleteEmail(id);
-                        toast({description: "Email deleted successfully!"});
+                        toast.success("Email deleted successfully!");
                     } catch (error) {
                         handleGenericApiError(error);
                     }

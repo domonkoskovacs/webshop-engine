@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import React from "react";
 import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
@@ -29,8 +29,7 @@ interface ProductFormProps {
 }
 
 const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
-    const { mutateAsync: createEmail } = useCreateEmail();
-    const {toast} = useToast()
+    const {mutateAsync: createEmail} = useCreateEmail();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -49,10 +48,7 @@ const EmailForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                 minute: data.minute,
             });
 
-            toast({
-                description: "Email promotion created successfully.",
-            });
-
+            toast.success("Email promotion created successfully.");
             setIsOpen(false);
         } catch (error) {
             handleGenericApiError(error);

@@ -3,7 +3,7 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {toast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useNewPassword} from "../../../hooks/user/useNewPassword";
@@ -39,10 +39,7 @@ const NewPasswordForm: React.FC = () => {
             const id = searchParams.get("id");
             if (id) {
                 await newPassword({id, password: data.password});
-                toast({
-                    variant: "success",
-                    description: "Password renewed.",
-                })
+                toast.success("Password renewed.")
             } else {
                 navigate("/");
             }

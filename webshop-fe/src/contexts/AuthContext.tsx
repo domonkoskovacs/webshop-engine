@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {toast} from "../hooks/UseToast";
+import {toast} from "../hooks/useToast";
 import {useCookies} from "react-cookie";
 import {useLogin} from "../hooks/auth/useLogin";
 import {useRefresh} from "../hooks/auth/useRefresh";
@@ -45,15 +45,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                 } else {
                     navigate("/")
                 }
-                toast({
-                    description: "You are successfully logged in.",
-                })
+                toast.info("You are successfully logged in.");
             } else {
-                toast({
-                    variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
-                    description: "Invalid response from the server while logging you in. Please try again.",
-                });
+                toast.error("Uh oh! Something went wrong.",
+                    "Invalid response from the server while logging you in. Please try again.",);
             }
         } catch (error) {
             throw error;
@@ -69,15 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             removeCookie("role", {path: "/"});
             removeCookie("refreshToken", {path: "/"});
             navigate("/authentication?type=login");
-            toast({
-                description: "Sad to see you go!",
-            });
+            toast.info("Sad to see you go!");
         } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: "Something went wrong while logging out. Please try again.",
-            });
+            toast.error("Uh oh! Something went wrong.",
+                "Something went wrong while logging out. Please try again.",);
         }
     }, [navigate, removeCookie])
 
@@ -93,11 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
 
     const handleAuthError = useCallback((message: string) => {
         logout();
-        toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: message,
-        });
+        toast.error("Uh oh! Something went wrong.", message);
     }, [logout]);
 
     useEffect(() => {

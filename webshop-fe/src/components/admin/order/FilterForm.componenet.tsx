@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import React, {useEffect} from "react";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {GetAll4PaymentMethodsEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "../../../shared/api";
@@ -32,7 +32,6 @@ interface ProductFormProps {
 
 const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
     const {updateFilters, filters, resetFilters, priceRange} = useOrdersPagination()
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -63,9 +62,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             sortType: data.sortType,
             size: data.size,
         })
-        toast({
-            description: "Filters applied successfully."
-        })
+        toast.info("Filters applied successfully.")
         setIsOpen(false)
     }
 

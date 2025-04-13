@@ -24,7 +24,7 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
 import {useDeleteProducts} from "../../hooks/product/useDeleteProducts";
-import {useToast} from "../../hooks/UseToast";
+import {toast} from "../../hooks/useToast";
 import {handleGenericApiError} from "../../shared/ApiError";
 import {useExportProducts} from "../../hooks/product/useExportProducts";
 import {downloadCSV} from 'src/lib/file.utils';
@@ -62,7 +62,6 @@ const ProductsDashboard: React.FC = () => {
     const [product, setProduct] = useState<ProductResponse>({});
     const [id, setId] = useState<string | undefined>(undefined);
     const [ids, setIds] = useState<string[]>([]);
-    const {toast} = useToast();
 
     const handleExport = async () => {
         try {
@@ -199,7 +198,7 @@ const ProductsDashboard: React.FC = () => {
                                     onClick={async () => {
                                         try {
                                             await deleteProductsMutation(targetIds);
-                                            toast({description: "Product(s) successfully deleted!"});
+                                            toast.success("Product(s) successfully deleted!");
                                         } catch (error) {
                                             handleGenericApiError(error);
                                         }

@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import React from "react";
 import {TextInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -21,7 +21,6 @@ interface CategoryFormProps {
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen, id}) => {
-    const {toast} = useToast()
     const {mutateAsync: createCategory} = useCreateCategory();
     const {mutateAsync: addSubCategory} = useAddSubCategory();
 
@@ -35,11 +34,11 @@ const CategoryForm: React.FC<CategoryFormProps> = ({setIsOpen, id}) => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             if (id) {
-                await addSubCategory({ id, name: data.categoryName });
-                toast({ description: "Subcategory created successfully." });
+                await addSubCategory({id, name: data.categoryName});
+                toast.success("Subcategory created successfully.");
             } else {
                 await createCategory(data.categoryName);
-                toast({ description: "Category created successfully." });
+                toast.success("Category created successfully.");
             }
             setIsOpen(false);
         } catch (error) {

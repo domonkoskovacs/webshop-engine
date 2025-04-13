@@ -32,6 +32,7 @@ import {
 import {useCancelOrder} from "../../../hooks/order/useCancelOrder";
 import {useReturnOrder} from "../../../hooks/order/useReturnOrder";
 import {handleGenericApiError} from "../../../shared/ApiError";
+import {toast} from "../../../hooks/useToast";
 
 interface OrderItemProps {
     order: OrderResponse;
@@ -121,8 +122,20 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                                 <AlertDialogCancel>Back</AlertDialogCancel>
                                 <AlertDialogAction asChild
                                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                    <Button variant="destructive" onClick={() => cancelOrder(order.id ?? '')}>Finish
-                                        Order Cancellation</Button>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={async () => {
+                                            try {
+                                                await cancelOrder(order.id ?? '');
+                                                toast.success("Order cancelled successfully.");
+                                            } catch (error) {
+                                                toast.error(
+                                                    "Order cancellation failed.",
+                                                    "Something went wrong while cancelling your order. Please try again."
+                                                );
+                                            }
+                                        }}
+                                    >Finish Order Cancellation</Button>
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
@@ -144,6 +157,7 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                                     onClick={async () => {
                                         try {
                                             await returnOrder(order.id ?? '');
+                                            toast.success("Order return requested successfully.");
                                             setIsReturnDialogOpen(false);
                                         } catch (error) {
                                             handleGenericApiError(error)
@@ -160,22 +174,25 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                     </Button>
                 </div>
             </CardContent>
-            {showDetails && (
-                <div className="px-4 pb-4 border-t pt-2">
-                    {items.map((orderItem, index) =>
-                        <OrderItem item={orderItem} key={index}/>
-                    )}
-                    <Separator/>
-                    <div className="mt-4 text-sm">
-                        <p>Order number: {order.orderNumber}</p>
-                        <p className="text-sm">
-                            Shipping Cost: ${order.shippingPrice?.toFixed(2)}
-                        </p>
+            {
+                showDetails && (
+                    <div className="px-4 pb-4 border-t pt-2">
+                        {items.map((orderItem, index) =>
+                            <OrderItem item={orderItem} key={index}/>
+                        )}
+                        <Separator/>
+                        <div className="mt-4 text-sm">
+                            <p>Order number: {order.orderNumber}</p>
+                            <p className="text-sm">
+                                Shipping Cost: ${order.shippingPrice?.toFixed(2)}
+                            </p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </Card>
-    );
+    )
+        ;
 };
 
 export default Order;

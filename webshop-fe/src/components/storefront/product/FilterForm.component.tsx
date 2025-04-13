@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from "react";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import {GetAllSortTypeEnum, ProductServiceApiGetAllRequest} from "../../../shared/api";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -41,7 +41,6 @@ const FilterForm: React.FC<FilterFormProps> = ({
                                                }) => {
     const {priceRange, discountRange} = useProductScroll(filters);
     const {data: brands = []} = useProductBrands();
-    const {toast} = useToast()
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -72,9 +71,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
 
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            description: "Filters has been successfully applied",
-        })
+        toast.info("Filters has been successfully applied",)
         setUrlFiltersApplied(false);
         setIsOpen(false)
         const queryParams = new URLSearchParams();

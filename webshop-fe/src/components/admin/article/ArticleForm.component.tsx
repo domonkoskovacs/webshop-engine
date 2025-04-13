@@ -5,8 +5,8 @@ import {FileInputField, TextInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {toast} from "../../../hooks/UseToast";
 import {handleGenericApiError} from "../../../shared/ApiError";
+import {toast} from "../../../hooks/useToast";
 
 export const FormSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -40,7 +40,7 @@ const ArticleForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
                 buttonLink: data.buttonLink,
                 image: data.image,
             });
-            toast({description: 'Slide created successfully!'});
+            toast.success('Slide created successfully!');
             setIsOpen(false);
         } catch (error) {
             handleGenericApiError(error);

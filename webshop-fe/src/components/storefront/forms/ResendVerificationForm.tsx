@@ -8,7 +8,7 @@ import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useResendVerificationEmail} from "../../../hooks/user/useResendVerificationEmail";
 import {useSearchParams} from "react-router-dom";
-import {toast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -37,10 +37,7 @@ const ResendVerificationEmailForm: React.FC = () => {
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         try {
             await resendEmail(data.email);
-            toast({
-                variant: "success",
-                description: "Verification email sent! Please check your inbox.",
-            });
+            toast.success("Verification email sent! Please check your inbox.",);
         } catch (error) {
             if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(

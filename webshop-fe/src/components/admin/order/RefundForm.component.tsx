@@ -3,7 +3,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useFieldArray, useForm} from "react-hook-form";
 import React from "react";
 import {useRefundOrder} from "../../../hooks/order/useRefundOrder";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {handleGenericApiError} from "../../../shared/ApiError";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {SelectOption} from "../../../types/select";
@@ -24,7 +24,6 @@ type RefundFormProps = {
 };
 
 const RefundForm: React.FC<RefundFormProps> = ({orderId, items, setIsOpen}) => {
-    const {toast} = useToast();
     const {mutateAsync: refund} = useRefundOrder();
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -45,7 +44,7 @@ const RefundForm: React.FC<RefundFormProps> = ({orderId, items, setIsOpen}) => {
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         try {
             await refund({id: orderId, refund: data.items});
-            toast({description: "Refund successful and status updated to RETURN_RECEIVED."});
+            toast.success("Refund successful and status updated to RETURN_RECEIVED.");
             setIsOpen(false);
         } catch (error) {
             handleGenericApiError(error);

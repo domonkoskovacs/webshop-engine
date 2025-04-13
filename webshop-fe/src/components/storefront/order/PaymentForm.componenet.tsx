@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import {useNavigate} from "react-router-dom";
-import {toast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {Button} from "../../ui/Button";
 import {OrderResponse} from "../../../shared/api";
 
@@ -42,9 +42,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({order}) => {
             setError(stripeError.message || "Payment failed.");
             setProcessing(false);
         } else if (paymentIntent && paymentIntent.status === "succeeded") {
-            toast({
-                description: "Payment successful",
-            });
+            toast.success("Payment successful");
             navigate("/previous-orders");
         }
     };

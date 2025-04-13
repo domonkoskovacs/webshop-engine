@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/UseToast";
+import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useChangePassword} from "../../../hooks/user/useChangePassword";
@@ -29,9 +29,7 @@ const PasswordForm: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             await changePassword(data.password)
-            toast({
-                description: "Your password was successfully renewed.",
-            })
+            toast.success("Your password was successfully renewed.");
         } catch (error) {
             unexpectedErrorToast()
         }

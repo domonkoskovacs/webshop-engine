@@ -16,7 +16,7 @@ import {
 } from "../../ui/AlertDialog";
 import {Button} from "src/components/ui/Button";
 import {useDeleteUser} from "../../../hooks/user/useDeleteUser";
-import {toast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 
 
 const ProfileForm: React.FC = () => {
@@ -61,12 +61,9 @@ const ProfileForm: React.FC = () => {
                                                     onClick={async () => {
                                                         try {
                                                             await deleteUser();
-                                                            toast({description: "Account successfully deleted."});
+                                                            toast.success("Account successfully deleted.");
                                                         } catch (error) {
-                                                            toast({
-                                                                variant: "destructive",
-                                                                description: "There was an error deleting your account.",
-                                                            });
+                                                            toast.error("There was an error deleting your account.");
                                                         }
                                                     }}
                                                 >

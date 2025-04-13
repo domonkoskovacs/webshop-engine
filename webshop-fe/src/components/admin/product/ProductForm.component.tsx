@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import React, {useEffect} from "react";
 import {ComboBoxField} from "../../ui/fields/ComboBoxField";
 import {FileListInputField, NumberInputField, TextInputField} from "../../ui/fields/InputField";
@@ -62,7 +62,6 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
     const {mutateAsync: updateProduct, isPending: isUpdating} = useUpdateProduct();
     const {data: productData} = useProductById(productId ?? "");
     const {data: categories = []} = useCategories();
-    const {toast} = useToast();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -111,7 +110,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                     existingImageIds: existingImageIds,
                     itemNumber: data.itemNumber,
                 });
-                toast({description: "Product updated successfully."});
+                toast.success("Product updated successfully.");
             } else {
                 await createProduct({
                     brand: data.brand,
@@ -125,7 +124,7 @@ const ProductForm: React.FC<ProductFormProps> = ({setIsOpen, productId}) => {
                     images: data.images as File[],
                     itemNumber: data.itemNumber,
                 });
-                toast({description: "Product created successfully."});
+                toast.success("Product created successfully.");
             }
             setIsOpen(false);
         } catch (error) {

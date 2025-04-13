@@ -4,7 +4,7 @@ import {Badge} from "../../ui/Badge";
 import {Minus, Plus} from "lucide-react";
 import {Button} from "src/components/ui/Button";
 import {ApiError} from "../../../shared/ApiError";
-import {toast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
 
 interface CartHoverItemProps {
@@ -26,10 +26,10 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
                 );
 
                 if (errorMap.get(ResultEntryReasonCodeEnum.NotEnoughProductInStock)) {
-                    toast({description: "Not enough products in stock."});
+                    toast.warn("Not enough products in stock.");
                 }
             } else {
-                toast({variant: "destructive", description: "Error updating cart."});
+                toast.error("Error updating cart.");
             }
         }
     };

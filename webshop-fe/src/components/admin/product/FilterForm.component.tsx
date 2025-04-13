@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {GetAllSortTypeEnum, ProductServiceApiGetAllRequest, UpdateGenderEnum} from "../../../shared/api";
 
 import {z} from "zod";
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -50,7 +50,6 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen, updateFilters, filter
     const discountRange: [number, number] = [data?.minDiscount ?? 0, data?.maxDiscount ?? 0];
     const {data: brands = []} = useProductBrands();
     const {data: categories = []} = useCategories();
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -79,7 +78,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen, updateFilters, filter
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         updateFilters({...data});
-        toast({description: "Filters applied successfully.",})
+        toast.info("Filters applied successfully.")
         setIsOpen(false)
     }
 

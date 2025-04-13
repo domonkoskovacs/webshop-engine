@@ -1,7 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {useToast} from "../../../hooks/UseToast";
+import {toast} from "../../../hooks/useToast";
 import React, {useEffect} from "react";
 import {NumberInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -22,7 +22,6 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
     const {mutateAsync: setDiscounts, isPending} = useSetProductDiscounts();
     const singleProductId = productIds.length === 1 ? productIds[0] : "";
     const {data: productData} = useProductById(singleProductId);
-    const {toast} = useToast()
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -45,9 +44,7 @@ const DiscountForm: React.FC<DiscountFormProps> = ({setIsOpen, productIds}) => {
                 id,
                 discount: data.discountPercentage,
             })));
-            toast({
-                description: "Discount applied successfully.",
-            });
+            toast.success("Discount applied successfully.",);
             setIsOpen(false);
         } catch (error) {
             handleGenericApiError(error)
