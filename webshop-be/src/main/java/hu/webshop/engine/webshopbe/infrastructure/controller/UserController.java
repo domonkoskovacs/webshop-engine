@@ -4,26 +4,26 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.UserAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ForgottenPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.NewPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RegistrationRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.UpdateUserRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.VerificationRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CartItemResponse;
-import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Tag(
         name = "User service",
@@ -49,7 +48,9 @@ public class UserController {
             summary = "Registration of new user",
             description = "Users can register with the required information"
     )
-    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = ApiPaths.Users.REGISTER,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> register(@Valid @RequestBody RegistrationRequest registration) {
         log.info("register > registration: [{}]", registration);
         userAdapter.register(registration);
@@ -61,7 +62,8 @@ public class UserController {
             summary = "New password request",
             description = "Users can request a new password if the old is forgotten"
     )
-    @PostMapping(value = "/forgotten/password", consumes = "application/json")
+    @PostMapping(value = ApiPaths.Users.FORGOTTEN_PASSWORD,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> forgottenPassword(@Valid @RequestBody ForgottenPasswordRequest forgottenPasswordRequest) {
         log.info("forgottenPassword > forgottenPasswordRequest: [{}]", forgottenPasswordRequest);
         userAdapter.forgottenPassword(forgottenPasswordRequest);
@@ -73,7 +75,7 @@ public class UserController {
             summary = "Get current user",
             description = "Current user can be retrieved"
     )
-    @GetMapping(value = "/current", produces = "application/json")
+    @GetMapping(value = ApiPaths.Users.CURRENT, produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<UserResponse> getCurrentUser() {
         log.info("getCurrentUser");
@@ -85,10 +87,12 @@ public class UserController {
             summary = "Verify an user",
             description = "After registration users must be verified, with a verification link that is given in an email"
     )
-    @PostMapping(value = "/verify", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Void> verify(@Valid @RequestBody VerificationRequest verificationRequest) {
-        log.info("verify > verificationRequest: [{}]", verificationRequest);
-        userAdapter.verify(verificationRequest);
+    @PostMapping(value = ApiPaths.Users.VERIFY,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> verify(@PathVariable UUID id) {
+        log.info("verify > id: [{}]", id);
+        userAdapter.verify(id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -97,7 +101,9 @@ public class UserController {
             summary = "Resend verification email",
             description = "After registration users can resend the verification email"
     )
-    @PostMapping(value = "/resend-verify", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = ApiPaths.Users.RESEND_VERIFICATION,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> resendVerify(@Valid @RequestBody EmailRequest emailRequest) {
         log.info("resendVerify > emailRequest: [{}]", emailRequest);
         userAdapter.resendVerify(emailRequest);
@@ -110,10 +116,11 @@ public class UserController {
             description = "Update a user password with a new one"
 
     )
-    @PostMapping(value = "/new/password", consumes = "application/json")
-    public ResponseEntity<Void> newPassword(@Valid @RequestBody NewPasswordRequest newPasswordRequest) {
-        log.info("newPassword > newPasswordRequest: [{}]", newPasswordRequest);
-        userAdapter.newPassword(newPasswordRequest);
+    @PostMapping(value = ApiPaths.Users.PASSWORD,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> newPassword(@PathVariable UUID id, @Valid @RequestBody NewPasswordRequest newPasswordRequest) {
+        log.info("newPassword > id: [{}]", id);
+        userAdapter.newPassword(id, newPasswordRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -122,7 +129,9 @@ public class UserController {
             summary = "Update user",
             description = "Update a users email and/or username"
     )
-    @PostMapping(value = "/update", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = ApiPaths.Users.UPDATE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UpdateUserRequest user) {
         log.info("updateUser > user: [{}]", user);
@@ -134,7 +143,7 @@ public class UserController {
             summary = "Delete user",
             description = "Delete a user"
     )
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping(ApiPaths.Users.DELETE)
     @User
     public ResponseEntity<Void> deleteUser() {
         log.info("deleteUser");
@@ -147,7 +156,8 @@ public class UserController {
             summary = "Get saved products",
             description = "Get the users saved products"
     )
-    @GetMapping(value = "/saved", produces = "application/json")
+    @GetMapping(value = ApiPaths.SavedProducts.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<List<ProductResponse>> getSaved() {
         log.info("getSaved");
@@ -159,7 +169,8 @@ public class UserController {
             summary = "Get cart products",
             description = "Get the users cart products"
     )
-    @GetMapping(value = "/cart", produces = "application/json")
+    @GetMapping(value = ApiPaths.CartItems.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<List<CartItemResponse>> getCart() {
         log.info("getCart");
@@ -168,22 +179,12 @@ public class UserController {
 
     @Operation(
             tags = {"User service"},
-            summary = "Get orders",
-            description = "Get the orders for the user"
-    )
-    @GetMapping(value = "/order", produces = "application/json")
-    @User
-    public ResponseEntity<List<OrderResponse>> getOrders() {
-        log.info("getOrders");
-        return ResponseEntity.ok().body(userAdapter.getOrders());
-    }
-
-    @Operation(
-            tags = {"User service"},
             summary = "Add to saved products",
             description = "Add items to users saved products"
     )
-    @PostMapping(value = "/add/saved", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = ApiPaths.SavedProducts.BASE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<List<ProductResponse>> addSaved(@Valid @RequestBody List<UUID> productIds) {
         log.info("addSaved, productIds: [{}]", productIds);
@@ -195,7 +196,9 @@ public class UserController {
             summary = "Remove from saved products",
             description = "Remove items to users saved products"
     )
-    @PostMapping(value = "/remove/saved", consumes = "application/json", produces = "application/json")
+    @DeleteMapping(value = ApiPaths.SavedProducts.BASE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<List<ProductResponse>> removeSaved(@Valid @RequestBody List<UUID> productIds) {
         log.info("removeSaved, productIds: [{}]", productIds);
@@ -207,7 +210,9 @@ public class UserController {
             summary = "Update cart products",
             description = "Update the users cart products"
     )
-    @PostMapping(value = "/update/cart", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = ApiPaths.CartItems.BASE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @User
     public ResponseEntity<List<CartItemResponse>> updateCart(@Valid @RequestBody List<CartItemRequest> cartItemRequests) {
         log.info("updateSaved, cartItemRequests: [{}]", cartItemRequests);
@@ -219,7 +224,7 @@ public class UserController {
             summary = "Unsubscribe from email list with email",
             description = "User can unsubscribe from email list with email"
     )
-    @GetMapping(value = "/unsubscribe/{id}")
+    @GetMapping(value = ApiPaths.Users.UNSUBSCRIBE)
     public ResponseEntity<Void> unSubscribeToEmailListWithId(@PathVariable UUID id) {
         log.info("unSubscribeToEmailListWithId > id: [{}]", id);
         userAdapter.unSubscribeToEmailListWithId(id);

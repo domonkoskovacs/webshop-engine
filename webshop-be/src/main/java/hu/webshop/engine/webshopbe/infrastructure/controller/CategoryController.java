@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.CategoryAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CategoryRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/category")
 @RequiredArgsConstructor
 @Tag(
         name = "Category service",
@@ -41,7 +40,8 @@ public class CategoryController {
             summary = "Get all category",
             description = "Public endpoint returns all categories"
     )
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = ApiPaths.Categories.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryResponse>> getAll() {
         log.info("getAll");
         return ResponseEntity.ok(categoryAdapter.getALl());
@@ -52,7 +52,9 @@ public class CategoryController {
             summary = "Create a category",
             description = "Admins can create a category"
     )
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = ApiPaths.Categories.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequest request) {
         log.info("create > request: [{}]", request);
@@ -64,7 +66,7 @@ public class CategoryController {
             summary = "Add a subcategory to a category",
             description = "Admins can add a subcategory to a category"
     )
-    @PostMapping(value = "/subCategory/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = ApiPaths.Categories.CATEGORY_BY_ID_SUBCATEGORIES, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<CategoryResponse> addSubCategory(@PathVariable UUID id, @RequestBody CategoryRequest request) {
         log.info("addSubCategory > id: [{}], request: [{}]", id, request);
@@ -76,7 +78,7 @@ public class CategoryController {
             summary = "Update a category",
             description = "Admins can update a category"
     )
-    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = ApiPaths.Categories.BY_ID, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<CategoryResponse> update(@PathVariable UUID id, @RequestBody CategoryRequest request) {
         log.info("update > id: [{}], request: [{}]", id, request);
@@ -88,7 +90,7 @@ public class CategoryController {
             summary = "Delete a category",
             description = "Admins can delete a category"
     )
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(ApiPaths.Categories.BY_ID)
     @Admin
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         log.info("delete > id: [{}]", id);
@@ -101,7 +103,7 @@ public class CategoryController {
             summary = "Delete a subcategory",
             description = "Admins can delete a subcategory"
     )
-    @DeleteMapping(value = "/subCategory/{id}")
+    @DeleteMapping(ApiPaths.Categories.SUBCATEGORY_BY_ID)
     @Admin
     public ResponseEntity<Void> deleteSubCategory(@PathVariable UUID id) {
         log.info("deleteSubCategory > id: [{}]", id);

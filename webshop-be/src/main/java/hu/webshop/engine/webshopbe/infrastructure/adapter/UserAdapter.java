@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.CartMapper;
-import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.OrderMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.ProductMapper;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.UserMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
@@ -17,9 +16,7 @@ import hu.webshop.engine.webshopbe.infrastructure.model.request.ForgottenPasswor
 import hu.webshop.engine.webshopbe.infrastructure.model.request.NewPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RegistrationRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.UpdateUserRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.VerificationRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CartItemResponse;
-import hu.webshop.engine.webshopbe.infrastructure.model.response.OrderResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ProductResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.UserResponse;
 import jakarta.validation.Valid;
@@ -35,7 +32,6 @@ public class UserAdapter {
     private final UserMapper userMapper;
     private final ProductMapper productMapper;
     private final CartMapper cartMapper;
-    private final OrderMapper orderMapper;
 
     @Transactional
     public void register(RegistrationRequest registration) {
@@ -53,14 +49,14 @@ public class UserAdapter {
         return userMapper.toResponse(userService.getCurrentUser());
     }
 
-    public void verify(VerificationRequest verificationRequest) {
-        log.info("verify > verificationRequest: [{}]", verificationRequest);
-        userService.verify(userMapper.fromRequest(verificationRequest));
+    public void verify(UUID id) {
+        log.info("verify > id: [{}]", id);
+        userService.verify(id);
     }
 
-    public void newPassword(NewPasswordRequest newPasswordRequest) {
-        log.info("newPassword > newPasswordRequest: [{}]", newPasswordRequest);
-        userService.updatePassword(userMapper.fromRequest(newPasswordRequest));
+    public void newPassword(UUID id, NewPasswordRequest newPasswordRequest) {
+        log.info("newPassword > id: [{}]", id);
+        userService.updatePassword(id, newPasswordRequest.password());
     }
 
     public UserResponse updateUser(UpdateUserRequest user) {
@@ -81,11 +77,6 @@ public class UserAdapter {
     public List<CartItemResponse> getCart() {
         log.info("getCart");
         return cartMapper.toResponseList(userService.getCart());
-    }
-
-    public List<OrderResponse> getOrders() {
-        log.info("getOrders");
-        return orderMapper.toResponseList(userService.getOrders());
     }
 
     public List<ProductResponse> addSaved(List<UUID> productIds) {

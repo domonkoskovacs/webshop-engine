@@ -32,6 +32,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.config.filter.JwtAuthenticationFilter;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,17 +104,18 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/user/**").permitAll()
-                        .requestMatchers("/api/product/**").permitAll()
-                        .requestMatchers("/api/article/**").permitAll()
-                        .requestMatchers("/api/order/**").permitAll()
-                        .requestMatchers("/api/image/**").permitAll()
-                        .requestMatchers("/api/category/**").permitAll()
-                        .requestMatchers("/api/store/**").permitAll()
-                        .requestMatchers("/api/statistics/**").permitAll()
-                        .requestMatchers("/api/email/**").permitAll()
-                        .requestMatchers("/api/payment/webhooks/**").permitAll()
+                        .requestMatchers(ApiPaths.Auth.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Users.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Products.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Articles.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Orders.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Images.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Categories.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Categories.SUBCATEGORIES_BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Store.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Statistics.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.PromotionEmails.BASE + "/**").permitAll()
+                        .requestMatchers(ApiPaths.Webhooks.BASE + "/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

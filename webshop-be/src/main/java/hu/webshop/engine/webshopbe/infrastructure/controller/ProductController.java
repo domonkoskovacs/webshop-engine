@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +23,7 @@ import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.ProductAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
@@ -39,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/product")
 @RequiredArgsConstructor
 @Tag(
         name = "Product service",
@@ -54,7 +53,9 @@ public class ProductController {
             summary = "Create product",
             description = "Create a new product"
     )
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
+    @PostMapping(value = ApiPaths.Products.BASE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<ProductResponse> create(@ModelAttribute ProductRequest productRequest) {
         log.info("create > productRequest: [{}]", productRequest);
@@ -66,7 +67,8 @@ public class ProductController {
             summary = "Get all products",
             description = "Get all existing products"
     )
-    @GetMapping(produces = "application/json")
+    @GetMapping(value = ApiPaths.Products.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductPage<ProductResponse>> getAll(
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
@@ -92,7 +94,8 @@ public class ProductController {
             summary = "Get a products by id",
             description = "Get a products by id"
     )
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = ApiPaths.Products.BY_ID,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductResponse> getById(@PathVariable UUID id) {
         log.info("getById > id: [{}]", id);
         return ResponseEntity.ok(productAdapter.getById(id));
@@ -103,7 +106,8 @@ public class ProductController {
             summary = "Get brands",
             description = "Public endpoint, return existing brands"
     )
-    @GetMapping(value = "/brand", produces = "application/json")
+    @GetMapping(value = ApiPaths.Products.BRANDS,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BrandResponse>> getBrands() {
         log.info("getBrands");
         return ResponseEntity.ok(productAdapter.getBrands());
@@ -114,7 +118,8 @@ public class ProductController {
             summary = "Delete products with id list",
             description = "Delete products with id list"
     )
-    @DeleteMapping(consumes = "application/json")
+    @DeleteMapping(value = ApiPaths.Products.DELETE_BATCH,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<Void> delete(@RequestBody DeleteProductRequest deleteProductRequest) {
         log.info("delete > deleteProductRequest: [{}]", deleteProductRequest);
@@ -127,7 +132,9 @@ public class ProductController {
             summary = "Update a products by id",
             description = "Update a products by id"
     )
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
+    @PutMapping(value = ApiPaths.Products.BY_ID,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<ProductResponse> update(@PathVariable UUID id, @ModelAttribute ProductUpdateRequest productUpdateRequest) {
         log.info("update > id: [{}], productUpdateRequest: [{}]", id, productUpdateRequest);
@@ -139,7 +146,8 @@ public class ProductController {
             summary = "Update products discount by id",
             description = "Update products discount by id"
     )
-    @PostMapping(value = "/discount", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = ApiPaths.Products.DISCOUNT,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<Void> setDiscounts(@RequestBody DiscountRequest discountRequest) {
         log.info("setDiscount > discountRequest: [{}]", discountRequest);
@@ -152,7 +160,8 @@ public class ProductController {
             summary = "Import products from a csv",
             description = "Import products from a base64 encoded csv"
     )
-    @PostMapping(value = "/import", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = ApiPaths.Products.IMPORT,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<Void> importProducts(@RequestBody CsvRequest csvRequest) {
         log.info("importProducts > csvRequest: [{}]", csvRequest);
@@ -165,7 +174,7 @@ public class ProductController {
             summary = "Export products to a csv",
             description = "Export products to a base64 encoded csv"
     )
-    @GetMapping(value = "/export", produces = "application/json")
+    @GetMapping(value = ApiPaths.Products.EXPORT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<CsvResponse> export(
             @RequestParam(required = false) LocalDate from,

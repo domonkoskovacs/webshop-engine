@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stripe.exception.SignatureVerificationException;
@@ -13,6 +12,7 @@ import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentWebhookAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,16 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Hidden
 @RestController
-@RequestMapping("/api/payment/webhooks")
 @RequiredArgsConstructor
-public class PaymentWebhookController {
+public class WebhookController {
 
     private final PaymentWebhookAdapter paymentAdapter;
     private final StripeProperties stripeProperties;
 
-
-    @PostMapping
-    public ResponseEntity<Void> handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
+    @PostMapping(ApiPaths.Webhooks.STRIPE)
+    public ResponseEntity<Void> handleStripeWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event;
         try {
             event = Webhook.constructEvent(payload, sigHeader, stripeProperties.getEndpointSecret());

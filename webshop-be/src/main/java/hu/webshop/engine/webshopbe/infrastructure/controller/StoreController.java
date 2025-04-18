@@ -1,15 +1,16 @@
 package hu.webshop.engine.webshopbe.infrastructure.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.StoreAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.StoreRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.PublicStoreResponse;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.StoreResponse;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/store")
 @RequiredArgsConstructor
 @Tag(
         name = "Store service",
@@ -35,7 +35,8 @@ public class StoreController {
             summary = "Get store configuration",
             description = "Admin can retrieve store configuration"
     )
-    @GetMapping(produces = "application/json")
+    @GetMapping(value = ApiPaths.Store.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<StoreResponse> getStore() {
         log.info("getStore");
@@ -47,7 +48,9 @@ public class StoreController {
             summary = "Update store configuration",
             description = "Admin can update store configuration"
     )
-    @PutMapping(produces = "application/json", consumes = "application/json")
+    @PutMapping(value = ApiPaths.Store.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Admin
     public ResponseEntity<StoreResponse> updateStore(@RequestBody StoreRequest request) {
         log.info("updateStore > request: [{}]", request);
@@ -59,7 +62,8 @@ public class StoreController {
             summary = "Get public store configuration",
             description = "Retrieve essential store settings for users"
     )
-    @GetMapping(value = "/public", produces = "application/json")
+    @GetMapping(value = ApiPaths.Store.PUBLIC,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PublicStoreResponse> getPublicStore() {
         log.info("getPublicStore");
         return ResponseEntity.status(HttpStatus.OK).body(storeAdapter.getPublicStore());

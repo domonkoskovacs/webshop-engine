@@ -23,17 +23,14 @@ import hu.webshop.engine.webshopbe.domain.base.exception.ProductException;
 import hu.webshop.engine.webshopbe.domain.base.exception.RegistrationException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
-import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.CartItem;
-import hu.webshop.engine.webshopbe.domain.user.value.NewPassword;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.domain.user.value.UpdateUser;
-import hu.webshop.engine.webshopbe.domain.user.value.Verification;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
@@ -124,9 +121,9 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void verify(Verification verification) {
-        log.info("verify > verification: [{}]", verification);
-        User user = userRepository.findById(verification.id()).orElseThrow(this::entityNotFoundException);
+    public void verify(UUID id) {
+        log.info("verify > id: [{}]", id);
+        User user = userRepository.findById(id).orElseThrow(this::entityNotFoundException);
         if (!Boolean.TRUE.equals(user.getVerified())) {
             user.setVerified(true);
             userRepository.save(user);
@@ -135,10 +132,10 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void updatePassword(NewPassword newPassword) {
+    public void updatePassword(UUID id, String password) {
         log.info("updatePassword");
-        User user = userRepository.findById(newPassword.id()).orElseThrow(this::entityNotFoundException);
-        user.setPassword(encoder.encode(newPassword.password()));
+        User user = userRepository.findById(id).orElseThrow(this::entityNotFoundException);
+        user.setPassword(encoder.encode(password));
         userRepository.save(user);
     }
 
@@ -245,11 +242,6 @@ public class UserService implements UserDetailsService {
         User currentUser = getCurrentUser();
         currentUser.clearCart();
         userRepository.save(currentUser);
-    }
-
-    public List<Order> getOrders() {
-        log.info("getOrders");
-        return getCurrentUser().getOrders();
     }
 
     public void unSubscribeToEmailListWithId(UUID id) {

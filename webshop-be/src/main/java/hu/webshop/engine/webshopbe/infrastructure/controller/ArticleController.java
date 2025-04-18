@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.ArticleAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ArticleRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ArticleResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/article")
 @RequiredArgsConstructor
 @Tag(
         name = "Article service",
@@ -40,7 +39,8 @@ public class ArticleController {
             summary = "Get all article",
             description = "Get all article"
     )
-    @GetMapping(produces = "application/json")
+    @GetMapping(value = ApiPaths.Articles.BASE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ArticleResponse>> getAll() {
         log.info("getAll");
         return ResponseEntity.ok(articleAdapter.getAll());
@@ -52,7 +52,9 @@ public class ArticleController {
             description = "Administrator creates a new article"
     )
     @Admin
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = "application/json")
+    @PostMapping(value = ApiPaths.Articles.BASE,
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ArticleResponse> create(@ModelAttribute ArticleRequest articleRequest) {
         log.info("create > articleRequest: [{}]", articleRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(articleAdapter.create(articleRequest));
@@ -64,7 +66,7 @@ public class ArticleController {
             description = "Administrator can delete an article"
     )
     @Admin
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ApiPaths.Articles.BY_ID)
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         log.info("delete > id: [{}]", id);
         articleAdapter.delete(id);

@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.StoreRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -18,13 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class StoreControllerIT extends IntegrationTest {
 
-    private static final String BASE_URL = "/api/store";
-
     @Test
     @DisplayName("store can be retrieved")
     void storeCanBeRetrieved() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL, Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(ApiPaths.Store.BASE, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.minOrderPrice").value("0.0"));
@@ -37,7 +36,7 @@ class StoreControllerIT extends IntegrationTest {
         StoreRequest request = new StoreRequest("name", 10.0, 10.0, 10, 24, null, null, null, true, false, false);
 
         //When
-        ResultActions resultActions = performPut(BASE_URL, request, Role.ROLE_ADMIN);
+        ResultActions resultActions = performPut(ApiPaths.Store.BASE, request, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.returnPeriod").value("10"));
@@ -48,7 +47,7 @@ class StoreControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void publicStoreCanBeRetrieved() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/public", Role.ROLE_USER);
+        ResultActions resultActions = performGet(ApiPaths.Store.PUBLIC, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.minOrderPrice").value("0.0"));

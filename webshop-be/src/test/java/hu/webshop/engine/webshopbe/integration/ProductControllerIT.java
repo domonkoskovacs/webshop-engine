@@ -33,6 +33,7 @@ import hu.webshop.engine.webshopbe.domain.product.value.Discount;
 import hu.webshop.engine.webshopbe.domain.product.value.Gender;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DiscountRequest;
@@ -44,7 +45,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ProductControllerIT extends IntegrationTest {
 
-    private static final String BASE_URL = "/api/product";
     private static final String PRODUCT_ID = "b7f86506-8ea8-4908-b8f4-668c5ec6a7e1";
     private static final UUID SUB_CATEGORY_ID = UUID.fromString("a40ce50d-531e-4205-84b0-3244b983a8a1");
     private final ProductRepository productRepository;
@@ -58,7 +58,7 @@ class ProductControllerIT extends IntegrationTest {
                 SUB_CATEGORY_ID, Gender.UNISEX, 2, 3.2, 10.0, null, "000");
 
         //When
-        ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request, Role.ROLE_ADMIN));
+        ResultActions resultActions = mockMvc.perform(getMultipartRequest(HttpMethod.POST, ApiPaths.Products.BASE, request, Role.ROLE_ADMIN));
 
         //Then
         resultActions.andExpect(status().isCreated()).andExpect(jsonPath("$.brand.name").value("brand"));
@@ -88,7 +88,7 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void getAllProduct() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL, Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(ApiPaths.Products.BASE, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.content").isArray()).andExpect(jsonPath("$.content").isNotEmpty());
@@ -102,7 +102,7 @@ class ProductControllerIT extends IntegrationTest {
         ProductSortType sortType = ProductSortType.ASC_PRICE;
 
         //When
-        ResultActions resultActions = mockMvc.perform(get(BASE_URL)
+        ResultActions resultActions = mockMvc.perform(get(ApiPaths.Products.BASE)
                 .param("brands", "brand")
                 .param("categories", "category")
                 .param("subCategories", "subCategory")
@@ -128,10 +128,10 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void allSortTypesWork() throws Exception {
         //Given //When //Then
-        mockMvc.perform(get(BASE_URL).param("sortType", ProductSortType.ASC_PRICE.name())).andExpect(status().isOk());
-        mockMvc.perform(get(BASE_URL).param("sortType", ProductSortType.DESC_PRICE.name())).andExpect(status().isOk());
-        mockMvc.perform(get(BASE_URL).param("sortType", ProductSortType.ASC_DISCOUNT.name())).andExpect(status().isOk());
-        mockMvc.perform(get(BASE_URL).param("sortType", ProductSortType.DESC_DISCOUNT.name())).andExpect(status().isOk());
+        mockMvc.perform(get(ApiPaths.Products.BASE).param("sortType", ProductSortType.ASC_PRICE.name())).andExpect(status().isOk());
+        mockMvc.perform(get(ApiPaths.Products.BASE).param("sortType", ProductSortType.DESC_PRICE.name())).andExpect(status().isOk());
+        mockMvc.perform(get(ApiPaths.Products.BASE).param("sortType", ProductSortType.ASC_DISCOUNT.name())).andExpect(status().isOk());
+        mockMvc.perform(get(ApiPaths.Products.BASE).param("sortType", ProductSortType.DESC_DISCOUNT.name())).andExpect(status().isOk());
     }
 
     @Test
@@ -139,7 +139,7 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void productCanBeRetrievedById() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/" + PRODUCT_ID, Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(pathWithId(ApiPaths.Products.BY_ID, PRODUCT_ID), Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.brand.name").value("brand"));
@@ -150,7 +150,7 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void notFoundProductReturn404() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/b7f86506-8ea8-4908-b8f4-668c5ec1a727", Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(pathWithId(ApiPaths.Products.BY_ID, "b7f86506-8ea8-4908-b8f4-668c5ec1a727"), Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isNotFound());
@@ -164,7 +164,7 @@ class ProductControllerIT extends IntegrationTest {
         DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
         //When
-        ResultActions resultActions = performDelete(BASE_URL, Role.ROLE_ADMIN, deleteProductRequest);
+        ResultActions resultActions = performDelete(ApiPaths.Products.DELETE_BATCH, Role.ROLE_ADMIN, deleteProductRequest);
         transaction();
 
         //Then
@@ -192,7 +192,7 @@ class ProductControllerIT extends IntegrationTest {
         byte[] pngBytes = Files.readAllBytes(Paths.get("src/test/resources/images/e3ee6173-d53a-46c0-aea8-2de257e47089.png"));
         MockMultipartFile image1 = new MockMultipartFile("newImages", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
         MockMultipartFile image2 = new MockMultipartFile("newImages", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
-        return multipart(HttpMethod.PUT, "/api/product/b7f86506-8ea8-4908-b8f4-668c5ec6a7e1")
+        return multipart(HttpMethod.PUT, pathWithId(ApiPaths.Products.BY_ID, "b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"))
                 .file(image1)
                 .file(image2)
                 .param("existingImageIds", request.existingImageIds().toString())
@@ -215,7 +215,7 @@ class ProductControllerIT extends IntegrationTest {
         DiscountRequest request = new DiscountRequest(List.of(new Discount(UUID.fromString(PRODUCT_ID), 20.0)));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/discount", request, Role.ROLE_ADMIN);
+        ResultActions resultActions = performPost(ApiPaths.Products.DISCOUNT, request, Role.ROLE_ADMIN);
         transaction();
 
         //Then
@@ -241,12 +241,12 @@ class ProductControllerIT extends IntegrationTest {
         DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
         //When //Then
-        performGet(BASE_URL).andExpect(status().isOk());
-        performGet(BASE_URL + "/" + PRODUCT_ID).andExpect(status().isOk());
-        mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request)).andExpect(status().isForbidden());
-        performDelete(BASE_URL, deleteProductRequest).andExpect(status().isForbidden());
-        mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request)).andExpect(status().isForbidden());
-        performPost(BASE_URL + "/discount", discountRequest).andExpect(status().isForbidden());
+        performGet(ApiPaths.Products.BASE).andExpect(status().isOk());
+        performGet(pathWithId(ApiPaths.Products.BY_ID, PRODUCT_ID)).andExpect(status().isOk());
+        mockMvc.perform(getMultipartRequest(HttpMethod.POST, ApiPaths.Products.BASE, request)).andExpect(status().isForbidden());
+        performDelete(ApiPaths.Products.DELETE_BATCH, deleteProductRequest).andExpect(status().isForbidden());
+        mockMvc.perform(getMultipartRequest(HttpMethod.PUT, pathWithId(ApiPaths.Products.BY_ID, PRODUCT_ID), request)).andExpect(status().isForbidden());
+        performPost(ApiPaths.Products.DISCOUNT, discountRequest).andExpect(status().isForbidden());
     }
 
     @NotNull
@@ -278,12 +278,12 @@ class ProductControllerIT extends IntegrationTest {
         DeleteProductRequest deleteProductRequest = new DeleteProductRequest(List.of(UUID.fromString(PRODUCT_ID)));
 
         //When //Then
-        performGet(BASE_URL, Role.ROLE_USER).andExpect(status().isOk());
-        performGet(BASE_URL + "/" + PRODUCT_ID, Role.ROLE_USER).andExpect(status().isOk());
-        mockMvc.perform(getMultipartRequest(HttpMethod.POST, BASE_URL, request, Role.ROLE_USER)).andExpect(status().isForbidden());
-        performDelete(BASE_URL, Role.ROLE_USER, deleteProductRequest).andExpect(status().isForbidden());
-        mockMvc.perform(getMultipartRequest(HttpMethod.PUT, BASE_URL + "/" + PRODUCT_ID, request, Role.ROLE_USER)).andExpect(status().isForbidden());
-        performPost(BASE_URL + "/discount", discountRequest, Role.ROLE_USER).andExpect(status().isForbidden());
+        performGet(ApiPaths.Products.BASE, Role.ROLE_USER).andExpect(status().isOk());
+        performGet(pathWithId(ApiPaths.Products.BY_ID, PRODUCT_ID), Role.ROLE_USER).andExpect(status().isOk());
+        mockMvc.perform(getMultipartRequest(HttpMethod.POST, ApiPaths.Products.BASE, request, Role.ROLE_USER)).andExpect(status().isForbidden());
+        performDelete(ApiPaths.Products.DELETE_BATCH, Role.ROLE_USER, deleteProductRequest).andExpect(status().isForbidden());
+        mockMvc.perform(getMultipartRequest(HttpMethod.PUT, pathWithId(ApiPaths.Products.BY_ID, PRODUCT_ID), request, Role.ROLE_USER)).andExpect(status().isForbidden());
+        performPost(ApiPaths.Products.DISCOUNT, discountRequest, Role.ROLE_USER).andExpect(status().isForbidden());
     }
 
     @Test
@@ -291,7 +291,7 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("brand.yml")
     void allBrandsCanBeRetried() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/brand");
+        ResultActions resultActions = performGet(ApiPaths.Products.BRANDS);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -308,7 +308,7 @@ class ProductControllerIT extends IntegrationTest {
         CsvRequest request = new CsvRequest("aXRlbU51bWJlcjticmFuZDtuYW1lO2Rlc2NyaXB0aW9uO3N1YkNhdGVnb3J5TmFtZTtnZW5kZXI7Y291bnQ7cHJpY2U7ZGlzY291bnRQZXJjZW50YWdlO2ltYWdlc1VybHMNCml0ZW0wMDA7YnJhbmQ7c2hpcnQ7dGhpcyBpcyBhIHNoaXJ0O3N1YkNhdGVnb3J5O1VOSVNFWDsxMDsxMC4wOzEuMDtpbWFnZVVybCxpbWFnZVVybDI");
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/import", request, Role.ROLE_ADMIN);
+        ResultActions resultActions = performPost(ApiPaths.Products.IMPORT, request, Role.ROLE_ADMIN);
         transaction();
 
         //Then
@@ -321,7 +321,7 @@ class ProductControllerIT extends IntegrationTest {
     @DataSet("adminAndProducts.yml")
     void productsCanBeExported() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/export", Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(ApiPaths.Products.EXPORT, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")
@@ -348,7 +348,7 @@ class ProductControllerIT extends IntegrationTest {
         params.add("showOutOfStock", "true");
 
         //When
-        ResultActions resultActions = performGet(BASE_URL + "/export", Role.ROLE_ADMIN, params);
+        ResultActions resultActions = performGet(ApiPaths.Products.EXPORT, Role.ROLE_ADMIN, params);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.csv")

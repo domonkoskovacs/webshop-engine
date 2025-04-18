@@ -7,11 +7,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.ImageAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/image")
 @RequiredArgsConstructor
 @Tag(
         name = "Image service",
@@ -34,7 +32,8 @@ public class ImageController {
             summary = "Get an image",
             description = "Public endpoint returns an image by id and extension"
     )
-    @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
+    @GetMapping(value = ApiPaths.Images.BY_ID,
+            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<ByteArrayResource> getById(@PathVariable UUID id) {
         log.info("getImage > id: [{}]", id);
         return ResponseEntity.ok().body(imageAdapter.getById(id));

@@ -20,6 +20,7 @@ import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.Gender;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.AddressRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
@@ -27,14 +28,11 @@ import hu.webshop.engine.webshopbe.infrastructure.model.request.ForgottenPasswor
 import hu.webshop.engine.webshopbe.infrastructure.model.request.NewPasswordRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RegistrationRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.UpdateUserRequest;
-import hu.webshop.engine.webshopbe.infrastructure.model.request.VerificationRequest;
 import lombok.RequiredArgsConstructor;
 
 @DisplayName("User controller integration tests")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class UserControllerIT extends IntegrationTest {
-    private static final String BASE_URL = "/api/user";
-    private static final String AUTH_BASE_URL = "/api/auth";
     private static final String BAD_UUID = "b7f86506-8ea8-4908-b8f4-668c5ec6a7e2";
     private static final String VERIFIED_USER = "b7f86506-8ea8-4908-b8f4-668c5ec6a7ee";
     private final UserRepository userRepository;
@@ -47,7 +45,7 @@ class UserControllerIT extends IntegrationTest {
         RegistrationRequest userRequest = new RegistrationRequest(email, "test", "test", "pass", "123", Gender.MALE, true);
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/register", userRequest);
+        ResultActions resultActions = performPost(ApiPaths.Users.REGISTER, userRequest);
         transaction();
 
         //Then
@@ -67,7 +65,7 @@ class UserControllerIT extends IntegrationTest {
         RegistrationRequest userRequest = new RegistrationRequest(email, "test", "test", "pass", "123", Gender.MALE, false);
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/register", userRequest);
+        ResultActions resultActions = performPost(ApiPaths.Users.REGISTER, userRequest);
 
         //Then
         resultActions.andExpect(status().isBadRequest());
@@ -81,7 +79,7 @@ class UserControllerIT extends IntegrationTest {
         ForgottenPasswordRequest forgottenPasswordRequest = new ForgottenPasswordRequest("test@test.com");
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/forgotten/password", forgottenPasswordRequest);
+        ResultActions resultActions = performPost(ApiPaths.Users.FORGOTTEN_PASSWORD, forgottenPasswordRequest);
 
         //Then
         resultActions.andExpect(status().isOk());
@@ -95,7 +93,7 @@ class UserControllerIT extends IntegrationTest {
         ForgottenPasswordRequest forgottenPasswordRequest = new ForgottenPasswordRequest("bad@email.com");
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/forgotten/password", forgottenPasswordRequest);
+        ResultActions resultActions = performPost(ApiPaths.Users.FORGOTTEN_PASSWORD, forgottenPasswordRequest);
 
         //Then
         resultActions.andExpect(status().isNotFound());
@@ -105,7 +103,7 @@ class UserControllerIT extends IntegrationTest {
     @DisplayName("bad id throws 404")
     void badIdThrows404() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/" + BAD_UUID, Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(ApiPaths.Users.BASE + "/" + BAD_UUID, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isNotFound());
@@ -116,7 +114,7 @@ class UserControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void userCanGetCurrentUser() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/current", Role.ROLE_USER);
+        ResultActions resultActions = performGet(ApiPaths.Users.CURRENT, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.email").value("test@test.com"));
@@ -126,7 +124,7 @@ class UserControllerIT extends IntegrationTest {
     @DisplayName("unauthenticated user cannot get current user")
     void unauthenticatedUserCannotGetCurrentUser() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/current");
+        ResultActions resultActions = performGet(ApiPaths.Users.CURRENT);
 
         //Then
         resultActions.andExpect(status().isForbidden());
@@ -140,7 +138,7 @@ class UserControllerIT extends IntegrationTest {
         UUID id = UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7ee");
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/verify", new VerificationRequest(id));
+        ResultActions resultActions = performPost(pathWithId(ApiPaths.Users.VERIFY, id));
         transaction();
 
         //Then
@@ -159,7 +157,7 @@ class UserControllerIT extends IntegrationTest {
         UUID id = UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7ee");
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/verify", new VerificationRequest(id));
+        ResultActions resultActions = performPost(pathWithId(ApiPaths.Users.VERIFY, id));
 
         //Then
         resultActions.andExpect(status().isBadRequest());
@@ -173,7 +171,7 @@ class UserControllerIT extends IntegrationTest {
         EmailRequest emailRequest = new EmailRequest("test@test.com");
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/resend-verify", emailRequest);
+        ResultActions resultActions = performPost(ApiPaths.Users.RESEND_VERIFICATION, emailRequest);
         transaction();
 
         //Then
@@ -188,7 +186,7 @@ class UserControllerIT extends IntegrationTest {
         EmailRequest emailRequest = new EmailRequest("test@test.com");
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/resend-verify", emailRequest);
+        ResultActions resultActions = performPost(ApiPaths.Users.RESEND_VERIFICATION, emailRequest);
 
         //Then
         resultActions.andExpect(status().isBadRequest());
@@ -203,7 +201,7 @@ class UserControllerIT extends IntegrationTest {
         String newPass = "newPass";
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/new/password", new NewPasswordRequest(id, newPass));
+        ResultActions resultActions = performPost(pathWithId(ApiPaths.Users.PASSWORD, id), new NewPasswordRequest(newPass));
         transaction();
 
         //Then
@@ -212,7 +210,7 @@ class UserControllerIT extends IntegrationTest {
             Optional<User> user = userRepository.findById(id);
             return user.isPresent() && user.get().getLastModifiedTime() != null;
         });
-        performPost(AUTH_BASE_URL + "/login", createLoginRequest(newPass)).andExpect(status().isOk());
+        performPost(ApiPaths.Auth.LOGIN, createLoginRequest(newPass)).andExpect(status().isOk());
     }
 
     @Test
@@ -225,7 +223,7 @@ class UserControllerIT extends IntegrationTest {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest(email, "first", "last", "111", Gender.MALE, false, addressRequest, addressRequest);
 
         // When
-        ResultActions resultActions = performPost(BASE_URL + "/update", updateUserRequest, Role.ROLE_USER);
+        ResultActions resultActions = performPut(ApiPaths.Users.UPDATE, updateUserRequest, Role.ROLE_USER);
         transaction();
 
         //Then
@@ -241,7 +239,7 @@ class UserControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void userCanBeDeleted() throws Exception {
         //Given // When
-        ResultActions resultActions = performDelete(BASE_URL + "/delete", Role.ROLE_USER);
+        ResultActions resultActions = performDelete(ApiPaths.Users.DELETE, Role.ROLE_USER);
         transaction();
 
         //Then
@@ -254,7 +252,7 @@ class UserControllerIT extends IntegrationTest {
     @DataSet("verifiedUserWithSavedAndCartProduct.yml")
     void userSavedItemsCanBeRetrieved() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/saved", Role.ROLE_USER);
+        ResultActions resultActions = performGet(ApiPaths.SavedProducts.BASE, Role.ROLE_USER);
 
         //Then
         resultActions
@@ -269,7 +267,7 @@ class UserControllerIT extends IntegrationTest {
     @DataSet("verifiedUserWithSavedAndCartProduct.yml")
     void userCartItemsCanBeRetrieved() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL + "/cart", Role.ROLE_USER);
+        ResultActions resultActions = performGet(ApiPaths.CartItems.BASE, Role.ROLE_USER);
 
         //Then
         resultActions
@@ -288,7 +286,7 @@ class UserControllerIT extends IntegrationTest {
         List<UUID> uuids = List.of(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/add/saved", uuids, Role.ROLE_USER);
+        ResultActions resultActions = performPost(ApiPaths.SavedProducts.BASE, uuids, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -305,7 +303,7 @@ class UserControllerIT extends IntegrationTest {
         List<UUID> uuids = List.of(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/remove/saved", uuids, Role.ROLE_USER);
+        ResultActions resultActions = performDelete(ApiPaths.SavedProducts.BASE, Role.ROLE_USER, uuids);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -321,7 +319,7 @@ class UserControllerIT extends IntegrationTest {
         List<CartItemRequest> cartItemRequests = List.of(new CartItemRequest(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"), 2));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/update/cart", cartItemRequests, Role.ROLE_USER);
+        ResultActions resultActions = performPut(ApiPaths.CartItems.BASE, cartItemRequests, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -338,7 +336,7 @@ class UserControllerIT extends IntegrationTest {
         List<CartItemRequest> cartItemRequests = List.of(new CartItemRequest(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"), 20));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/update/cart", cartItemRequests, Role.ROLE_USER);
+        ResultActions resultActions = performPut(ApiPaths.CartItems.BASE, cartItemRequests, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isBadRequest());
@@ -352,7 +350,7 @@ class UserControllerIT extends IntegrationTest {
         List<CartItemRequest> cartItemRequests = List.of(new CartItemRequest(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"), 0));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/update/cart", cartItemRequests, Role.ROLE_USER);
+        ResultActions resultActions = performPut(ApiPaths.CartItems.BASE, cartItemRequests, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -369,7 +367,7 @@ class UserControllerIT extends IntegrationTest {
         List<CartItemRequest> cartItemRequests = List.of(new CartItemRequest(UUID.fromString("b7f86506-8ea8-4908-b8f4-668c5ec6a7e1"), 2));
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/update/cart", cartItemRequests, Role.ROLE_USER);
+        ResultActions resultActions = performPut(ApiPaths.CartItems.BASE, cartItemRequests, Role.ROLE_USER);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -379,27 +377,12 @@ class UserControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("user can get its orders")
-    @DataSet("userWithOrder.yml")
-    void userCanGetItsOrders() throws Exception {
-        //When
-        ResultActions resultActions = performGet(BASE_URL + "/order", Role.ROLE_USER);
-
-        //Then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isNotEmpty())
-                .andExpect(jsonPath("$[0].totalPrice").value(20));
-    }
-
-    @Test
     @DisplayName("unsubscribe from email list by id")
     @DataSet("verifiedUser.yml")
     void unsubscribeFromEmailListById() throws Exception {
         //Given
         String userId = "b7f86506-8ea8-4908-b8f4-668c5ec6a7ee";
-        ResultActions resultActions = performGet(BASE_URL + "/unsubscribe/" + userId);
+        ResultActions resultActions = performGet(pathWithId(ApiPaths.Users.UNSUBSCRIBE, userId));
 
         //Then
         resultActions

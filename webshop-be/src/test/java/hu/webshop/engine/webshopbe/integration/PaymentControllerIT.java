@@ -23,12 +23,12 @@ import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import lombok.RequiredArgsConstructor;
 
 @DisplayName("Payment controller integration tests")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class PaymentControllerIT extends IntegrationTest {
-    private static final String BASE_URL = "/api/payment/webhooks";
     private static final String ORDER_ID = "11f86506-8ea8-4908-b8f4-668c5ec6a1e1";
     private final OrderRepository orderRepository;
 
@@ -50,7 +50,7 @@ class PaymentControllerIT extends IntegrationTest {
                             Webhook.constructEvent(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                     .thenReturn(event);
 
-            ResultActions resultActions = performPost(BASE_URL, payload, signatureHeader);
+            ResultActions resultActions = performPost(ApiPaths.Webhooks.STRIPE, payload, signatureHeader);
             transaction();
 
             //Then
@@ -81,7 +81,7 @@ class PaymentControllerIT extends IntegrationTest {
                             Webhook.constructEvent(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                     .thenReturn(event);
 
-            ResultActions resultActions = performPost(BASE_URL, payload, signatureHeader);
+            ResultActions resultActions = performPost(ApiPaths.Webhooks.STRIPE, payload, signatureHeader);
             transaction();
 
             //Then
@@ -112,7 +112,7 @@ class PaymentControllerIT extends IntegrationTest {
                             Webhook.constructEvent(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                     .thenReturn(event);
 
-            ResultActions resultActions = performPost(BASE_URL, payload, signatureHeader);
+            ResultActions resultActions = performPost(ApiPaths.Webhooks.STRIPE, payload, signatureHeader);
             transaction();
 
             //Then
@@ -140,7 +140,7 @@ class PaymentControllerIT extends IntegrationTest {
                             Webhook.constructEvent(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                     .thenThrow(new com.stripe.exception.SignatureVerificationException("Invalid signature", null));
 
-            ResultActions resultActions = performPost(BASE_URL, payload, signatureHeader);
+            ResultActions resultActions = performPost(ApiPaths.Webhooks.STRIPE, payload, signatureHeader);
             transaction();
 
             //Then
@@ -162,7 +162,7 @@ class PaymentControllerIT extends IntegrationTest {
                             Webhook.constructEvent(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                     .thenThrow(new RuntimeException("Invalid payload"));
 
-            ResultActions resultActions = performPost(BASE_URL, payload, signatureHeader);
+            ResultActions resultActions = performPost(ApiPaths.Webhooks.STRIPE, payload, signatureHeader);
             transaction();
 
             //Then

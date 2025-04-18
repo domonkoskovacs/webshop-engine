@@ -16,6 +16,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.email.repository.PromotionalEmailRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.PromotionEmailRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 class EmailControllerIT extends IntegrationTest {
 
     private static final String EMAIL_ID = "b7f86506-8ea8-4908-b8f4-668c5ec6a711";
-    private static final String BASE_URL = "/api/email";
     private final PromotionalEmailRepository repository;
 
     @Test
@@ -38,7 +38,7 @@ class EmailControllerIT extends IntegrationTest {
         );
 
         //When
-        ResultActions resultActions = performPost(BASE_URL, request, Role.ROLE_ADMIN);
+        ResultActions resultActions = performPost(ApiPaths.PromotionEmails.BASE, request, Role.ROLE_ADMIN);
         transaction();
 
         //Then
@@ -57,7 +57,7 @@ class EmailControllerIT extends IntegrationTest {
         );
 
         //When
-        ResultActions resultActions = performPost(BASE_URL, request, Role.ROLE_ADMIN);
+        ResultActions resultActions = performPost(ApiPaths.PromotionEmails.BASE, request, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isBadRequest());
@@ -68,7 +68,7 @@ class EmailControllerIT extends IntegrationTest {
     @DataSet("promotionEmail.yml")
     void allEmailsCanBeRetrieved() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL, Role.ROLE_ADMIN);
+        ResultActions resultActions = performGet(ApiPaths.PromotionEmails.BASE, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$").isArray()).andExpect(jsonPath("$").isNotEmpty());
@@ -79,7 +79,7 @@ class EmailControllerIT extends IntegrationTest {
     @DataSet("promotionEmail.yml")
     void promotionEmailCanBeDeleted() throws Exception {
         //Given //When
-        ResultActions resultActions = performDelete(BASE_URL + "/" + EMAIL_ID, Role.ROLE_ADMIN);
+        ResultActions resultActions = performDelete(pathWithId(ApiPaths.PromotionEmails.BY_ID, EMAIL_ID), Role.ROLE_ADMIN);
         transaction();
 
         //Then
@@ -95,7 +95,7 @@ class EmailControllerIT extends IntegrationTest {
         EmailRequest request = new EmailRequest("email@email.com");
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/test/" + EMAIL_ID, request, Role.ROLE_ADMIN);
+        ResultActions resultActions = performPost(pathWithId(ApiPaths.PromotionEmails.TEST, EMAIL_ID), request, Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk());

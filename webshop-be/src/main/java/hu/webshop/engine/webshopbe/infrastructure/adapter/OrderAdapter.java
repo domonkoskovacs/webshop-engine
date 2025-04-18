@@ -82,4 +82,8 @@ public class OrderAdapter {
         log.info("createRefund > id: [{}], refundRequest: [{}]", id, refundRequest);
         return orderMapper.toResponse(orderStatusService.createRefund(id, orderMapper.fromRequestlist(refundRequest)));
     }
+
+    public List<OrderResponse> getUserOrders() {
+        return orderMapper.toResponseList(orderQueryService.getOrdersFromCurrentUser());
+    }
 }

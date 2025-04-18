@@ -66,6 +66,7 @@ import hu.webshop.engine.webshopbe.container.MailDevContainer;
 import hu.webshop.engine.webshopbe.domain.order.StripeService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.config.InitDataConfig;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -180,6 +181,14 @@ public abstract class IntegrationTest {
         TestTransaction.start();
     }
 
+    protected String pathWithId(String pathTemplate, Object id) {
+        return pathTemplate.replace("{id}", id.toString());
+    }
+
+    protected ResultActions performPost(String url) throws Exception {
+        return mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(""));
+    }
+
     protected ResultActions performPost(String url, Role role) throws Exception {
         return mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                 .content("")
@@ -187,7 +196,7 @@ public abstract class IntegrationTest {
     }
 
     protected String getToken(Role role) throws Exception {
-        MvcResult mvcResult = performPost("/api/auth/login", new LoginRequest(role == Role.ROLE_ADMIN ? "admin@admin.com" : "test@test.com", role == Role.ROLE_ADMIN ? "admin" : "pass"))
+        MvcResult mvcResult = performPost(ApiPaths.Auth.LOGIN, new LoginRequest(role == Role.ROLE_ADMIN ? "admin@admin.com" : "test@test.com", role == Role.ROLE_ADMIN ? "admin" : "pass"))
                 .andExpect(status().isOk()).andReturn();
         return objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("accessToken").asText();
     }
@@ -209,8 +218,8 @@ public abstract class IntegrationTest {
 
     protected ResultActions performPost(String url, String payload, String signatureHeader) throws Exception {
         return mockMvc.perform(post(url).header("Stripe-Signature", signatureHeader)
-                        .content(payload)
-                        .contentType(MediaType.APPLICATION_JSON)
+                .content(payload)
+                .contentType(MediaType.APPLICATION_JSON)
         );
     }
 

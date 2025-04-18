@@ -72,8 +72,12 @@ public class OrderQueryService {
         return new EntityNotFoundException("Order was not found");
     }
 
+    public List<Order> getOrdersFromCurrentUser() {
+        return userService.getCurrentUser().getOrders();
+    }
+
     public Order getOrderFromCurrentUser(UUID id) {
-        return userService.getCurrentUser().getOrders().stream()
+        return getOrdersFromCurrentUser().stream()
                 .filter(o -> o.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new OrderException(ReasonCode.ORDER_EXCEPTION, "No order present for the user with the given id"));

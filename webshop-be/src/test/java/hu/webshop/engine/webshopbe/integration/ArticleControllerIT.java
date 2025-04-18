@@ -20,13 +20,13 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.article.repository.ArticleRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import lombok.RequiredArgsConstructor;
 
 @DisplayName("Article controller integration test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ArticleControllerIT extends IntegrationTest {
 
-    private static final String BASE_URL = "/api/article";
     private static final String VALID_ARTICLE_ID = "a40ce50d-531e-4205-84b0-3244b983a8ae";
     private final ArticleRepository articleRepository;
 
@@ -35,7 +35,7 @@ class ArticleControllerIT extends IntegrationTest {
     @DataSet(value = "article.yml")
     void allArticlesCanBeRetrieved() throws Exception {
         //Given //When
-        ResultActions resultActions = performGet(BASE_URL);
+        ResultActions resultActions = performGet(ApiPaths.Articles.BASE);
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -52,7 +52,7 @@ class ArticleControllerIT extends IntegrationTest {
         MockMultipartFile image = new MockMultipartFile("image", "test.png", MediaType.IMAGE_PNG_VALUE, pngBytes);
 
         //When
-        ResultActions resultActions = mockMvc.perform(multipart(BASE_URL)
+        ResultActions resultActions = mockMvc.perform(multipart(ApiPaths.Articles.BASE)
                 .file(image)
                 .param("name", "name")
                 .param("text", "text")
@@ -72,7 +72,7 @@ class ArticleControllerIT extends IntegrationTest {
     @DataSet("article.yml")
     void articleCanBeDeletedByAdmin() throws Exception {
         //Given //When
-        ResultActions resultActions = performDelete(BASE_URL + "/" + VALID_ARTICLE_ID, Role.ROLE_ADMIN);
+        ResultActions resultActions = performDelete(pathWithId(ApiPaths.Articles.BY_ID , VALID_ARTICLE_ID), Role.ROLE_ADMIN);
 
         //Then
         resultActions.andExpect(status().isOk());

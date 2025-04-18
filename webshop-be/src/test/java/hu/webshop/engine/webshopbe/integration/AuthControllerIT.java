@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.TokenRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class AuthControllerIT extends IntegrationTest {
 
-    private static final String BASE_URL = "/api/auth";
-
     @Test
     @DisplayName("user can successfully log in")
     @DataSet("verifiedUser.yml")
     void userCanSuccessfullyLogIn() throws Exception {
         //Given //When
-        ResultActions resultActions = performPost(BASE_URL + "/login", createLoginRequest("pass"));
+        ResultActions resultActions = performPost(ApiPaths.Auth.LOGIN, createLoginRequest("pass"));
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.accessToken").exists());
@@ -41,7 +40,7 @@ class AuthControllerIT extends IntegrationTest {
     @DataSet("notVerifiedUser.yml")
     void userCannotLogInIfNotVerified() throws Exception {
         //Given //When
-        ResultActions resultActions = performPost(BASE_URL + "/login", createLoginRequest("pass"));
+        ResultActions resultActions = performPost(ApiPaths.Auth.LOGIN, createLoginRequest("pass"));
 
         //Then
         resultActions.andExpect(status().isUnauthorized()).andExpect(jsonPath("$.error[0].reasonCode").value("UNVERIFIED_USER"));
@@ -52,7 +51,7 @@ class AuthControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void userCannotLogInWithWrongPassword() throws Exception {
         //Given //When
-        ResultActions resultActions = performPost(BASE_URL + "/login", createLoginRequest("wrong"));
+        ResultActions resultActions = performPost(ApiPaths.Auth.LOGIN, createLoginRequest("wrong"));
 
         //Then
         resultActions.andExpect(status().isUnauthorized()).andExpect(jsonPath("$.error[0].reasonCode").value("WRONG_PASSWORD"));
@@ -64,11 +63,11 @@ class AuthControllerIT extends IntegrationTest {
     @DataSet("verifiedUser.yml")
     void userCanUseARefreshTokenSuccessfully() throws Exception {
         //Given
-        MvcResult mvcResult = performPost(BASE_URL + "/login", createLoginRequest("pass")).andExpect(status().isOk()).andReturn();
+        MvcResult mvcResult = performPost(ApiPaths.Auth.LOGIN, createLoginRequest("pass")).andExpect(status().isOk()).andReturn();
         String refreshToken = objectMapper.readTree(mvcResult.getResponse().getContentAsString()).get("refreshToken").asText();
 
         //When
-        ResultActions resultActions = performPost(BASE_URL + "/refreshToken", new TokenRequest(refreshToken));
+        ResultActions resultActions = performPost(ApiPaths.Auth.REFRESH, new TokenRequest(refreshToken));
 
         //Then
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.accessToken").exists()).andExpect(jsonPath("$.refreshToken").exists());

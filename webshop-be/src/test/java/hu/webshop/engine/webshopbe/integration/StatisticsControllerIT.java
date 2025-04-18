@@ -13,13 +13,12 @@ import org.springframework.util.MultiValueMap;
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import lombok.RequiredArgsConstructor;
 
 @DisplayName("Statistics controller integration tests")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class StatisticsControllerIT extends IntegrationTest {
-
-    private static final String BASE_URL = "/api/statistics";
 
     @Test
     @DisplayName("admin can get statistics")
@@ -31,7 +30,7 @@ class StatisticsControllerIT extends IntegrationTest {
         params.add("to", "2023-09-11");
 
         //When
-        ResultActions resultActions = performGet(BASE_URL, Role.ROLE_ADMIN, params);
+        ResultActions resultActions = performGet(ApiPaths.Statistics.BASE, Role.ROLE_ADMIN, params);
 
         //Then
         resultActions.andExpect(status().isOk())
