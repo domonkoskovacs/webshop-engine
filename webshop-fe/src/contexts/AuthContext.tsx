@@ -6,6 +6,7 @@ import {useLogin} from "../hooks/auth/useLogin";
 import {useRefresh} from "../hooks/auth/useRefresh";
 import {setupServiceInterceptors} from "../lib/interceptors.config";
 import axiosInstance from "../lib/axios";
+import {AppPaths} from "../routing/AppPaths";
 
 interface AuthContextType {
     role: string | null;
@@ -41,9 +42,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
                 setCookie("role", role, {path: "/"});
                 setCookie("refreshToken", refreshToken, {maxAge: refreshTokenTimeout, path: "/"});
                 if (role === "ROLE_ADMIN") {
-                    navigate("/dashboard")
+                    navigate(AppPaths.DASHBOARD_BASE)
                 } else {
-                    navigate("/")
+                    navigate(AppPaths.HOME)
                 }
                 toast.info("You are successfully logged in.");
             } else {
@@ -63,7 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             removeCookie("loggedIn", {path: "/"});
             removeCookie("role", {path: "/"});
             removeCookie("refreshToken", {path: "/"});
-            navigate("/authentication?type=login");
+            navigate({
+                pathname: AppPaths.AUTHENTICATION,
+                search: '?type=login',
+            });
             toast.info("Sad to see you go!");
         } catch (error) {
             toast.error("Uh oh! Something went wrong.",

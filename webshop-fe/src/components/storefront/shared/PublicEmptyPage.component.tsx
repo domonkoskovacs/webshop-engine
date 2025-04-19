@@ -2,6 +2,7 @@ import React from 'react';
 import EmptyState from "./EmptyPage.component";
 import {Link} from "react-router-dom";
 import {Button} from "../../ui/Button";
+import {AppPaths} from "../../../routing/AppPaths";
 
 interface EmptyStateWithButtonProps {
     emptyStateTitle: string;
@@ -16,7 +17,7 @@ const PublicEmptyPage: React.FC<EmptyStateWithButtonProps> = ({emptyStateTitle, 
                 {buttonTitle}
             </h1>
             <div className="flex justify-center my-4">
-                <Link to="/authentication?type=login">
+                <Link to={{ pathname: AppPaths.AUTHENTICATION, search: '?type=login' }}>
                     <Button>
                         Log In
                     </Button>

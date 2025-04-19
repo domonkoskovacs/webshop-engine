@@ -5,6 +5,7 @@ import CartItem from "../cart/CartItem.component";
 import {calculateCartTotals} from "../../../lib/price.utils";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
 import {useCart} from "../../../hooks/user/useCart";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const CartHoverContent: React.FC = () => {
                 </div>
                 <div className="flex flex-row justify-between items-center">
                     <h1 className="text-xl font-bold">Subtotal: ${discountedPrice.toFixed(2)}</h1>
-                    <Button className="w-1/3 mt-2" onClick={() => navigate("/checkout")}>Checkout</Button>
+                    <Button className="w-1/3 mt-2" onClick={() => navigate(AppPaths.CHECKOUT)}>Checkout</Button>
                 </div>
             </div>
         ) : (

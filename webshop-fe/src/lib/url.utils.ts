@@ -1,5 +1,6 @@
 import {BreadcrumbSegment} from "../components/shared/PathBreadcrumb.component";
-import {GetAllGendersEnum, GetAllSortTypeEnum, ProductServiceApiGetAllRequest} from "../shared/api";
+import {GetAll1GendersEnum, GetAll1SortTypeEnum, ProductServiceApiGetAll1Request} from "../shared/api";
+import {AppPaths} from "../routing/AppPaths";
 
 /**
  * Extracts path segments from a given URL path.
@@ -75,7 +76,8 @@ export const generateProductUrl = (
     return attachQueryParams(url, query);
 };
 
-export const toLogin = "/authentication?type=login";
+export const toLogin = `${AppPaths.AUTHENTICATION}?type=login`;
+;
 
 /**
  * Generates a product list URL based on provided parameters.
@@ -127,10 +129,13 @@ export const generateProductBreadcrumbSegments = ({
     id?: string | number | null;
 }): BreadcrumbSegment[] => {
     return [
-        { segmentName: "Products", path: "/products" },
-        gender && { segmentName: decodeURIComponent(gender), path: `/products/${gender}` },
-        category && { segmentName: decodeURIComponent(category), path: `/products/${gender}/${category}` },
-        subcategory && { segmentName: decodeURIComponent(subcategory), path: `/products/${gender}/${category}/${subcategory}` },
+        {segmentName: "Products", path: "/products"},
+        gender && {segmentName: decodeURIComponent(gender), path: `/products/${gender}`},
+        category && {segmentName: decodeURIComponent(category), path: `/products/${gender}/${category}`},
+        subcategory && {
+            segmentName: decodeURIComponent(subcategory),
+            path: `/products/${gender}/${category}/${subcategory}`
+        },
         name && {
             segmentName: decodeURIComponent(name),
             path: `/products/${gender}/${category}/${subcategory}/${name}${id ? `/${id}` : ""}`,
@@ -139,7 +144,7 @@ export const generateProductBreadcrumbSegments = ({
 };
 
 type MutableFilters = {
-    -readonly [K in keyof ProductServiceApiGetAllRequest]: ProductServiceApiGetAllRequest[K];
+    -readonly [K in keyof ProductServiceApiGetAll1Request]: ProductServiceApiGetAll1Request[K];
 };
 
 /**
@@ -152,7 +157,7 @@ type MutableFilters = {
 export function parseFiltersFromUrl(
     pathname: string,
     search: string
-): Partial<ProductServiceApiGetAllRequest> {
+): Partial<ProductServiceApiGetAll1Request> {
     const urlObj = new URL(pathname + search, window.location.origin);
     const params = new URLSearchParams(urlObj.search);
     const filters: Partial<MutableFilters> = {};
@@ -161,8 +166,8 @@ export function parseFiltersFromUrl(
 
     if (decodedSegments.length > 1) {
         filters.genders = [
-            decodedSegments[1].toUpperCase() as GetAllGendersEnum,
-            GetAllGendersEnum.Unisex,
+            decodedSegments[1].toUpperCase() as GetAll1GendersEnum,
+            GetAll1GendersEnum.Unisex,
         ];
     }
     if (decodedSegments.length > 2) {
@@ -172,7 +177,7 @@ export function parseFiltersFromUrl(
         filters.subCategories = [decodedSegments[3]];
     }
 
-    const queryFilterKeys: (keyof ProductServiceApiGetAllRequest)[] = [
+    const queryFilterKeys: (keyof ProductServiceApiGetAll1Request)[] = [
         "brands",
         "maxPrice",
         "minPrice",
@@ -194,9 +199,9 @@ export function parseFiltersFromUrl(
                 } else if (key === "brands") {
                     filters[key] = value.split(",");
                 } else if (key === "sortType") {
-                    const isValidSort = Object.values(GetAllSortTypeEnum).includes(value as GetAllSortTypeEnum);
+                    const isValidSort = Object.values(GetAll1SortTypeEnum).includes(value as GetAll1SortTypeEnum);
                     if (isValidSort) {
-                        filters[key] = value as GetAllSortTypeEnum;
+                        filters[key] = value as GetAll1SortTypeEnum;
                     }
                 } else {
                     filters[key] = value as any;
@@ -215,7 +220,7 @@ export function parseFiltersFromUrl(
  * @returns A URL string representing the filters.
  */
 export function generateUrlFromFilters(
-    filters: ProductServiceApiGetAllRequest
+    filters: ProductServiceApiGetAll1Request
 ): string {
     let path = "/products";
     if (filters.genders && filters.genders.length > 0) {
@@ -229,7 +234,7 @@ export function generateUrlFromFilters(
     }
 
     const query: Record<string, string> = {};
-    const queryKeys: (keyof ProductServiceApiGetAllRequest)[] = [
+    const queryKeys: (keyof ProductServiceApiGetAll1Request)[] = [
         "brands",
         "maxPrice",
         "minPrice",

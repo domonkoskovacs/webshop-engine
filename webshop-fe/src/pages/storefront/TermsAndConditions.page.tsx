@@ -5,6 +5,7 @@ import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from 'src/components/shared/PageContent';
 import {usePublicStore} from "../../hooks/store/usePublicStore";
+import {AppPaths} from "../../routing/AppPaths";
 
 const TermsAndConditions: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -51,7 +52,7 @@ const TermsAndConditions: React.FC = () => {
                     These terms shall be governed by and construed in accordance with the laws of Hungary.
                 </p>
                 <p className="mt-6">
-                    If you have any questions about these terms, please <strong><Link to="/contact"
+                    If you have any questions about these terms, please <strong><Link to={AppPaths.CONTACT}
                                                                                       className="hover:underline">contact
                     us</Link></strong>.
                 </p>

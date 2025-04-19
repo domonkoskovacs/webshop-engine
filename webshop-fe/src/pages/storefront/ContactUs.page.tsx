@@ -5,6 +5,7 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from 'src/components/shared/PageContent';
+import {AppPaths} from "../../routing/AppPaths";
 
 const ContactUs: React.FC = () => {
     return (
@@ -55,13 +56,16 @@ const ContactUs: React.FC = () => {
                         Stay connected with us through social media for updates, promotions, and news:
                     </p>
                     <div className="flex items-center space-x-4 mt-4">
-                        <Link to="/" aria-label="Facebook" className="text-muted-foreground hover:text-primary">
+                        <Link to={AppPaths.HOME} aria-label="Facebook"
+                              className="text-muted-foreground hover:text-primary">
                             <Facebook size={24}/>
                         </Link>
-                        <Link to="/" aria-label="Twitter" className="text-muted-foreground hover:text-primary">
+                        <Link to={AppPaths.HOME} aria-label="Twitter"
+                              className="text-muted-foreground hover:text-primary">
                             <Twitter size={24}/>
                         </Link>
-                        <Link to="/" aria-label="Instagram" className="text-muted-foreground hover:text-primary">
+                        <Link to={AppPaths.HOME} aria-label="Instagram"
+                              className="text-muted-foreground hover:text-primary">
                             <Instagram size={24}/>
                         </Link>
                     </div>

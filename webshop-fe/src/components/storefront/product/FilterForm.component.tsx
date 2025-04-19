@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {toast} from "../../../hooks/useToast";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
-import {GetAllSortTypeEnum, ProductServiceApiGetAllRequest} from "../../../shared/api";
+import {GetAll1SortTypeEnum, ProductServiceApiGetAll1Request} from "../../../shared/api";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {mapBrandsToOptions, mapEnumToOptions} from "../../../lib/options.utils";
 import SliderField from "../../ui/fields/SliderField";
@@ -21,13 +21,13 @@ export const FormSchema = z.object({
     minDiscountPercentage: z.number().min(0, {message: "Minimum discount must be at least 0%"}).max(100, {message: "Minimum discount cannot exceed 100%"}).optional(),
     maxDiscountPercentage: z.number().min(0, {message: "Maximum discount must be at least 0%"}).max(100, {message: "Maximum discount cannot exceed 100%"}).optional(),
     showOutOfStock: z.boolean().default(false).describe("Indicates whether out-of-stock products should be shown"),
-    sortType: z.nativeEnum(GetAllSortTypeEnum).optional().describe("Sorting type for products"),
+    sortType: z.nativeEnum(GetAll1SortTypeEnum).optional().describe("Sorting type for products"),
 });
 
 interface FilterFormProps {
     setIsOpen: (open: boolean) => void;
-    filters: ProductServiceApiGetAllRequest;
-    updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
+    filters: ProductServiceApiGetAll1Request;
+    updateFilters: (newFilters: Partial<ProductServiceApiGetAll1Request>) => void;
     setUrlFiltersApplied: (applied: boolean) => void;
     resetFilters: () => void;
 }
@@ -133,7 +133,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
                      label="Discount percentage"
                      range={[discountRange[0], discountRange[1]]}/>
         <SwitchField form={form} name="showOutOfStock" label="Show out of stock products?"/>
-        <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAllSortTypeEnum)}/>
+        <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
     </SheetFormContainer>
 }
 

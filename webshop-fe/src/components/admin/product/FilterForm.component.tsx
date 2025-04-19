@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {GetAllSortTypeEnum, ProductServiceApiGetAllRequest, UpdateGenderEnum} from "../../../shared/api";
+import {GetAll1SortTypeEnum, ProductServiceApiGetAll1Request, UpdateGenderEnum} from "../../../shared/api";
 
 import {z} from "zod";
 import {toast} from "../../../hooks/useToast";
@@ -32,14 +32,14 @@ const FormSchema = z.object({
     minDiscountPercentage: z.number().min(0, "Discount percentage must be non-negative").max(100, "Discount percentage can't be bigger than 100").optional(),
     itemNumber: z.string().optional(),
     showOutOfStock: z.boolean(),
-    sortType: z.nativeEnum(GetAllSortTypeEnum).optional(),
+    sortType: z.nativeEnum(GetAll1SortTypeEnum).optional(),
     size: z.number().int().min(1, "Size must be non-negative"),
 });
 
 interface FilterFormProps {
     setIsOpen: (val: boolean) => void;
-    filters: ProductServiceApiGetAllRequest;
-    updateFilters: (newFilters: Partial<ProductServiceApiGetAllRequest>) => void;
+    filters: ProductServiceApiGetAll1Request;
+    updateFilters: (newFilters: Partial<ProductServiceApiGetAll1Request>) => void;
     resetFilters: () => void;
 }
 
@@ -101,7 +101,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen, updateFilters, filter
                      range={[discountRange[0], discountRange[1]]}/>
         <TextInputField form={form} name="itemNumber" placeholder="Item number..."/>
         <SwitchField form={form} name="showOutOfStock" label="Show out of stock products?"/>
-        <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAllSortTypeEnum)}/>
+        <SelectField form={form} name="sortType" placeholder="Sorting" options={mapEnumToOptions(GetAll1SortTypeEnum)}/>
         <NumberInputField form={form} name="size" label="Page size" placeholder="Add page size..." min={1}/>
     </SheetFormContainer>
 }

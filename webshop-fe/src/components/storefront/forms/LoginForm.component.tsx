@@ -9,6 +9,7 @@ import {ResultEntryReasonCodeEnum} from "../../../shared/api";
 import {unexpectedErrorToast} from "../../../hooks/useToast";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -76,7 +77,7 @@ const LoginForm: React.FC = () => {
                             placeholder="Please enter your email" autoComplete="email"/>
             <TextInputField form={form} name="password" label="Password"
                             placeholder="*****" autoComplete="current-password"
-                            description={<Link to="/forgot-password">I forgot my password!</Link>}
+                            description={<Link to={AppPaths.FORGOT_PASSWORD}>I forgot my password!</Link>}
                             type="password"/>
         </div>
         <div className="hidden sm:flex flex-col justify-center items-center p-4">

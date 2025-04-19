@@ -18,6 +18,7 @@ import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
 import {useAuth} from "../../../hooks/UseAuth";
 import {useSaved} from "../../../hooks/user/useSaved";
 import {useModifySaved} from "../../../hooks/user/useModifySaved";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const ProductDetails: React.FC = () => {
     const {addItemToCart, isPending} = useUpdateCart();
@@ -228,7 +229,7 @@ const ProductDetails: React.FC = () => {
                                 Should you have any questions or concerns regarding our products, services, or these
                                 terms, please contact our legal department via our{" "}
                                 <Link
-                                    to="/contact"
+                                    to={AppPaths.CONTACT}
                                     className="underline dark:text-blue-400"
                                 >
                                     Contact Us
@@ -237,14 +238,14 @@ const ProductDetails: React.FC = () => {
                                 these terms, and any disputes will be governed by the applicable laws of our
                                 jurisdiction. For more details, please review our{" "}
                                 <Link
-                                    to="/privacy-policy"
+                                    to={AppPaths.PRIVACY_POLICY}
                                     className="underline dark:text-blue-400"
                                 >
                                     Privacy Policy
                                 </Link>{" "}
                                 and{" "}
                                 <Link
-                                    to="/terms-and-conditions"
+                                    to={AppPaths.TERMS}
                                     className="underline dark:text-blue-400"
                                 >
                                     Terms and Conditions
@@ -263,7 +264,7 @@ const ProductDetails: React.FC = () => {
                             For any usual queries or further information, please visit our FAQ section.
                         </p>
                     </div>
-                    <Link to="/faq">
+                    <Link to={AppPaths.FAQ}>
                         <Button className="w-full sm:w-auto">Read our FAQ</Button>
                     </Link>
                 </div>

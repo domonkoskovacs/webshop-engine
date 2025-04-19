@@ -17,8 +17,8 @@ import {useProductScrollFilters} from "../../hooks/product/useProductScrollFilte
 import {useProductScroll} from "../../hooks/product/useProductScroll";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../components/ui/Select";
 import {SORT_OPTIONS} from "../../lib/product.utils";
-import {GetAllSortTypeEnum} from "../../shared/api";
 import {useCategories} from "../../hooks/category/useCategories";
+import {GetAll1SortTypeEnum} from "../../shared/api";
 
 const Products: React.FC = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -74,8 +74,8 @@ const Products: React.FC = () => {
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
 
     const handleSortChange = (val: string) => {
-        if (!Object.values(GetAllSortTypeEnum).includes(val as GetAllSortTypeEnum)) return;
-        updateFilters({...filters, sortType: val as GetAllSortTypeEnum});
+        if (!Object.values(GetAll1SortTypeEnum).includes(val as GetAll1SortTypeEnum)) return;
+        updateFilters({...filters, sortType: val as GetAll1SortTypeEnum});
         searchParams.set("sortType", val);
         setSearchParams(searchParams);
     };

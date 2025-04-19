@@ -467,12 +467,6 @@ export interface NewPasswordRequest {
      * @type {string}
      * @memberof NewPasswordRequest
      */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NewPasswordRequest
-     */
     'password'?: string;
 }
 /**
@@ -620,12 +614,6 @@ export interface OrderPageOrderResponse {
     'totalPages'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
@@ -648,6 +636,12 @@ export interface OrderPageOrderResponse {
      * @memberof OrderPageOrderResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -890,6 +884,12 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof PageableObject
      */
@@ -900,12 +900,6 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     'pageSize'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageableObject
-     */
-    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -988,12 +982,6 @@ export interface ProductPageProductResponse {
     'totalPages'?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'first'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -1016,6 +1004,12 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1902,19 +1896,6 @@ export interface UserStatisticsResponse {
 /**
  * 
  * @export
- * @interface VerificationRequest
- */
-export interface VerificationRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof VerificationRequest
-     */
-    'id': string;
-}
-/**
- * 
- * @export
  * @interface WeeklyOrderStatisticsResponse
  */
 export interface WeeklyOrderStatisticsResponse {
@@ -1965,7 +1946,7 @@ export const ArticleServiceApiAxiosParamCreator = function (configuration?: Conf
         create4: async (image: File, name?: string, text?: string, buttonText?: string, buttonLink?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'image' is not null or undefined
             assertParamExists('create4', 'image', image)
-            const localVarPath = `/api/article`;
+            const localVarPath = `/api/articles`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2026,7 +2007,7 @@ export const ArticleServiceApiAxiosParamCreator = function (configuration?: Conf
         delete3: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('delete3', 'id', id)
-            const localVarPath = `/api/article/{id}`
+            const localVarPath = `/api/articles/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2061,7 +2042,7 @@ export const ArticleServiceApiAxiosParamCreator = function (configuration?: Conf
          * @throws {RequiredError}
          */
         getAll3: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/article`;
+            const localVarPath = `/api/articles`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2339,7 +2320,7 @@ export const AuthServiceApiAxiosParamCreator = function (configuration?: Configu
         refreshToken: async (tokenRequest: TokenRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'tokenRequest' is not null or undefined
             assertParamExists('refreshToken', 'tokenRequest', tokenRequest)
-            const localVarPath = `/api/auth/refreshToken`;
+            const localVarPath = `/api/auth/refresh`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2516,7 +2497,7 @@ export const CategoryServiceApiAxiosParamCreator = function (configuration?: Con
         _delete: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('_delete', 'id', id)
-            const localVarPath = `/api/category/{id}`
+            const localVarPath = `/api/categories/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2557,7 +2538,7 @@ export const CategoryServiceApiAxiosParamCreator = function (configuration?: Con
             assertParamExists('addSubCategory', 'id', id)
             // verify required parameter 'categoryRequest' is not null or undefined
             assertParamExists('addSubCategory', 'categoryRequest', categoryRequest)
-            const localVarPath = `/api/category/subCategory/{id}`
+            const localVarPath = `/api/categories/{id}/subcategories`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2598,7 +2579,7 @@ export const CategoryServiceApiAxiosParamCreator = function (configuration?: Con
         create3: async (categoryRequest: CategoryRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'categoryRequest' is not null or undefined
             assertParamExists('create3', 'categoryRequest', categoryRequest)
-            const localVarPath = `/api/category`;
+            const localVarPath = `/api/categories`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2638,7 +2619,7 @@ export const CategoryServiceApiAxiosParamCreator = function (configuration?: Con
         deleteSubCategory: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('deleteSubCategory', 'id', id)
-            const localVarPath = `/api/category/subCategory/{id}`
+            const localVarPath = `/api/subcategories/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2673,7 +2654,7 @@ export const CategoryServiceApiAxiosParamCreator = function (configuration?: Con
          * @throws {RequiredError}
          */
         getAll2: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/category`;
+            const localVarPath = `/api/categories`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2713,7 +2694,7 @@ export const CategoryServiceApiAxiosParamCreator = function (configuration?: Con
             assertParamExists('update1', 'id', id)
             // verify required parameter 'categoryRequest' is not null or undefined
             assertParamExists('update1', 'categoryRequest', categoryRequest)
-            const localVarPath = `/api/category/{id}`
+            const localVarPath = `/api/categories/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3083,10 +3064,10 @@ export const EmailServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create2: async (promotionEmailRequest: PromotionEmailRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create: async (promotionEmailRequest: PromotionEmailRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'promotionEmailRequest' is not null or undefined
-            assertParamExists('create2', 'promotionEmailRequest', promotionEmailRequest)
-            const localVarPath = `/api/email`;
+            assertParamExists('create', 'promotionEmailRequest', promotionEmailRequest)
+            const localVarPath = `/api/promotion-emails`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3123,10 +3104,10 @@ export const EmailServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        delete1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('delete2', 'id', id)
-            const localVarPath = `/api/email/{id}`
+            assertParamExists('delete1', 'id', id)
+            const localVarPath = `/api/promotion-emails/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3160,8 +3141,8 @@ export const EmailServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/email`;
+        getAll: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/promotion-emails`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3201,7 +3182,7 @@ export const EmailServiceApiAxiosParamCreator = function (configuration?: Config
             assertParamExists('test', 'id', id)
             // verify required parameter 'emailRequest' is not null or undefined
             assertParamExists('test', 'emailRequest', emailRequest)
-            const localVarPath = `/api/email/test/{id}`
+            const localVarPath = `/api/promotion-emails/{id}/test`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3249,10 +3230,10 @@ export const EmailServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create2(promotionEmailRequest: PromotionEmailRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PromotionEmailResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create2(promotionEmailRequest, options);
+        async create(promotionEmailRequest: PromotionEmailRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PromotionEmailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create(promotionEmailRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.create2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.create']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3262,10 +3243,10 @@ export const EmailServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async delete2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete2(id, options);
+        async delete1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.delete1(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.delete2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.delete1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3274,10 +3255,10 @@ export const EmailServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAll1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PromotionEmailResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll1(options);
+        async getAll(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PromotionEmailResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.getAll1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['EmailServiceApi.getAll']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3307,22 +3288,22 @@ export const EmailServiceApiFactory = function (configuration?: Configuration, b
         /**
          * Admins can create a promotion email
          * @summary Create a new promotion email
-         * @param {EmailServiceApiCreate2Request} requestParameters Request parameters.
+         * @param {EmailServiceApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create2(requestParameters: EmailServiceApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<PromotionEmailResponse> {
-            return localVarFp.create2(requestParameters.promotionEmailRequest, options).then((request) => request(axios, basePath));
+        create(requestParameters: EmailServiceApiCreateRequest, options?: RawAxiosRequestConfig): AxiosPromise<PromotionEmailResponse> {
+            return localVarFp.create(requestParameters.promotionEmailRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Admins can delete a promotion email
          * @summary Delete a promotion email
-         * @param {EmailServiceApiDelete2Request} requestParameters Request parameters.
+         * @param {EmailServiceApiDelete1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete2(requestParameters: EmailServiceApiDelete2Request, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.delete2(requestParameters.id, options).then((request) => request(axios, basePath));
+        delete1(requestParameters: EmailServiceApiDelete1Request, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.delete1(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Admins can get all promotion email
@@ -3330,8 +3311,8 @@ export const EmailServiceApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll1(options?: RawAxiosRequestConfig): AxiosPromise<Array<PromotionEmailResponse>> {
-            return localVarFp.getAll1(options).then((request) => request(axios, basePath));
+        getAll(options?: RawAxiosRequestConfig): AxiosPromise<Array<PromotionEmailResponse>> {
+            return localVarFp.getAll(options).then((request) => request(axios, basePath));
         },
         /**
          * Admins can try out and test a promotion email
@@ -3347,29 +3328,29 @@ export const EmailServiceApiFactory = function (configuration?: Configuration, b
 };
 
 /**
- * Request parameters for create2 operation in EmailServiceApi.
+ * Request parameters for create operation in EmailServiceApi.
  * @export
- * @interface EmailServiceApiCreate2Request
+ * @interface EmailServiceApiCreateRequest
  */
-export interface EmailServiceApiCreate2Request {
+export interface EmailServiceApiCreateRequest {
     /**
      * 
      * @type {PromotionEmailRequest}
-     * @memberof EmailServiceApiCreate2
+     * @memberof EmailServiceApiCreate
      */
     readonly promotionEmailRequest: PromotionEmailRequest
 }
 
 /**
- * Request parameters for delete2 operation in EmailServiceApi.
+ * Request parameters for delete1 operation in EmailServiceApi.
  * @export
- * @interface EmailServiceApiDelete2Request
+ * @interface EmailServiceApiDelete1Request
  */
-export interface EmailServiceApiDelete2Request {
+export interface EmailServiceApiDelete1Request {
     /**
      * 
      * @type {string}
-     * @memberof EmailServiceApiDelete2
+     * @memberof EmailServiceApiDelete1
      */
     readonly id: string
 }
@@ -3405,25 +3386,25 @@ export class EmailServiceApi extends BaseAPI {
     /**
      * Admins can create a promotion email
      * @summary Create a new promotion email
-     * @param {EmailServiceApiCreate2Request} requestParameters Request parameters.
+     * @param {EmailServiceApiCreateRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EmailServiceApi
      */
-    public create2(requestParameters: EmailServiceApiCreate2Request, options?: RawAxiosRequestConfig) {
-        return EmailServiceApiFp(this.configuration).create2(requestParameters.promotionEmailRequest, options).then((request) => request(this.axios, this.basePath));
+    public create(requestParameters: EmailServiceApiCreateRequest, options?: RawAxiosRequestConfig) {
+        return EmailServiceApiFp(this.configuration).create(requestParameters.promotionEmailRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Admins can delete a promotion email
      * @summary Delete a promotion email
-     * @param {EmailServiceApiDelete2Request} requestParameters Request parameters.
+     * @param {EmailServiceApiDelete1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EmailServiceApi
      */
-    public delete2(requestParameters: EmailServiceApiDelete2Request, options?: RawAxiosRequestConfig) {
-        return EmailServiceApiFp(this.configuration).delete2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public delete1(requestParameters: EmailServiceApiDelete1Request, options?: RawAxiosRequestConfig) {
+        return EmailServiceApiFp(this.configuration).delete1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3433,8 +3414,8 @@ export class EmailServiceApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof EmailServiceApi
      */
-    public getAll1(options?: RawAxiosRequestConfig) {
-        return EmailServiceApiFp(this.configuration).getAll1(options).then((request) => request(this.axios, this.basePath));
+    public getAll(options?: RawAxiosRequestConfig) {
+        return EmailServiceApiFp(this.configuration).getAll(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3468,7 +3449,7 @@ export const ImageServiceApiAxiosParamCreator = function (configuration?: Config
         getById1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getById1', 'id', id)
-            const localVarPath = `/api/image/{id}`
+            const localVarPath = `/api/images/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3594,7 +3575,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
         cancel: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('cancel', 'id', id)
-            const localVarPath = `/api/order/{id}/cancel`
+            const localVarPath = `/api/my-orders/{id}/cancel`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3635,7 +3616,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
             assertParamExists('changeOrderStatus', 'id', id)
             // verify required parameter 'orderStatusRequest' is not null or undefined
             assertParamExists('changeOrderStatus', 'orderStatusRequest', orderStatusRequest)
-            const localVarPath = `/api/order/{id}/status`
+            const localVarPath = `/api/orders/{id}/status`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3672,8 +3653,8 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/order/create`;
+        create2: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/my-orders`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3713,7 +3694,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
             assertParamExists('createRefund', 'id', id)
             // verify required parameter 'refundOrderItemRequest' is not null or undefined
             assertParamExists('createRefund', 'refundOrderItemRequest', refundOrderItemRequest)
-            const localVarPath = `/api/order/{id}/refund`
+            const localVarPath = `/api/orders/{id}/refund`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3753,7 +3734,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
          * @throws {RequiredError}
          */
         export1: async (from?: string, to?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/order/export`;
+            const localVarPath = `/api/orders/export`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3808,7 +3789,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
          * @throws {RequiredError}
          */
         getAll4: async (minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentMethods?: Array<GetAll4PaymentMethodsEnum>, statuses?: Array<GetAll4StatusesEnum>, sortType?: GetAll4SortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/order`;
+            const localVarPath = `/api/orders`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3876,6 +3857,40 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
+         * Users can get their own orders
+         * @summary Get current user\'s orders
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMyOrders: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/my-orders`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication BearerAuthentication required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Users can pay an order
          * @summary Pay an order
          * @param {string} id 
@@ -3885,7 +3900,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
         paymentIntent: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('paymentIntent', 'id', id)
-            const localVarPath = `/api/order/{id}/paymentIntent`
+            const localVarPath = `/api/orders/{id}/paymentIntent`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3923,7 +3938,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
         returnOrder: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('returnOrder', 'id', id)
-            const localVarPath = `/api/order/{id}/return`
+            const localVarPath = `/api/my-orders/{id}/return`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3994,10 +4009,10 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create1(options);
+        async create2(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create2(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.create1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.create2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4047,6 +4062,18 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAll4(minDate, maxDate, minPrice, maxPrice, paymentMethods, statuses, sortType, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getAll4']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Users can get their own orders
+         * @summary Get current user\'s orders
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMyOrders(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMyOrders(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getMyOrders']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4111,8 +4138,8 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create1(options?: RawAxiosRequestConfig): AxiosPromise<OrderResponse> {
-            return localVarFp.create1(options).then((request) => request(axios, basePath));
+        create2(options?: RawAxiosRequestConfig): AxiosPromise<OrderResponse> {
+            return localVarFp.create2(options).then((request) => request(axios, basePath));
         },
         /**
          * Admin can refund order items
@@ -4143,6 +4170,15 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          */
         getAll4(requestParameters: OrderServiceApiGetAll4Request = {}, options?: RawAxiosRequestConfig): AxiosPromise<OrderPageOrderResponse> {
             return localVarFp.getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Users can get their own orders
+         * @summary Get current user\'s orders
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMyOrders(options?: RawAxiosRequestConfig): AxiosPromise<Array<OrderResponse>> {
+            return localVarFp.getMyOrders(options).then((request) => request(axios, basePath));
         },
         /**
          * Users can pay an order
@@ -4380,8 +4416,8 @@ export class OrderServiceApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof OrderServiceApi
      */
-    public create1(options?: RawAxiosRequestConfig) {
-        return OrderServiceApiFp(this.configuration).create1(options).then((request) => request(this.axios, this.basePath));
+    public create2(options?: RawAxiosRequestConfig) {
+        return OrderServiceApiFp(this.configuration).create2(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4418,6 +4454,17 @@ export class OrderServiceApi extends BaseAPI {
      */
     public getAll4(requestParameters: OrderServiceApiGetAll4Request = {}, options?: RawAxiosRequestConfig) {
         return OrderServiceApiFp(this.configuration).getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Users can get their own orders
+     * @summary Get current user\'s orders
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrderServiceApi
+     */
+    public getMyOrders(options?: RawAxiosRequestConfig) {
+        return OrderServiceApiFp(this.configuration).getMyOrders(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4511,7 +4558,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @throws {RequiredError}
          */
         _export: async (from?: string, to?: string, brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, genders?: Array<ExportGendersEnum>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/product/export`;
+            const localVarPath = `/api/products/export`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4597,7 +4644,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {string} name 
          * @param {string} description 
          * @param {string} subCategoryId 
-         * @param {CreateGenderEnum} gender 
+         * @param {Create1GenderEnum} gender 
          * @param {number} count 
          * @param {number} price 
          * @param {number} discountPercentage 
@@ -4606,26 +4653,26 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create: async (brand: string, name: string, description: string, subCategoryId: string, gender: CreateGenderEnum, count: number, price: number, discountPercentage: number, itemNumber: string, images?: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create1: async (brand: string, name: string, description: string, subCategoryId: string, gender: Create1GenderEnum, count: number, price: number, discountPercentage: number, itemNumber: string, images?: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'brand' is not null or undefined
-            assertParamExists('create', 'brand', brand)
+            assertParamExists('create1', 'brand', brand)
             // verify required parameter 'name' is not null or undefined
-            assertParamExists('create', 'name', name)
+            assertParamExists('create1', 'name', name)
             // verify required parameter 'description' is not null or undefined
-            assertParamExists('create', 'description', description)
+            assertParamExists('create1', 'description', description)
             // verify required parameter 'subCategoryId' is not null or undefined
-            assertParamExists('create', 'subCategoryId', subCategoryId)
+            assertParamExists('create1', 'subCategoryId', subCategoryId)
             // verify required parameter 'gender' is not null or undefined
-            assertParamExists('create', 'gender', gender)
+            assertParamExists('create1', 'gender', gender)
             // verify required parameter 'count' is not null or undefined
-            assertParamExists('create', 'count', count)
+            assertParamExists('create1', 'count', count)
             // verify required parameter 'price' is not null or undefined
-            assertParamExists('create', 'price', price)
+            assertParamExists('create1', 'price', price)
             // verify required parameter 'discountPercentage' is not null or undefined
-            assertParamExists('create', 'discountPercentage', discountPercentage)
+            assertParamExists('create1', 'discountPercentage', discountPercentage)
             // verify required parameter 'itemNumber' is not null or undefined
-            assertParamExists('create', 'itemNumber', itemNumber)
-            const localVarPath = `/api/product`;
+            assertParamExists('create1', 'itemNumber', itemNumber)
+            const localVarPath = `/api/products`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4705,10 +4752,10 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete1: async (deleteProductRequest: DeleteProductRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        delete2: async (deleteProductRequest: DeleteProductRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'deleteProductRequest' is not null or undefined
-            assertParamExists('delete1', 'deleteProductRequest', deleteProductRequest)
-            const localVarPath = `/api/product`;
+            assertParamExists('delete2', 'deleteProductRequest', deleteProductRequest)
+            const localVarPath = `/api/products/batch`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4744,21 +4791,21 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @param {Array<string>} [brands] 
          * @param {Array<string>} [categories] 
          * @param {Array<string>} [subCategories] 
-         * @param {Array<GetAllGendersEnum>} [genders] 
+         * @param {Array<GetAll1GendersEnum>} [genders] 
          * @param {number} [maxPrice] 
          * @param {number} [minPrice] 
          * @param {number} [maxDiscountPercentage] 
          * @param {number} [minDiscountPercentage] 
          * @param {string} [itemNumber] 
          * @param {boolean} [showOutOfStock] 
-         * @param {GetAllSortTypeEnum} [sortType] 
+         * @param {GetAll1SortTypeEnum} [sortType] 
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll: async (brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, genders?: Array<GetAllGendersEnum>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/product`;
+        getAll1: async (brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, genders?: Array<GetAll1GendersEnum>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAll1SortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/products`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4844,7 +4891,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
          * @throws {RequiredError}
          */
         getBrands: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/product/brand`;
+            const localVarPath = `/api/products/brands`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4881,7 +4928,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
         getById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getById', 'id', id)
-            const localVarPath = `/api/product/{id}`
+            const localVarPath = `/api/products/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4919,7 +4966,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
         importProducts: async (csvRequest: CsvRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'csvRequest' is not null or undefined
             assertParamExists('importProducts', 'csvRequest', csvRequest)
-            const localVarPath = `/api/product/import`;
+            const localVarPath = `/api/products/import`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4959,7 +5006,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
         setDiscounts: async (discountRequest: DiscountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'discountRequest' is not null or undefined
             assertParamExists('setDiscounts', 'discountRequest', discountRequest)
-            const localVarPath = `/api/product/discount`;
+            const localVarPath = `/api/products/discount`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -5028,7 +5075,7 @@ export const ProductServiceApiAxiosParamCreator = function (configuration?: Conf
             assertParamExists('update', 'discountPercentage', discountPercentage)
             // verify required parameter 'itemNumber' is not null or undefined
             assertParamExists('update', 'itemNumber', itemNumber)
-            const localVarPath = `/api/product/{id}`
+            const localVarPath = `/api/products/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5147,7 +5194,7 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {string} name 
          * @param {string} description 
          * @param {string} subCategoryId 
-         * @param {CreateGenderEnum} gender 
+         * @param {Create1GenderEnum} gender 
          * @param {number} count 
          * @param {number} price 
          * @param {number} discountPercentage 
@@ -5156,10 +5203,10 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create(brand: string, name: string, description: string, subCategoryId: string, gender: CreateGenderEnum, count: number, price: number, discountPercentage: number, itemNumber: string, images?: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create(brand, name, description, subCategoryId, gender, count, price, discountPercentage, itemNumber, images, options);
+        async create1(brand: string, name: string, description: string, subCategoryId: string, gender: Create1GenderEnum, count: number, price: number, discountPercentage: number, itemNumber: string, images?: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create1(brand, name, description, subCategoryId, gender, count, price, discountPercentage, itemNumber, images, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.create']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.create1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5169,10 +5216,10 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async delete1(deleteProductRequest: DeleteProductRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete1(deleteProductRequest, options);
+        async delete2(deleteProductRequest: DeleteProductRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.delete2(deleteProductRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.delete1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.delete2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5181,23 +5228,23 @@ export const ProductServiceApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [brands] 
          * @param {Array<string>} [categories] 
          * @param {Array<string>} [subCategories] 
-         * @param {Array<GetAllGendersEnum>} [genders] 
+         * @param {Array<GetAll1GendersEnum>} [genders] 
          * @param {number} [maxPrice] 
          * @param {number} [minPrice] 
          * @param {number} [maxDiscountPercentage] 
          * @param {number} [minDiscountPercentage] 
          * @param {string} [itemNumber] 
          * @param {boolean} [showOutOfStock] 
-         * @param {GetAllSortTypeEnum} [sortType] 
+         * @param {GetAll1SortTypeEnum} [sortType] 
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAll(brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, genders?: Array<GetAllGendersEnum>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAllSortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductPageProductResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll(brands, categories, subCategories, genders, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock, sortType, page, size, options);
+        async getAll1(brands?: Array<string>, categories?: Array<string>, subCategories?: Array<string>, genders?: Array<GetAll1GendersEnum>, maxPrice?: number, minPrice?: number, maxDiscountPercentage?: number, minDiscountPercentage?: number, itemNumber?: string, showOutOfStock?: boolean, sortType?: GetAll1SortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductPageProductResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll1(brands, categories, subCategories, genders, maxPrice, minPrice, maxDiscountPercentage, minDiscountPercentage, itemNumber, showOutOfStock, sortType, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.getAll']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProductServiceApi.getAll1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5298,32 +5345,32 @@ export const ProductServiceApiFactory = function (configuration?: Configuration,
         /**
          * Create a new product
          * @summary Create product
-         * @param {ProductServiceApiCreateRequest} requestParameters Request parameters.
+         * @param {ProductServiceApiCreate1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(requestParameters: ProductServiceApiCreateRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProductResponse> {
-            return localVarFp.create(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.gender, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.itemNumber, requestParameters.images, options).then((request) => request(axios, basePath));
+        create1(requestParameters: ProductServiceApiCreate1Request, options?: RawAxiosRequestConfig): AxiosPromise<ProductResponse> {
+            return localVarFp.create1(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.gender, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.itemNumber, requestParameters.images, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete products with id list
          * @summary Delete products with id list
-         * @param {ProductServiceApiDelete1Request} requestParameters Request parameters.
+         * @param {ProductServiceApiDelete2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete1(requestParameters: ProductServiceApiDelete1Request, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.delete1(requestParameters.deleteProductRequest, options).then((request) => request(axios, basePath));
+        delete2(requestParameters: ProductServiceApiDelete2Request, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.delete2(requestParameters.deleteProductRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Get all existing products
          * @summary Get all products
-         * @param {ProductServiceApiGetAllRequest} requestParameters Request parameters.
+         * @param {ProductServiceApiGetAll1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll(requestParameters: ProductServiceApiGetAllRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ProductPageProductResponse> {
-            return localVarFp.getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.genders, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        getAll1(requestParameters: ProductServiceApiGetAll1Request = {}, options?: RawAxiosRequestConfig): AxiosPromise<ProductPageProductResponse> {
+            return localVarFp.getAll1(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.genders, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * Public endpoint, return existing brands
@@ -5469,190 +5516,190 @@ export interface ProductServiceApiExportRequest {
 }
 
 /**
- * Request parameters for create operation in ProductServiceApi.
+ * Request parameters for create1 operation in ProductServiceApi.
  * @export
- * @interface ProductServiceApiCreateRequest
+ * @interface ProductServiceApiCreate1Request
  */
-export interface ProductServiceApiCreateRequest {
+export interface ProductServiceApiCreate1Request {
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly brand: string
 
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly name: string
 
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly description: string
 
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly subCategoryId: string
 
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
-    readonly gender: CreateGenderEnum
+    readonly gender: Create1GenderEnum
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly count: number
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly price: number
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly discountPercentage: number
 
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly itemNumber: string
 
     /**
      * 
      * @type {Array<File>}
-     * @memberof ProductServiceApiCreate
+     * @memberof ProductServiceApiCreate1
      */
     readonly images?: Array<File>
 }
 
 /**
- * Request parameters for delete1 operation in ProductServiceApi.
+ * Request parameters for delete2 operation in ProductServiceApi.
  * @export
- * @interface ProductServiceApiDelete1Request
+ * @interface ProductServiceApiDelete2Request
  */
-export interface ProductServiceApiDelete1Request {
+export interface ProductServiceApiDelete2Request {
     /**
      * 
      * @type {DeleteProductRequest}
-     * @memberof ProductServiceApiDelete1
+     * @memberof ProductServiceApiDelete2
      */
     readonly deleteProductRequest: DeleteProductRequest
 }
 
 /**
- * Request parameters for getAll operation in ProductServiceApi.
+ * Request parameters for getAll1 operation in ProductServiceApi.
  * @export
- * @interface ProductServiceApiGetAllRequest
+ * @interface ProductServiceApiGetAll1Request
  */
-export interface ProductServiceApiGetAllRequest {
+export interface ProductServiceApiGetAll1Request {
     /**
      * 
      * @type {Array<string>}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly brands?: Array<string>
 
     /**
      * 
      * @type {Array<string>}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly categories?: Array<string>
 
     /**
      * 
      * @type {Array<string>}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly subCategories?: Array<string>
 
     /**
      * 
      * @type {Array<'MEN' | 'WOMEN' | 'UNISEX'>}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
-    readonly genders?: Array<GetAllGendersEnum>
+    readonly genders?: Array<GetAll1GendersEnum>
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly maxPrice?: number
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly minPrice?: number
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly maxDiscountPercentage?: number
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly minDiscountPercentage?: number
 
     /**
      * 
      * @type {string}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly itemNumber?: string
 
     /**
      * 
      * @type {boolean}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly showOutOfStock?: boolean
 
     /**
      * 
      * @type {'ASC_PRICE' | 'DESC_PRICE' | 'ASC_DISCOUNT' | 'DESC_DISCOUNT'}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
-    readonly sortType?: GetAllSortTypeEnum
+    readonly sortType?: GetAll1SortTypeEnum
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly page?: number
 
     /**
      * 
      * @type {number}
-     * @memberof ProductServiceApiGetAll
+     * @memberof ProductServiceApiGetAll1
      */
     readonly size?: number
 }
@@ -5812,37 +5859,37 @@ export class ProductServiceApi extends BaseAPI {
     /**
      * Create a new product
      * @summary Create product
-     * @param {ProductServiceApiCreateRequest} requestParameters Request parameters.
+     * @param {ProductServiceApiCreate1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductServiceApi
      */
-    public create(requestParameters: ProductServiceApiCreateRequest, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration).create(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.gender, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.itemNumber, requestParameters.images, options).then((request) => request(this.axios, this.basePath));
+    public create1(requestParameters: ProductServiceApiCreate1Request, options?: RawAxiosRequestConfig) {
+        return ProductServiceApiFp(this.configuration).create1(requestParameters.brand, requestParameters.name, requestParameters.description, requestParameters.subCategoryId, requestParameters.gender, requestParameters.count, requestParameters.price, requestParameters.discountPercentage, requestParameters.itemNumber, requestParameters.images, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Delete products with id list
      * @summary Delete products with id list
-     * @param {ProductServiceApiDelete1Request} requestParameters Request parameters.
+     * @param {ProductServiceApiDelete2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductServiceApi
      */
-    public delete1(requestParameters: ProductServiceApiDelete1Request, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration).delete1(requestParameters.deleteProductRequest, options).then((request) => request(this.axios, this.basePath));
+    public delete2(requestParameters: ProductServiceApiDelete2Request, options?: RawAxiosRequestConfig) {
+        return ProductServiceApiFp(this.configuration).delete2(requestParameters.deleteProductRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Get all existing products
      * @summary Get all products
-     * @param {ProductServiceApiGetAllRequest} requestParameters Request parameters.
+     * @param {ProductServiceApiGetAll1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductServiceApi
      */
-    public getAll(requestParameters: ProductServiceApiGetAllRequest = {}, options?: RawAxiosRequestConfig) {
-        return ProductServiceApiFp(this.configuration).getAll(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.genders, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public getAll1(requestParameters: ProductServiceApiGetAll1Request = {}, options?: RawAxiosRequestConfig) {
+        return ProductServiceApiFp(this.configuration).getAll1(requestParameters.brands, requestParameters.categories, requestParameters.subCategories, requestParameters.genders, requestParameters.maxPrice, requestParameters.minPrice, requestParameters.maxDiscountPercentage, requestParameters.minDiscountPercentage, requestParameters.itemNumber, requestParameters.showOutOfStock, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5917,31 +5964,31 @@ export type ExportGendersEnum = typeof ExportGendersEnum[keyof typeof ExportGend
 /**
  * @export
  */
-export const CreateGenderEnum = {
+export const Create1GenderEnum = {
     Men: 'MEN',
     Women: 'WOMEN',
     Unisex: 'UNISEX'
 } as const;
-export type CreateGenderEnum = typeof CreateGenderEnum[keyof typeof CreateGenderEnum];
+export type Create1GenderEnum = typeof Create1GenderEnum[keyof typeof Create1GenderEnum];
 /**
  * @export
  */
-export const GetAllGendersEnum = {
+export const GetAll1GendersEnum = {
     Men: 'MEN',
     Women: 'WOMEN',
     Unisex: 'UNISEX'
 } as const;
-export type GetAllGendersEnum = typeof GetAllGendersEnum[keyof typeof GetAllGendersEnum];
+export type GetAll1GendersEnum = typeof GetAll1GendersEnum[keyof typeof GetAll1GendersEnum];
 /**
  * @export
  */
-export const GetAllSortTypeEnum = {
+export const GetAll1SortTypeEnum = {
     AscPrice: 'ASC_PRICE',
     DescPrice: 'DESC_PRICE',
     AscDiscount: 'ASC_DISCOUNT',
     DescDiscount: 'DESC_DISCOUNT'
 } as const;
-export type GetAllSortTypeEnum = typeof GetAllSortTypeEnum[keyof typeof GetAllSortTypeEnum];
+export type GetAll1SortTypeEnum = typeof GetAll1SortTypeEnum[keyof typeof GetAll1SortTypeEnum];
 /**
  * @export
  */
@@ -6386,7 +6433,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         addSaved: async (requestBody: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'requestBody' is not null or undefined
             assertParamExists('addSaved', 'requestBody', requestBody)
-            const localVarPath = `/api/user/add/saved`;
+            const localVarPath = `/api/saved-products`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6423,7 +6470,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         deleteUser: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/delete`;
+            const localVarPath = `/api/users/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6460,7 +6507,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         forgottenPassword: async (forgottenPasswordRequest: ForgottenPasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'forgottenPasswordRequest' is not null or undefined
             assertParamExists('forgottenPassword', 'forgottenPasswordRequest', forgottenPasswordRequest)
-            const localVarPath = `/api/user/forgotten/password`;
+            const localVarPath = `/api/users/password/forgotten`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6497,7 +6544,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         getCart: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/cart`;
+            const localVarPath = `/api/cart-items`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6531,41 +6578,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         getCurrentUser: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/current`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication BearerAuthentication required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get the orders for the user
-         * @summary Get orders
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getOrders: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/order`;
+            const localVarPath = `/api/users/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6599,7 +6612,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         getSaved: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/saved`;
+            const localVarPath = `/api/saved-products`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6629,14 +6642,18 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         /**
          * Update a user password with a new one
          * @summary Update users password
+         * @param {string} id 
          * @param {NewPasswordRequest} newPasswordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        newPassword: async (newPasswordRequest: NewPasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        newPassword: async (id: string, newPasswordRequest: NewPasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('newPassword', 'id', id)
             // verify required parameter 'newPasswordRequest' is not null or undefined
             assertParamExists('newPassword', 'newPasswordRequest', newPasswordRequest)
-            const localVarPath = `/api/user/new/password`;
+            const localVarPath = `/api/users/{id}/password`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6676,7 +6693,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         register: async (registrationRequest: RegistrationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'registrationRequest' is not null or undefined
             assertParamExists('register', 'registrationRequest', registrationRequest)
-            const localVarPath = `/api/user/register`;
+            const localVarPath = `/api/users/register`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6716,7 +6733,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         removeSaved: async (requestBody: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'requestBody' is not null or undefined
             assertParamExists('removeSaved', 'requestBody', requestBody)
-            const localVarPath = `/api/user/remove/saved`;
+            const localVarPath = `/api/saved-products`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6724,7 +6741,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6756,7 +6773,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         resendVerify: async (emailRequest: EmailRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'emailRequest' is not null or undefined
             assertParamExists('resendVerify', 'emailRequest', emailRequest)
-            const localVarPath = `/api/user/resend-verify`;
+            const localVarPath = `/api/users/verify/resend`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6796,7 +6813,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         unSubscribeToEmailListWithId: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('unSubscribeToEmailListWithId', 'id', id)
-            const localVarPath = `/api/user/unsubscribe/{id}`
+            const localVarPath = `/api/users/{id}/unsubscribe`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6834,7 +6851,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         updateCart: async (cartItemRequest: Array<CartItemRequest>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'cartItemRequest' is not null or undefined
             assertParamExists('updateCart', 'cartItemRequest', cartItemRequest)
-            const localVarPath = `/api/user/update/cart`;
+            const localVarPath = `/api/cart-items`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6842,7 +6859,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6874,7 +6891,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         updateUser: async (updateUserRequest: UpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'updateUserRequest' is not null or undefined
             assertParamExists('updateUser', 'updateUserRequest', updateUserRequest)
-            const localVarPath = `/api/user/update`;
+            const localVarPath = `/api/users/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6882,7 +6899,7 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6907,14 +6924,15 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
         /**
          * After registration users must be verified, with a verification link that is given in an email
          * @summary Verify an user
-         * @param {VerificationRequest} verificationRequest 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        verify: async (verificationRequest: VerificationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'verificationRequest' is not null or undefined
-            assertParamExists('verify', 'verificationRequest', verificationRequest)
-            const localVarPath = `/api/user/verify`;
+        verify: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('verify', 'id', id)
+            const localVarPath = `/api/users/{id}/verify`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6932,12 +6950,9 @@ export const UserServiceApiAxiosParamCreator = function (configuration?: Configu
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(verificationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7017,18 +7032,6 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Get the orders for the user
-         * @summary Get orders
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getOrders(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getOrders(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserServiceApi.getOrders']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Get the users saved products
          * @summary Get saved products
          * @param {*} [options] Override http request option.
@@ -7043,12 +7046,13 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
         /**
          * Update a user password with a new one
          * @summary Update users password
+         * @param {string} id 
          * @param {NewPasswordRequest} newPasswordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async newPassword(newPasswordRequest: NewPasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.newPassword(newPasswordRequest, options);
+        async newPassword(id: string, newPasswordRequest: NewPasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.newPassword(id, newPasswordRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserServiceApi.newPassword']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -7134,12 +7138,12 @@ export const UserServiceApiFp = function(configuration?: Configuration) {
         /**
          * After registration users must be verified, with a verification link that is given in an email
          * @summary Verify an user
-         * @param {VerificationRequest} verificationRequest 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async verify(verificationRequest: VerificationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.verify(verificationRequest, options);
+        async verify(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.verify(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserServiceApi.verify']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -7202,15 +7206,6 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
             return localVarFp.getCurrentUser(options).then((request) => request(axios, basePath));
         },
         /**
-         * Get the orders for the user
-         * @summary Get orders
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getOrders(options?: RawAxiosRequestConfig): AxiosPromise<Array<OrderResponse>> {
-            return localVarFp.getOrders(options).then((request) => request(axios, basePath));
-        },
-        /**
          * Get the users saved products
          * @summary Get saved products
          * @param {*} [options] Override http request option.
@@ -7227,7 +7222,7 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
          * @throws {RequiredError}
          */
         newPassword(requestParameters: UserServiceApiNewPasswordRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.newPassword(requestParameters.newPasswordRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.newPassword(requestParameters.id, requestParameters.newPasswordRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Users can register with the required information
@@ -7297,7 +7292,7 @@ export const UserServiceApiFactory = function (configuration?: Configuration, ba
          * @throws {RequiredError}
          */
         verify(requestParameters: UserServiceApiVerifyRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.verify(requestParameters.verificationRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.verify(requestParameters.id, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -7336,6 +7331,13 @@ export interface UserServiceApiForgottenPasswordRequest {
  * @interface UserServiceApiNewPasswordRequest
  */
 export interface UserServiceApiNewPasswordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserServiceApiNewPassword
+     */
+    readonly id: string
+
     /**
      * 
      * @type {NewPasswordRequest}
@@ -7436,10 +7438,10 @@ export interface UserServiceApiUpdateUserRequest {
 export interface UserServiceApiVerifyRequest {
     /**
      * 
-     * @type {VerificationRequest}
+     * @type {string}
      * @memberof UserServiceApiVerify
      */
-    readonly verificationRequest: VerificationRequest
+    readonly id: string
 }
 
 /**
@@ -7507,17 +7509,6 @@ export class UserServiceApi extends BaseAPI {
     }
 
     /**
-     * Get the orders for the user
-     * @summary Get orders
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserServiceApi
-     */
-    public getOrders(options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).getOrders(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Get the users saved products
      * @summary Get saved products
      * @param {*} [options] Override http request option.
@@ -7537,7 +7528,7 @@ export class UserServiceApi extends BaseAPI {
      * @memberof UserServiceApi
      */
     public newPassword(requestParameters: UserServiceApiNewPasswordRequest, options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).newPassword(requestParameters.newPasswordRequest, options).then((request) => request(this.axios, this.basePath));
+        return UserServiceApiFp(this.configuration).newPassword(requestParameters.id, requestParameters.newPasswordRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7621,7 +7612,7 @@ export class UserServiceApi extends BaseAPI {
      * @memberof UserServiceApi
      */
     public verify(requestParameters: UserServiceApiVerifyRequest, options?: RawAxiosRequestConfig) {
-        return UserServiceApiFp(this.configuration).verify(requestParameters.verificationRequest, options).then((request) => request(this.axios, this.basePath));
+        return UserServiceApiFp(this.configuration).verify(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

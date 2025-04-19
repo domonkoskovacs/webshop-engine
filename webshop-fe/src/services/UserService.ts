@@ -28,7 +28,7 @@ class UserService extends ApiBaseService<UserServiceApi> {
      * @param password
      */
     async newPassword(id: string, password: string) {
-        return this.api.newPassword({newPasswordRequest: {id, password}}).then(res => res?.data)
+        return this.api.newPassword({id, newPasswordRequest: {password}}).then(res => res?.data)
     }
 
     /**
@@ -36,7 +36,7 @@ class UserService extends ApiBaseService<UserServiceApi> {
      * @param id
      */
     async verifyEmail(id: string) {
-        return this.api.verify({verificationRequest: {id}}).then(res => res?.data)
+        return this.api.verify({id}).then(res => res?.data)
     }
 
     /**
@@ -81,13 +81,6 @@ class UserService extends ApiBaseService<UserServiceApi> {
      */
     async getCart() {
         return this.api.getCart().then(res => res?.data)
-    }
-
-    /**
-     * Get orders
-     */
-    async getOrders() {
-        return this.api.getOrders().then(res => res?.data)
     }
 
     /**

@@ -1,12 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const SiteHeader: React.FC = () => {
     return (
         <div className="flex items-center justify-between bg-muted py-1 px-4 text-xs">
             <div>
-                <Link to="/faq" className="text-primary hover:underline">
+                <Link to={AppPaths.FAQ} className="text-primary hover:underline">
                     FAQ
                 </Link>
             </div>

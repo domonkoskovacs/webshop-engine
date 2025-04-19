@@ -3,7 +3,7 @@ import { productService } from "../../services/ProductService";
 import {
     ProductPageProductResponse,
     ProductResponse,
-    ProductServiceApiGetAllRequest,
+    ProductServiceApiGetAll1Request,
 } from "../../shared/api";
 import { ApiError } from "../../shared/ApiError";
 
@@ -16,12 +16,12 @@ interface InfiniteProducts {
     discountRange: [number, number];
 }
 
-export const useProductScroll = (filters: ProductServiceApiGetAllRequest) => {
+export const useProductScroll = (filters: ProductServiceApiGetAll1Request) => {
     const queryResult = useInfiniteQuery<
         ProductPageProductResponse,
         ApiError,
         InfiniteProducts,
-        (string | ProductServiceApiGetAllRequest)[],
+        (string | ProductServiceApiGetAll1Request)[],
         number
     >({
         queryKey: ["infinite-products", filters],

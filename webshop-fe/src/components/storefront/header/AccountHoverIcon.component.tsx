@@ -8,6 +8,7 @@ import {useAuth} from "../../../hooks/UseAuth";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../../ui/Tooltip";
 import {useLocation} from "react-router-dom";
 import {useUser} from "../../../hooks/user/useUser";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const AccountHoverIcon: React.FC = () => {
     const {data: user} = useUser();
@@ -16,7 +17,7 @@ const AccountHoverIcon: React.FC = () => {
 
     const profileChangesNeeded = loggedIn && role !== "ROLE_ADMIN" &&
         user && (!user.shippingAddress || !user.billingAddress) &&
-        location.pathname !== "/profile";
+        location.pathname !== AppPaths.PROFILE;
 
     return <HoverCard>
         <HoverCardTrigger>

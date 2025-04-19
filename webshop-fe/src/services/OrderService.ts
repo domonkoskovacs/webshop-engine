@@ -23,7 +23,7 @@ class OrderService extends ApiBaseService<OrderServiceApi> {
      * Create a new order
      */
     async create() {
-        return this.api.create1().then(res => res?.data)
+        return this.api.create2().then(res => res?.data)
     }
 
     /**
@@ -66,6 +66,13 @@ class OrderService extends ApiBaseService<OrderServiceApi> {
      */
     async createRefund(id: string, refundRequests: RefundOrderItemRequest[]) {
         return this.api.createRefund({id, refundOrderItemRequest: refundRequests}).then(res => res?.data);
+    }
+
+    /**
+     * get user orders
+     */
+    async getAllUser() {
+        return this.api.getMyOrders().then(res => res?.data);
     }
 }
 

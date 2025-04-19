@@ -8,6 +8,7 @@ import DarkModeToggle from "../components/ui/DarkModeToggle";
 import {Badge} from "../components/ui/Badge";
 import {useNavigate} from "react-router-dom";
 import {useOrdersPagination} from "../hooks/order/useOrdersPagination";
+import {AppPaths} from "../routing/AppPaths";
 
 interface LayoutProps {
     children: ReactNode;
@@ -31,7 +32,7 @@ const AdminDashboardLayout: React.FC<LayoutProps> = ({children}) => {
                         </div>
 
                         <div className="flex items-center">
-                            <div className="relative cursor-pointer" onClick={() => navigate("/dashboard/orders")}>
+                            <div className="relative cursor-pointer" onClick={() => navigate(AppPaths.DASHBOARD_ORDERS_FULL)}>
                                 <Bell className="m-2 p-1"/>
                                 {ordersNeedingAttention > 0 && (
                                     <Badge

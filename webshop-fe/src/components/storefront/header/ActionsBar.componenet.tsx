@@ -12,6 +12,7 @@ import {useAuth} from "../../../hooks/UseAuth";
 import {usePublicStore} from "../../../hooks/store/usePublicStore";
 import {useCart} from "../../../hooks/user/useCart";
 import {useSaved} from "../../../hooks/user/useSaved";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
@@ -26,14 +27,14 @@ const ActionsBar: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center py-2 px-6 gap-4 sm:gap-2">
             <GenderSelector/>
 
-            <Link to="/" className="text-xl font-semibold">
+            <Link to={AppPaths.HOME} className="text-xl font-semibold">
                 <span className="cursor-pointer">{store?.name}</span>
             </Link>
 
             <div className="flex space-x-4 sm:space-x-2">
                 <AccountHoverIcon/>
                 <div className="relative">
-                    <Button variant="ghost" size="icon" onClick={() => navigate("/saved")}>
+                    <Button variant="ghost" size="icon" onClick={() => navigate(AppPaths.SAVED_PRODUCTS)}>
                         <Heart/>
                     </Button>
                     {saved.length > 0 && (
@@ -47,7 +48,7 @@ const ActionsBar: React.FC = () => {
                 <HoverCard>
                     <HoverCardTrigger>
                         <div className="relative">
-                            <Button variant="ghost" size="icon" onClick={() => navigate("/cart")}>
+                            <Button variant="ghost" size="icon" onClick={() => navigate(AppPaths.CART_ITEMS)}>
                                 <ShoppingCart/>
                             </Button>
                             {cart.length > 0 && (

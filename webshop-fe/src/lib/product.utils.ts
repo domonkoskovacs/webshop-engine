@@ -1,4 +1,4 @@
-import {ProductServiceApiExportRequest, ProductServiceApiGetAllRequest} from "../shared/api";
+import {ProductServiceApiExportRequest, ProductServiceApiGetAll1Request} from "../shared/api";
 import {Gender} from "../types/gender";
 
 export const getProductGender = (itemGender: string, gender: Gender): string => {
@@ -9,7 +9,7 @@ export const getProductGender = (itemGender: string, gender: Gender): string => 
 };
 
 export const mapFiltersToExportRequest = (
-    filters: ProductServiceApiGetAllRequest
+    filters: ProductServiceApiGetAll1Request
 ): ProductServiceApiExportRequest => {
     return {
         from: undefined,

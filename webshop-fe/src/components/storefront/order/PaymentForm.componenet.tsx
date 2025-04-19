@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {toast} from "../../../hooks/useToast";
 import {Button} from "../../ui/Button";
 import {OrderResponse} from "../../../shared/api";
+import {AppPaths} from "../../../routing/AppPaths";
 
 interface PaymentFormProps {
     order: OrderResponse;
@@ -43,7 +44,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({order}) => {
             setProcessing(false);
         } else if (paymentIntent && paymentIntent.status === "succeeded") {
             toast.success("Payment successful");
-            navigate("/previous-orders");
+            navigate(AppPaths.MY_ORDERS);
         }
     };
 

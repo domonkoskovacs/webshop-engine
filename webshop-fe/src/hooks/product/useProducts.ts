@@ -1,12 +1,12 @@
 import {useAdminGuard} from "../useAdminGuard";
 import {useQuery} from "@tanstack/react-query";
 import {productService} from "../../services/ProductService";
-import {ProductPageProductResponse, ProductServiceApiGetAllRequest} from "../../shared/api";
+import {ProductPageProductResponse, ProductServiceApiGetAll1Request} from "../../shared/api";
 
-export const useProducts = (filters: ProductServiceApiGetAllRequest) => {
+export const useProducts = (filters: ProductServiceApiGetAll1Request) => {
     const {assertAdmin} = useAdminGuard();
 
-    return useQuery<ProductPageProductResponse, Error, ProductPageProductResponse, [string, ProductServiceApiGetAllRequest]>({
+    return useQuery<ProductPageProductResponse, Error, ProductPageProductResponse, [string, ProductServiceApiGetAll1Request]>({
         queryKey: ["products", filters],
         queryFn: async () => {
             assertAdmin();

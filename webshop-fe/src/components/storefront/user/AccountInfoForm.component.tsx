@@ -11,6 +11,7 @@ import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useUser} from "../../../hooks/user/useUser";
 import {useUpdateUser} from "../../../hooks/user/useUpdateUser";
 import {RadioGroupField} from "../../ui/fields/RadioGroupField";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const FormSchema = z.object({
     email: z.string().email({message: "Invalid email format."}),
@@ -91,7 +92,7 @@ const AccountInfoForm: React.FC = () => {
         />
         <SwitchField form={form} name="subscribedToEmail" label="Subscribe to email list."
                      description={<>You can change this anytime for more information please<Link
-                         to={"/terms-and-conditions"}>contact us</Link>.</>}/>
+                         to={AppPaths.CONTACT}>contact us</Link>.</>}/>
     </FormCardContainer>
 }
 

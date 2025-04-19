@@ -8,6 +8,7 @@ import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useNewPassword} from "../../../hooks/user/useNewPassword";
 import {handleGenericApiError} from "../../../shared/ApiError";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -41,7 +42,7 @@ const NewPasswordForm: React.FC = () => {
                 await newPassword({id, password: data.password});
                 toast.success("Password renewed.")
             } else {
-                navigate("/");
+                navigate(AppPaths.HOME);
             }
         } catch (error) {
             handleGenericApiError(error)

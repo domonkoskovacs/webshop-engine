@@ -15,7 +15,7 @@ import {useAuth} from "../../../hooks/UseAuth";
 import {useModifySaved} from "../../../hooks/user/useModifySaved";
 import {useSaved} from "../../../hooks/user/useSaved";
 import {useCart} from "../../../hooks/user/useCart";
-import {useUserOrders} from "../../../hooks/user/useUserOrders";
+import {useUserOrders} from "../../../hooks/order/useUserOrders";
 
 interface ProductCardProps {
     product: ProductResponse;

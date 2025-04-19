@@ -11,8 +11,9 @@ import {Separator} from "../../components/ui/Separator";
 import {Card, CardContent, CardFooter} from "../../components/ui/Card";
 import OrderItem from "../../components/storefront/order/OrderItem.component";
 import {usePublicStore} from "../../hooks/store/usePublicStore";
-import {useUserOrders} from "../../hooks/user/useUserOrders";
 import {useCreatePaymentIntent} from "../../hooks/order/useCreatePaymentIntent";
+import {useUserOrders} from "../../hooks/order/useUserOrders";
+import {AppPaths} from "../../routing/AppPaths";
 
 const CheckoutPayment: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -73,7 +74,7 @@ const CheckoutPayment: React.FC = () => {
             <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate("/previous-orders")}
+                onClick={() => navigate(AppPaths.MY_ORDERS)}
                 className="absolute top-2 left-2 cursor-pointer"
             >
                 <ArrowLeft className="h-5 w-5"/>

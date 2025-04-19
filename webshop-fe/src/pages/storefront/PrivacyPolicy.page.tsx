@@ -5,6 +5,7 @@ import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from 'src/components/shared/PageContent';
 import {usePublicStore} from "../../hooks/store/usePublicStore";
+import {AppPaths} from "../../routing/AppPaths";
 
 const PrivacyPolicy: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -59,7 +60,7 @@ const PrivacyPolicy: React.FC = () => {
                     We reserve the right to update this Privacy Policy. Please check back periodically for updates.
                 </p>
                 <p className="mt-6">
-                    If you have any questions about this Privacy Policy, please <strong><Link to="/contact"
+                    If you have any questions about this Privacy Policy, please <strong><Link to={AppPaths.CONTACT}
                                                                                               className="hover:underline">contact
                     us</Link></strong>.
                 </p>

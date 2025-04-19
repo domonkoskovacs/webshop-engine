@@ -8,6 +8,7 @@ import {Card, CardContent, CardHeader} from "../../components/ui/Card";
 import {toLogin} from "../../lib/url.utils";
 import PageContainer from "../../components/shared/PageContainer.component";
 import {useVerifyEmail} from "../../hooks/user/useVerifyEmail";
+import {AppPaths} from "../../routing/AppPaths";
 
 const VerifyEmailConfirmation: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -22,7 +23,7 @@ const VerifyEmailConfirmation: React.FC = () => {
         if (!id) {
             setMessage("Invalid verification link.");
             setStatus("error");
-            setTimeout(() => navigate("/"), 3000);
+            setTimeout(() => navigate(AppPaths.HOME), 3000);
             return;
         }
 
@@ -89,7 +90,7 @@ const VerifyEmailConfirmation: React.FC = () => {
                                 <XCircle className="w-10 h-10 text-red-500"/>
                                 <p className="mt-4 text-red-700 font-semibold">{message}</p>
                                 <Button
-                                    onClick={() => navigate("/verify-email")}
+                                    onClick={() => navigate(AppPaths.VERIFY_EMAIL)}
                                     className="mt-4 hover:bg-gray-600 px-4 py-2"
                                 >
                                     Resend Verification Email

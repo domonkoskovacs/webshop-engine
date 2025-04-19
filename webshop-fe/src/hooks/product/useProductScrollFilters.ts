@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ProductServiceApiGetAllRequest } from "../../shared/api";
+import { ProductServiceApiGetAll1Request } from "../../shared/api";
 
-const defaultFilters: ProductServiceApiGetAllRequest = {
+const defaultFilters: ProductServiceApiGetAll1Request = {
     brands: [],
     categories: [],
     subCategories: [],
@@ -18,10 +18,10 @@ const defaultFilters: ProductServiceApiGetAllRequest = {
 };
 
 export const useProductScrollFilters = () => {
-    const [filters, setFilters] = useState<ProductServiceApiGetAllRequest>(defaultFilters);
+    const [filters, setFilters] = useState<ProductServiceApiGetAll1Request>(defaultFilters);
     const [urlFiltersApplied, setUrlFiltersApplied] = useState(false);
 
-    const updateFilters = (newFilters: Partial<ProductServiceApiGetAllRequest>) => {
+    const updateFilters = (newFilters: Partial<ProductServiceApiGetAll1Request>) => {
         setFilters(prev => ({ ...prev, ...newFilters, page: 1 }));
     };
 

@@ -6,6 +6,7 @@ import {Button} from "../../components/ui/Button";
 import {Card, CardContent, CardHeader} from "../../components/ui/Card";
 import PageContainer from "../../components/shared/PageContainer.component";
 import {useUnsubscribeById} from "../../hooks/user/useUnsubscribeById";
+import {AppPaths} from "../../routing/AppPaths";
 
 const UnsubscribeEmailList: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -21,7 +22,7 @@ const UnsubscribeEmailList: React.FC = () => {
         if (!id) {
             setMessage("Invalid unsubscribe link.");
             setStatus("error");
-            setTimeout(() => navigate("/"), 3000);
+            setTimeout(() => navigate(AppPaths.HOME), 3000);
             return;
         }
 
@@ -64,7 +65,7 @@ const UnsubscribeEmailList: React.FC = () => {
                             <div className="flex flex-col items-center">
                                 <CheckCircle className="w-10 h-10 text-green-500"/>
                                 <p className="mt-4 text-green-700 font-semibold">{message}</p>
-                                <Button onClick={() => navigate("/")} className="mt-4 px-4 py-2">
+                                <Button onClick={() => navigate(AppPaths.HOME)} className="mt-4 px-4 py-2">
                                     Go to Home
                                 </Button>
                             </div>
@@ -74,7 +75,7 @@ const UnsubscribeEmailList: React.FC = () => {
                             <div className="flex flex-col items-center">
                                 <XCircle className="w-10 h-10 text-red-500"/>
                                 <p className="mt-4 text-red-700 font-semibold">{message}</p>
-                                <Button onClick={() => navigate("/")} className="mt-4 px-4 py-2">
+                                <Button onClick={() => navigate(AppPaths.HOME)} className="mt-4 px-4 py-2">
                                     Back to Home
                                 </Button>
                             </div>

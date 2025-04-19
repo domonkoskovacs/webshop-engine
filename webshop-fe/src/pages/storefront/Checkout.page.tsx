@@ -14,6 +14,7 @@ import {usePublicStore} from "../../hooks/store/usePublicStore";
 import {useCart} from "../../hooks/user/useCart";
 import {useUser} from "../../hooks/user/useUser";
 import {useCreateOrder} from "../../hooks/order/useCreateOrder";
+import {AppPaths} from "../../routing/AppPaths";
 
 const Checkout: React.FC = () => {
     const {cart} = useCart();
@@ -145,7 +146,7 @@ const Checkout: React.FC = () => {
                                 </div>
                             )}
                             {addressError ? (
-                                    <Button className="w-full rounded-t-none" onClick={() => navigate("/profile")}>Go to
+                                    <Button className="w-full rounded-t-none" onClick={() => navigate(AppPaths.PROFILE)}>Go to
                                         Profile</Button>
                                 ) :
                                 <Button

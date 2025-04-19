@@ -18,18 +18,20 @@ import {useAuth} from "../../hooks/UseAuth";
 import {Avatar, AvatarFallback} from "../ui/Avatar";
 import React from "react";
 import {ScrollArea} from "../ui/ScrollArea";
+import {AppPaths} from "../../routing/AppPaths";
 
 // Menu items.
 const storefront = [
-    {icon: Newspaper, label: "Articles", path: "/dashboard/article"},
-    {icon: ShoppingBag, label: "Categories", path: "/dashboard/category"},
-    {icon: Shirt, label: "Products", path: "/dashboard/products"},
-    {icon: Store, label: "Store", path: "/dashboard/store"},
+    {icon: Newspaper, label: "Articles", path: AppPaths.DASHBOARD_ARTICLES_FULL},
+    {icon: ShoppingBag, label: "Categories", path: AppPaths.DASHBOARD_CATEGORIES_FULL},
+    {icon: Shirt, label: "Products", path: AppPaths.DASHBOARD_PRODUCTS_FULL},
+    {icon: Store, label: "Store", path: AppPaths.DASHBOARD_STORE_FULL},
 ];
+
 const salesOperations = [
-    {icon: Mail, label: "Promotions", path: "/dashboard/promotion-email"},
-    {icon: ShoppingBag, label: "Orders", path: "/dashboard/orders"},
-    {icon: ChartLine, label: "Statistics", path: "/dashboard/statistics"},
+    {icon: Mail, label: "Promotions", path: AppPaths.DASHBOARD_PROMOTION_EMAIL_FULL},
+    {icon: ShoppingBag, label: "Orders", path: AppPaths.DASHBOARD_ORDERS_FULL},
+    {icon: ChartLine, label: "Statistics", path: AppPaths.DASHBOARD_STATISTICS_FULL},
 ];
 
 export function AppSidebar() {
@@ -40,7 +42,7 @@ export function AppSidebar() {
 
             <SidebarHeader>
                 <SidebarMenu>
-                    <Link to={"/dashboard"}>
+                    <Link to={AppPaths.DASHBOARD_BASE}>
                         <SidebarMenuButton
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -140,7 +142,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link to="/">
+                            <Link to={AppPaths.HOME}>
                                 <Store/>
                                 Storefront
                             </Link>

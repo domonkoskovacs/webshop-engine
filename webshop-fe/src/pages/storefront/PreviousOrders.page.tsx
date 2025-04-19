@@ -6,7 +6,7 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
-import {useUserOrders} from "../../hooks/user/useUserOrders";
+import {useUserOrders} from "../../hooks/order/useUserOrders";
 
 const PreviousOrders: React.FC = () => {
     const {orders} = useUserOrders()

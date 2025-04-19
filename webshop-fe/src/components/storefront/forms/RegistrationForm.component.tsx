@@ -11,6 +11,7 @@ import {SwitchField} from "../../ui/fields/SwitchField";
 import {RadioGroupField} from "../../ui/fields/RadioGroupField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useRegister} from "../../../hooks/user/useRegister";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -131,11 +132,11 @@ const RegistrationForm: React.FC = () => {
             <SwitchField form={form} name="subscribe" label="Marketing emails"
                          description="Receive emails about new products, features, and more. If you don't accept this you will still get emails based on your orders."/>
             <SwitchField form={form} name="privacyPolicy"
-                         label={<Link to={"/privacy-policy"}>Privacy Policy</Link>}
-                         description={<>Accept the <Link to={"/privacy-policy"}>privacy policy</Link>.</>}/>
+                         label={<Link to={AppPaths.PRIVACY_POLICY}>Privacy Policy</Link>}
+                         description={<>Accept the <Link to={AppPaths.PRIVACY_POLICY}>privacy policy</Link>.</>}/>
             <SwitchField form={form} name="termsAndConditions"
-                         label={<Link to={"/terms-and-conditions"}>Terms and Conditions</Link>}
-                         description={<>Accept the <Link to={"/terms-and-conditions"}>terms and
+                         label={<Link to={AppPaths.TERMS}>Terms and Conditions</Link>}
+                         description={<>Accept the <Link to={AppPaths.TERMS}>terms and
                              conditions</Link>.</>}/>
         </div>
     </FormCardContainer>

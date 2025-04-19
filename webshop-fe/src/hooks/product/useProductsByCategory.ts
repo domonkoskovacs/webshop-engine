@@ -1,18 +1,18 @@
 import {useQuery} from "@tanstack/react-query";
 import {productService} from "../../services/ProductService";
-import {GetAllGendersEnum, ProductResponse} from "../../shared/api";
+import {GetAll1GendersEnum, ProductResponse} from "../../shared/api";
 import {useGender} from "../useGender";
 
-const genderMap: Record<'men' | 'women', GetAllGendersEnum> = {
-    men: GetAllGendersEnum.Men,
-    women: GetAllGendersEnum.Women
+const genderMap: Record<'men' | 'women', GetAll1GendersEnum> = {
+    men: GetAll1GendersEnum.Men,
+    women: GetAll1GendersEnum.Women
 };
 
 export const useProductsByCategory = (category: string) => {
     const {gender} = useGender();
 
-    const genderFilters: GetAllGendersEnum[] = [
-        GetAllGendersEnum.Unisex,
+    const genderFilters: GetAll1GendersEnum[] = [
+        GetAll1GendersEnum.Unisex,
         genderMap[gender],
     ];
 

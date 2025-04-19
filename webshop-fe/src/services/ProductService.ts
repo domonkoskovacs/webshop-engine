@@ -1,9 +1,9 @@
 import {
     Discount,
     ProductServiceApi,
-    ProductServiceApiCreateRequest,
+    ProductServiceApiCreate1Request,
     ProductServiceApiExportRequest,
-    ProductServiceApiGetAllRequest,
+    ProductServiceApiGetAll1Request,
     ProductServiceApiUpdateRequest
 } from "../shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
@@ -17,15 +17,15 @@ class ProductService extends ApiBaseService<ProductServiceApi> {
     /**
      * Create a product
      */
-    async create(productRequest: ProductServiceApiCreateRequest) {
-        return this.api.create(productRequest).then(res => res?.data)
+    async create(productRequest: ProductServiceApiCreate1Request) {
+        return this.api.create1(productRequest).then(res => res?.data)
     }
 
     /**
      * Get all product by filters
      */
-    async getAll(productRequest: ProductServiceApiGetAllRequest) {
-        return this.api.getAll(productRequest).then(res => res?.data)
+    async getAll(productRequest: ProductServiceApiGetAll1Request) {
+        return this.api.getAll1(productRequest).then(res => res?.data)
     }
 
     /**
@@ -46,7 +46,7 @@ class ProductService extends ApiBaseService<ProductServiceApi> {
      * Delete a product
      */
     async delete(ids: string[]) {
-        return this.api.delete1({deleteProductRequest: {ids}}).then(res => res?.data)
+        return this.api.delete2({deleteProductRequest: {ids}}).then(res => res?.data)
     }
 
     /**

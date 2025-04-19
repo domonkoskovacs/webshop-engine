@@ -14,6 +14,7 @@ import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
 import {usePublicStore} from "../../hooks/store/usePublicStore";
 import {useCart} from "../../hooks/user/useCart";
+import {AppPaths} from "../../routing/AppPaths";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()
@@ -66,7 +67,7 @@ const Cart: React.FC = () => {
                             <p className="text-xl font-bold">Total: ${finalPrice.toFixed(2)}</p>
                         </CardContent>
                         <CardFooter className="p-0 border-t">
-                            <Link className="w-full rounded-t-none" to={"/checkout"}>
+                            <Link className="w-full rounded-t-none" to={AppPaths.CHECKOUT}>
                                 <Button className="w-full rounded-t-none">Go to Checkout</Button>
                             </Link>
                         </CardFooter>

@@ -5,6 +5,7 @@ import PageTitle from "../../components/shared/PageTitle";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
 import {usePublicStore} from "../../hooks/store/usePublicStore";
+import {AppPaths} from "../../routing/AppPaths";
 
 const AboutUs: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -61,7 +62,7 @@ const AboutUs: React.FC = () => {
                 <br/>
                 <p>
                     If you have any questions or feedback about this project, feel free to reach out via
-                    the <strong><Link to="/contact" className="hover:underline">Contact</Link></strong> page. Your input
+                    the <strong><Link to={AppPaths.CONTACT} className="hover:underline">Contact</Link></strong> page. Your input
                     is
                     valuable in helping me refine my work and
                     further

@@ -7,6 +7,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {Badge} from "../../ui/Badge";
 import {toLogin} from "../../../lib/url.utils";
 import {useUser} from "../../../hooks/user/useUser";
+import {AppPaths} from "../../../routing/AppPaths";
 
 const AccountHoverContent: React.FC = () => {
     const {loggedIn, role, logout} = useAuth()
@@ -17,12 +18,12 @@ const AccountHoverContent: React.FC = () => {
     const profileChangesNeeded = loggedIn &&
         user &&
         (!user.shippingAddress || !user.billingAddress) &&
-        location.pathname !== "/profile";
+        location.pathname !== AppPaths.PROFILE;
 
     if (loggedIn && role === "ROLE_USER") {
         return <div className="flex flex-col text-center space-y-1">
             <h1>Welcome back!</h1>
-            <Button variant="ghost" className="flex items-center justify-start" onClick={() => navigate("/profile")}>
+            <Button variant="ghost" className="flex items-center justify-start" onClick={() => navigate(AppPaths.PROFILE)}>
                 <div className="relative flex items-center justify-start">
                     <UserPen className="mr-2"/>Profile
                     {profileChangesNeeded && (
@@ -33,7 +34,7 @@ const AccountHoverContent: React.FC = () => {
                 </div>
             </Button>
             <Button variant="ghost" className="flex items-center justify-start"
-                    onClick={() => navigate("/previous-orders")}>
+                    onClick={() => navigate(AppPaths.MY_ORDERS)}>
                 <ShoppingBag className="mr-2"/>Previous orders
             </Button>
             <Separator className="my-4"/>
@@ -47,11 +48,11 @@ const AccountHoverContent: React.FC = () => {
         return <div className="flex flex-col text-center space-y-1">
             <h1>Welcome back!</h1>
             <Button variant="ghost" className="flex items-center justify-start"
-                    onClick={() => navigate("/dashboard")}>
+                    onClick={() => navigate(AppPaths.DASHBOARD_BASE)}>
                 <LayoutDashboard className="mr-2"/>Dashboard
             </Button>
             <Button variant="ghost" className="flex items-center justify-start"
-                    onClick={() => navigate("/dashboard/store")}>
+                    onClick={() => navigate(AppPaths.DASHBOARD_STORE_FULL)}>
                 <Settings className="mr-2"/>Settings
             </Button>
             <Separator className="my-4"/>
@@ -69,7 +70,10 @@ const AccountHoverContent: React.FC = () => {
             Login
         </Button>
         <Button onClick={() => {
-            navigate("/authentication?type=registration")
+            navigate({
+                pathname: AppPaths.AUTHENTICATION,
+                search: '?type=registration',
+            });
         }}>
             Register
         </Button>

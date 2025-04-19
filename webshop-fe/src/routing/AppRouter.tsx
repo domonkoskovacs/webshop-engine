@@ -1,6 +1,5 @@
 import React from 'react';
 import {Navigate, Outlet, Route, Routes} from 'react-router-dom';
-import Forbidden from '../pages/storefront/Forbidden.page';
 import Home from '../pages/storefront/Home.page';
 import NotFound from '../pages/storefront/NotFound.page';
 import ProtectedRoute from './ProtectedRoute';
@@ -31,6 +30,7 @@ import Checkout from "../pages/storefront/Checkout.page";
 import VerifyEmailResend from "../pages/storefront/VerifyEmailResend.page";
 import UnsubscribeEmailList from "../pages/storefront/UnsubscribeEmailList.page";
 import CheckoutPayment from "../pages/storefront/CheckoutPayment.page";
+import {AppPaths} from "./AppPaths";
 
 const AppRouter: React.FC = () => {
     return (
@@ -43,23 +43,22 @@ const AppRouter: React.FC = () => {
                 }
             >
                 {/* Public routes */}
-                <Route path="/" element={<Home/>}/>
-                <Route path="/products/*" element={<Products/>}/>
-                <Route path="/saved" element={<Saved/>}/>
-                <Route path="/cart" element={<Cart/>}/>
-                <Route path="/authentication" element={<Authentication/>}/>
-                <Route path="/forgot-password" element={<ForgotPassword/>}/>
-                <Route path="/new-password" element={<NewPassword/>}/>
-                <Route path="/verify-email" element={<VerifyEmailResend/>}/>
-                <Route path="/verify-email/confirm" element={<VerifyEmailConfirmation/>}/>
-                <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
-                <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
-                <Route path="/about-us" element={<AboutUs/>}/>
-                <Route path="/faq" element={<FrequentlyAskedQuestions/>}/>
-                <Route path="/contact" element={<ContactUs/>}/>
-                <Route path="/unsubcribe" element={<UnsubscribeEmailList/>}/>
-                <Route path="/403" element={<Forbidden/>}/>
-                <Route path="*" element={<NotFound/>}/>
+                <Route path={AppPaths.HOME} element={<Home/>}/>
+                <Route path={AppPaths.PRODUCTS} element={<Products/>}/>
+                <Route path={AppPaths.SAVED_PRODUCTS} element={<Saved/>}/>
+                <Route path={AppPaths.CART_ITEMS} element={<Cart/>}/>
+                <Route path={AppPaths.AUTHENTICATION} element={<Authentication/>}/>
+                <Route path={AppPaths.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
+                <Route path={AppPaths.NEW_PASSWORD} element={<NewPassword/>}/>
+                <Route path={AppPaths.VERIFY_EMAIL} element={<VerifyEmailResend/>}/>
+                <Route path={AppPaths.VERIFY_EMAIL_CONFIRM} element={<VerifyEmailConfirmation/>}/>
+                <Route path={AppPaths.PRIVACY_POLICY} element={<PrivacyPolicy/>}/>
+                <Route path={AppPaths.TERMS} element={<TermsAndConditions/>}/>
+                <Route path={AppPaths.ABOUT} element={<AboutUs/>}/>
+                <Route path={AppPaths.FAQ} element={<FrequentlyAskedQuestions/>}/>
+                <Route path={AppPaths.CONTACT} element={<ContactUs/>}/>
+                <Route path={AppPaths.UNSUBSCRIBE_EMAIL} element={<UnsubscribeEmailList/>}/>
+                <Route path={AppPaths.NOT_FOUND} element={<NotFound/>}/>
 
                 <Route
                     element={
@@ -69,15 +68,15 @@ const AppRouter: React.FC = () => {
                     }
                 >
                     {/* Protected storefront routes */}
-                    <Route path="/profile" element={<Profile/>}/>
-                    <Route path="/previous-orders" element={<PreviousOrders/>}/>
-                    <Route path="/checkout" element={<Checkout/>}/>
+                    <Route path={AppPaths.PROFILE} element={<Profile/>}/>
+                    <Route path={AppPaths.MY_ORDERS} element={<PreviousOrders/>}/>
+                    <Route path={AppPaths.CHECKOUT} element={<Checkout/>}/>
                 </Route>
             </Route>
 
             {/* Protected payment route */}
             <Route
-                path="/checkout-payment"
+                path={AppPaths.CHECKOUT_PAYMENT}
                 element={
                     <ProtectedRoute allowedRole="ROLE_USER">
                         <CheckoutPayment/>
@@ -86,24 +85,24 @@ const AppRouter: React.FC = () => {
             />
 
             <Route
-                path="/dashboard/*"
+                path={AppPaths.DASHBOARD}
                 element={
                     <ProtectedRoute allowedRole="ROLE_ADMIN">
-                            <AdminDashboardLayout>
-                                <Outlet/>
-                            </AdminDashboardLayout>
+                        <AdminDashboardLayout>
+                            <Outlet/>
+                        </AdminDashboardLayout>
                     </ProtectedRoute>
                 }
             >
-                <Route index element={<Navigate to="article" replace />} />
+                <Route index element={<Navigate to={AppPaths.DASHBOARD_ARTICLES} replace/>}/>
                 {/* Protected admin routes */}
-                <Route path="article" element={<ArticleDashboard/>}/>
-                <Route path="category" element={<CategoryDashboard/>}/>
-                <Route path="promotion-email" element={<PromotionEmailDashboard/>}/>
-                <Route path="orders" element={<OrdersDashboard/>}/>
-                <Route path="products" element={<ProductsDashboard/>}/>
-                <Route path="statistics" element={<StatisticsDashboard/>}/>
-                <Route path="store" element={<StoreDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_ARTICLES} element={<ArticleDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_CATEGORIES} element={<CategoryDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_PROMOTION_EMAIL} element={<PromotionEmailDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_ORDERS} element={<OrdersDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_PRODUCTS} element={<ProductsDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_STATISTICS} element={<StatisticsDashboard/>}/>
+                <Route path={AppPaths.DASHBOARD_STORE} element={<StoreDashboard/>}/>
             </Route>
         </Routes>
     );

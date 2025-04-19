@@ -11,21 +11,21 @@ class EmailService extends ApiBaseService<EmailServiceApi> {
      * Create promotion email
      */
     async create(promotionEmailRequest: PromotionEmailRequest) {
-        return this.api.create2({promotionEmailRequest}).then(res => res?.data)
+        return this.api.create({promotionEmailRequest}).then(res => res?.data)
     }
 
     /**
      * Get all emails
      */
     async getAll() {
-        return this.api.getAll1().then(res => res?.data)
+        return this.api.getAll().then(res => res?.data)
     }
 
     /**
      * Delete email by id
      */
     async delete(id: string) {
-        return this.api.delete2({id}).then(res => res?.data)
+        return this.api.delete1({id}).then(res => res?.data)
     }
 
     /**
