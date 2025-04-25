@@ -49,7 +49,6 @@ public final class ApiPaths {
     public static final class Orders {
         public static final String BASE = API_BASE + "/orders";
         public static final String BY_ID = BASE + ID;
-        public static final String PAYMENT_INTENT = BY_ID + "/paymentIntent";
         public static final String CHANGE_STATUS = BY_ID + "/status";
         public static final String REFUND = BY_ID + "/refund";
         public static final String EXPORT = BASE + "/export";
@@ -58,6 +57,7 @@ public final class ApiPaths {
         public static final String MY_BY_ID = MY_BASE + ID;
         public static final String CANCEL = MY_BY_ID + "/cancel";
         public static final String RETURN = MY_BY_ID + "/return";
+        public static final String PAYMENT_INTENT = MY_BY_ID + "/paymentIntent";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
