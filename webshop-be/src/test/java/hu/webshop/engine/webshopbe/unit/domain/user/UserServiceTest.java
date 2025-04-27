@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("User service unit tests")
@@ -54,5 +56,19 @@ class UserServiceTest {
 
         //Then
         assertThat(subscribedUsers).hasSizeGreaterThan(0);
+    }
+    
+    @Test
+    @DisplayName("load user throws exception when not found")
+    void loadUserThrowsExceptionWhenNotFound() {
+        //Given
+        String email = "test@example.com";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+
+        //When //Then
+        assertThatThrownBy(() -> userService.loadUserByUsername(email))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("User was not found");
     }
 }

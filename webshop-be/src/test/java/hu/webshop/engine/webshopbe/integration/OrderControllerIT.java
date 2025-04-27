@@ -82,7 +82,7 @@ class OrderControllerIT extends IntegrationTest {
                 .param("maxDate", "2023-12-09")
                 .param("minPrice", "0.0")
                 .param("maxPrice", "100.0")
-                .param("paymentMethods", "STRIPE")
+                .param("paymentTypes", "STRIPE")
                 .param("statuses", "CREATED")
                 .param("sortType", sortType.name())
                 .param("page", "0")

@@ -1,7 +1,5 @@
 package hu.webshop.engine.webshopbe.infrastructure.adapter.mapper;
 
-import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,8 +14,6 @@ import hu.webshop.engine.webshopbe.infrastructure.model.response.UserResponse;
 @Mapper(uses = {AddressMapper.class, CartMapper.class, ProductMapper.class, OrderMapper.class})
 public interface UserMapper {
     UserResponse toResponse(User entity);
-
-    List<UserResponse> toResponseList(List<User> entities);
 
     @Mapping(target = "verified", ignore = true)
     @Mapping(target = "shippingAddress", ignore = true)

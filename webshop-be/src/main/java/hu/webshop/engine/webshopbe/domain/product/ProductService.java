@@ -135,6 +135,7 @@ public class ProductService {
         images.clear();
         images.addAll(preservedImages);
         images.addAll(newImages);
+        updatedProduct.setImages(images);
         updatedProduct.setSubCategory(categoryService.getSubCategoryById(productUpdate.subCategoryId()));
         updatedProduct.setBrand(brandService.getByName(productUpdate.brand()));
 

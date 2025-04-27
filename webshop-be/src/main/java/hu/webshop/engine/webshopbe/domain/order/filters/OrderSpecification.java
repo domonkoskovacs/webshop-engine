@@ -36,7 +36,7 @@ public class OrderSpecification {
     private static Specification<Order> paymentType(List<PaymentType> paymentTypes) {
         return (orders, cq, cb) -> {
             if (paymentTypes == null || paymentTypes.isEmpty()) return cb.conjunction();
-            return orders.get("paymentMethod").in(paymentTypes);
+            return orders.get("paymentType").in(paymentTypes);
         };
     }
 

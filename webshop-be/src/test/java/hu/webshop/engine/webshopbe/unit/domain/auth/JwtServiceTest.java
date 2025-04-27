@@ -209,4 +209,19 @@ class JwtServiceTest {
         assertThatThrownBy(() -> jwtService.validateJwtToken(token, JwtTokenType.ACCESS_TOKEN))
                 .isInstanceOf(AuthenticationException.class);
     }
+
+    @Test
+    @DisplayName("isValidRefreshToken returns true for valid refresh token")
+    void isValidRefreshTokenReturnsTrueForValidRefreshToken() {
+        //Given
+        when(jwtProperties.getRefreshKey()).thenReturn(key);
+        when(jwtProperties.getRefreshExpiration()).thenReturn(3600000);
+        String refreshToken = jwtService.generateJwtRefreshToken("username", "email@email.com", "ROLE_USER");
+
+        //When
+        boolean isValid = jwtService.isValidRefreshToken(refreshToken);
+
+        //Then
+        assertThat(isValid).isTrue();
+    }
 }

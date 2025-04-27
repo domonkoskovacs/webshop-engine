@@ -291,4 +291,54 @@ class OrderStatusServiceTest {
                 .doesNotThrowAnyException();
     }
 
+    @Test
+    @DisplayName("createRefund throws OrderException if refund items list is empty")
+    void createRefundThrowsWhenRefundItemListEmpty() {
+        // Given
+        UUID orderId = UUID.randomUUID();
+        Order order = Order.builder()
+                .status(OrderStatus.RETURN_APPROVED)
+                .totalPrice(100.0)
+                .items(List.of(OrderItem.builder().count(1).individualPrice(100.0).build()))
+                .build();
+        order.setId(orderId);
+        when(orderQueryService.getById(orderId)).thenReturn(order);
+        List<RefundOrderItem> refundItems = List.of();
+
+        // When / Then
+        assertThatThrownBy(() -> orderStatusService.createRefund(orderId, refundItems))
+                .isInstanceOf(OrderException.class)
+                .satisfies(ex -> {
+                    OrderException oe = (OrderException) ex;
+                    assertThat(oe.getResponse().error().get(0).reasonCode()).isEqualTo(ReasonCode.ORDER_EXCEPTION);
+                    assertThat(oe.getResponse().error().get(0).message()).contains("Invalid total refund amount");
+                });
+    }
+
+    @Test
+    @DisplayName("createRefund throws OrderException if total refund amount exceeds order total")
+    void createRefundThrowsWhenRefundAmountExceedsTotal() {
+        // Given
+        UUID orderId = UUID.randomUUID();
+        OrderItem orderItem = OrderItem.builder().count(1).individualPrice(100.0).build();
+        Order order = Order.builder()
+                .status(OrderStatus.RETURN_APPROVED)
+                .totalPrice(100.0)
+                .items(List.of(orderItem))
+                .build();
+        order.setId(orderId);
+        when(orderQueryService.getById(orderId)).thenReturn(order);
+        RefundOrderItem refundItem = new RefundOrderItem(orderItem.getId(), orderItem.getCount() + 1);
+        List<RefundOrderItem> refundItems = List.of(refundItem);
+
+        // When / Then
+        assertThatThrownBy(() -> orderStatusService.createRefund(orderId, refundItems))
+                .isInstanceOf(OrderException.class)
+                .satisfies(ex -> {
+                    OrderException oe = (OrderException) ex;
+                    assertThat(oe.getResponse().error().get(0).reasonCode()).isEqualTo(ReasonCode.ORDER_EXCEPTION);
+                    assertThat(oe.getResponse().error().get(0).message()).contains("Invalid refund count for item");
+                });
+    }
+
 }
