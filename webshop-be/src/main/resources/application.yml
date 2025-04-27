@@ -68,6 +68,8 @@ application:
   jwt:
     expiration: 1000000000
     refresh-expiration: 1000000000
+    accessSecret: ${JWT_ACCESS_SECRET:generate}
+    refreshSecret: ${JWT_REFRESH_SECRET:generate}
   email:
     new-password: http://localhost:3000/new-password?id={id}
     verify: http://localhost:3000/verify-email/confirm?id={id}

@@ -21,8 +21,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JwtService {
 
-    private static final Key accessKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    private static final Key refreshKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     private final JwtProperties jwtProperties;
 
     public long getAccessJwtExpiration() {
@@ -48,7 +44,7 @@ public class JwtService {
         log.info("generateAccessJwtToken > username: [{}], email: [{}], role: [{}]", username, email, role);
         return tokenBuilder(username, email, role)
                 .setExpiration(Date.from(Instant.now().plus(jwtProperties.getExpiration(), ChronoUnit.MILLIS)))
-                .signWith(accessKey)
+                .signWith(jwtProperties.getAccessKey())
                 .compact();
     }
 
@@ -64,12 +60,12 @@ public class JwtService {
         log.info("generateJwtRefreshToken > username: [{}], email: [{}], role: [{}]", username, email, role);
         return tokenBuilder(username, email, role)
                 .setExpiration(Date.from(Instant.now().plus(jwtProperties.getRefreshExpiration(), ChronoUnit.MILLIS)))
-                .signWith(refreshKey)
+                .signWith(jwtProperties.getRefreshKey())
                 .compact();
     }
 
     public String getEmailFromAccessJwtToken(String token) {
-        return getClaims(accessKey, token).get(JwtTokenClaims.EMAIL.name(), String.class);
+        return getClaims(jwtProperties.getAccessKey(), token).get(JwtTokenClaims.EMAIL.name(), String.class);
     }
 
     private Claims getClaims(Key key, String token) {
@@ -77,7 +73,7 @@ public class JwtService {
     }
 
     public String getEmailFromRefreshJwtToken(String token) {
-        return getClaims(refreshKey, token).get(JwtTokenClaims.EMAIL.name(), String.class);
+        return getClaims(jwtProperties.getRefreshKey(), token).get(JwtTokenClaims.EMAIL.name(), String.class);
     }
 
     public JwtTokenType getJwtTokenType(String token) {
@@ -88,7 +84,7 @@ public class JwtService {
 
     public boolean isValidAccessToken(String token) {
         try {
-            getClaims(accessKey, token);
+            getClaims(jwtProperties.getAccessKey(), token);
             return true;
         } catch (Exception e) {
             return false;
@@ -97,7 +93,7 @@ public class JwtService {
 
     public boolean isValidRefreshToken(String token) {
         try {
-            getClaims(refreshKey, token);
+            getClaims(jwtProperties.getRefreshKey(), token);
             return true;
         } catch (Exception e) {
             return false;
@@ -106,7 +102,7 @@ public class JwtService {
 
     public void validateRefreshToken(String token) {
         try {
-            getClaims(refreshKey, token);
+            getClaims(jwtProperties.getRefreshKey(), token);
         } catch (ExpiredJwtException e) {
             log.error("JWT token is expired: {}", e.getMessage());
             throw new AuthenticationException(ReasonCode.JWT_EXPIRED_ERROR, e.getMessage());
@@ -120,7 +116,7 @@ public class JwtService {
         log.info("validateJwtToken token type is: [{}]", jwtTokenType);
         if (jwtTokenType.isInvalidToken()) return false;
         try {
-            Jwts.parserBuilder().setSigningKey(jwtTokenType.isAccessToken() ? accessKey : refreshKey).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(jwtTokenType.isAccessToken() ? jwtProperties.getAccessKey() : jwtProperties.getRefreshKey()).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             throw new AuthenticationException(ReasonCode.JWT_EXPIRED_ERROR, e.getMessage());
