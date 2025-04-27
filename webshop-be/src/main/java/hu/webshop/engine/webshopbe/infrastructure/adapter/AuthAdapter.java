@@ -24,8 +24,8 @@ public class AuthAdapter {
         return authMapper.toResponse(authService.login(authMapper.fromRequest(loginRequest)));
     }
 
-    public LoginResponse refreshToken(String token) {
+    public LoginResponse refresh(String token) {
         log.info("refreshToken > token: [{}]", token);
-        return authMapper.toResponse(authService.refreshToken(token));
+        return authMapper.toResponse(authService.refresh(token));
     }
 }

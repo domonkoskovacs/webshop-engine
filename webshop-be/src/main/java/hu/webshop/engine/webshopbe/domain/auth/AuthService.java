@@ -59,7 +59,7 @@ public class AuthService {
      * @param token refresh token
      * @return token and login info
      */
-    public Login refreshToken(String token) {
+    public Login refresh(String token) {
         log.info("refreshToken");
         jwtService.validateRefreshToken(token);
         String email = jwtService.getEmailFromRefreshJwtToken(token);

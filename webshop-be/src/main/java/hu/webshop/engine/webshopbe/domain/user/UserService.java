@@ -229,7 +229,6 @@ public class UserService implements UserDetailsService {
         return existingCarts;
     }
 
-
     private Cart mapCart(CartItem cartItem) {
         return Cart.builder()
                 .count(cartItem.count())

@@ -13,4 +13,13 @@ public class ImageProperties {
     private String folderName;
     private String serverDomain;
     private ImageStorageType storageType;
+    private Minio minio;
+
+    @Data
+    public static class Minio {
+        private String endpoint;
+        private String accessKey;
+        private String secretKey;
+        private String bucket;
+    }
 }

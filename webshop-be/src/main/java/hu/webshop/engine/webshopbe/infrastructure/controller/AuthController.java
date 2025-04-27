@@ -50,6 +50,6 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody TokenRequest token) {
         log.info("refreshToken");
-        return ResponseEntity.ok(authAdapter.refreshToken(token.token()));
+        return ResponseEntity.ok(authAdapter.refresh(token.token()));
     }
 }
