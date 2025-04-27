@@ -8,7 +8,7 @@ public record OrderSpecificationArgs(
         LocalDate maxDate,
         Double minPrice,
         Double maxPrice,
-        List<PaymentMethod> paymentMethods,
+        List<PaymentType> paymentTypes,
         List<OrderStatus> statuses
 ) {
 }

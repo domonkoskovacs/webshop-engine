@@ -12,7 +12,7 @@ import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
 import hu.webshop.engine.webshopbe.domain.order.mapper.OrderItemStockChangeMapper;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.value.StockChangeType;
@@ -35,8 +35,8 @@ public class OrderCreationService {
     private final ProductService productService;
     private final StoreService storeService;
 
-    public Order create(PaymentMethod paymentMethod) {
-        log.info("create > paymentMethod: [{}]", paymentMethod);
+    public Order create(PaymentType paymentType) {
+        log.info("create > paymentType: [{}]", paymentType);
         User currentUser = userService.getCurrentUser();
         validateOrderCanStart(currentUser);
         List<OrderItem> orderItems = mapUserCartToOrderItems(currentUser);
@@ -44,7 +44,7 @@ public class OrderCreationService {
         Order order = Order.builder()
                 .totalPrice(totalPrice)
                 .shippingPrice(storeService.getStore().getShippingPrice())
-                .paymentMethod(paymentMethod)
+                .paymentType(paymentType)
                 .user(currentUser)
                 .items(orderItems)
                 .build();

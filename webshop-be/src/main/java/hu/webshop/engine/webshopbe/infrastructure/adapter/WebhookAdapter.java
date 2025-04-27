@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
-import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
+import hu.webshop.engine.webshopbe.domain.order.OrderPaymentStatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class WebhookAdapter {
 
-    private final OrderPaymentService orderPaymentService;
+    private final OrderPaymentStatusService orderPaymentStatusService;
 
     public void handleStripeEvent(Event event) {
         switch (event.getType()) {
@@ -22,21 +22,21 @@ public class WebhookAdapter {
                 PaymentIntent paymentIntent = deserialize(event, PaymentIntent.class,
                         "Failed to deserialize PaymentIntent for succeeded event.");
                 if (paymentIntent != null) {
-                    orderPaymentService.paymentIntentSucceeded(paymentIntent);
+                    orderPaymentStatusService.paymentIntentSucceeded(paymentIntent.getId());
                 }
                 break;
             case "payment_intent.failed":
                 PaymentIntent failedIntent = deserialize(event, PaymentIntent.class,
                         "Failed to deserialize PaymentIntent for failed event.");
                 if (failedIntent != null) {
-                    orderPaymentService.paymentIntentFailed(failedIntent);
+                    orderPaymentStatusService.paymentIntentFailed(failedIntent.getId());
                 }
                 break;
             case "refund.updated":
                 Refund refund = deserialize(event, Refund.class,
                         "Failed to deserialize Refund for updated event.");
                 if (refund != null && "succeeded".equals(refund.getStatus())) {
-                    orderPaymentService.handleRefundSuccess(refund);
+                    orderPaymentStatusService.handleRefundSuccess(refund.getId());
                 }
                 break;
             default:

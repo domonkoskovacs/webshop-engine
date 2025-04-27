@@ -19,8 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.PaymentIntent;
-import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
+import hu.webshop.engine.webshopbe.domain.order.OrderPaymentStatusService;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.WebhookAdapter;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +27,7 @@ import hu.webshop.engine.webshopbe.infrastructure.adapter.WebhookAdapter;
 class WebhookAdapterTest {
 
     @Mock
-    private OrderPaymentService orderService;
+    private OrderPaymentStatusService orderService;
 
     @InjectMocks
     private WebhookAdapter paymentAdapter;
@@ -61,7 +60,7 @@ class WebhookAdapterTest {
         paymentAdapter.handleStripeEvent(event);
 
         //Then
-        verify(orderService, never()).paymentIntentSucceeded(any(PaymentIntent.class));
+        verify(orderService, never()).paymentIntentSucceeded(any(String.class));
 
     }
 }

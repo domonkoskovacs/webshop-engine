@@ -15,6 +15,8 @@ import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.image.entity.ImageMetadata;
 import hu.webshop.engine.webshopbe.domain.image.properties.ImageProperties;
 import hu.webshop.engine.webshopbe.domain.image.repository.ImageMetadataRepository;
+import hu.webshop.engine.webshopbe.domain.image.strategy.ImageStorageStrategy;
+import hu.webshop.engine.webshopbe.domain.image.strategy.ImageStorageStrategyRegistry;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class ImageService {
 
     private final ImageProperties imageProperties;
     private final ImageMetadataRepository imageMetadataRepository;
-    private final StrategyRegistry strategyRegistry;
+    private final ImageStorageStrategyRegistry strategyRegistry;
 
     public ByteArrayResource getById(UUID id) {
         ImageMetadata metadata = imageMetadataRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Image metadata not found"));

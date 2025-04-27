@@ -26,7 +26,7 @@ import hu.webshop.engine.webshopbe.domain.base.exception.ImageException;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
 import hu.webshop.engine.webshopbe.domain.base.exception.ProductException;
 import hu.webshop.engine.webshopbe.domain.base.exception.RegistrationException;
-import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
+import hu.webshop.engine.webshopbe.domain.base.exception.PaymentException;
 import hu.webshop.engine.webshopbe.domain.base.value.HandlerErrorModel;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.base.value.ResultEntry;
@@ -96,9 +96,9 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
      * Stripe payment exception
      * Returns 402
      */
-    @ExceptionHandler(StripeException.class)
+    @ExceptionHandler(PaymentException.class)
     @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
-    public ErrorResponse stripeException(StripeException nse) {
+    public ErrorResponse stripeException(PaymentException nse) {
         return mapper.toResponse(nse.getResponse());
     }
 

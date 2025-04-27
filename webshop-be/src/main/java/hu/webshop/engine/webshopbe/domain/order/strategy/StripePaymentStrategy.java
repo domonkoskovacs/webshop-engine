@@ -1,35 +1,39 @@
-package hu.webshop.engine.webshopbe.domain.order;
+package hu.webshop.engine.webshopbe.domain.order.strategy;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Refund;
 import com.stripe.param.PaymentIntentCancelParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.PaymentIntentRetrieveParams;
 import com.stripe.param.RefundCreateParams;
-import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
+import hu.webshop.engine.webshopbe.domain.base.exception.PaymentException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
-import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
+import hu.webshop.engine.webshopbe.domain.order.properties.PaymentProperties;
 import hu.webshop.engine.webshopbe.domain.order.value.Intent;
+import hu.webshop.engine.webshopbe.domain.order.value.IntentSecret;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class StripeService {
+public class StripePaymentStrategy implements PaymentStrategy {
 
-    private final StripeProperties stripeProperties;
+    private final PaymentProperties stripeProperties;
 
     @PostConstruct
     public synchronized void init() {
         Stripe.apiKey = stripeProperties.getPrivateKey();
     }
 
-    public PaymentIntent createIntent(Intent intent) {
+    @Override
+    public IntentSecret createIntent(Intent intent) {
         log.info("intent > intent: [{}]", intent);
 
         try {
@@ -50,41 +54,41 @@ public class StripeService {
             }
 
             PaymentIntentCreateParams params = builder.build();
-            return PaymentIntent.create(params);
+            PaymentIntent paymentIntent = PaymentIntent.create(params);
+            return new IntentSecret(paymentIntent.getId(), paymentIntent.getClientSecret());
 
-        } catch (com.stripe.exception.StripeException e) {
-            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+        } catch (StripeException e) {
+            throw new PaymentException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
         }
     }
 
-    public PaymentIntent retrieveIntent(String intentId) {
+    @Override
+    public IntentSecret retrieveIntent(String intentId) {
         log.info("retrieveIntent > intentId: [{}]", intentId);
-
-        try {
-            return PaymentIntent.retrieve(intentId, PaymentIntentRetrieveParams.builder().build(), null);
-        } catch (com.stripe.exception.StripeException e) {
-            log.error("Failed to retrieve payment intent: [{}]", intentId, e);
-            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
-        }
+        PaymentIntent intent = getIntent(intentId);
+        return new IntentSecret(intentId, intent.getClientSecret());
     }
 
-    public PaymentIntent cancelPaymentIntent(String paymentIntentId) {
+    @Override
+    public void cancelPaymentIntent(String paymentIntentId) {
         log.info("cancelPaymentIntent > paymentIntentId: [{}]", paymentIntentId);
         try {
-            PaymentIntent intent = retrieveIntent(paymentIntentId);
+            PaymentIntent intent = getIntent(paymentIntentId);
             if ("succeeded".equals(intent.getStatus())) {
                 log.warn("PaymentIntent [{}] already succeeded and cannot be canceled.", paymentIntentId);
-                return intent;
+                throw new PaymentException(ReasonCode.PAYMENT_ALREADY_SUCCEEDED,
+                        "Cannot cancel a payment intent that already succeeded.");
             }
             PaymentIntentCancelParams params = PaymentIntentCancelParams.builder().build();
-            return intent.cancel(params);
-        } catch (com.stripe.exception.StripeException e) {
+            intent.cancel(params);
+        } catch (StripeException e) {
             log.error("Failed to cancel PaymentIntent: [{}]", paymentIntentId, e);
-            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+            throw new PaymentException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
         }
     }
 
-    public Refund createRefund(String intentId, Double totalPrice) {
+    @Override
+    public String createRefund(String intentId, Double totalPrice) {
         log.info("createRefund > intentId: [{}], totalPrice: [{}]", intentId, totalPrice);
         try {
             long amountInCents = Math.round(totalPrice * 100);
@@ -94,10 +98,25 @@ public class StripeService {
                     .setAmount(amountInCents);
 
             RefundCreateParams params = builder.build();
-            return Refund.create(params);
-        } catch (com.stripe.exception.StripeException e) {
+            Refund refund = Refund.create(params);
+            return refund.getId();
+        } catch (StripeException e) {
             log.error("Failed to create refund for intent: [{}]", intentId, e);
-            throw new StripeException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+            throw new PaymentException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
+        }
+    }
+
+    @Override
+    public PaymentType getPaymentType() {
+        return PaymentType.STRIPE;
+    }
+
+    private PaymentIntent getIntent(String intentId) {
+        try {
+            return PaymentIntent.retrieve(intentId, PaymentIntentRetrieveParams.builder().build(), null);
+        } catch (StripeException e) {
+            log.error("Failed to retrieve payment intent: [{}]", intentId, e);
+            throw new PaymentException(ReasonCode.STRIPE_EXCEPTION, e.getMessage());
         }
     }
 }

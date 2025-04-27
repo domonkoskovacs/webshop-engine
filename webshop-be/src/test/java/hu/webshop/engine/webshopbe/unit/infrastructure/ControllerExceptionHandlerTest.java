@@ -18,7 +18,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import hu.webshop.engine.webshopbe.domain.base.exception.CsvException;
 import hu.webshop.engine.webshopbe.domain.base.exception.GenericRuntimeException;
 import hu.webshop.engine.webshopbe.domain.base.exception.ImageException;
-import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
+import hu.webshop.engine.webshopbe.domain.base.exception.PaymentException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.base.value.ResultEntry;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.HandlerErrorMapper;
@@ -132,7 +132,7 @@ class ControllerExceptionHandlerTest {
         //Given
         ReasonCode reasonCode = ReasonCode.STRIPE_EXCEPTION;
         String errorMessage = "Error message";
-        StripeException exception = new StripeException(reasonCode, errorMessage);
+        PaymentException exception = new PaymentException(reasonCode, errorMessage);
         when(errorMapper.toResponse(exception.getResponse())).thenReturn(new ErrorResponse(
                 exception.getResponse().info(),
                 exception.getResponse().error(),

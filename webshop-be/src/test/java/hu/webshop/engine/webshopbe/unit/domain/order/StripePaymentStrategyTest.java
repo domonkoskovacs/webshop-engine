@@ -7,7 +7,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,20 +29,23 @@ import com.stripe.param.PaymentIntentCancelParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.PaymentIntentRetrieveParams;
 import com.stripe.param.RefundCreateParams;
-import hu.webshop.engine.webshopbe.domain.base.exception.StripeException;
-import hu.webshop.engine.webshopbe.domain.order.StripeService;
-import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
+import hu.webshop.engine.webshopbe.domain.base.exception.PaymentException;
+import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
+import hu.webshop.engine.webshopbe.domain.base.value.ResultEntry;
+import hu.webshop.engine.webshopbe.domain.order.properties.PaymentProperties;
+import hu.webshop.engine.webshopbe.domain.order.strategy.StripePaymentStrategy;
 import hu.webshop.engine.webshopbe.domain.order.value.Currency;
 import hu.webshop.engine.webshopbe.domain.order.value.Intent;
+import hu.webshop.engine.webshopbe.domain.order.value.IntentSecret;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("StripeService unit tests")
-class StripeServiceTest {
+@DisplayName("StripePaymentStrategy unit tests")
+class StripePaymentStrategyTest {
 
     @InjectMocks
-    private StripeService stripeService;
+    private StripePaymentStrategy stripeService;
     @Mock
-    private StripeProperties stripeProperties;
+    private PaymentProperties stripeProperties;
 
     @Test
     @DisplayName("create intent is correct")
@@ -56,10 +58,10 @@ class StripeServiceTest {
             paymentIntentMockedStatic.when(() -> PaymentIntent.create(any(PaymentIntentCreateParams.class)))
                     .thenReturn(paymentIntent);
             //When
-            PaymentIntent result = stripeService.createIntent(intent);
+            IntentSecret result = stripeService.createIntent(intent);
 
             //Then
-            assertThat(result).isEqualTo(paymentIntent);
+            assertThat(result.id()).isEqualTo(paymentIntent.getId());
         }
     }
 
@@ -81,7 +83,7 @@ class StripeServiceTest {
 
             //When //Then
             assertThatThrownBy(() -> stripeService.createIntent(intent))
-                    .isInstanceOf(StripeException.class);
+                    .isInstanceOf(PaymentException.class);
         }
     }
 
@@ -91,15 +93,16 @@ class StripeServiceTest {
         //Given
         String intentId = UUID.randomUUID().toString();
         PaymentIntent paymentIntent = new PaymentIntent();
+        paymentIntent.setId(intentId);
 
         try (MockedStatic<PaymentIntent> paymentIntentMockedStatic = mockStatic(PaymentIntent.class)) {
             paymentIntentMockedStatic.when(() -> PaymentIntent.retrieve(any(String.class), any(PaymentIntentRetrieveParams.class), any()))
                     .thenReturn(paymentIntent);
             //When
-            PaymentIntent result = stripeService.retrieveIntent(intentId);
+            IntentSecret result = stripeService.retrieveIntent(intentId);
 
             //Then
-            assertThat(result).isEqualTo(paymentIntent);
+            assertThat(result.id()).isEqualTo(paymentIntent.getId());
         }
     }
 
@@ -116,7 +119,7 @@ class StripeServiceTest {
 
             //When //Then
             assertThatThrownBy(() -> stripeService.retrieveIntent(intentId))
-                    .isInstanceOf(StripeException.class);
+                    .isInstanceOf(PaymentException.class);
         }
     }
 
@@ -133,14 +136,17 @@ class StripeServiceTest {
                             PaymentIntent.retrieve(any(String.class), any(PaymentIntentRetrieveParams.class), any()))
                     .thenReturn(paymentIntent);
 
-            //When
-            PaymentIntent result = stripeService.cancelPaymentIntent(intentId);
-
-            //Then
-            verify(paymentIntent, never()).cancel(any(PaymentIntentCancelParams.class));
-            assertThat(result).isEqualTo(paymentIntent);
-        } catch (com.stripe.exception.StripeException e) {
-            throw new RuntimeException(e);
+            //When //Then
+            assertThatThrownBy(() -> stripeService.cancelPaymentIntent(intentId))
+                    .isInstanceOf(PaymentException.class)
+                    .satisfies(ex -> {
+                        PaymentException paymentException = (PaymentException) ex;
+                        assertThat(paymentException.getResponse().error())
+                                .hasSize(1)
+                                .first()
+                                .extracting(ResultEntry::reasonCode)
+                                .isEqualTo(ReasonCode.PAYMENT_ALREADY_SUCCEEDED);
+                    });
         }
     }
 
@@ -151,9 +157,7 @@ class StripeServiceTest {
         String intentId = UUID.randomUUID().toString();
         PaymentIntent paymentIntent = spy(new PaymentIntent());
         doReturn("requires_payment_method").when(paymentIntent).getStatus();
-        PaymentIntent canceledPaymentIntent = spy(new PaymentIntent());
-        doReturn("canceled").when(canceledPaymentIntent).getStatus();
-        doReturn(canceledPaymentIntent).when(paymentIntent).cancel(any(PaymentIntentCancelParams.class));
+        doReturn(paymentIntent).when(paymentIntent).cancel(any(PaymentIntentCancelParams.class));
 
         try (MockedStatic<PaymentIntent> paymentIntentMockedStatic = Mockito.mockStatic(PaymentIntent.class)) {
             paymentIntentMockedStatic.when(() ->
@@ -161,11 +165,10 @@ class StripeServiceTest {
                     .thenReturn(paymentIntent);
 
             //When
-            PaymentIntent result = stripeService.cancelPaymentIntent(intentId);
+            stripeService.cancelPaymentIntent(intentId);
 
             //Then
             verify(paymentIntent, times(1)).cancel(any(PaymentIntentCancelParams.class));
-            assertThat(result.getStatus()).isEqualTo("canceled");
         }
     }
 
@@ -189,7 +192,7 @@ class StripeServiceTest {
 
             //When //Then
             assertThatThrownBy(() -> stripeService.cancelPaymentIntent(intentId))
-                    .isInstanceOf(StripeException.class);
+                    .isInstanceOf(PaymentException.class);
         }
     }
 
@@ -206,10 +209,10 @@ class StripeServiceTest {
                     .thenReturn(refund);
 
             //When
-            Refund result = stripeService.createRefund(intentId, totalPrice);
+            String result = stripeService.createRefund(intentId, totalPrice);
 
             //Then
-            assertThat(result).isEqualTo(refund);
+            assertThat(result).isEqualTo(refund.getId());
         }
     }
 
@@ -227,7 +230,7 @@ class StripeServiceTest {
 
             // When/Then
             assertThatThrownBy(() -> stripeService.createRefund(intentId, totalPrice))
-                    .isInstanceOf(StripeException.class);
+                    .isInstanceOf(PaymentException.class);
         }
     }
 }

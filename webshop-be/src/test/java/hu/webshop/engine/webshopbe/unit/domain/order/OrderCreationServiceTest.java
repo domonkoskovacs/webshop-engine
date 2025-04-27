@@ -18,7 +18,7 @@ import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.order.OrderCreationService;
 import hu.webshop.engine.webshopbe.domain.order.mapper.OrderItemStockChangeMapper;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Category;
@@ -56,7 +56,7 @@ class OrderCreationServiceTest {
         when(userService.getCurrentUser()).thenReturn(User.builder().shippingAddress(null).billingAddress(new Address()).cart(List.of(new Cart())).build());
 
         //When //Then
-        assertThatThrownBy(() -> orderCreationService.create(PaymentMethod.STRIPE))
+        assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
                 .isInstanceOf(OrderException.class)
                 .extracting(e -> ((OrderException) e).getResponse().error().get(0).reasonCode())
                 .isEqualTo(ReasonCode.NO_SHIPPING_ADDRESS);
@@ -69,7 +69,7 @@ class OrderCreationServiceTest {
         when(userService.getCurrentUser()).thenReturn(User.builder().shippingAddress(new Address()).billingAddress(null).cart(List.of(new Cart())).build());
 
         //When //Then
-        assertThatThrownBy(() -> orderCreationService.create(PaymentMethod.STRIPE))
+        assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
                 .isInstanceOf(OrderException.class)
                 .extracting(e -> ((OrderException) e).getResponse().error().get(0).reasonCode())
                 .isEqualTo(ReasonCode.NO_BILLING_ADDRESS);
@@ -82,7 +82,7 @@ class OrderCreationServiceTest {
         when(userService.getCurrentUser()).thenReturn(User.builder().shippingAddress(new Address()).billingAddress(new Address()).cart(List.of()).build());
 
         //When //Then
-        assertThatThrownBy(() -> orderCreationService.create(PaymentMethod.STRIPE))
+        assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
                 .isInstanceOf(OrderException.class)
                 .extracting(e -> ((OrderException) e).getResponse().error().get(0).reasonCode())
                 .isEqualTo(ReasonCode.NO_ITEMS_IN_CART);
@@ -98,7 +98,7 @@ class OrderCreationServiceTest {
         when(userService.getCurrentUser()).thenReturn(user);
 
         //When //Then
-        assertThatThrownBy(() -> orderCreationService.create(PaymentMethod.STRIPE))
+        assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
                 .isInstanceOf(OrderException.class)
                 .extracting(e -> ((OrderException) e).getResponse().error().get(0).reasonCode())
                 .isEqualTo(ReasonCode.NOT_ENOUGH_PRODUCT_IN_STOCK);
@@ -115,7 +115,7 @@ class OrderCreationServiceTest {
         when(userService.getCurrentUser()).thenReturn(user);
         when(storeService.getStore()).thenReturn(store);
         //When //Then
-        assertThatThrownBy(() -> orderCreationService.create(PaymentMethod.STRIPE))
+        assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
                 .isInstanceOf(OrderException.class)
                 .extracting(e -> ((OrderException) e).getResponse().error().get(0).reasonCode())
                 .isEqualTo(ReasonCode.INVALID_ORDER_PRICE);

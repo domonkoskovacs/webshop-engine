@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.stripe.model.Refund;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
@@ -42,7 +41,7 @@ public class OrderStatusService {
     private final OrderRepository orderRepository;
     private final OrderQueryService orderQueryService;
     private final EmailService emailService;
-    private final StripeService stripeService;
+    private final PaymentService paymentService;
     private final StoreService storeService;
     private final OrderItemStockChangeMapper orderItemStockChangeMapper;
     private final ProductService productService;
@@ -54,13 +53,13 @@ public class OrderStatusService {
         if (order.getStatus().isCancelable()) {
             if (OrderStatus.CREATED.equals(order.getStatus()) || OrderStatus.PAYMENT_FAILED.equals(order.getStatus())) {
                 if (order.getPaymentIntentId() != null) {
-                    stripeService.cancelPaymentIntent(order.getPaymentIntentId());
+                    paymentService.cancelPaymentIntent(order.getPaymentIntentId(), order.getPaymentType());
                 }
                 applyStatusChange(order, OrderStatus.CANCELLED);
             } else {
-                Refund refund = stripeService.createRefund(order.getPaymentIntentId(), order.getTotalPrice());
+                String refundId = paymentService.createRefund(order.getPaymentIntentId(), order.getTotalPrice(), order.getPaymentType());
                 applyStatusChange(order, OrderStatus.WAITING_FOR_REFUND);
-                order.setRefundId(refund.getId());
+                order.setRefundId(refundId);
             }
             orderRepository.save(order);
             emailService.sendOrderCanceledEmail(order);
@@ -110,8 +109,8 @@ public class OrderStatusService {
             throw new OrderException(ReasonCode.ORDER_EXCEPTION, "Invalid total refund amount for order " + order.getOrderNumber());
         }
 
-        Refund refund = stripeService.createRefund(order.getPaymentIntentId(), totalRefundAmount);
-        order.setRefundId(refund.getId());
+        String refundId = paymentService.createRefund(order.getPaymentIntentId(), totalRefundAmount, order.getPaymentType());
+        order.setRefundId(refundId);
         applyStatusChange(order, OrderStatus.RETURN_RECEIVED);
         return orderRepository.save(order);
     }

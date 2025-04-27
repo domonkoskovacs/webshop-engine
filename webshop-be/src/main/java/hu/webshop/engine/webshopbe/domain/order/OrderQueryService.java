@@ -26,7 +26,7 @@ import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import hu.webshop.engine.webshopbe.domain.util.CSVWriter;
@@ -105,7 +105,7 @@ public class OrderQueryService {
                 Order::getOrderNumber,
                 Order::getTotalPrice,
                 Order::getShippingPrice,
-                order -> valueOfNullable(order.getPaymentMethod(), PaymentMethod::name),
+                order -> valueOfNullable(order.getPaymentType(), PaymentType::name),
                 order -> valueOfNullable(order.getStatus(), OrderStatus::name),
                 Order::getPaymentIntentId,
                 Order::getRefundId,

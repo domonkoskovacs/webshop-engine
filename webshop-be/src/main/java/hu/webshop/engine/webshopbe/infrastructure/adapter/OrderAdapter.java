@@ -15,7 +15,7 @@ import hu.webshop.engine.webshopbe.domain.order.filters.OrderSorting;
 import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.mapper.OrderMapper;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.OrderStatusRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.RefundOrderItemRequest;
@@ -48,14 +48,13 @@ public class OrderAdapter {
         return orderQueryService.getAll(args, pageRequest).map(orderMapper::toResponse);
     }
 
-    public OrderResponse create(PaymentMethod paymentMethod) {
-        log.info("create > paymentMethod: [{}]", paymentMethod);
-        return orderMapper.toResponse(orderCreationService.create(paymentMethod));
+    public OrderResponse create(PaymentType paymentType) {
+        return orderMapper.toResponse(orderCreationService.create(paymentType));
     }
 
     public PaymentIntentResponse paymentIntent(UUID id) {
         log.info("createPaymentIntent > id: [{}]", id);
-        return new PaymentIntentResponse(orderPaymentService.paymentIntent(id).getClientSecret());
+        return new PaymentIntentResponse(orderPaymentService.paymentIntent(id).secret());
     }
 
     public OrderResponse changeStatus(UUID id, OrderStatusRequest request) {

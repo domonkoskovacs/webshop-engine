@@ -1,4 +1,4 @@
-package hu.webshop.engine.webshopbe.domain.image;
+package hu.webshop.engine.webshopbe.domain.image.strategy;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MinioImageStorage implements ImageStorageStrategy{
+public class MinioImageStorageStrategy implements ImageStorageStrategy{
 
     private final MinioClient minioClient;
     private final ImageProperties imageProperties;

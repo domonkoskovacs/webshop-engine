@@ -1,4 +1,4 @@
-package hu.webshop.engine.webshopbe.domain.image;
+package hu.webshop.engine.webshopbe.domain.image.strategy;
 
 import org.springframework.web.multipart.MultipartFile;
 

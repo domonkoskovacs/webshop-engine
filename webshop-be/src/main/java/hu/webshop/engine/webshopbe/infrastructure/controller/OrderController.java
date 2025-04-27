@@ -18,7 +18,7 @@ import hu.webshop.engine.webshopbe.domain.order.model.OrderPage;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSortType;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.OrderAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
@@ -58,14 +58,14 @@ public class OrderController {
             @RequestParam(required = false) LocalDate maxDate,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) List<PaymentMethod> paymentMethods,
+            @RequestParam(required = false) List<PaymentType> paymentTypes,
             @RequestParam(required = false) List<OrderStatus> statuses,
             @RequestParam(required = false) OrderSortType sortType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         log.info("getAll");
-        return ResponseEntity.ok(orderAdapter.getAll(new OrderSpecificationArgs(minDate, maxDate, minPrice, maxPrice, paymentMethods, statuses), sortType, page, size));
+        return ResponseEntity.ok(orderAdapter.getAll(new OrderSpecificationArgs(minDate, maxDate, minPrice, maxPrice, paymentTypes, statuses), sortType, page, size));
     }
 
     @Operation(
@@ -78,7 +78,7 @@ public class OrderController {
     @User
     public ResponseEntity<OrderResponse> create() {
         log.info("create");
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderAdapter.create(PaymentMethod.STRIPE));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderAdapter.create(PaymentType.STRIPE));
     }
 
     @Operation(

@@ -24,18 +24,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.stripe.model.Refund;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.order.OrderQueryService;
 import hu.webshop.engine.webshopbe.domain.order.OrderStatusService;
-import hu.webshop.engine.webshopbe.domain.order.StripeService;
+import hu.webshop.engine.webshopbe.domain.order.PaymentService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.entity.OrderItem;
 import hu.webshop.engine.webshopbe.domain.order.mapper.OrderItemStockChangeMapper;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.domain.order.value.RefundOrderItem;
 import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.store.StoreService;
@@ -62,7 +62,7 @@ class OrderStatusServiceTest {
     @Mock
     private Clock clock;
     @Mock
-    private StripeService stripeService;
+    private PaymentService paymentService;
 
     @Test
     @DisplayName("paid order cancellation results in a refund")
@@ -70,12 +70,11 @@ class OrderStatusServiceTest {
         //Given
         String paymentIntentId = UUID.randomUUID().toString();
         Double totalAmount = 100.0;
-        Order order = Order.builder().status(OrderStatus.PAID).paymentIntentId(paymentIntentId).totalPrice(totalAmount).build();
+        Order order = Order.builder().status(OrderStatus.PAID).paymentIntentId(paymentIntentId).totalPrice(totalAmount).paymentType(PaymentType.DEMO).build();
         UUID orderId = UUID.randomUUID();
         order.setId(orderId);
-        Refund refund = new Refund();
-        refund.setId(UUID.randomUUID().toString());
-        when(stripeService.createRefund(any(), any())).thenReturn(refund);
+        String refundId = UUID.randomUUID().toString();
+        when(paymentService.createRefund(any(), any(), any())).thenReturn(refundId);
         when(orderQueryService.getOrderFromCurrentUser(orderId)).thenReturn(order);
 
         //When
@@ -84,7 +83,7 @@ class OrderStatusServiceTest {
         //Then
         assertThat(cancel.getStatus()).isEqualTo(OrderStatus.WAITING_FOR_REFUND);
         assertThat(cancel.getRefundId()).isNotNull();
-        verify(stripeService, times(1)).createRefund(paymentIntentId, totalAmount);
+        verify(paymentService, times(1)).createRefund(paymentIntentId, totalAmount, PaymentType.DEMO);
     }
 
     @Test
@@ -108,7 +107,7 @@ class OrderStatusServiceTest {
     void cancelOrderCancelsIntent() {
         //Given
         String paymentIntentId = UUID.randomUUID().toString();
-        Order order = Order.builder().status(OrderStatus.CREATED).paymentIntentId(paymentIntentId).build();
+        Order order = Order.builder().status(OrderStatus.CREATED).paymentIntentId(paymentIntentId).paymentType(PaymentType.DEMO).build();
         UUID orderId = UUID.randomUUID();
         order.setId(orderId);
         when(orderQueryService.getOrderFromCurrentUser(orderId)).thenReturn(order);
@@ -117,7 +116,7 @@ class OrderStatusServiceTest {
         orderStatusService.cancel(orderId);
 
         //Then
-        verify(stripeService, times(1)).cancelPaymentIntent(paymentIntentId);
+        verify(paymentService, times(1)).cancelPaymentIntent(paymentIntentId, PaymentType.DEMO);
     }
 
     @Test

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderSpecificationArgs;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +17,7 @@ public class OrderSpecification {
 
     public static Specification<Order> getSpecifications(
             OrderSpecificationArgs args) {
-        return Specification.where(paymentMethod(args.paymentMethods()))
+        return Specification.where(paymentType(args.paymentTypes()))
                 .and(status(args.statuses()))
                 .and(minTotalPrice(args.minPrice()))
                 .and(maxTotalPrice(args.maxPrice()))
@@ -27,16 +27,16 @@ public class OrderSpecification {
 
     public static Specification<Order> getSpecificationsWithoutPrice(
             OrderSpecificationArgs args) {
-        return Specification.where(paymentMethod(args.paymentMethods()))
+        return Specification.where(paymentType(args.paymentTypes()))
                 .and(status(args.statuses()))
                 .and(minDate(args.minDate()))
                 .and(maxDate(args.maxDate()));
     }
 
-    private static Specification<Order> paymentMethod(List<PaymentMethod> paymentMethods) {
+    private static Specification<Order> paymentType(List<PaymentType> paymentTypes) {
         return (orders, cq, cb) -> {
-            if (paymentMethods == null || paymentMethods.isEmpty()) return cb.conjunction();
-            return orders.get("paymentMethod").in(paymentMethods);
+            if (paymentTypes == null || paymentTypes.isEmpty()) return cb.conjunction();
+            return orders.get("paymentMethod").in(paymentTypes);
         };
     }
 

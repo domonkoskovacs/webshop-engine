@@ -19,4 +19,6 @@ public class Constants {
     public static final String DAY_OF_WEEK_SEPARATOR = ",";
 
     public static final String GENERATE_KEY = "generate";
+
+    public static final String PRODUCTION_PROFILE = "prod";
 }

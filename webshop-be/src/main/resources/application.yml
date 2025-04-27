@@ -85,9 +85,10 @@ application:
       accessKey: ${MINIO_ACCESS_KEY:minioadmin}
       secretKey: ${MINIO_SECRET_KEY:minioadmin}
       bucket: images
-  stripe:
+  payment:
     private-key: ${STRIPE_PRIVATE_KEY:MUST_BE_SPECIFIED}
     endpoint-secret: ${ENDPOINT_SECRET:MUST_BE_SPECIFIED}
+    demo-mode: true
   schedule:
     out-of-stock-product:
       cron: "* 0 0 * * *" #every midnight

@@ -4,9 +4,9 @@ import java.net.URI;
 
 import org.springframework.stereotype.Component;
 
-import hu.webshop.engine.webshopbe.domain.image.ImageStorageStrategy;
-import hu.webshop.engine.webshopbe.domain.image.StrategyRegistry;
+import hu.webshop.engine.webshopbe.domain.image.strategy.ImageStorageStrategy;
 import hu.webshop.engine.webshopbe.domain.image.properties.ImageProperties;
+import hu.webshop.engine.webshopbe.domain.image.strategy.ImageStorageStrategyRegistry;
 import hu.webshop.engine.webshopbe.domain.image.value.ImageStorageType;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class ImageMetadataEntityListener {
-    private final StrategyRegistry strategyRegistry;
+    private final ImageStorageStrategyRegistry strategyRegistry;
     private final ImageProperties imageProperties;
 
     @PrePersist

@@ -60,10 +60,9 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.configuration.Orthography;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.Refund;
 import hu.webshop.engine.webshopbe.container.MailDevContainer;
-import hu.webshop.engine.webshopbe.domain.order.StripeService;
+import hu.webshop.engine.webshopbe.domain.order.strategy.StripePaymentStrategy;
+import hu.webshop.engine.webshopbe.domain.order.value.IntentSecret;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.config.InitDataConfig;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
@@ -102,7 +101,7 @@ public abstract class IntegrationTest {
     @Autowired
     protected ObjectMapper objectMapper;
     @MockitoBean
-    protected StripeService stripeService;
+    protected StripePaymentStrategy stripeService;
     @MockitoSpyBean
     protected InitDataConfig initDataConfig;
     @MockitoBean
@@ -157,15 +156,12 @@ public abstract class IntegrationTest {
     @BeforeEach
     @DataSet(cleanBefore = true)
     void setup() {
-        PaymentIntent intent = new PaymentIntent();
-        intent.setId(UUID.randomUUID().toString());
-        intent.setClientSecret(UUID.randomUUID().toString());
-        Refund refund = new Refund();
-        refund.setId(UUID.randomUUID().toString());
-        lenient().when(stripeService.createIntent(any())).thenReturn(intent);
-        lenient().when(stripeService.retrieveIntent(any())).thenReturn(intent);
-        lenient().when(stripeService.cancelPaymentIntent(any())).thenReturn(intent);
-        lenient().when(stripeService.createRefund(any(), any())).thenReturn(refund);
+        IntentSecret intentSecret = new IntentSecret(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        String refundId = UUID.randomUUID().toString();
+        lenient().when(stripeService.createIntent(any())).thenReturn(intentSecret);
+        lenient().when(stripeService.retrieveIntent(any())).thenReturn(intentSecret);
+        lenient().doNothing().when(stripeService).cancelPaymentIntent(any());
+        lenient().when(stripeService.createRefund(any(), any())).thenReturn(refundId);
         initDataConfig.run();
         when(clock.instant()).thenReturn(Instant.parse("2025-03-25T00:00:00Z"));
         when(clock.getZone()).thenReturn(ZoneId.of("UTC"));

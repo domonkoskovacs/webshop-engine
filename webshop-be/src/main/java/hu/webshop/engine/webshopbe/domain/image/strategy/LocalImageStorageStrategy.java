@@ -1,4 +1,4 @@
-package hu.webshop.engine.webshopbe.domain.image;
+package hu.webshop.engine.webshopbe.domain.image.strategy;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LocalImageStorage  implements ImageStorageStrategy{
+public class LocalImageStorageStrategy implements ImageStorageStrategy{
 
     private final ImageProperties imageProperties;
     @Getter

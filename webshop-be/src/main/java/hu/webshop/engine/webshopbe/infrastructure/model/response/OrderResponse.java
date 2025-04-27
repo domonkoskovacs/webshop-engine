@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 
 
 public record OrderResponse(
@@ -18,7 +18,7 @@ public record OrderResponse(
         AddressResponse billingAddress,
         String email,
         String phoneNumber,
-        PaymentMethod paymentMethod,
+        PaymentType paymentType,
         OrderStatus status,
         OffsetDateTime paidDate,
         OffsetDateTime refundedDate,

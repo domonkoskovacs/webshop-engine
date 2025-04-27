@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
-import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
+import hu.webshop.engine.webshopbe.domain.order.properties.PaymentProperties;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.WebhookAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WebhookController {
 
     private final WebhookAdapter paymentAdapter;
-    private final StripeProperties stripeProperties;
+    private final PaymentProperties stripeProperties;
 
     @Public
     @PostMapping(ApiPaths.Webhooks.STRIPE)

@@ -11,7 +11,7 @@ import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
 import hu.webshop.engine.webshopbe.domain.base.exception.OrderException;
 import hu.webshop.engine.webshopbe.domain.base.value.ReasonCode;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
-import hu.webshop.engine.webshopbe.domain.order.value.PaymentMethod;
+import hu.webshop.engine.webshopbe.domain.order.value.PaymentType;
 import hu.webshop.engine.webshopbe.domain.order.value.ProductDetails;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -55,7 +55,7 @@ public class Order extends BaseEntity {
 
     @Column(name = "payment_method", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+    private PaymentType paymentType;
 
     @Builder.Default
     @Column(name = "order_status")

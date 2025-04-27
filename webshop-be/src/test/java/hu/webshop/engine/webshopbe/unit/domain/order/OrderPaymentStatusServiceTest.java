@@ -14,20 +14,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.stripe.model.Refund;
-import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
+import hu.webshop.engine.webshopbe.domain.order.OrderPaymentStatusService;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.order.repository.OrderRepository;
 import hu.webshop.engine.webshopbe.domain.order.value.OrderStatus;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("OrderPaymentService unit tests")
-class OrderPaymentServiceTest {
+@DisplayName("OrderPaymentStatusServiceTest unit tests")
+class OrderPaymentStatusServiceTest {
 
     @Mock
     private OrderRepository orderRepository;
 
     @InjectMocks
-    private OrderPaymentService orderPaymentService;
+    private OrderPaymentStatusService orderPaymentStatusService;
 
     @Test
     @DisplayName("refund success sets return completed status")
@@ -39,7 +39,7 @@ class OrderPaymentServiceTest {
         when(orderRepository.findByRefundId(refund.getId())).thenReturn(Optional.of(order));
 
         //When
-        orderPaymentService.handleRefundSuccess(refund);
+        orderPaymentStatusService.handleRefundSuccess(refund.getId());
 
         //Then
         assertThat(order.getStatus()).isEqualTo(OrderStatus.RETURN_COMPLETED);
