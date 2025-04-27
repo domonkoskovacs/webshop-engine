@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.ArticleAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.ArticleRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.ArticleResponse;
@@ -39,6 +40,7 @@ public class ArticleController {
             summary = "Get all article",
             description = "Get all article"
     )
+    @Public
     @GetMapping(value = ApiPaths.Articles.BASE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ArticleResponse>> getAll() {

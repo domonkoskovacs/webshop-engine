@@ -23,6 +23,7 @@ import hu.webshop.engine.webshopbe.domain.product.value.ProductSortType;
 import hu.webshop.engine.webshopbe.domain.product.value.ProductSpecificationArgs;
 import hu.webshop.engine.webshopbe.infrastructure.adapter.ProductAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CsvRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.DeleteProductRequest;
@@ -67,6 +68,7 @@ public class ProductController {
             summary = "Get all products",
             description = "Get all existing products"
     )
+    @Public
     @GetMapping(value = ApiPaths.Products.BASE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductPage<ProductResponse>> getAll(
@@ -94,6 +96,7 @@ public class ProductController {
             summary = "Get a products by id",
             description = "Get a products by id"
     )
+    @Public
     @GetMapping(value = ApiPaths.Products.BY_ID,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductResponse> getById(@PathVariable UUID id) {
@@ -106,6 +109,7 @@ public class ProductController {
             summary = "Get brands",
             description = "Public endpoint, return existing brands"
     )
+    @Public
     @GetMapping(value = ApiPaths.Products.BRANDS,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BrandResponse>> getBrands() {

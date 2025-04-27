@@ -11,7 +11,8 @@ import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 import hu.webshop.engine.webshopbe.domain.order.properties.StripeProperties;
-import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentWebhookAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.adapter.WebhookAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class WebhookController {
 
-    private final PaymentWebhookAdapter paymentAdapter;
+    private final WebhookAdapter paymentAdapter;
     private final StripeProperties stripeProperties;
 
+    @Public
     @PostMapping(ApiPaths.Webhooks.STRIPE)
     public ResponseEntity<Void> handleStripeWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event;

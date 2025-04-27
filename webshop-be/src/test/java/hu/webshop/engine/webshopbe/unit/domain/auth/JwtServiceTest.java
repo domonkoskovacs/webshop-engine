@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import java.security.Key;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import hu.webshop.engine.webshopbe.domain.auth.JwtService;
 import hu.webshop.engine.webshopbe.domain.auth.properties.JwtProperties;
 import hu.webshop.engine.webshopbe.domain.auth.value.JwtTokenType;
 import hu.webshop.engine.webshopbe.domain.base.exception.AuthenticationException;
+import io.jsonwebtoken.security.Keys;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Jwt service unit tests")
@@ -27,11 +30,14 @@ class JwtServiceTest {
     @InjectMocks
     private JwtService jwtService;
 
+    Key key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS512);
+
     @Test
     @DisplayName("test if token type retrievable when jwt is access token")
     void testIfTokenTypeRetrievableWhenJwtIsAccessToken() {
         //Given
         when(jwtProperties.getExpiration()).thenReturn(86400000);
+        when(jwtProperties.getAccessKey()).thenReturn(key);
         String accessToken = jwtService.generateAccessJwtToken("username", "email@email.com", "role");
 
         //When
@@ -46,6 +52,7 @@ class JwtServiceTest {
     void testIfTokenTypeRetrievableWhenJwtIsRefreshToken() {
         //Given
         when(jwtProperties.getRefreshExpiration()).thenReturn(864000000);
+        when(jwtProperties.getRefreshKey()).thenReturn(key);
         String accessToken = jwtService.generateJwtRefreshToken("username", "email@email.com", "role");
 
         //When
@@ -60,6 +67,7 @@ class JwtServiceTest {
     void testThatExpiredTokenTypeIsNotRetrievable() {
         //Given
         when(jwtProperties.getExpiration()).thenReturn(0);
+        when(jwtProperties.getAccessKey()).thenReturn(key);
         String accessToken = jwtService.generateAccessJwtToken("username", "email@email.com", "role");
 
         //When //Then
@@ -71,6 +79,7 @@ class JwtServiceTest {
     void testThatEmailIsRetrievableFromAccessToken() {
         //Given
         when(jwtProperties.getExpiration()).thenReturn(10000);
+        when(jwtProperties.getAccessKey()).thenReturn(key);
         String email = "email@email.com";
         String accessToken = jwtService.generateAccessJwtToken("username", email, "role");
 
@@ -86,6 +95,7 @@ class JwtServiceTest {
     void testThatEmailIsRetrievableFromRefreshToken() {
         //Given
         when(jwtProperties.getRefreshExpiration()).thenReturn(10000);
+        when(jwtProperties.getRefreshKey()).thenReturn(key);
         String email = "email@email.com";
         String accessToken = jwtService.generateJwtRefreshToken("username", email, "role");
 
@@ -101,6 +111,7 @@ class JwtServiceTest {
     void testThatAccessTokenCanBeValidated() {
         //Given
         when(jwtProperties.getExpiration()).thenReturn(86400000);
+        when(jwtProperties.getAccessKey()).thenReturn(key);
         String accessToken = jwtService.generateAccessJwtToken("username", "email@email.com", "role");
 
         //When
@@ -115,6 +126,7 @@ class JwtServiceTest {
     void testThatRefreshTokenCanBeValidated() {
         //Given
         when(jwtProperties.getRefreshExpiration()).thenReturn(86400000);
+        when(jwtProperties.getRefreshKey()).thenReturn(key);
         String refreshToken = jwtService.generateJwtRefreshToken("username", "email@email.com", "role");
 
         //When
@@ -155,6 +167,7 @@ class JwtServiceTest {
     void expiredRefreshTokenThrowsException() {
         //Given
         when(jwtProperties.getRefreshExpiration()).thenReturn(0);
+        when(jwtProperties.getRefreshKey()).thenReturn(key);
         String refreshToken = jwtService.generateJwtRefreshToken("username", "email@email.com", "role");
 
         //When //Then
@@ -189,6 +202,7 @@ class JwtServiceTest {
     void expiredTokenCantBeValidated() {
         //Given
         when(jwtProperties.getExpiration()).thenReturn(0);
+        when(jwtProperties.getAccessKey()).thenReturn(key);
         String token = jwtService.generateAccessJwtToken("username", "email@email.com", "role");
 
         //When //Then

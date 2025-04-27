@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.CategoryAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CategoryRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.CategoryResponse;
@@ -40,6 +41,7 @@ public class CategoryController {
             summary = "Get all category",
             description = "Public endpoint returns all categories"
     )
+    @Public
     @GetMapping(value = ApiPaths.Categories.BASE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryResponse>> getAll() {

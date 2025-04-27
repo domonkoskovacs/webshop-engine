@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.UserAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.User;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.CartItemRequest;
@@ -48,6 +49,7 @@ public class UserController {
             summary = "Registration of new user",
             description = "Users can register with the required information"
     )
+    @Public
     @PostMapping(value = ApiPaths.Users.REGISTER,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,6 +64,7 @@ public class UserController {
             summary = "New password request",
             description = "Users can request a new password if the old is forgotten"
     )
+    @Public
     @PostMapping(value = ApiPaths.Users.FORGOTTEN_PASSWORD,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> forgottenPassword(@Valid @RequestBody ForgottenPasswordRequest forgottenPasswordRequest) {
@@ -87,6 +90,7 @@ public class UserController {
             summary = "Verify an user",
             description = "After registration users must be verified, with a verification link that is given in an email"
     )
+    @Public
     @PostMapping(value = ApiPaths.Users.VERIFY,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -101,6 +105,7 @@ public class UserController {
             summary = "Resend verification email",
             description = "After registration users can resend the verification email"
     )
+    @Public
     @PostMapping(value = ApiPaths.Users.RESEND_VERIFICATION,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -116,6 +121,7 @@ public class UserController {
             description = "Update a user password with a new one"
 
     )
+    @Public
     @PostMapping(value = ApiPaths.Users.PASSWORD,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> newPassword(@PathVariable UUID id, @Valid @RequestBody NewPasswordRequest newPasswordRequest) {
@@ -224,6 +230,7 @@ public class UserController {
             summary = "Unsubscribe from email list with email",
             description = "User can unsubscribe from email list with email"
     )
+    @Public
     @GetMapping(value = ApiPaths.Users.UNSUBSCRIBE)
     public ResponseEntity<Void> unSubscribeToEmailListWithId(@PathVariable UUID id) {
         log.info("unSubscribeToEmailListWithId > id: [{}]", id);

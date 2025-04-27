@@ -21,17 +21,17 @@ import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
 import hu.webshop.engine.webshopbe.domain.order.OrderPaymentService;
-import hu.webshop.engine.webshopbe.infrastructure.adapter.PaymentWebhookAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.adapter.WebhookAdapter;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PaymentWebhookAdapter unit tests")
-class PaymentWebhookAdapterTest {
+@DisplayName("WebhookAdapter unit tests")
+class WebhookAdapterTest {
 
     @Mock
     private OrderPaymentService orderService;
 
     @InjectMocks
-    private PaymentWebhookAdapter paymentAdapter;
+    private WebhookAdapter paymentAdapter;
 
     @Test
     @DisplayName("unknown event type does nothing")

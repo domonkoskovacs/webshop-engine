@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PaymentWebhookAdapter {
+public class WebhookAdapter {
 
     private final OrderPaymentService orderPaymentService;
 

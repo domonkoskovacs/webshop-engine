@@ -31,8 +31,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.config.endpoint.PublicEndpointsCollector;
 import hu.webshop.engine.webshopbe.infrastructure.config.filter.JwtAuthenticationFilter;
-import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +50,7 @@ public class SecurityConfig {
     private final MonitoringProperties monitoringProperties;
     private final SwaggerProperties swaggerProperties;
     private final CorsProperties corsProperties;
+    private final PublicEndpointsCollector publicEndpointsCollector;
 
     @Bean
     @Order(1)
@@ -104,18 +105,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(ApiPaths.Auth.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Users.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Products.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Articles.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Orders.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Images.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Categories.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Categories.SUBCATEGORIES_BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Store.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Statistics.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.PromotionEmails.BASE + "/**").permitAll()
-                        .requestMatchers(ApiPaths.Webhooks.BASE + "/**").permitAll()
+                        .requestMatchers(publicEndpointsCollector.getPublicEndpoints().toArray(new String[0])).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

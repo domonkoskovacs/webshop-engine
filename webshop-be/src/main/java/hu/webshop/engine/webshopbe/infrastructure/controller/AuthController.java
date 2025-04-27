@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.AuthAdapter;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.LoginRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.TokenRequest;
@@ -32,6 +33,7 @@ public class AuthController {
             summary = "Login with an existing user",
             description = "Users can login with username and password and get an access token"
     )
+    @Public
     @PostMapping(value = ApiPaths.Auth.LOGIN,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +47,7 @@ public class AuthController {
             summary = "Refresh access token",
             description = "Users can refresh their access token with a refresh token"
     )
+    @Public
     @PostMapping(value = ApiPaths.Auth.REFRESH,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
