@@ -91,9 +91,7 @@ public class UserController {
             description = "After registration users must be verified, with a verification link that is given in an email"
     )
     @Public
-    @PostMapping(value = ApiPaths.Users.VERIFY,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = ApiPaths.Users.VERIFY)
     public ResponseEntity<Void> verify(@PathVariable UUID id) {
         log.info("verify > id: [{}]", id);
         userAdapter.verify(id);
@@ -107,8 +105,7 @@ public class UserController {
     )
     @Public
     @PostMapping(value = ApiPaths.Users.RESEND_VERIFICATION,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> resendVerify(@Valid @RequestBody EmailRequest emailRequest) {
         log.info("resendVerify > emailRequest: [{}]", emailRequest);
         userAdapter.resendVerify(emailRequest);

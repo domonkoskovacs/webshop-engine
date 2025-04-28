@@ -16,7 +16,6 @@ export const FormSchema = z.object({
     shippingPrice: z.number().min(0, "Shipping price must be at least 0"),
     returnPeriod: z.number().min(0, "Return period must be at least 0"),
     deleteOutOfStockProducts: z.boolean(),
-    deleteUnusedPictures: z.boolean(),
     enableBuiltInMarketingEmails: z.boolean(),
     unpaidOrderCancelHours: z.number().min(1, "Unpaid order cancel hours is at least 1"),
 });
@@ -33,7 +32,6 @@ const StoreForm: React.FC = () => {
             shippingPrice: 0,
             returnPeriod: 0,
             deleteOutOfStockProducts: false,
-            deleteUnusedPictures: false,
             enableBuiltInMarketingEmails: false,
         }
     })
@@ -46,7 +44,6 @@ const StoreForm: React.FC = () => {
                 shippingPrice: store.shippingPrice,
                 returnPeriod: store.returnPeriod,
                 deleteOutOfStockProducts: store.deleteOutOfStockProducts,
-                deleteUnusedPictures: store.deleteUnusedPictures,
                 enableBuiltInMarketingEmails: store.enableBuiltInMarketingEmails,
                 unpaidOrderCancelHours: store.unpaidOrderCancelHours,
             });
@@ -84,8 +81,6 @@ const StoreForm: React.FC = () => {
         <div className="flex flex-col gap-2">
             <SwitchField form={form} name="deleteOutOfStockProducts" label="Out of stock job"
                          description="Delete out of stock products"/>
-            <SwitchField form={form} name="deleteUnusedPictures" label="Unused picture job"
-                         description="Delete unused pictures"/>
             <SwitchField form={form} name="enableBuiltInMarketingEmails" label="Marketing email job"
                          description="Enable marketing emails"/>
         </div>

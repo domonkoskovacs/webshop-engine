@@ -76,13 +76,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }, [navigate, removeCookie])
 
     useEffect(() => {
+        const tryRefreshAccessToken = async () => {
+            if (!accessToken && cookies.refreshToken) {
+                try {
+                    const response = await refreshWithToken(cookies.refreshToken);
+                    const {accessToken, role} = response;
+                    if (accessToken && role) {
+                        setAccessToken(accessToken);
+                        setRole(role);
+                        setLoggedIn(true);
+                    } else {
+                        logout();
+                    }
+                } catch (e) {
+                    logout();
+                }
+            }
+            setLoading(false);
+
+        };
+
+        tryRefreshAccessToken();
+    }, [accessToken, cookies.refreshToken, refreshWithToken, logout]);
+
+
+    useEffect(() => {
         const storedLoggedIn = cookies.loggedIn;
         const storedRole = cookies.role;
         if (storedLoggedIn === true && storedRole) {
             setRole(storedRole);
             setLoggedIn(true);
         }
-        setLoading(false);
     }, [cookies.loggedIn, cookies.role]);
 
     const handleAuthError = useCallback((message: string) => {

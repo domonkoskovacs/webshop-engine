@@ -16,8 +16,5 @@ export const useDeleteUser = () => {
         onSuccess: () => {
             logout();
         },
-        onError: (error) => {
-            console.error("Error deleting user:", error);
-        },
     });
 };

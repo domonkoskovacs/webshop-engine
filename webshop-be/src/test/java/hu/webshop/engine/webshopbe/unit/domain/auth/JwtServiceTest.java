@@ -30,7 +30,7 @@ class JwtServiceTest {
     @InjectMocks
     private JwtService jwtService;
 
-    Key key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS512);
+    private final Key key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS512);
 
     @Test
     @DisplayName("test if token type retrievable when jwt is access token")

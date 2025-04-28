@@ -31,6 +31,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
+import hu.webshop.engine.webshopbe.infrastructure.config.endpoint.JwtAuthenticationEntryPoint;
 import hu.webshop.engine.webshopbe.infrastructure.config.endpoint.PublicEndpointsCollector;
 import hu.webshop.engine.webshopbe.infrastructure.config.filter.JwtAuthenticationFilter;
 import lombok.Data;
@@ -51,6 +52,7 @@ public class SecurityConfig {
     private final SwaggerProperties swaggerProperties;
     private final CorsProperties corsProperties;
     private final PublicEndpointsCollector publicEndpointsCollector;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     @Order(1)
@@ -102,6 +104,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .userDetailsService(userService)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.webshop.engine.webshopbe.infrastructure.adapter.StoreAdapter;
 import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Admin;
+import hu.webshop.engine.webshopbe.infrastructure.config.annotations.Public;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.StoreRequest;
 import hu.webshop.engine.webshopbe.infrastructure.model.response.PublicStoreResponse;
@@ -62,6 +63,7 @@ public class StoreController {
             summary = "Get public store configuration",
             description = "Retrieve essential store settings for users"
     )
+    @Public
     @GetMapping(value = ApiPaths.Store.PUBLIC,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PublicStoreResponse> getPublicStore() {

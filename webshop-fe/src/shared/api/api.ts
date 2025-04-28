@@ -614,6 +614,12 @@ export interface OrderPageOrderResponse {
     'totalPages'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof OrderPageOrderResponse
+     */
+    'first'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof OrderPageOrderResponse
      */
@@ -636,12 +642,6 @@ export interface OrderPageOrderResponse {
      * @memberof OrderPageOrderResponse
      */
     'numberOfElements'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OrderPageOrderResponse
-     */
-    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -739,7 +739,7 @@ export interface OrderResponse {
      * @type {string}
      * @memberof OrderResponse
      */
-    'paymentMethod'?: OrderResponsePaymentMethodEnum;
+    'paymentType'?: OrderResponsePaymentTypeEnum;
     /**
      * 
      * @type {string}
@@ -766,11 +766,12 @@ export interface OrderResponse {
     'items'?: Array<OrderItemResponse>;
 }
 
-export const OrderResponsePaymentMethodEnum = {
-    Stripe: 'STRIPE'
+export const OrderResponsePaymentTypeEnum = {
+    Stripe: 'STRIPE',
+    Demo: 'DEMO'
 } as const;
 
-export type OrderResponsePaymentMethodEnum = typeof OrderResponsePaymentMethodEnum[keyof typeof OrderResponsePaymentMethodEnum];
+export type OrderResponsePaymentTypeEnum = typeof OrderResponsePaymentTypeEnum[keyof typeof OrderResponsePaymentTypeEnum];
 export const OrderResponseStatusEnum = {
     Created: 'CREATED',
     PaymentFailed: 'PAYMENT_FAILED',
@@ -884,10 +885,10 @@ export interface PageableObject {
     'sort'?: SortObject;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof PageableObject
      */
-    'paged'?: boolean;
+    'pageSize'?: number;
     /**
      * 
      * @type {number}
@@ -896,10 +897,10 @@ export interface PageableObject {
     'pageNumber'?: number;
     /**
      * 
-     * @type {number}
+     * @type {boolean}
      * @memberof PageableObject
      */
-    'pageSize'?: number;
+    'paged'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -982,6 +983,12 @@ export interface ProductPageProductResponse {
     'totalPages'?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof ProductPageProductResponse
+     */
+    'first'?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof ProductPageProductResponse
      */
@@ -1004,12 +1011,6 @@ export interface ProductPageProductResponse {
      * @memberof ProductPageProductResponse
      */
     'numberOfElements'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProductPageProductResponse
-     */
-    'first'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -1423,7 +1424,8 @@ export const ResultEntryReasonCodeEnum = {
     CsvUploadError: 'CSV_UPLOAD_ERROR',
     OrderNotReturnable: 'ORDER_NOT_RETURNABLE',
     ExpiredReturnPeriod: 'EXPIRED_RETURN_PERIOD',
-    PromotionEmailNameOccupied: 'PROMOTION_EMAIL_NAME_OCCUPIED'
+    PromotionEmailNameOccupied: 'PROMOTION_EMAIL_NAME_OCCUPIED',
+    PaymentAlreadySucceeded: 'PAYMENT_ALREADY_SUCCEEDED'
 } as const;
 
 export type ResultEntryReasonCodeEnum = typeof ResultEntryReasonCodeEnum[keyof typeof ResultEntryReasonCodeEnum];
@@ -1576,34 +1578,10 @@ export interface StoreRequest {
     'unpaidOrderCancelHours': number;
     /**
      * 
-     * @type {string}
-     * @memberof StoreRequest
-     */
-    'theme'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StoreRequest
-     */
-    'primaryColor'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StoreRequest
-     */
-    'secondaryColor'?: string;
-    /**
-     * 
      * @type {boolean}
      * @memberof StoreRequest
      */
     'deleteOutOfStockProducts': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StoreRequest
-     */
-    'deleteUnusedPictures': boolean;
     /**
      * 
      * @type {boolean}
@@ -1649,34 +1627,10 @@ export interface StoreResponse {
     'unpaidOrderCancelHours': number;
     /**
      * 
-     * @type {string}
-     * @memberof StoreResponse
-     */
-    'theme'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StoreResponse
-     */
-    'primaryColor'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StoreResponse
-     */
-    'secondaryColor'?: string;
-    /**
-     * 
      * @type {boolean}
      * @memberof StoreResponse
      */
     'deleteOutOfStockProducts': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StoreResponse
-     */
-    'deleteUnusedPictures': boolean;
     /**
      * 
      * @type {boolean}
@@ -3780,7 +3734,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {string} [maxDate] 
          * @param {number} [minPrice] 
          * @param {number} [maxPrice] 
-         * @param {Array<GetAll4PaymentMethodsEnum>} [paymentMethods] 
+         * @param {Array<GetAll4PaymentTypesEnum>} [paymentTypes] 
          * @param {Array<GetAll4StatusesEnum>} [statuses] 
          * @param {GetAll4SortTypeEnum} [sortType] 
          * @param {number} [page] 
@@ -3788,7 +3742,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAll4: async (minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentMethods?: Array<GetAll4PaymentMethodsEnum>, statuses?: Array<GetAll4StatusesEnum>, sortType?: GetAll4SortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAll4: async (minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentTypes?: Array<GetAll4PaymentTypesEnum>, statuses?: Array<GetAll4StatusesEnum>, sortType?: GetAll4SortTypeEnum, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/orders`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3825,8 +3779,8 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
                 localVarQueryParameter['maxPrice'] = maxPrice;
             }
 
-            if (paymentMethods) {
-                localVarQueryParameter['paymentMethods'] = paymentMethods;
+            if (paymentTypes) {
+                localVarQueryParameter['paymentTypes'] = paymentTypes;
             }
 
             if (statuses) {
@@ -3900,7 +3854,7 @@ export const OrderServiceApiAxiosParamCreator = function (configuration?: Config
         paymentIntent: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('paymentIntent', 'id', id)
-            const localVarPath = `/api/orders/{id}/paymentIntent`
+            const localVarPath = `/api/my-orders/{id}/paymentIntent`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4050,7 +4004,7 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
          * @param {string} [maxDate] 
          * @param {number} [minPrice] 
          * @param {number} [maxPrice] 
-         * @param {Array<GetAll4PaymentMethodsEnum>} [paymentMethods] 
+         * @param {Array<GetAll4PaymentTypesEnum>} [paymentTypes] 
          * @param {Array<GetAll4StatusesEnum>} [statuses] 
          * @param {GetAll4SortTypeEnum} [sortType] 
          * @param {number} [page] 
@@ -4058,8 +4012,8 @@ export const OrderServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAll4(minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentMethods?: Array<GetAll4PaymentMethodsEnum>, statuses?: Array<GetAll4StatusesEnum>, sortType?: GetAll4SortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderPageOrderResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll4(minDate, maxDate, minPrice, maxPrice, paymentMethods, statuses, sortType, page, size, options);
+        async getAll4(minDate?: string, maxDate?: string, minPrice?: number, maxPrice?: number, paymentTypes?: Array<GetAll4PaymentTypesEnum>, statuses?: Array<GetAll4StatusesEnum>, sortType?: GetAll4SortTypeEnum, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderPageOrderResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAll4(minDate, maxDate, minPrice, maxPrice, paymentTypes, statuses, sortType, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderServiceApi.getAll4']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4169,7 +4123,7 @@ export const OrderServiceApiFactory = function (configuration?: Configuration, b
          * @throws {RequiredError}
          */
         getAll4(requestParameters: OrderServiceApiGetAll4Request = {}, options?: RawAxiosRequestConfig): AxiosPromise<OrderPageOrderResponse> {
-            return localVarFp.getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+            return localVarFp.getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentTypes, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * Users can get their own orders
@@ -4316,10 +4270,10 @@ export interface OrderServiceApiGetAll4Request {
 
     /**
      * 
-     * @type {Array<'STRIPE'>}
+     * @type {Array<'STRIPE' | 'DEMO'>}
      * @memberof OrderServiceApiGetAll4
      */
-    readonly paymentMethods?: Array<GetAll4PaymentMethodsEnum>
+    readonly paymentTypes?: Array<GetAll4PaymentTypesEnum>
 
     /**
      * 
@@ -4453,7 +4407,7 @@ export class OrderServiceApi extends BaseAPI {
      * @memberof OrderServiceApi
      */
     public getAll4(requestParameters: OrderServiceApiGetAll4Request = {}, options?: RawAxiosRequestConfig) {
-        return OrderServiceApiFp(this.configuration).getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentMethods, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+        return OrderServiceApiFp(this.configuration).getAll4(requestParameters.minDate, requestParameters.maxDate, requestParameters.minPrice, requestParameters.maxPrice, requestParameters.paymentTypes, requestParameters.statuses, requestParameters.sortType, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4495,10 +4449,11 @@ export class OrderServiceApi extends BaseAPI {
 /**
  * @export
  */
-export const GetAll4PaymentMethodsEnum = {
-    Stripe: 'STRIPE'
+export const GetAll4PaymentTypesEnum = {
+    Stripe: 'STRIPE',
+    Demo: 'DEMO'
 } as const;
-export type GetAll4PaymentMethodsEnum = typeof GetAll4PaymentMethodsEnum[keyof typeof GetAll4PaymentMethodsEnum];
+export type GetAll4PaymentTypesEnum = typeof GetAll4PaymentTypesEnum[keyof typeof GetAll4PaymentTypesEnum];
 /**
  * @export
  */

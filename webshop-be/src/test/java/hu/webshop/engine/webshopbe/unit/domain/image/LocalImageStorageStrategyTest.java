@@ -78,7 +78,7 @@ class LocalImageStorageStrategyTest {
     @DisplayName("save throws ImageException when file save fails")
     void saveThrowsImageExceptionWhenFileSaveFails() throws IOException {
         //Given
-        when(imageProperties.getFolderName()).thenReturn("test-folder");
+        when(imageProperties.getFolderName()).thenReturn("src/test/resources/images");
         localImageStorageStrategy.init();
         MultipartFile file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn("test.jpg");
@@ -99,7 +99,7 @@ class LocalImageStorageStrategyTest {
     @DisplayName("get throws ImageException when file does not exist")
     void getThrowsImageExceptionWhenFileDoesNotExist() {
         //Given
-        when(imageProperties.getFolderName()).thenReturn("test-folder");
+        when(imageProperties.getFolderName()).thenReturn("src/test/resources/images");
         localImageStorageStrategy.init();
 
         String filename = "nonexistent.jpg";
@@ -124,7 +124,7 @@ class LocalImageStorageStrategyTest {
     @DisplayName("get throws ImageException when file read fails")
     void getThrowsImageExceptionWhenFileReadFails() {
         //Given
-        when(imageProperties.getFolderName()).thenReturn("test-folder");
+        when(imageProperties.getFolderName()).thenReturn("src/test/resources/images");
         localImageStorageStrategy.init();
 
         String filename = "test.jpg";
@@ -152,7 +152,7 @@ class LocalImageStorageStrategyTest {
     @DisplayName("delete throws ImageException when file delete fails")
     void deleteThrowsImageExceptionWhenFileDeleteFails() {
         //Given
-        when(imageProperties.getFolderName()).thenReturn("test-folder");
+        when(imageProperties.getFolderName()).thenReturn("src/test/resources/images");
         localImageStorageStrategy.init();
         String filename = "test.jpg";
 

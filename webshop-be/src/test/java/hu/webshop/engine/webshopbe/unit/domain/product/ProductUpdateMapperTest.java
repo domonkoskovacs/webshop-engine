@@ -20,11 +20,8 @@ class ProductUpdateMapperTest {
     @Test
     @DisplayName("toImageMetadataList returns empty list when input is null")
     void toImageMetadataListReturnsEmptyListWhenInputIsNull() {
-        //Given
-        String imageUrls = null;
-
-        //When
-        List<ImageMetadata> result = mapper.toImageMetadataList(imageUrls);
+        //Given //When
+        List<ImageMetadata> result = mapper.toImageMetadataList(null);
 
         //Then
         assertThat(result).isEmpty();

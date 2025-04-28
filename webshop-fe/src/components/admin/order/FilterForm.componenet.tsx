@@ -4,7 +4,7 @@ import {z} from "zod"
 import {toast} from "../../../hooks/useToast";
 import React, {useEffect} from "react";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {GetAll4PaymentMethodsEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "../../../shared/api";
+import {GetAll4PaymentTypesEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "../../../shared/api";
 import DatePickerField from "../../ui/fields/DatePickerField";
 import SliderField from "../../ui/fields/SliderField";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
@@ -20,7 +20,7 @@ export const FormSchema = z.object({
     }).optional(),
     minPrice: z.number().min(0, {message: "Min price must be at least 0"}).optional(),
     maxPrice: z.number().optional(),
-    paymentMethods: z.array(z.nativeEnum(GetAll4PaymentMethodsEnum)).optional(),
+    paymentTypes: z.array(z.nativeEnum(GetAll4PaymentTypesEnum)).optional(),
     statuses: z.array(z.nativeEnum(GetAll4StatusesEnum)).optional(),
     sortType: z.nativeEnum(GetAll4SortTypeEnum).optional(),
     size: z.number().positive({message: "Size must be a positive number"}).optional()
@@ -44,12 +44,12 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             maxDate: filters.maxDate ? new Date(filters.maxDate) : undefined,
             minPrice: filters.minPrice,
             maxPrice: filters.maxPrice,
-            paymentMethods: filters.paymentMethods,
+            paymentTypes: filters.paymentTypes,
             statuses: filters.statuses,
             sortType: filters.sortType,
             size: filters.size,
         });
-    }, [filters.maxDate, filters.maxPrice, filters.minDate, filters.minPrice, filters.paymentMethods, filters.size, filters.sortType, filters.statuses, form]);
+    }, [filters.maxDate, filters.maxPrice, filters.minDate, filters.minPrice, filters.paymentTypes, filters.size, filters.sortType, filters.statuses, form]);
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         updateFilters({
@@ -57,7 +57,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             maxDate: data.maxDate?.toISOString().split("T")[0],
             minPrice: data.minPrice,
             maxPrice: data.maxPrice,
-            paymentMethods: data.paymentMethods,
+            paymentTypes: data.paymentTypes,
             statuses: data.statuses,
             sortType: data.sortType,
             size: data.size,
@@ -84,7 +84,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
                          range={[priceRange[0], priceRange[1]]}/>
             <ComboBoxMultipleValueField form={form} name="paymentMethods" label="Payment Methods"
-                                        options={mapEnumToOptions(GetAll4PaymentMethodsEnum)}/>
+                                        options={mapEnumToOptions(GetAll4PaymentTypesEnum)}/>
             <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
                                         options={mapEnumToOptions(GetAll4StatusesEnum)}/>
             <SelectField form={form} name="sortType" label="Sorting" placeholder="Select sorting..."

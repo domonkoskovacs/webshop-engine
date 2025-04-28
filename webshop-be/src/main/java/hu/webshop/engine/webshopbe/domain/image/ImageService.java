@@ -64,8 +64,7 @@ public class ImageService {
             builder.append(":").append(serverPort);
         }
 
-        builder.append("/api/image/")
-                .append(id);
+        builder.append("/api/images/").append(id);
 
         return builder.toString();
     }
