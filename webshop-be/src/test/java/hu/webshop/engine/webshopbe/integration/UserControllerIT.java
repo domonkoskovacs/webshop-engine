@@ -127,7 +127,7 @@ class UserControllerIT extends IntegrationTest {
         ResultActions resultActions = performGet(ApiPaths.Users.CURRENT);
 
         //Then
-        resultActions.andExpect(status().isForbidden());
+        resultActions.andExpect(status().isUnauthorized());
     }
 
     @Test
