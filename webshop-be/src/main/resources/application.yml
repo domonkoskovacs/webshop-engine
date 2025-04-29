@@ -15,7 +15,9 @@ spring:
       password: ${API_PASSWORD:swagger}
     cors:
       enabled:
-        paths: "http://localhost:3000"
+        paths:
+          - "http://localhost:3000"
+          - "http://localhost:5173"
   application:
     name: webshop-be-service
   mail:

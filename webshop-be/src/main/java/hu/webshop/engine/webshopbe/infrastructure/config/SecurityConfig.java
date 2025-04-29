@@ -130,7 +130,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(corsProperties.getPaths()));
+        config.setAllowedOrigins(corsProperties.getPaths());
         config.setAllowedMethods(List.of(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
@@ -178,6 +178,6 @@ public class SecurityConfig {
     @Component
     @ConfigurationProperties("spring.security.cors.enabled")
     public static class CorsProperties {
-        private String paths;
+        private List<String> paths;
     }
 }
