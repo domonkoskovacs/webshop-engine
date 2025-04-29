@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {usePublicStore} from "../../../hooks/store/usePublicStore";
-import {AppPaths} from "../../../routing/AppPaths";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const SiteFooter: React.FC = () => {
     const {data: store} = usePublicStore()

@@ -2,14 +2,14 @@ import {z} from "zod";
 import {UseFormReturn} from "react-hook-form";
 
 import React from "react";
-import {Card, CardContent, CardFooter, CardHeader} from "../ui/Card";
-import {Separator} from "../ui/Separator";
-import {Form} from "../ui/Form";
-import {Button} from "../ui/Button";
-import {Badge} from "../ui/Badge";
-import {cn} from "../../lib/utils";
+import {Card, CardContent, CardFooter, CardHeader} from "../ui/card";
+import {Separator} from "../ui/separator";
+import {Form} from "../ui/form";
+import {Button} from "../ui/button";
+import {Badge} from "../ui/badge";
+import {cn} from "@/lib/utils.ts";
 
-interface FormCardContainerProps<T extends z.ZodType<any, any>> {
+interface FormCardContainerProps<T extends z.ZodTypeAny> {
     title: string;
     description?: string;
     form: UseFormReturn<z.infer<T>>;
@@ -23,7 +23,7 @@ interface FormCardContainerProps<T extends z.ZodType<any, any>> {
     children: React.ReactNode;
 }
 
-const FormCardContainer = <T extends z.ZodType<any, any>>({
+const FormCardContainer = <T extends z.ZodTypeAny>({
                                                               title,
                                                               description,
                                                               form,

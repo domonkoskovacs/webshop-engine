@@ -1,12 +1,12 @@
 import React, {useCallback} from "react";
 
-import {UseFormReturn} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
-import {Input} from "../Input";
+import {FieldValues, Path, PathValue, UseFormReturn} from "react-hook-form";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {Input} from "../input";
 
-interface TextInputFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface TextInputFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label?: string;
     placeholder: string;
     description?: string | React.ReactNode;
@@ -14,9 +14,9 @@ interface TextInputFieldProps {
     autoComplete?: string;
 }
 
-interface NumberInputFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface NumberInputFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string;
     placeholder: string;
     min?: number;
@@ -24,16 +24,24 @@ interface NumberInputFieldProps {
     description?: string;
 }
 
-interface FileInputFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface FileInputFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string;
     accept: string;
     description?: string | React.ReactNode;
 }
 
-const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, placeholder, description, type, autoComplete}) => {
-    return <FormField
+const TextInputField = <T extends FieldValues>({
+                                                   form,
+                                                   name,
+                                                   label,
+                                                   placeholder,
+                                                   description,
+                                                   type,
+                                                   autoComplete,
+                                               }: TextInputFieldProps<T>) => (
+    <FormField
         control={form.control}
         name={name}
         render={({field}) => (
@@ -46,19 +54,17 @@ const TextInputField: React.FC<TextInputFieldProps> = ({form, name, label, place
                 <FormMessage/>
             </FormItem>
         )}
-    />
-};
+    />)
 
-const NumberInputField: React.FC<NumberInputFieldProps> = ({
-                                                               form,
-                                                               name,
-                                                               label,
-                                                               placeholder,
-                                                               min = 0,
-                                                               max,
-                                                               description,
-                                                           }) => {
-    return <FormField
+const NumberInputField = <T extends FieldValues>({
+                                                     form,
+                                                     name,
+                                                     label,
+                                                     placeholder,
+                                                     min = 0,
+                                                     max,
+                                                     description,
+                                                 }: NumberInputFieldProps<T>) => (<FormField
         control={form.control}
         name={name}
         render={({field: {onChange, value, ...rest}}) => (
@@ -78,16 +84,15 @@ const NumberInputField: React.FC<NumberInputFieldProps> = ({
             </FormItem>
         )}
     />
-};
+)
 
-const FileInputField: React.FC<FileInputFieldProps> = ({
-                                                           form,
-                                                           name,
-                                                           label,
-                                                           accept,
-                                                           description,
-                                                       }) => {
-    return <FormField
+const FileInputField = <T extends FieldValues>({
+                                                   form,
+                                                   name,
+                                                   label,
+                                                   accept,
+                                                   description,
+                                               }: FileInputFieldProps<T>) => (<FormField
         control={form.control}
         name={name}
         render={() => (
@@ -100,7 +105,7 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
                         onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                                form.setValue(name, file, {shouldValidate: true});
+                                form.setValue(name, file as PathValue<T, Path<T>>, {shouldValidate: true});
                             }
                         }}
                     />
@@ -110,30 +115,30 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
             </FormItem>
         )}
     />
-};
+)
 
-export interface FileListInputFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+export interface FileListInputFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string;
     accept: string;
     maxFiles?: number;
     children: (files: Array<File | string>, removeFile: (index: number) => void) => React.ReactNode;
 }
 
-const FileListInputField: React.FC<FileListInputFieldProps> = ({
-                                                                   form,
-                                                                   name,
-                                                                   label,
-                                                                   accept,
-                                                                   maxFiles = 5,
-                                                                   children,
-                                                               }) => {
+const FileListInputField = <T extends FieldValues>({
+                                                       form,
+                                                       name,
+                                                       label,
+                                                       accept,
+                                                       maxFiles = 5,
+                                                       children,
+                                                   }: FileListInputFieldProps<T>) => {
     const removeFile = useCallback(
         (index: number) => {
             const currentFiles = (form.getValues(name) as Array<File | string>) || [];
             const updatedFiles = currentFiles.filter((_, i) => i !== index);
-            form.setValue(name, updatedFiles, {shouldValidate: true});
+            form.setValue(name, updatedFiles as PathValue<T, Path<T>>, {shouldValidate: true});
         },
         [form, name]
     );
@@ -159,7 +164,7 @@ const FileListInputField: React.FC<FileListInputFieldProps> = ({
                                             onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 if (file) {
-                                                    form.setValue(name, [...files, file], {shouldValidate: true});
+                                                    form.setValue(name, [...files, file] as PathValue<T, Path<T>>, {shouldValidate: true});
                                                 }
                                                 e.target.value = "";
                                             }}

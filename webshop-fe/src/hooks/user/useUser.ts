@@ -1,7 +1,7 @@
 import {useQuery} from "@tanstack/react-query";
-import {userService} from "../../services/UserService";
-import {UserResponse} from "../../shared/api";
-import {ApiError} from "../../shared/ApiError";
+import {userService} from "@/services/UserService.ts";
+import {UserResponse} from "@/shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
 import {useAuthGuard} from "../useAuthGuard";
 
 export const useUser = () => {

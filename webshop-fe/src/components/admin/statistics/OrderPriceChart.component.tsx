@@ -3,7 +3,7 @@
 import * as React from "react"
 
 
-import {OrderPriceStatisticsResponse} from "../../../shared/api"
+import {OrderPriceStatisticsResponse} from "@/shared/api"
 import {
     ChartConfig,
     ChartContainer,
@@ -11,12 +11,12 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/Chart";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/Card";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
+} from "../../ui/chart";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/card";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select";
 import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts";
-import {cn} from "../../../lib/utils";
-import {Switch} from "../../ui/Switch";
+import {cn} from "@/lib/utils.ts";
+import {Switch} from "../../ui/switch";
 
 type Props = {
     data: OrderPriceStatisticsResponse[],

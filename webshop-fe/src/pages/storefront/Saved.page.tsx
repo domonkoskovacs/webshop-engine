@@ -1,6 +1,6 @@
 import React from 'react';
-import {useAuth} from "../../hooks/UseAuth";
-import {ProductResponse} from "../../shared/api";
+import {useAuth} from "@/hooks/useAuth.ts";
+import {ProductResponse} from "@/shared/api";
 import ProductCard from "../../components/storefront/product/ProductCard.component";
 import EmptyState from "../../components/storefront/shared/EmptyPage.component";
 import PublicEmptyPage from "../../components/storefront/shared/PublicEmptyPage.component";
@@ -8,7 +8,7 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
-import {useSaved} from "../../hooks/user/useSaved";
+import {useSaved} from "@/hooks/user/useSaved.ts";
 
 const Saved: React.FC = () => {
     const {loggedIn} = useAuth()

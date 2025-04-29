@@ -3,7 +3,7 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
-import ResendVerificationEmailForm from 'src/components/storefront/forms/ResendVerificationForm';
+import ResendVerificationEmailForm from '@/components/storefront/forms/ResendVerificationForm';
 
 const VerifyEmailResend: React.FC = () => {
 

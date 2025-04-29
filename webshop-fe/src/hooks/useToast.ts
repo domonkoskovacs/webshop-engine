@@ -1,4 +1,5 @@
 import {toast as sonner} from "sonner";
+import {ApiError} from "@/shared/ApiError.ts";
 
 export const toast = {
     success: (msg: string, description?: string) =>
@@ -21,5 +22,21 @@ export const toast = {
     info: sonner,
 };
 
-export const unexpectedErrorToast = () =>
-    toast.error("Uh oh! Something went wrong.", "Unexpected error occurred");
+export const unexpectedErrorToast = (
+    error?: unknown,
+    description?: string
+) => {
+    let reasonCode = "";
+
+    if (error instanceof ApiError && error.error.length > 0) {
+        reasonCode = error.error[0]?.reasonCode ?? "";
+    }
+
+    const message = `Uh oh! Something went wrong.${reasonCode ? ` (${reasonCode})` : ""}`;
+    const fallbackDescription = "Unexpected error occurred";
+
+    toast.error(message, description ?? fallbackDescription);
+};
+
+
+

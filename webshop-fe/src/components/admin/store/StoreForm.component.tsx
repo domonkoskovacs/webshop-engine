@@ -2,13 +2,13 @@ import {z} from "zod"
 import React, {useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {StoreRequest} from "../../../shared/api";
-import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
+import {StoreRequest} from "@/shared/api";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useStore} from "../../../hooks/store/useStore";
-import {useUpdateStore} from "../../../hooks/store/useUpdateStore";
+import {useStore} from "@/hooks/store/useStore.ts";
+import {useUpdateStore} from "@/hooks/store/useUpdateStore.ts";
 
 export const FormSchema = z.object({
     name: z.string().min(1, "Store name is required"),
@@ -56,7 +56,7 @@ const StoreForm: React.FC = () => {
             await updateStore(storeRq);
             toast.success("Store successfully updated.");
         } catch (error) {
-            unexpectedErrorToast()
+            unexpectedErrorToast(error)
         }
     }
 
@@ -75,10 +75,11 @@ const StoreForm: React.FC = () => {
                               placeholder="Add the shipping price"/>
             <NumberInputField form={form} name="returnPeriod" label="Return period (day)"
                               placeholder="Add the return period"/>
-            <NumberInputField form={form} name="unpaidOrderCancelHours" label="Unpaid order wait period (h)"
-                              placeholder="Add hours"/>
+
         </div>
         <div className="flex flex-col gap-2">
+            <NumberInputField form={form} name="unpaidOrderCancelHours" label="Unpaid order wait period (h)"
+                              placeholder="Add hours"/>
             <SwitchField form={form} name="deleteOutOfStockProducts" label="Out of stock job"
                          description="Delete out of stock products"/>
             <SwitchField form={form} name="enableBuiltInMarketingEmails" label="Marketing email job"

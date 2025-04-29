@@ -1,19 +1,25 @@
-import {UseFormReturn} from "react-hook-form";
-import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../Select";
-import {SelectOption} from "../../../types/select";
+import {FieldValues, Path, UseFormReturn} from "react-hook-form";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../select";
+import {SelectOption} from "@/types/select";
 
-interface SelectFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface SelectFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label?: string;
     placeholder: string;
     description?: string;
     options: SelectOption[];
 }
 
-const SelectField: React.FC<SelectFieldProps> = ({form, name, label, placeholder, description, options}) => {
+const SelectField = <T extends FieldValues>({
+                                                form,
+                                                name,
+                                                label,
+                                                placeholder,
+                                                description,
+                                                options,
+                                            }: SelectFieldProps<T>) => {
     return <FormField
         control={form.control}
         name={name}
@@ -22,7 +28,7 @@ const SelectField: React.FC<SelectFieldProps> = ({form, name, label, placeholder
                 {label && <FormLabel>{label}</FormLabel>}
                 <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                             <SelectValue placeholder={placeholder}/>
                         </SelectTrigger>
                     </FormControl>

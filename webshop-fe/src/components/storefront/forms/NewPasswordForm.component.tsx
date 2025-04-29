@@ -3,12 +3,12 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useNewPassword} from "../../../hooks/user/useNewPassword";
-import {handleGenericApiError} from "../../../shared/ApiError";
-import {AppPaths} from "../../../routing/AppPaths";
+import {useNewPassword} from "@/hooks/user/useNewPassword.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const FormSchema = z.object({
     password: z.string().min(6, {

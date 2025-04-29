@@ -1,13 +1,13 @@
 import React from "react";
-import {Button} from "../../ui/Button";
+import {Button} from "../../ui/button";
 import {LayoutDashboard, Settings, ShoppingBag, UserPen} from "lucide-react";
-import {Separator} from "../../ui/Separator";
-import {useAuth} from "../../../hooks/UseAuth";
+import {Separator} from "../../ui/separator";
+import {useAuth} from "@/hooks/useAuth.ts";
 import {useLocation, useNavigate} from "react-router-dom";
-import {Badge} from "../../ui/Badge";
-import {toLogin} from "../../../lib/url.utils";
-import {useUser} from "../../../hooks/user/useUser";
-import {AppPaths} from "../../../routing/AppPaths";
+import {Badge} from "../../ui/badge";
+import {toLogin} from "@/lib/url.utils.ts";
+import {useUser} from "@/hooks/user/useUser.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const AccountHoverContent: React.FC = () => {
     const {loggedIn, role, logout} = useAuth()

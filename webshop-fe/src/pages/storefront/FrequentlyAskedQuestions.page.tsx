@@ -1,6 +1,6 @@
 import React from 'react';
-import PageContent from 'src/components/shared/PageContent';
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from 'src/components/ui/Accordition';
+import PageContent from '@/components/shared/PageContent';
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";

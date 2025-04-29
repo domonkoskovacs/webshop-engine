@@ -2,17 +2,17 @@ import React, {useEffect, useRef} from "react";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
-import {GetAll1SortTypeEnum, ProductServiceApiGetAll1Request} from "../../../shared/api";
+import {GetAll1SortTypeEnum, ProductServiceApiGetAll1Request} from "@/shared/api";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {mapBrandsToOptions, mapEnumToOptions} from "../../../lib/options.utils";
+import {mapBrandsToOptions, mapEnumToOptions} from "@/lib/options.utils.ts";
 import SliderField from "../../ui/fields/SliderField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import SelectField from "../../ui/fields/SelectField";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useProductBrands} from "../../../hooks/product/useProductBrands";
-import {useProductScroll} from "../../../hooks/product/useProductScroll";
+import {useProductBrands} from "@/hooks/product/useProductBrands.ts";
+import {useProductScroll} from "@/hooks/product/useProductScroll.ts";
 
 export const FormSchema = z.object({
     brands: z.array(z.string().min(1, "Brand is required"), {message: "Brands must be an array of strings"}).optional(),
@@ -20,7 +20,7 @@ export const FormSchema = z.object({
     maxPrice: z.number().min(0, {message: "Maximum price must be at least 0"}).optional(),
     minDiscountPercentage: z.number().min(0, {message: "Minimum discount must be at least 0%"}).max(100, {message: "Minimum discount cannot exceed 100%"}).optional(),
     maxDiscountPercentage: z.number().min(0, {message: "Maximum discount must be at least 0%"}).max(100, {message: "Maximum discount cannot exceed 100%"}).optional(),
-    showOutOfStock: z.boolean().default(false).describe("Indicates whether out-of-stock products should be shown"),
+    showOutOfStock: z.boolean().describe("Indicates whether out-of-stock products should be shown"),
     sortType: z.nativeEnum(GetAll1SortTypeEnum).optional().describe("Sorting type for products"),
 });
 
@@ -46,7 +46,15 @@ const FilterForm: React.FC<FilterFormProps> = ({
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
-        defaultValues: {},
+        defaultValues: {
+            showOutOfStock: false,
+            brands: [],
+            minPrice: undefined,
+            maxPrice: undefined,
+            minDiscountPercentage: undefined,
+            maxDiscountPercentage: undefined,
+            sortType: undefined,
+        },
     })
 
     const prevFiltersRef = useRef<string | null>(null);

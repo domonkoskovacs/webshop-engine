@@ -1,20 +1,20 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {categoryService} from "../../services/CategoryService";
-import {useAdminGuard} from "../useAdminGuard";
-import {ApiError} from "../../shared/ApiError";
-import {CategoryResponse} from "../../shared/api";
+import {categoryService} from "@/services/CategoryService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
+import {CategoryResponse} from "@/shared/api";
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useUpdateCategory = () => {
     const queryClient = useQueryClient();
-    const { assertAdmin } = useAdminGuard();
+    const {assertAdmin} = useAuthGuard();
 
     return useMutation<CategoryResponse, ApiError, { id: string; name: string }>({
-        mutationFn: async ({ id, name }) => {
+        mutationFn: async ({id, name}) => {
             assertAdmin();
             return categoryService.update(id, name);
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['categories'] });
+            await queryClient.invalidateQueries({queryKey: ['categories']});
         },
     });
 };

@@ -1,11 +1,11 @@
 import {UseFormReturn} from "react-hook-form";
 import {z} from "zod";
-import {Button} from "src/components/ui/Button";
-import {Form} from "src/components/ui/Form";
+import {Button} from "@/components/ui/button";
 import React from "react";
-import {DialogDescription, DialogTitle} from "../ui/Dialog";
+import {DialogDescription, DialogTitle} from "../ui/dialog";
+import {Form} from "../ui/form";
 
-interface SheetFormContainerProps<T extends z.ZodType<any, any>> {
+interface SheetFormContainerProps<T extends z.ZodTypeAny> {
     title: string;
     form: UseFormReturn<z.infer<T>>;
     formId: string;
@@ -18,21 +18,21 @@ interface SheetFormContainerProps<T extends z.ZodType<any, any>> {
     children: React.ReactNode;
 }
 
-const SheetFormContainer = <T extends z.ZodType<any, any>>({
-                                                               title,
-                                                               form,
-                                                               formId,
-                                                               onSubmit,
-                                                               submitButtonDisabled = false,
-                                                               submitButtonText,
-                                                               secondaryButtonClick,
-                                                               secondaryButtonText,
-                                                               description,
-                                                               children
-                                                           }: SheetFormContainerProps<T>) => {
+const SheetFormContainer = <T extends z.ZodTypeAny>({
+                                                        title,
+                                                        form,
+                                                        formId,
+                                                        onSubmit,
+                                                        submitButtonDisabled = false,
+                                                        submitButtonText,
+                                                        secondaryButtonClick,
+                                                        secondaryButtonText,
+                                                        description,
+                                                        children
+                                                    }: SheetFormContainerProps<T>) => {
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center border-b pb-3">
+        <div className="flex flex-col h-full p-6">
+            <div className="flex justify-between content-center border-b pb-3">
                 <DialogTitle className="text-lg font-semibold">
                     {title}
                 </DialogTitle>
@@ -46,11 +46,11 @@ const SheetFormContainer = <T extends z.ZodType<any, any>>({
                     </form>
                 </Form>
             </div>
-            <div className="mt-auto flex gap-2 pt-3 border-t">
-                <Button variant="outline" className="w-full" onClick={secondaryButtonClick}>
+            <div className="mt-auto flex flex-row w-full gap-2 pt-3 border-t">
+                <Button variant="outline" className="flex-1" onClick={secondaryButtonClick}>
                     {secondaryButtonText}
                 </Button>
-                <Button type="submit" className="w-full" form={formId} disabled={submitButtonDisabled}>
+                <Button type="submit" className="flex-1" form={formId} disabled={submitButtonDisabled}>
                     {submitButtonText}
                 </Button>
             </div>

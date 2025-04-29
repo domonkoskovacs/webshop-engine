@@ -1,4 +1,4 @@
-import {ArticleServiceApi, ArticleServiceApiCreate4Request} from "../shared/api";
+import {ArticleServiceApi, ArticleServiceApiCreate4Request} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

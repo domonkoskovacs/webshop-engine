@@ -1,6 +1,6 @@
 import * as React from "react"
 import {CartesianGrid, Line, LineChart, XAxis, YAxis} from "recharts"
-import {OrderCountStatisticsResponse} from "../../../shared/api";
+import {OrderCountStatisticsResponse} from "@/shared/api";
 import {
     ChartConfig,
     ChartContainer,
@@ -8,12 +8,12 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/Chart";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/Card";
-import {cn} from "../../../lib/utils";
+} from "../../ui/chart";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/card";
+import {cn} from "@/lib/utils.ts";
 import {TrendingUp} from "lucide-react";
-import {Label} from "../../ui/Label";
-import {Switch} from "../../ui/Switch";
+import {Label} from "../../ui/label";
+import {Switch} from "../../ui/switch";
 
 type Props = {
     data: OrderCountStatisticsResponse[]
@@ -132,7 +132,7 @@ const OrderCountChart: React.FC<Props> = ({
                     Order activity remains steady <TrendingUp className="h-4 w-4"/>
                 </div>
                 <div className="leading-none text-muted-foreground">
-                    Based on daily totals in the selected period
+                    {`Based on daily totals in the selected period${averageOrderValue !== undefined ? `, with an average of ${averageOrderValue.toFixed(2)} orders per day.` : "."}`}
                 </div>
             </CardFooter>
         </Card>

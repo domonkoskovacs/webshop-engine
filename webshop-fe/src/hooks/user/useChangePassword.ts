@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { userService } from "../../services/UserService";
-import { ApiError } from "../../shared/ApiError";
-import { useUserGuard } from "../useUserGuard";
+import { userService } from "@/services/UserService.ts";
+import { ApiError } from "@/shared/ApiError.ts";
+import { useAuthGuard } from "../useAuthGuard";
 import {useUser} from "./useUser";
 
 export const useChangePassword = () => {
     const { data: user } = useUser();
-    const { assertUser } = useUserGuard();
+    const { assertUser } = useAuthGuard();
 
     return useMutation<void, ApiError, string>({
         mutationFn: async (newPassword: string) => {

@@ -1,5 +1,5 @@
-import {ProductServiceApiExportRequest, ProductServiceApiGetAll1Request} from "../shared/api";
-import {Gender} from "../types/gender";
+import {ProductServiceApiExportRequest, ProductServiceApiGetAll1Request} from "@/shared/api";
+import {Gender} from "@/types/gender";
 
 export const getProductGender = (itemGender: string, gender: Gender): string => {
     if (!itemGender) return "";

@@ -1,24 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import PathBreadcrumb from "../../components/shared/PathBreadcrumb.component";
-import {Button} from "../../components/ui/Button";
-import {Separator} from "../../components/ui/Separator";
-import {Badge} from "../../components/ui/Badge";
+import {Button} from "../../components/ui/button";
+import {Separator} from "../../components/ui/separator";
+import {Badge} from "../../components/ui/badge";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
 import ProductList from "../../components/storefront/product/ProductList.component";
-import {useGender} from "../../hooks/useGender";
+import {useGender} from "@/hooks/useGender.ts";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
 import ProductDetails from "../../components/storefront/product/ProductDetails.componenet";
-import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersFromUrl} from "../../lib/url.utils";
-import {useProductScrollFilters} from "../../hooks/product/useProductScrollFilters";
-import {useProductScroll} from "../../hooks/product/useProductScroll";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../components/ui/Select";
-import {SORT_OPTIONS} from "../../lib/product.utils";
-import {useCategories} from "../../hooks/category/useCategories";
-import {GetAll1SortTypeEnum} from "../../shared/api";
+import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersFromUrl} from "@/lib/url.utils.ts";
+import {useProductScrollFilters} from "@/hooks/product/useProductScrollFilters.ts";
+import {useProductScroll} from "@/hooks/product/useProductScroll.ts";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../components/ui/select";
+import {SORT_OPTIONS} from "@/lib/product.utils.ts";
+import {useCategories} from "@/hooks/category/useCategories.ts";
+import {GetAll1SortTypeEnum} from "@/shared/api";
 
 const Products: React.FC = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);

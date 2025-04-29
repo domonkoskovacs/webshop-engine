@@ -1,4 +1,4 @@
-import {StoreRequest, StoreServiceApi} from "../shared/api";
+import {StoreRequest, StoreServiceApi} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

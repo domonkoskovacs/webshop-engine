@@ -1,14 +1,14 @@
 import {useUser} from "./useUser";
-import {AddressRequest, UpdateUserRequest, UpdateUserRequestGenderEnum, UserResponse,} from "../../shared/api";
-import {toAddressRequest} from "../../lib/address.utils";
+import {AddressRequest, UpdateUserRequest, UpdateUserRequestGenderEnum, UserResponse,} from "@/shared/api";
+import {toAddressRequest} from "@/lib/address.utils.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {useUserGuard} from "../useUserGuard";
-import {userService} from "../../services/UserService";
-import {ApiError} from "../../shared/ApiError";
+import {useAuthGuard} from "../useAuthGuard";
+import {userService} from "@/services/UserService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
 
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
-    const {assertUser} = useUserGuard();
+    const {assertUser} = useAuthGuard();
     const {data: user} = useUser();
 
     const {mutateAsync: updateUserMutation, isPending} = useMutation<UserResponse, ApiError, UpdateUserRequest>({

@@ -1,4 +1,4 @@
-import {StatisticsServiceApi, StatisticsServiceApiGetStatisticsRequest} from "../shared/api";
+import {StatisticsServiceApi, StatisticsServiceApiGetStatisticsRequest} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

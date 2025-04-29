@@ -1,24 +1,24 @@
 import React from 'react';
 import {ColumnDef} from "@tanstack/react-table";
-import {OrderItemResponse, OrderResponse, OrderResponseStatusEnum} from "../../shared/api";
+import {OrderItemResponse, OrderResponse, OrderResponseStatusEnum} from "@/shared/api";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger
-} from "../../components/ui/DropdownMenu";
-import {Button} from "../../components/ui/Button";
+} from "../../components/ui/dropdown-menu";
+import {Button} from "../../components/ui/button";
 import {MoreHorizontal} from "lucide-react";
-import {DataTable} from "../../components/ui/DataTable";
-import PaginationComponent from "../../components/ui/Pagination";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
+import {DataTable} from "../../components/ui/data-table";
+import PaginationComponent from "../../components/ui/pagination";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
 import ExportForm from "../../components/admin/order/ExportForm.componenet";
 import FilterForm from "../../components/admin/order/FilterForm.componenet";
 import PageContainer from "../../components/shared/PageContainer.component";
-import {getNextAdminStatuses} from "../../lib/order.utils";
-import {useOrdersPagination} from "../../hooks/order/useOrdersPagination";
-import {handleGenericApiError} from "../../shared/ApiError";
-import {useChangeOrderStatus} from "../../hooks/order/useChangeOrderStatus";
+import {getNextAdminStatuses} from "@/lib/order.utils.ts";
+import {useOrdersPagination} from "@/hooks/order/useOrdersPagination.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {useChangeOrderStatus} from "@/hooks/order/useChangeOrderStatus.ts";
 import RefundForm from "../../components/admin/order/RefundForm.component";
 
 const OrdersDashboard: React.FC = () => {

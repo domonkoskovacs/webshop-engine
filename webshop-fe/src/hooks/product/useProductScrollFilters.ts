@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProductServiceApiGetAll1Request } from "../../shared/api";
+import { ProductServiceApiGetAll1Request } from "@/shared/api";
 
 const defaultFilters: ProductServiceApiGetAll1Request = {
     brands: [],

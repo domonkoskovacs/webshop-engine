@@ -1,9 +1,9 @@
 import React from "react";
-import {Input} from "src/components/ui/Input";
-import {ProductServiceApiGetAll1Request} from "../../../shared/api";
+import {Input} from "@/components/ui/input";
+import {ProductServiceApiGetAll1Request} from "@/shared/api";
 
 interface ItemNumberSearchProps {
-    inputRef: React.RefObject<HTMLInputElement>;
+    inputRef: React.RefObject<HTMLInputElement | null>;
     setIsInputFocused: (val: boolean) => void;
     filters: ProductServiceApiGetAll1Request;
     updateFilters: (newFilters: Partial<ProductServiceApiGetAll1Request>) => void;

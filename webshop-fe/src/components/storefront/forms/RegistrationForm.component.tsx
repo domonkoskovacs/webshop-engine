@@ -2,16 +2,16 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {Link, useNavigate} from "react-router-dom";
-import {ApiError} from "../../../shared/ApiError";
-import {RegistrationRequestGenderEnum, ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
+import {RegistrationRequestGenderEnum, ResultEntryReasonCodeEnum} from "@/shared/api";
 import {TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import {RadioGroupField} from "../../ui/fields/RadioGroupField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useRegister} from "../../../hooks/user/useRegister";
-import {AppPaths} from "../../../routing/AppPaths";
+import {useRegister} from "@/hooks/user/useRegister.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -35,11 +35,11 @@ const FormSchema = z.object({
     gender: z.enum(["men", "women"], {
         required_error: "You need to select your gender.",
     }).optional(),
-    subscribe: z.boolean().default(false).optional(),
-    privacyPolicy: z.boolean().default(false).refine(value => value, {
+    subscribe: z.boolean().optional(),
+    privacyPolicy: z.boolean().refine(value => value, {
         message: "You must accept the privacy policy.",
     }),
-    termsAndConditions: z.boolean().default(false).refine(value => value, {
+    termsAndConditions: z.boolean().refine(value => value, {
         message: "You must accept the terms and conditions.",
     }),
 }).refine((data) => data.password === data.passwordAgain, {
@@ -60,6 +60,9 @@ const RegistrationForm: React.FC = () => {
             password: "",
             passwordAgain: "",
             phoneNumber: "",
+            subscribe: false,
+            privacyPolicy: false,
+            termsAndConditions: false,
         },
     })
 

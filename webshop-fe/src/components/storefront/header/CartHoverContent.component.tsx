@@ -1,11 +1,11 @@
 import React from "react";
-import {Button} from "../../ui/Button";
+import {Button} from "../../ui/button";
 import {useNavigate} from "react-router-dom";
 import CartItem from "../cart/CartItem.component";
-import {calculateCartTotals} from "../../../lib/price.utils";
-import {usePublicStore} from "../../../hooks/store/usePublicStore";
-import {useCart} from "../../../hooks/user/useCart";
-import {AppPaths} from "../../../routing/AppPaths";
+import {calculateCartTotals} from "@/lib/price.utils.ts";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {useCart} from "@/hooks/user/useCart.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const CartHoverContent: React.FC = () => {
     const navigate = useNavigate();

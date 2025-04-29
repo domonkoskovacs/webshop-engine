@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {useAdminGuard} from "../useAdminGuard";
-import {ApiError} from "../../shared/ApiError";
-import {productService} from "../../services/ProductService";
+import {useAuthGuard} from "../useAuthGuard";
+import {ApiError} from "@/shared/ApiError.ts";
+import {productService} from "@/services/ProductService.ts";
 
 export const useDeleteProducts = () => {
     const queryClient = useQueryClient();
-    const { assertAdmin } = useAdminGuard();
+    const { assertAdmin } = useAuthGuard();
 
     return useMutation<void, ApiError, string[]>({
         mutationFn: async (ids) => {

@@ -1,17 +1,15 @@
-import {useUserGuard} from "../useUserGuard";
 import {useQuery} from "@tanstack/react-query";
-import {OrderResponse} from "../../shared/api";
-import {orderService} from "../../services/OrderService";
+import {OrderResponse} from "@/shared/api";
+import {orderService} from "@/services/OrderService.ts";
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useUserOrders = () => {
-    const {assertUser} = useUserGuard();
+    const {isUser} = useAuthGuard()
 
     const {data: orders = [], isLoading} = useQuery<OrderResponse[]>({
         queryKey: ["orders"],
-        queryFn: async () => {
-            assertUser();
-            return orderService.getAllUser();
-        },
+        queryFn: async () => orderService.getAllUser(),
+        enabled: isUser
     });
 
     const isOrdered = (productId: string): boolean => {

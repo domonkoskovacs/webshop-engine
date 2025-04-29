@@ -1,5 +1,5 @@
 import React from "react";
-import {WeeklyOrderStatisticsResponse} from "../../../shared/api";
+import {WeeklyOrderStatisticsResponse} from "@/shared/api";
 import {
     ChartConfig,
     ChartContainer,
@@ -7,10 +7,10 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/Chart";
+} from "../../ui/chart";
 import {Bar, BarChart, CartesianGrid, XAxis} from "recharts";
-import {Card, CardContent, CardHeader} from "../../ui/Card";
-import {cn} from "../../../lib/utils";
+import {Card, CardContent, CardHeader} from "../../ui/card";
+import {cn} from "@/lib/utils.ts";
 
 type Props = {
     data: WeeklyOrderStatisticsResponse[];
@@ -26,7 +26,7 @@ const chartConfig = {
 
 const formatDayOfWeek = (value: string) => {
     const lower = value.toLowerCase();
-    let day = lower.charAt(0).toUpperCase() + lower.slice(1);
+    const day = lower.charAt(0).toUpperCase() + lower.slice(1);
     return day.slice(0, 3);
 };
 

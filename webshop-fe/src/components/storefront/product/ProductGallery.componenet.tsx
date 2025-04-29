@@ -1,16 +1,17 @@
 import React, {useState} from "react";
-import {ProductResponse} from "../../../shared/api";
+import {ProductResponse} from "@/shared/api";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Thumbs} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/thumbs";
+import { Swiper as SwiperClass } from "swiper";
 
 interface ProductCardProps {
     product: ProductResponse
 }
 
 const ProductGallery: React.FC<ProductCardProps> = ({product}) => {
-    const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
 
     return (
         <div className="flex flex-col justify-center sm:flex-row gap-4">

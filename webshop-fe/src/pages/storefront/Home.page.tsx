@@ -4,7 +4,7 @@ import 'swiper/css';
 import ArticleSlider from "../../components/shared/ArticleSlider.component";
 import HomeProductBlock from "../../components/storefront/home/ProductBlock.component";
 import PageContainer from "../../components/shared/PageContainer.component";
-import {useCategories} from "../../hooks/category/useCategories";
+import {useCategories} from "@/hooks/category/useCategories.ts";
 
 const Home: React.FC = () => {
     const {data: categories = []} = useCategories();

@@ -1,18 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { ProductResponse } from "../../shared/api";
-import { userService } from "../../services/UserService";
-import { ApiError } from "../../shared/ApiError";
-import { useUserGuard } from "../useUserGuard";
+import {useQuery} from "@tanstack/react-query";
+import {ProductResponse} from "@/shared/api";
+import {userService} from "@/services/UserService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
+import {useAuthGuard} from "../useAuthGuard";
 
 export const useSaved = () => {
-    const { assertUser } = useUserGuard();
+    const {isUser} = useAuthGuard();
 
-    const { data: saved = [] } = useQuery<ProductResponse[], ApiError>({
+    const {data: saved = []} = useQuery<ProductResponse[], ApiError>({
         queryKey: ["saved"],
-        queryFn: async () => {
-            assertUser();
-            return userService.getSaved();
-        },
+        queryFn: async () => userService.getSaved(),
+        enabled: isUser,
         staleTime: 60 * 1000,
     });
 
@@ -20,5 +18,5 @@ export const useSaved = () => {
         return saved.some(item => item.id === id);
     };
 
-    return { saved, isSaved };
+    return {saved, isSaved};
 };

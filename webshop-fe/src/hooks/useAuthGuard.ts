@@ -1,4 +1,4 @@
-import {useAuth} from "./UseAuth";
+import {useAuth} from "./useAuth.ts";
 
 export const useAuthGuard = () => {
     const {role, loggedIn, loading} = useAuth();

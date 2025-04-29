@@ -1,16 +1,16 @@
-import React, {Fragment} from "react";
+import {Fragment} from "react";
 
 import {ColumnDef, flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table"
 
-import {TableCell, TableRow,} from "src/components/ui/Table"
-import {SubCategoryResponse} from "../../../shared/api";
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/DropdownMenu";
-import {Button} from "../../ui/Button";
+import {TableCell, TableRow,} from "@/components/ui/table"
+import {SubCategoryResponse} from "@/shared/api";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/dropdown-menu";
+import {Button} from "../../ui/button";
 import {MoreHorizontal} from "lucide-react";
-import {Badge} from "../../ui/Badge";
-import {toast} from "../../../hooks/useToast";
-import {useDeleteSubCategory} from "../../../hooks/category/useDeleteSubCategory";
-import {handleGenericApiError} from "../../../shared/ApiError";
+import {Badge} from "../../ui/badge";
+import {toast} from "@/hooks/useToast.ts";
+import {useDeleteSubCategory} from "@/hooks/category/useDeleteSubCategory.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 interface SubCategoryTableProps {
     data: SubCategoryResponse[]

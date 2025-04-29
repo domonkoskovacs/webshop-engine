@@ -1,11 +1,11 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {categoryService} from "../../services/CategoryService";
-import {useAdminGuard} from "../useAdminGuard";
-import {ApiError} from "../../shared/ApiError";
+import {categoryService} from "@/services/CategoryService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useDeleteSubCategory = () => {
     const queryClient = useQueryClient();
-    const {assertAdmin} = useAdminGuard();
+    const {assertAdmin} = useAuthGuard();
 
     return useMutation<void, ApiError, string>({
         mutationFn: async (id) => {

@@ -1,10 +1,10 @@
-import {useAdminGuard} from "../useAdminGuard";
+import {useAuthGuard} from "../useAuthGuard";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {OrderResponse, OrderStatusRequestOrderStatusEnum} from "../../shared/api";
-import {orderService} from "../../services/OrderService";
+import {OrderResponse, OrderStatusRequestOrderStatusEnum} from "@/shared/api";
+import {orderService} from "@/services/OrderService.ts";
 
 export const useChangeOrderStatus = () => {
-    const { assertAdmin } = useAdminGuard();
+    const { assertAdmin } = useAuthGuard();
     const queryClient = useQueryClient();
 
     return useMutation<OrderResponse, Error, { id: string; status: OrderStatusRequestOrderStatusEnum }>({

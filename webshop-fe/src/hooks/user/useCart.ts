@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { CartItemResponse } from "../../shared/api";
-import { userService } from "../../services/UserService";
-import { useUserGuard } from "../useUserGuard";
+import { CartItemResponse } from "@/shared/api";
+import { userService } from "@/services/UserService.ts";
+import { useAuthGuard } from "../useAuthGuard";
 
 export const useCart = () => {
-    const { assertUser } = useUserGuard();
+    const { assertUser } = useAuthGuard();
 
     const { data: cart = [] } = useQuery<CartItemResponse[]>({
         queryKey: ["cart"],

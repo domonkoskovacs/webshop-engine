@@ -1,13 +1,13 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import React, {useEffect} from "react";
 import {NumberInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {useProductById} from "../../../hooks/product/useProductById";
-import {useSetProductDiscounts} from "../../../hooks/product/useSetProductDiscounts";
-import {handleGenericApiError} from "../../../shared/ApiError";
+import {useProductById} from "@/hooks/product/useProductById.ts";
+import {useSetProductDiscounts} from "@/hooks/product/useSetProductDiscounts.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 export const FormSchema = z.object({
     discountPercentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100").optional(),

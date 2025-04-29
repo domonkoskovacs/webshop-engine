@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import {cn} from "src/lib/utils"
+import {cn} from "@/lib/utils"
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -11,10 +11,10 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
-} from "src/components/ui/NavigationMenu"
+} from "@/components/ui/navigation-menu"
 import {Link} from "react-router-dom";
-import {useGender} from "../../../hooks/useGender";
-import {useCategories} from "../../../hooks/category/useCategories";
+import {useGender} from "@/hooks/useGender.ts";
+import {useCategories} from "@/hooks/category/useCategories.ts";
 
 const MenuBar: React.FC = () => {
     const {data: categories = []} = useCategories();
@@ -28,7 +28,7 @@ const MenuBar: React.FC = () => {
                         <NavigationMenuItem key={category.id}>
                             <NavigationMenuTrigger className="flex-shrink-0">{category.name}</NavigationMenuTrigger>
                             <NavigationMenuContent>
-                                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                                <ul className="grid w-[400px] gap-3 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                                     {category.subCategories?.map((subCategory) => (
                                         <ListItem
                                             key={subCategory.id}
@@ -53,16 +53,16 @@ const MenuBar: React.FC = () => {
 }
 
 const ListItem = React.forwardRef<
-    React.ElementRef<"a">,
+    React.ComponentRef<"a">,
     React.ComponentPropsWithoutRef<"a">
->(({className, title, children, ...props}, ref) => {
+>(({className, title, ...props}, ref) => {
     return (
         <li>
             <NavigationMenuLink asChild>
                 <a
                     ref={ref}
                     className={cn(
-                        "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                        "block select-none gap-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
                         className
                     )}
                     {...props}

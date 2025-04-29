@@ -6,16 +6,16 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
+    RowSelectionState,
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table"
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "src/components/ui/Table"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import React from "react";
-import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger} from "./DropdownMenu";
-import {Button} from "./Button";
-import {RowSelectionState} from "@tanstack/table-core/src/features/RowSelection";
-import {Input} from "./Input";
+import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger} from "./dropdown-menu";
+import {Button} from "./button";
+import {Input} from "./input";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]

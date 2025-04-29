@@ -1,12 +1,12 @@
 import {z} from "zod"
 import React from "react";
-import {useCreateArticle} from "../../../hooks/article/useCreateArticle";
+import {useCreateArticle} from "@/hooks/article/useCreateArticle.ts";
 import {FileInputField, TextInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {handleGenericApiError} from "../../../shared/ApiError";
-import {toast} from "../../../hooks/useToast";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {toast} from "@/hooks/useToast.ts";
 
 export const FormSchema = z.object({
     name: z.string().min(1, "Name is required"),

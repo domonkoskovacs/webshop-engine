@@ -2,13 +2,13 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {ApiError} from "../../../shared/ApiError";
-import {ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
+import {ResultEntryReasonCodeEnum} from "@/shared/api";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useResendVerificationEmail} from "../../../hooks/user/useResendVerificationEmail";
+import {useResendVerificationEmail} from "@/hooks/user/useResendVerificationEmail.ts";
 import {useSearchParams} from "react-router-dom";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 
 const FormSchema = z.object({
     email: z.string().email({

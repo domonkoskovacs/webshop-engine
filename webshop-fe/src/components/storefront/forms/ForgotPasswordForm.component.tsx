@@ -2,11 +2,11 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useForgotPassword} from "../../../hooks/user/useForgotPassword";
-import {handleGenericApiError} from "../../../shared/ApiError";
+import {useForgotPassword} from "@/hooks/user/useForgotPassword.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 const FormSchema = z.object({
     email: z.string().email({

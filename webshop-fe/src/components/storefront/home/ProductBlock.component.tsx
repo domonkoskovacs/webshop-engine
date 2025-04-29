@@ -3,12 +3,12 @@ import React from "react";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import {Button} from "../../ui/Button";
+import {Button} from "../../ui/button";
 import {Link} from "react-router-dom";
 import SkeletonProductCard from "./SkeletonCard.component";
-import {useGender} from "../../../hooks/useGender";
+import {useGender} from "@/hooks/useGender.ts";
 import ProductCard from "../product/ProductCard.component";
-import {useProductsByCategory} from "../../../hooks/product/useProductsByCategory";
+import {useProductsByCategory} from "@/hooks/product/useProductsByCategory.ts";
 
 interface ProductSwiperProps {
     category: string;

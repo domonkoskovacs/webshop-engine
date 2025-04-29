@@ -1,16 +1,16 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import React from "react";
-import {PromotionEmailRequestDayOfWeekEnum} from "../../../shared/api";
+import {PromotionEmailRequestDayOfWeekEnum} from "@/shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {mapEnumToOptions} from "../../../lib/options.utils";
-import {useCreateEmail} from "../../../hooks/email/useCreateEmail";
-import {handleGenericApiError} from "../../../shared/ApiError";
+import {mapEnumToOptions} from "@/lib/options.utils.ts";
+import {useCreateEmail} from "@/hooks/email/useCreateEmail.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 export const FormSchema = z.object({
     name: z.string().min(1, {message: "Name is required."}),

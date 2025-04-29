@@ -1,7 +1,7 @@
 import {useQuery} from "@tanstack/react-query";
-import {productService} from "../../services/ProductService";
-import {GetAll1GendersEnum, ProductResponse} from "../../shared/api";
-import {useGender} from "../useGender";
+import {productService} from "@/services/ProductService.ts";
+import {GetAll1GendersEnum, ProductResponse} from "@/shared/api";
+import {useGender} from "../useGender.ts";
 
 const genderMap: Record<'men' | 'women', GetAll1GendersEnum> = {
     men: GetAll1GendersEnum.Men,

@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { productService } from "../../services/ProductService";
+import { productService } from "@/services/ProductService.ts";
 import {
     ProductPageProductResponse,
     ProductResponse,
     ProductServiceApiGetAll1Request,
-} from "../../shared/api";
-import { ApiError } from "../../shared/ApiError";
+} from "@/shared/api";
+import { ApiError } from "@/shared/ApiError.ts";
 
 interface InfiniteProducts {
     pages: ProductPageProductResponse[];

@@ -1,4 +1,4 @@
-import {CartItemRequest, UpdateUserRequest, UserServiceApi, UserServiceApiRegisterRequest} from "../shared/api";
+import {CartItemRequest, UpdateUserRequest, UserServiceApi, UserServiceApiRegisterRequest} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

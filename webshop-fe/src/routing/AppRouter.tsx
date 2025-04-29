@@ -19,7 +19,7 @@ import PrivacyPolicy from "../pages/storefront/PrivacyPolicy.page";
 import TermsAndConditions from "../pages/storefront/TermsAndConditions.page";
 import Authentication from "../pages/storefront/Authentication.page";
 import AboutUs from "../pages/storefront/AboutUs.page";
-import FrequentlyAskedQuestions from 'src/pages/storefront/FrequentlyAskedQuestions.page';
+import FrequentlyAskedQuestions from '../pages/storefront/FrequentlyAskedQuestions.page';
 import ContactUs from "../pages/storefront/ContactUs.page";
 import Products from "../pages/storefront/Products.page";
 import Saved from "../pages/storefront/Saved.page";

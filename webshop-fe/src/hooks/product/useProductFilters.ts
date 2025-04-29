@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {ProductServiceApiGetAll1Request} from "../../shared/api";
+import {ProductServiceApiGetAll1Request} from "@/shared/api";
 
 export const useProductFilters = () => {
     const [filters, setFilters] = useState<ProductServiceApiGetAll1Request>({

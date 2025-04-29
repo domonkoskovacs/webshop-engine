@@ -2,16 +2,16 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {TextInputField} from "../../ui/fields/InputField";
-import {UpdateUserRequestGenderEnum} from "../../../shared/api";
+import {UpdateUserRequestGenderEnum} from "@/shared/api";
 import {Link} from "react-router-dom";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useUser} from "../../../hooks/user/useUser";
-import {useUpdateUser} from "../../../hooks/user/useUpdateUser";
+import {useUser} from "@/hooks/user/useUser.ts";
+import {useUpdateUser} from "@/hooks/user/useUpdateUser.ts";
 import {RadioGroupField} from "../../ui/fields/RadioGroupField";
-import {AppPaths} from "../../../routing/AppPaths";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const FormSchema = z.object({
     email: z.string().email({message: "Invalid email format."}),
@@ -63,7 +63,7 @@ const AccountInfoForm: React.FC = () => {
             );
             toast.success("Your account information was successfully updated.");
         } catch (error) {
-            unexpectedErrorToast()
+            unexpectedErrorToast(error);
         }
     }
 

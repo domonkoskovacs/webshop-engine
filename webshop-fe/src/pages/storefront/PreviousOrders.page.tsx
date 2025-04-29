@@ -1,12 +1,12 @@
 import React from 'react';
 import EmptyState from "../../components/storefront/shared/EmptyPage.component";
-import {OrderResponse} from "../../shared/api";
+import {OrderResponse} from "@/shared/api";
 import OrderItem from "../../components/storefront/order/Order.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
-import {useUserOrders} from "../../hooks/order/useUserOrders";
+import {useUserOrders} from "@/hooks/order/useUserOrders.ts";
 
 const PreviousOrders: React.FC = () => {
     const {orders} = useUserOrders()

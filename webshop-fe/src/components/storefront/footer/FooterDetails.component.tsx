@@ -1,8 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Facebook, Instagram, Twitter} from "lucide-react";
-import {usePublicStore} from "../../../hooks/store/usePublicStore";
-import {AppPaths} from "../../../routing/AppPaths";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const FooterDetails: React.FC = () => {
     const {data: store} = usePublicStore()

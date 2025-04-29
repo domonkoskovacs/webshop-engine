@@ -5,7 +5,7 @@ import {
     ProductServiceApiExportRequest,
     ProductServiceApiGetAll1Request,
     ProductServiceApiUpdateRequest
-} from "../shared/api";
+} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

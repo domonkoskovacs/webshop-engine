@@ -1,17 +1,17 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import React, {useEffect} from "react";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {GetAll4PaymentTypesEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "../../../shared/api";
+import {GetAll4PaymentTypesEnum, GetAll4SortTypeEnum, GetAll4StatusesEnum} from "@/shared/api";
 import DatePickerField from "../../ui/fields/DatePickerField";
 import SliderField from "../../ui/fields/SliderField";
 import {ComboBoxMultipleValueField} from "../../ui/fields/ComboBoxMultipleValueField";
-import {mapEnumToOptions} from "../../../lib/options.utils";
+import {mapEnumToOptions} from "@/lib/options.utils.ts";
 import SelectField from "../../ui/fields/SelectField";
 import {NumberInputField} from "../../ui/fields/InputField";
-import {useOrdersPagination} from "../../../hooks/order/useOrdersPagination";
+import {useOrdersPagination} from "@/hooks/order/useOrdersPagination.ts";
 
 export const FormSchema = z.object({
     minDate: z.date().optional(),
@@ -83,7 +83,7 @@ const FilterForm: React.FC<ProductFormProps> = ({setIsOpen}) => {
             <DatePickerField form={form} name="maxDate" label="Latest date"/>
             <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
                          range={[priceRange[0], priceRange[1]]}/>
-            <ComboBoxMultipleValueField form={form} name="paymentMethods" label="Payment Methods"
+            <ComboBoxMultipleValueField form={form} name="paymentTypes" label="Payment Methods"
                                         options={mapEnumToOptions(GetAll4PaymentTypesEnum)}/>
             <ComboBoxMultipleValueField form={form} name="statuses" label="Statuses"
                                         options={mapEnumToOptions(GetAll4StatusesEnum)}/>

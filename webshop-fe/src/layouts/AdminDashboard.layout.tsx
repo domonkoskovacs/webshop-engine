@@ -1,11 +1,11 @@
 import React, {ReactNode} from 'react';
-import {SidebarInset, SidebarProvider, SidebarTrigger} from '../components/ui/Sidebar';
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '../components/ui/sidebar';
 import {AppSidebar} from "../components/admin/Sidebar.component";
-import {Separator} from "../components/ui/Separator";
+import {Separator} from "../components/ui/separator";
 import DashboardBreadcrumb from "../components/shared/PathBreadcrumb.component";
 import {Bell} from "lucide-react";
-import DarkModeToggle from "../components/ui/DarkModeToggle";
-import {Badge} from "../components/ui/Badge";
+import DarkModeToggle from "../components/ui/dark-mode-toggle.tsx";
+import {Badge} from "../components/ui/badge";
 import {useNavigate} from "react-router-dom";
 import {useOrdersPagination} from "../hooks/order/useOrdersPagination";
 import {AppPaths} from "../routing/AppPaths";
@@ -23,7 +23,7 @@ const AdminDashboardLayout: React.FC<LayoutProps> = ({children}) => {
             <AppSidebar/>
             <SidebarInset>
                 <header
-                    className="flex shrink-0 items-center transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                    className="flex shrink-0 items-center transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center">
                             <SidebarTrigger className="m-2 p-1"/>
@@ -41,7 +41,7 @@ const AdminDashboardLayout: React.FC<LayoutProps> = ({children}) => {
                                     </Badge>
                                 )}
                             </div>
-                            <DarkModeToggle className="m-2 p-1"/>
+                            <DarkModeToggle className=""/>
                         </div>
                     </div>
                 </header>

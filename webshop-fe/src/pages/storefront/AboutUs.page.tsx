@@ -4,8 +4,8 @@ import PageContainer from "../../components/shared/PageContainer.component";
 import PageTitle from "../../components/shared/PageTitle";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
-import {usePublicStore} from "../../hooks/store/usePublicStore";
-import {AppPaths} from "../../routing/AppPaths";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const AboutUs: React.FC = () => {
     const {data: store} = usePublicStore()

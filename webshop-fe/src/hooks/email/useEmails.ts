@@ -1,17 +1,15 @@
 import {useQuery} from '@tanstack/react-query';
-import {emailService} from 'src/services/EmailService';
-import {PromotionEmailResponse} from 'src/shared/api';
-import {ApiError} from 'src/shared/ApiError';
-import {useAdminGuard} from "../useAdminGuard";
+import {emailService} from '@/services/EmailService';
+import {PromotionEmailResponse} from '@/shared/api';
+import {ApiError} from '@/shared/ApiError';
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useEmails = () => {
-    const {assertAdmin} = useAdminGuard();
+    const {isAdmin} = useAuthGuard();
 
     return useQuery<PromotionEmailResponse[], ApiError>({
         queryKey: ['emails'],
-        queryFn: async () => {
-            assertAdmin();
-            return emailService.getAll();
-        },
+        queryFn: async () => emailService.getAll(),
+        enabled: isAdmin
     });
 };

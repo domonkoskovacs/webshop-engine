@@ -1,12 +1,6 @@
-import React, {createContext, ReactNode, useEffect, useState} from "react";
-import {Gender} from "../types/gender";
-
-interface GenderContextType {
-    gender: Gender;
-    setGender: (gender: Gender) => void;
-}
-
-export const GenderContext = createContext<GenderContextType | undefined>(undefined);
+import React, {ReactNode, useEffect, useState} from "react";
+import {Gender} from "@/types/gender";
+import {GenderContext} from "@/contexts/GenderContext.ts";
 
 interface GenderProviderProps {
     children: ReactNode;

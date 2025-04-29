@@ -1,28 +1,27 @@
-import {Button} from "src/components/ui/Button";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "src/components/ui/Form";
-import {Popover, PopoverContent, PopoverTrigger} from "src/components/ui/Popover";
-import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "src/components/ui/Command";
+import {Button} from "@/components/ui/button";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
 import {Check, ChevronsUpDown} from "lucide-react";
-import {cn} from "src/lib/utils";
-import React from "react";
-import {UseFormReturn} from "react-hook-form";
-import {SelectOption} from "../../../types/select";
+import {cn} from "@/lib/utils";
+import {FieldValues, Path, UseFormReturn} from "react-hook-form";
+import {SelectOption} from "@/types/select";
 
-interface FormComboBoxProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface FormComboBoxProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string;
     description?: string;
     options: SelectOption[];
 }
 
-export const ComboBoxMultipleValueField: React.FC<FormComboBoxProps> = ({
-                                                                            form,
-                                                                            name,
-                                                                            label,
-                                                                            description,
-                                                                            options
-                                                                        }) => {
+export const ComboBoxMultipleValueField = <T extends FieldValues>({
+                                                                      form,
+                                                                      name,
+                                                                      label,
+                                                                      description,
+                                                                      options,
+                                                                  }: FormComboBoxProps<T>) => {
     return (
         <FormField
             control={form.control}

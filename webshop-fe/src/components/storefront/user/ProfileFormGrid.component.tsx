@@ -2,7 +2,7 @@ import React from "react";
 import PasswordForm from "./RenewPasswordForm.component";
 import AddressForm from "./AddressForm.component";
 import AccountInfoForm from "./AccountInfoForm.component";
-import {Card, CardContent, CardFooter} from "../../ui/Card";
+import {Card, CardContent, CardFooter} from "../../ui/card";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -13,10 +13,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger
-} from "../../ui/AlertDialog";
-import {Button} from "src/components/ui/Button";
-import {useDeleteUser} from "../../../hooks/user/useDeleteUser";
-import {toast} from "../../../hooks/useToast";
+} from "@/components/ui/alert-dialog";
+import {Button} from "@/components/ui/button";
+import {useDeleteUser} from "@/hooks/user/useDeleteUser.ts";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 
 
 const ProfileForm: React.FC = () => {
@@ -25,12 +25,12 @@ const ProfileForm: React.FC = () => {
         <div className="w-full flex items-center justify-center">
             <div className="w-full space-y-6 mb-6">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 md:gap-4">
-                    <div className="md:flex flex-col gap-4">
+                    <div className="md:flex flex-col justify-between">
                         <AddressForm type="shipping"/>
                         <AddressForm type="billing"/>
                     </div>
 
-                    <div className="md:flex flex-col gap-4">
+                    <div className="md:flex flex-col justify-between">
                         <AccountInfoForm/>
                         <PasswordForm/>
                         <Card className="my-4 flex-1 flex flex-col justify-between">
@@ -63,7 +63,7 @@ const ProfileForm: React.FC = () => {
                                                             await deleteUser();
                                                             toast.success("Account successfully deleted.");
                                                         } catch (error) {
-                                                            toast.error("There was an error deleting your account.");
+                                                            unexpectedErrorToast(error, "There was an error deleting your account.")
                                                         }
                                                     }}
                                                 >

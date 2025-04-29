@@ -1,11 +1,11 @@
 import React from "react";
-import {CartItemResponse, ResultEntryReasonCodeEnum} from "../../../shared/api";
-import {Badge} from "../../ui/Badge";
+import {CartItemResponse, ResultEntryReasonCodeEnum} from "@/shared/api";
+import {Badge} from "../../ui/badge";
 import {Minus, Plus} from "lucide-react";
-import {Button} from "src/components/ui/Button";
-import {ApiError} from "../../../shared/ApiError";
-import {toast} from "../../../hooks/useToast";
-import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
+import {Button} from "@/components/ui/button";
+import {ApiError} from "@/shared/ApiError.ts";
+import {toast} from "@/hooks/useToast.ts";
+import {useUpdateCart} from "@/hooks/user/useUpdateCart.ts";
 
 interface CartHoverItemProps {
     item: CartItemResponse;
@@ -18,7 +18,7 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
 
     const handleUpdate = async (newCount: number) => {
         try {
-            await updateCart({count: newCount, productId: item.product?.id!});
+            await updateCart({count: newCount, productId: item.product?.id ?? ''});
         } catch (error) {
             if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(
@@ -34,7 +34,7 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
         }
     };
 
-    const originalPrice = item.product?.price!;
+    const originalPrice = item.product?.price ?? NaN;
     const discount = item.product?.discountPercentage ?? 0;
     const discountedPrice = originalPrice * (1 - discount / 100);
     const isDiscounted = discount > 0;

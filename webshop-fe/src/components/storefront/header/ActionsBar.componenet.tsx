@@ -1,18 +1,18 @@
 import React from 'react';
-import {Button} from 'src/components/ui/Button';
+import {Button} from '@/components/ui/button';
 import {Heart, ShoppingCart} from 'lucide-react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import DarkModeToggle from "../../ui/DarkModeToggle";
+import DarkModeToggle from "@/components/ui/dark-mode-toggle.tsx";
 import GenderSelector from "./GenderSelector.component";
 import AccountHoverIcon from "./AccountHoverIcon.component";
-import {Badge} from "../../ui/Badge";
-import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard";
+import {Badge} from "../../ui/badge";
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card";
 import CartHoverContent from "./CartHoverContent.component";
-import {useAuth} from "../../../hooks/UseAuth";
-import {usePublicStore} from "../../../hooks/store/usePublicStore";
-import {useCart} from "../../../hooks/user/useCart";
-import {useSaved} from "../../../hooks/user/useSaved";
-import {AppPaths} from "../../../routing/AppPaths";
+import {useAuth} from "@/hooks/useAuth.ts";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {useCart} from "@/hooks/user/useCart.ts";
+import {useSaved} from "@/hooks/user/useSaved.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const ActionsBar: React.FC = () => {
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ const ActionsBar: React.FC = () => {
                 <AccountHoverIcon/>
                 <div className="relative">
                     <Button variant="ghost" size="icon" onClick={() => navigate(AppPaths.SAVED_PRODUCTS)}>
-                        <Heart/>
+                        <Heart className="scale-125"/>
                     </Button>
                     {saved.length > 0 && (
                         <Badge
@@ -48,8 +48,8 @@ const ActionsBar: React.FC = () => {
                 <HoverCard>
                     <HoverCardTrigger>
                         <div className="relative">
-                            <Button variant="ghost" size="icon" onClick={() => navigate(AppPaths.CART_ITEMS)}>
-                                <ShoppingCart/>
+                            <Button variant="ghost" onClick={() => navigate(AppPaths.CART_ITEMS)}>
+                                <ShoppingCart className="scale-125" />
                             </Button>
                             {cart.length > 0 && (
                                 <Badge
@@ -63,7 +63,7 @@ const ActionsBar: React.FC = () => {
                         <CartHoverContent/>
                     </HoverCardContent>
                 </HoverCard>
-                <DarkModeToggle/>
+                <DarkModeToggle className="scale-125"/>
             </div>
         </div>
     );

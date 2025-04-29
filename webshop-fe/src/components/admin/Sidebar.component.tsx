@@ -13,12 +13,11 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarSeparator,
-} from "src/components/ui/Sidebar"
-import {useAuth} from "../../hooks/UseAuth";
-import {Avatar, AvatarFallback} from "../ui/Avatar";
-import React from "react";
-import {ScrollArea} from "../ui/ScrollArea";
-import {AppPaths} from "../../routing/AppPaths";
+} from "@/components/ui/sidebar"
+import {useAuth} from "@/hooks/useAuth.ts";
+import {Avatar, AvatarFallback} from "../ui/avatar";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 // Menu items.
 const storefront = [

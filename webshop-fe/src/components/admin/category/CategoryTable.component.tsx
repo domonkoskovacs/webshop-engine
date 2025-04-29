@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from "react";
-import {Input} from "../../ui/Input";
-import {Button} from "../../ui/Button";
+import {Input} from "../../ui/input";
+import {Button} from "../../ui/button";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -11,18 +11,18 @@ import {
     SortingState,
     useReactTable
 } from "@tanstack/react-table";
-import {CategoryResponse} from "../../../shared/api";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../ui/Table";
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/DropdownMenu";
+import {CategoryResponse} from "@/shared/api";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../ui/table";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react";
 import UpdateCategoryForm from "./UpdateCategoryForm.component";
 import SubCategoryRows from "./SubCategoryTable.component";
-import {Sheet, SheetContent, SheetTrigger} from "../../ui/Sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../ui/sheet";
 import CategoryForm from "./CategoryForm.component";
-import {toast} from "../../../hooks/useToast";
-import {useCategories} from "../../../hooks/category/useCategories";
-import {useDeleteCategory} from "../../../hooks/category/useDeleteCategory";
-import {handleGenericApiError} from "../../../shared/ApiError";
+import {toast} from "@/hooks/useToast.ts";
+import {useCategories} from "@/hooks/category/useCategories.ts";
+import {useDeleteCategory} from "@/hooks/category/useDeleteCategory.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 const CategoryTable: React.FC = () => {
     const {data: categories = [], isLoading} = useCategories();
@@ -214,7 +214,7 @@ const CategoryTable: React.FC = () => {
                                             </TableCell>
                                         ))}
                                     </TableRow>
-                                    {openRows[row.original.id ?? ""] && row.original.subCategories?.length! > 0 && (
+                                    {openRows[row.original.id ?? ""] && (row.original.subCategories?.length ?? 0) > 0 && (
                                         <SubCategoryRows data={row.original.subCategories ?? []}/>
                                     )}
                                 </Fragment>

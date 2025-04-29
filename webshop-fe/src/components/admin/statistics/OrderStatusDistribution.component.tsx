@@ -3,7 +3,7 @@
 import {TrendingUp} from "lucide-react"
 import {Label, Pie, PieChart, Sector} from "recharts"
 
-import {OrderStatusDistributionResponse} from "../../../shared/api"
+import {OrderStatusDistributionResponse} from "@/shared/api"
 import {
     ChartConfig,
     ChartContainer,
@@ -11,9 +11,9 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/Chart";
+} from "../../ui/chart";
 import React from "react";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/Card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/card";
 import {PieSectorDataItem} from "recharts/types/polar/Pie";
 
 type Props = {

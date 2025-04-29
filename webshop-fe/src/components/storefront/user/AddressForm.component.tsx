@@ -2,13 +2,13 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React, {useEffect} from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
-import {AddressRequest} from "../../../shared/api";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
+import {AddressRequest} from "@/shared/api";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
-import {useAuth} from "../../../hooks/UseAuth";
+import {useAuth} from "@/hooks/useAuth.ts";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useUpdateUser} from "../../../hooks/user/useUpdateUser";
-import {useUser} from "../../../hooks/user/useUser";
+import {useUpdateUser} from "@/hooks/user/useUpdateUser.ts";
+import {useUser} from "@/hooks/user/useUser.ts";
 
 export const FormSchema = z.object({
     country: z.string().min(1, {message: "Country is required."}),
@@ -87,7 +87,7 @@ const AddressForm: React.FC<AddressFormProps> = ({type}) => {
                 toast.success("Your billing address was successfully updated.");
             }
         } catch (error) {
-            unexpectedErrorToast()
+            unexpectedErrorToast(error)
         }
     }
 

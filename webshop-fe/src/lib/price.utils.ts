@@ -1,4 +1,4 @@
-import {CartItemResponse} from "../shared/api";
+import {CartItemResponse} from "@/shared/api";
 
 export function calculateCartTotals(cart: CartItemResponse[], shippingCost: number) {
     const fullPrice = cart.reduce(

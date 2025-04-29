@@ -1,21 +1,21 @@
 import React from "react";
 import {Link, useLocation} from "react-router-dom";
-import {Card, CardContent, CardFooter} from "src/components/ui/Card";
-import {Button} from "../../ui/Button";
+import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Button} from "../../ui/button";
 import {HeartIcon, PlusIcon, TrashIcon} from "lucide-react";
-import {ProductResponse, ProductResponseGenderEnum} from "../../../shared/api";
-import {useGender} from "../../../hooks/useGender";
-import {generateProductListUrl, generateProductUrl} from "../../../lib/url.utils";
-import {calculateDiscountedPrice} from "../../../lib/price.utils";
+import {ProductResponse, ProductResponseGenderEnum} from "@/shared/api";
+import {useGender} from "@/hooks/useGender.ts";
+import {generateProductListUrl, generateProductUrl} from "@/lib/url.utils.ts";
+import {calculateDiscountedPrice} from "@/lib/price.utils.ts";
 import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/css";
-import {Badge} from "../../ui/Badge";
-import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
-import {useAuth} from "../../../hooks/UseAuth";
-import {useModifySaved} from "../../../hooks/user/useModifySaved";
-import {useSaved} from "../../../hooks/user/useSaved";
-import {useCart} from "../../../hooks/user/useCart";
-import {useUserOrders} from "../../../hooks/order/useUserOrders";
+import {Badge} from "../../ui/badge";
+import {useUpdateCart} from "@/hooks/user/useUpdateCart.ts";
+import {useAuth} from "@/hooks/useAuth.ts";
+import {useModifySaved} from "@/hooks/user/useModifySaved.ts";
+import {useSaved} from "@/hooks/user/useSaved.ts";
+import {useCart} from "@/hooks/user/useCart.ts";
+import {useUserOrders} from "@/hooks/order/useUserOrders.ts";
 
 interface ProductCardProps {
     product: ProductResponse;

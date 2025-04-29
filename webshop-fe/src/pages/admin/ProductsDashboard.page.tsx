@@ -1,36 +1,36 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ColumnDef} from "@tanstack/react-table";
-import {ProductResponse} from "../../shared/api";
+import {ProductResponse} from "@/shared/api";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger
-} from "../../components/ui/DropdownMenu";
-import {Button} from "../../components/ui/Button";
+} from "../../components/ui/dropdown-menu";
+import {Button} from "../../components/ui/button";
 import {ArrowRightFromLine, Import, MoreHorizontal} from "lucide-react";
-import PaginationComponent from "../../components/ui/Pagination";
+import PaginationComponent from "../../components/ui/pagination";
 import FilterForm from "../../components/admin/product/FilterForm.component";
-import {DataTable} from "../../components/ui/DataTable";
+import {DataTable} from "../../components/ui/data-table";
 import ItemNumberSearch from "../../components/admin/product/ItemNumberSearch.component";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
 import ProductForm from "../../components/admin/product/ProductForm.component";
-import {Checkbox} from "../../components/ui/Checkbox";
+import {Checkbox} from "../../components/ui/checkbox";
 import DiscountForm from "../../components/admin/product/DiscountForm.component";
 import ImportForm from "../../components/admin/product/ImportForm.component";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'src/components/ui/Dialog';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from '@/components/ui/dialog';
 import ProductCard from "../../components/storefront/product/ProductCard.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
-import {useDeleteProducts} from "../../hooks/product/useDeleteProducts";
-import {toast} from "../../hooks/useToast";
-import {handleGenericApiError} from "../../shared/ApiError";
-import {useExportProducts} from "../../hooks/product/useExportProducts";
-import {downloadCSV} from 'src/lib/file.utils';
-import {mapFiltersToExportRequest} from "../../lib/product.utils";
-import {useProductFilters} from "../../hooks/product/useProductFilters";
-import {useProducts} from "../../hooks/product/useProducts";
+import {useDeleteProducts} from "@/hooks/product/useDeleteProducts.ts";
+import {toast} from "@/hooks/useToast.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {useExportProducts} from "@/hooks/product/useExportProducts.ts";
+import {downloadCSV} from '@/lib/file.utils';
+import {mapFiltersToExportRequest} from "@/lib/product.utils.ts";
+import {useProductFilters} from "@/hooks/product/useProductFilters.ts";
+import {useProducts} from "@/hooks/product/useProducts.ts";
 
 const ProductsDashboard: React.FC = () => {
     const {
@@ -298,7 +298,7 @@ const ProductsDashboard: React.FC = () => {
                 </div>
             </PageHeader>
             <PageContent>
-                <DataTable key={products.length} columns={columns} data={products} customElement={itemNoFilter}
+                <DataTable key={products.length} columns={columns} data={products} customElement={itemNoFilter} isLoading={isLoading} isError={isError}
                            totalElements={totalElements}/>
                 <PaginationComponent
                     className="my-2"

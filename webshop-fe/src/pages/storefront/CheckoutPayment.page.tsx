@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {Elements} from '@stripe/react-stripe-js';
-import {stripePromise} from "../../lib/stripe.utils";
+import {stripePromise} from "@/lib/stripe.utils.ts";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PaymentForm from "../../components/storefront/order/PaymentForm.componenet";
-import {Button} from "../../components/ui/Button";
+import {Button} from "../../components/ui/button";
 import {ArrowLeft} from "lucide-react";
-import {OrderResponse} from "../../shared/api";
-import {Separator} from "../../components/ui/Separator";
-import {Card, CardContent, CardFooter} from "../../components/ui/Card";
+import {OrderResponse} from "@/shared/api";
+import {Separator} from "../../components/ui/separator";
+import {Card, CardContent, CardFooter} from "../../components/ui/card";
 import OrderItem from "../../components/storefront/order/OrderItem.component";
-import {usePublicStore} from "../../hooks/store/usePublicStore";
-import {useCreatePaymentIntent} from "../../hooks/order/useCreatePaymentIntent";
-import {useUserOrders} from "../../hooks/order/useUserOrders";
-import {AppPaths} from "../../routing/AppPaths";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {useCreatePaymentIntent} from "@/hooks/order/useCreatePaymentIntent.ts";
+import {useUserOrders} from "@/hooks/order/useUserOrders.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const CheckoutPayment: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -25,7 +25,7 @@ const CheckoutPayment: React.FC = () => {
     const [loadError, setLoadError] = useState<string | null>(null);
     const navigate = useNavigate();
     const [order, setOrder] = useState<OrderResponse>();
-    const {mutateAsync: createIntent, isPending} = useCreatePaymentIntent();
+    const {mutateAsync: createIntent} = useCreatePaymentIntent();
 
     useEffect(() => {
         if (loadingOrders || !orderId) {

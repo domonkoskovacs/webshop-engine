@@ -1,4 +1,4 @@
-import {AuthServiceApi} from "../shared/api";
+import {AuthServiceApi} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

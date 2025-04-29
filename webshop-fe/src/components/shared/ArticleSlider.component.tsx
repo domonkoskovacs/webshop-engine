@@ -6,9 +6,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import ArticleCard from './ArticleCard.component';
-import { useArticles } from 'src/hooks/article/useArticles';
+import { useArticles } from '@/hooks/article/useArticles';
 
 interface ArticleSliderProps {
     autoplayEnabled?: boolean;

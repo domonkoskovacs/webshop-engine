@@ -1,7 +1,7 @@
 import {useMutation} from "@tanstack/react-query";
-import {userService} from "../../services/UserService";
-import {ApiError} from "../../shared/ApiError";
-import {UserServiceApiRegisterRequest} from "../../shared/api";
+import {userService} from "@/services/UserService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
+import {UserServiceApiRegisterRequest} from "@/shared/api";
 
 export const useRegister = () => {
     return useMutation<void, ApiError, UserServiceApiRegisterRequest>({

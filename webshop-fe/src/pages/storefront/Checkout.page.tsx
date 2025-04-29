@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Card";
+import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/card";
 import CartItem from "../../components/storefront/cart/CartItem.component";
-import {Separator} from "../../components/ui/Separator";
-import {calculateCartTotals} from "../../lib/price.utils";
-import {Button} from "../../components/ui/Button";
-import {toast} from "../../hooks/useToast";
+import {Separator} from "../../components/ui/separator";
+import {calculateCartTotals} from "@/lib/price.utils.ts";
+import {Button} from "../../components/ui/button";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {useNavigate} from "react-router-dom";
-import PageContainer from 'src/components/shared/PageContainer.component';
+import PageContainer from '@/components/shared/PageContainer.component';
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
-import {usePublicStore} from "../../hooks/store/usePublicStore";
-import {useCart} from "../../hooks/user/useCart";
-import {useUser} from "../../hooks/user/useUser";
-import {useCreateOrder} from "../../hooks/order/useCreateOrder";
-import {AppPaths} from "../../routing/AppPaths";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {useCart} from "@/hooks/user/useCart.ts";
+import {useUser} from "@/hooks/user/useUser.ts";
+import {useCreateOrder} from "@/hooks/order/useCreateOrder.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const Checkout: React.FC = () => {
     const {cart} = useCart();
@@ -29,8 +29,8 @@ const Checkout: React.FC = () => {
         discountAmount,
         finalPrice
     } = calculateCartTotals(cart, store?.shippingPrice ?? NaN);
-    const shippingAddress = user?.shippingAddress!
-    const billingAddress = user?.billingAddress!
+    const shippingAddress = user?.shippingAddress
+    const billingAddress = user?.billingAddress
 
     const [errors, setErrors] = useState<string[]>([]);
     const [addressError, setAddressError] = useState(false);
@@ -59,8 +59,7 @@ const Checkout: React.FC = () => {
             navigate(`/checkout-payment?orderId=${order.id}`);
             toast.success("Order placed successfully",);
         } catch (error) {
-            toast.error("Uh oh! Something went wrong.",
-                "Can't place order. Please try again.",);
+            unexpectedErrorToast(error, "Can't place order. Please try again.");
         }
     }
 
@@ -146,7 +145,8 @@ const Checkout: React.FC = () => {
                                 </div>
                             )}
                             {addressError ? (
-                                    <Button className="w-full rounded-t-none" onClick={() => navigate(AppPaths.PROFILE)}>Go to
+                                    <Button className="w-full rounded-t-none" onClick={() => navigate(AppPaths.PROFILE)}>Go
+                                        to
                                         Profile</Button>
                                 ) :
                                 <Button

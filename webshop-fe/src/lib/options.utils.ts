@@ -1,4 +1,4 @@
-import {BrandResponse, CategoryResponse} from "../shared/api";
+import {BrandResponse, CategoryResponse} from "@/shared/api";
 
 export const formatLabel = (value: string): string =>
     value

@@ -1,11 +1,11 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Card, CardContent} from "src/components/ui/Card";
-import {Button} from "src/components/ui/Button";
-import {useDeleteArticle} from "src/hooks/article/useDeleteArticle";
+import {Card, CardContent} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {useDeleteArticle} from "@/hooks/article/useDeleteArticle";
 import {Trash} from "lucide-react";
-import {toast} from "../../hooks/useToast";
-import {handleGenericApiError} from "../../shared/ApiError";
+import {toast} from "@/hooks/useToast.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 interface ArticleCardProps {
     id: string;
@@ -36,7 +36,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     };
 
     return (
-        <Card className="h-full relative">
+        <Card className="h-full relative rounded-none p-0">
             <CardContent
                 className="h-full bg-cover bg-center flex flex-col justify-end p-4 sm:p-6 md:p-8"
                 style={{backgroundImage: `url(${image})`}}

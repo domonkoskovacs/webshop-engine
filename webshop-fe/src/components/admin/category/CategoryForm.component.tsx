@@ -1,13 +1,13 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import React from "react";
 import {TextInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {useCreateCategory} from "../../../hooks/category/useCreateCategory";
-import {useAddSubCategory} from "../../../hooks/category/useAddSubCategory";
-import {handleGenericApiError} from "../../../shared/ApiError";
+import {useCreateCategory} from "@/hooks/category/useCreateCategory.ts";
+import {useAddSubCategory} from "@/hooks/category/useAddSubCategory.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
 
 const FormSchema = z.object({
     categoryName: z.string().min(1, {

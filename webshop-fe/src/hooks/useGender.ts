@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {GenderContext} from "../contexts/GenderContext";
+import {GenderContext} from "../contexts/GenderContext.ts";
 
 export const useGender = () => {
     const context = useContext(GenderContext);

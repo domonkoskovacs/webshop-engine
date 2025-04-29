@@ -1,24 +1,24 @@
 import React from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {Button} from "../../ui/Button";
+import {Button} from "../../ui/button";
 
 import PageContainer from "../../shared/PageContainer.component";
 import EmptyState from "../shared/EmptyPage.component";
 import ProductGallery from "./ProductGallery.componenet";
-import {generateProductBreadcrumbSegments, generateProductListUrl} from "../../../lib/url.utils";
+import {generateProductBreadcrumbSegments, generateProductListUrl} from "@/lib/url.utils.ts";
 import PathBreadcrumb from "../../shared/PathBreadcrumb.component";
-import {useGender} from "../../../hooks/useGender";
+import {useGender} from "@/hooks/useGender.ts";
 import {ChevronLeft, Container, CornerDownLeft, Heart, PlusIcon} from "lucide-react";
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../../ui/Accordition";
-import {calculateDiscountedPrice} from "../../../lib/price.utils";
-import {Badge} from "../../ui/Badge";
-import {usePublicStore} from "../../../hooks/store/usePublicStore";
-import {useProductById} from "../../../hooks/product/useProductById";
-import {useUpdateCart} from "../../../hooks/user/useUpdateCart";
-import {useAuth} from "../../../hooks/UseAuth";
-import {useSaved} from "../../../hooks/user/useSaved";
-import {useModifySaved} from "../../../hooks/user/useModifySaved";
-import {AppPaths} from "../../../routing/AppPaths";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
+import {calculateDiscountedPrice} from "@/lib/price.utils.ts";
+import {Badge} from "../../ui/badge";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {useProductById} from "@/hooks/product/useProductById.ts";
+import {useUpdateCart} from "@/hooks/user/useUpdateCart.ts";
+import {useAuth} from "@/hooks/useAuth.ts";
+import {useSaved} from "@/hooks/user/useSaved.ts";
+import {useModifySaved} from "@/hooks/user/useModifySaved.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const ProductDetails: React.FC = () => {
     const {addItemToCart, isPending} = useUpdateCart();
@@ -36,7 +36,7 @@ const ProductDetails: React.FC = () => {
     const id = pathSegments[5] || null;
     const breadcrumbSegments = generateProductBreadcrumbSegments({gender, category, subcategory, name, id})
     const {data: product, isLoading, isError} = useProductById(id ?? "");
-    const savedProduct = isSaved(product?.id!);
+    const savedProduct = isSaved(product?.id ?? '');
 
     if (isLoading) {
         return <PageContainer className="my-10"><EmptyState title=""/></PageContainer>
@@ -94,7 +94,7 @@ const ProductDetails: React.FC = () => {
                     )}
                 </div>
                 <div className="w-full flex flex-row gap-2">
-                    <Button className="w-full" disabled={isPending}
+                    <Button className="flex-1" disabled={isPending}
                             onClick={() => addItemToCart(product.id!, loggedIn)}><PlusIcon
                         className="size-4 me-1"/> Add to
                         cart</Button>
@@ -173,14 +173,14 @@ const ProductDetails: React.FC = () => {
                 </Accordion>
                 <div className="flex flex-col gap-2">
                     <div
-                        className="w-full flex items-center gap-2 p-3 border rounded bg-blue-50 border-blue-300 shadow-sm dark:bg-blue-900 dark:border-blue-700">
+                        className="w-full flex items-center gap-2 p-3 border rounded bg-blue-50 border-blue-300 shadow-xs dark:bg-blue-900 dark:border-blue-700">
                         <Container className="w-4 h-4 text-blue-600 dark:text-blue-300"/>
                         <span className="text-sm text-blue-800 dark:text-blue-100">
                             Shipping: ${store?.shippingPrice ?? "N/A"}
                         </span>
                     </div>
                     <div
-                        className="w-full flex items-center gap-2 p-3 border rounded bg-yellow-50 border-yellow-300 shadow-sm dark:bg-yellow-900 dark:border-yellow-700">
+                        className="w-full flex items-center gap-2 p-3 border rounded bg-yellow-50 border-yellow-300 shadow-xs dark:bg-yellow-900 dark:border-yellow-700">
                         <CornerDownLeft className="w-4 h-4 text-yellow-600 dark:text-yellow-300"/>
                         <span className="text-sm text-yellow-800 dark:text-yellow-100">
                             Return: {store?.returnPeriod ?? "N/A"} days

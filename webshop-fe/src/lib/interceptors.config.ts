@@ -1,5 +1,5 @@
 import type {AxiosInstance} from 'axios';
-import {ResultEntryReasonCodeEnum} from "../shared/api";
+import {ResultEntryReasonCodeEnum} from "@/shared/api";
 import {handleApiError} from "../shared/ApiError";
 
 export function setupServiceInterceptors(

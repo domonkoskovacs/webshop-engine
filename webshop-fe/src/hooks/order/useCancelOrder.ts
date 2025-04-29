@@ -1,12 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { orderService } from "../../services/OrderService";
-import { ApiError } from "../../shared/ApiError";
-import { OrderResponse } from "../../shared/api";
-import { useUserGuard } from "../useUserGuard";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {orderService} from "@/services/OrderService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
+import {OrderResponse} from "@/shared/api";
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useCancelOrder = () => {
     const queryClient = useQueryClient();
-    const { assertUser } = useUserGuard();
+    const {assertUser} = useAuthGuard();
 
     return useMutation<OrderResponse, ApiError, string>({
         mutationFn: async (id: string) => {

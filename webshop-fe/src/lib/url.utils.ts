@@ -1,5 +1,5 @@
 import {BreadcrumbSegment} from "../components/shared/PathBreadcrumb.component";
-import {GetAll1GendersEnum, GetAll1SortTypeEnum, ProductServiceApiGetAll1Request} from "../shared/api";
+import {GetAll1GendersEnum, GetAll1SortTypeEnum, ProductServiceApiGetAll1Request} from "@/shared/api";
 import {AppPaths} from "../routing/AppPaths";
 
 /**
@@ -192,72 +192,33 @@ export function parseFiltersFromUrl(
         if (params.has(key)) {
             const value = params.get(key);
             if (value !== null) {
-                if (["maxPrice", "minPrice", "maxDiscountPercentage", "minDiscountPercentage"].includes(key)) {
-                    filters[key] = Number(value) as any;
-                } else if (key === "showOutOfStock") {
-                    filters[key] = value === "true";
-                } else if (key === "brands") {
-                    filters[key] = value.split(",");
-                } else if (key === "sortType") {
-                    const isValidSort = Object.values(GetAll1SortTypeEnum).includes(value as GetAll1SortTypeEnum);
-                    if (isValidSort) {
-                        filters[key] = value as GetAll1SortTypeEnum;
-                    }
-                } else {
-                    filters[key] = value as any;
+                switch (key) {
+                    case "maxPrice":
+                    case "minPrice":
+                    case "maxDiscountPercentage":
+                    case "minDiscountPercentage":
+                        filters[key] = Number(value) as ProductServiceApiGetAll1Request[typeof key];
+                        break;
+                    case "showOutOfStock":
+                        filters[key] = (value === "true") as ProductServiceApiGetAll1Request[typeof key];
+                        break;
+                    case "brands":
+                        filters[key] = value.split(",") as ProductServiceApiGetAll1Request[typeof key];
+                        break;
+                    case "sortType":
+                        if (Object.values(GetAll1SortTypeEnum).includes(value as GetAll1SortTypeEnum)) {
+                            filters[key] = value as ProductServiceApiGetAll1Request[typeof key];
+                        }
+                        break;
+                    case "itemNumber":
+                        filters[key] = value as ProductServiceApiGetAll1Request[typeof key];
+                        break;
+                    default:
+                        break;
                 }
             }
         }
     });
 
     return filters;
-}
-
-/**
- * Generates a URL string from a filter object.
- *
- * @param filters - The full filter object.
- * @returns A URL string representing the filters.
- */
-export function generateUrlFromFilters(
-    filters: ProductServiceApiGetAll1Request
-): string {
-    let path = "/products";
-    if (filters.genders && filters.genders.length > 0) {
-        path += "/" + filters.genders[0].toLowerCase();
-    }
-    if (filters.categories && filters.categories.length > 0) {
-        path += "/" + filters.categories[0];
-    }
-    if (filters.subCategories && filters.subCategories.length > 0) {
-        path += "/" + filters.subCategories[0];
-    }
-
-    const query: Record<string, string> = {};
-    const queryKeys: (keyof ProductServiceApiGetAll1Request)[] = [
-        "brands",
-        "maxPrice",
-        "minPrice",
-        "maxDiscountPercentage",
-        "minDiscountPercentage",
-        "itemNumber",
-        "showOutOfStock",
-        "sortType",
-    ];
-    queryKeys.forEach((key) => {
-        const value = filters[key];
-        if (
-            value !== undefined &&
-            value !== null &&
-            !(Array.isArray(value) && value.length === 0)
-        ) {
-            if (Array.isArray(value)) {
-                query[key] = value.join(",");
-            } else {
-                query[key] = String(value);
-            }
-        }
-    });
-    const queryString = new URLSearchParams(query).toString();
-    return queryString ? `${path}?${queryString}` : path;
 }

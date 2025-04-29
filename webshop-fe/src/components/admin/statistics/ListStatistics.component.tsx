@@ -1,9 +1,9 @@
 import React from "react";
-import {ProductStatisticsResponse, UserStatisticsResponse} from "../../../shared/api";
-import {Card, CardContent, CardHeader} from "../../ui/Card";
-import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/Tooltip";
-import {cn} from "../../../lib/utils";
-import {Separator} from "../../ui/Separator";
+import {ProductStatisticsResponse, UserStatisticsResponse} from "@/shared/api";
+import {Card, CardContent, CardHeader} from "../../ui/card";
+import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/tooltip";
+import {cn} from "@/lib/utils.ts";
+import {Separator} from "../../ui/separator";
 
 type Variant =
     | "spending-users"
@@ -19,11 +19,12 @@ type Props = {
 };
 
 const ListStatistics: React.FC<Props> = ({title, items, variant}) => {
-    const isUserStats = (item: any): item is UserStatisticsResponse =>
+    const isUserStats =
+        (item: UserStatisticsResponse | ProductStatisticsResponse): item is UserStatisticsResponse =>
         "email" in item || "fullName" in item;
 
     return (
-        <Card className=" shadow-sm p-4">
+        <Card className="shadow-xs p-4">
             <CardHeader className="pb-0">
                 <h3 className="text-lg font-semibold mb-4">{title}</h3>
             </CardHeader>

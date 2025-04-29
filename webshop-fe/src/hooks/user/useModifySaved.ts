@@ -1,14 +1,14 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {userService} from "../../services/UserService";
-import {ApiError} from "../../shared/ApiError";
+import {userService} from "@/services/UserService.ts";
+import {ApiError} from "@/shared/ApiError.ts";
 import {useSaved} from "./useSaved";
-import {useUserGuard} from "../useUserGuard";
+import {useAuthGuard} from "../useAuthGuard";
 import {toast} from "../useToast";
-import {useAuth} from "../UseAuth";
+import {useAuth} from "../useAuth.ts";
 
 export const useModifySaved = () => {
     const queryClient = useQueryClient();
-    const {assertUser} = useUserGuard();
+    const {assertUser} = useAuthGuard();
     const {isSaved} = useSaved();
     const { loggedIn } = useAuth();
 

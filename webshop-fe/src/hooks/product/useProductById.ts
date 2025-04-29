@@ -1,6 +1,6 @@
 import {useQuery} from "@tanstack/react-query";
-import {ProductResponse} from "../../shared/api";
-import {productService} from "../../services/ProductService";
+import {ProductResponse} from "@/shared/api";
+import {productService} from "@/services/ProductService.ts";
 
 export const useProductById = (id: string) => {
     return useQuery<ProductResponse>({

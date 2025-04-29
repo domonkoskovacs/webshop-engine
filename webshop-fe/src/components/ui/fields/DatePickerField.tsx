@@ -1,21 +1,26 @@
-import {UseFormReturn} from "react-hook-form";
+import {FieldValues, Path, UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
-import {Popover, PopoverContent, PopoverTrigger} from "../Popover";
-import {Button} from "../Button";
-import {cn} from "../../../lib/utils";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {Popover, PopoverContent, PopoverTrigger} from "../popover";
+import {Button} from "../button";
+import {cn} from "@/lib/utils.ts";
 import {CalendarIcon} from "lucide-react";
-import {Calendar} from "../Calendar";
+import {Calendar} from "../calendar";
 import {format} from "date-fns";
 
-interface TextInputFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface DatePickerFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label?: string;
     description?: string | React.ReactNode;
 }
 
-const DatePickerField: React.FC<TextInputFieldProps> = ({form, name, label, description}) => {
+const DatePickerField = <T extends FieldValues>({
+                                                    form,
+                                                    name,
+                                                    label,
+                                                    description,
+                                                }: DatePickerFieldProps<T>) => {
     return <FormField
         control={form.control}
         name={name}
@@ -49,7 +54,6 @@ const DatePickerField: React.FC<TextInputFieldProps> = ({form, name, label, desc
                             disabled={(date) =>
                                 date > new Date() || date < new Date("1900-01-01")
                             }
-                            initialFocus
                         />
                     </PopoverContent>
                 </Popover>

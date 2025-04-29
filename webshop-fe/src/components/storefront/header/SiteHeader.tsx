@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/Select";
-import {AppPaths} from "../../../routing/AppPaths";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const SiteHeader: React.FC = () => {
     return (
@@ -14,7 +14,7 @@ const SiteHeader: React.FC = () => {
 
             <div className="flex space-x-2">
                 <Select>
-                    <SelectTrigger className="h-6 border-none bg-muted">
+                    <SelectTrigger size="sm" className="text-xs border-none bg-muted shadow-none">
                         <SelectValue placeholder="USD"/>
                     </SelectTrigger>
                     <SelectContent>
@@ -23,7 +23,7 @@ const SiteHeader: React.FC = () => {
                 </Select>
 
                 <Select>
-                    <SelectTrigger className="h-6 border-none bg-muted">
+                    <SelectTrigger size="sm" className="text-xs border-none bg-muted shadow-none">
                         <SelectValue placeholder="EN"/>
                     </SelectTrigger>
                     <SelectContent>

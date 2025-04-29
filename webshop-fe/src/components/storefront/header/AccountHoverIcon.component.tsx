@@ -1,14 +1,14 @@
 import React from "react";
-import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/HoverCard";
-import {Button} from "../../ui/Button";
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/hover-card";
+import {Button} from "../../ui/button";
 import {User} from "lucide-react";
 import AccountHoverContent from "./AccountHoverContent.component";
-import {Badge} from "../../ui/Badge";
-import {useAuth} from "../../../hooks/UseAuth";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../../ui/Tooltip";
+import {Badge} from "../../ui/badge";
+import {useAuth} from "@/hooks/useAuth.ts";
+import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/tooltip";
 import {useLocation} from "react-router-dom";
-import {useUser} from "../../../hooks/user/useUser";
-import {AppPaths} from "../../../routing/AppPaths";
+import {useUser} from "@/hooks/user/useUser.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const AccountHoverIcon: React.FC = () => {
     const {data: user} = useUser();
@@ -21,28 +21,26 @@ const AccountHoverIcon: React.FC = () => {
 
     return <HoverCard>
         <HoverCardTrigger>
-            <TooltipProvider>
-                <div className="relative">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                                <User/>
-                            </Button>
-                        </TooltipTrigger>
-                        {profileChangesNeeded && (
-                            <TooltipContent>
-                                <span>You need to update your account info</span>
-                            </TooltipContent>
-                        )}
-                    </Tooltip>
-
+            <div className="relative">
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <User className="scale-125"/>
+                        </Button>
+                    </TooltipTrigger>
                     {profileChangesNeeded && (
-                        <Badge
-                            className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-ping">
-                        </Badge>
+                        <TooltipContent>
+                            <span>You need to update your account info</span>
+                        </TooltipContent>
                     )}
-                </div>
-            </TooltipProvider>
+                </Tooltip>
+
+                {profileChangesNeeded && (
+                    <Badge
+                        className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-ping">
+                    </Badge>
+                )}
+            </div>
         </HoverCardTrigger>
         <HoverCardContent>
             <AccountHoverContent/>

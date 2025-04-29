@@ -2,10 +2,10 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import React from "react";
-import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {useChangePassword} from "../../../hooks/user/useChangePassword";
+import {useChangePassword} from "@/hooks/user/useChangePassword.ts";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -31,7 +31,7 @@ const PasswordForm: React.FC = () => {
             await changePassword(data.password)
             toast.success("Your password was successfully renewed.");
         } catch (error) {
-            unexpectedErrorToast()
+            unexpectedErrorToast(error)
         }
     }
 

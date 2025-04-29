@@ -1,8 +1,8 @@
 import React, {useCallback, useRef} from "react";
 import ProductCard from "./ProductCard.component";
-import {ProductResponse} from "../../../shared/api";
+import {ProductResponse} from "@/shared/api";
 import EmptyState from "../shared/EmptyPage.component";
-import {useProductScroll} from "../../../hooks/product/useProductScroll";
+import {useProductScroll} from "@/hooks/product/useProductScroll.ts";
 
 interface ProductListProps {
     filters: Parameters<typeof useProductScroll>[0];
@@ -25,7 +25,7 @@ const ProductList: React.FC<ProductListProps> = ({filters}) => {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 if (entries[0].isIntersecting && hasMore) {
-                    fetchNextPage();
+                    void fetchNextPage();
                 }
             });
             if (node) observer.current.observe(node);

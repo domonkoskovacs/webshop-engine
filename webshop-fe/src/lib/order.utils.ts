@@ -1,4 +1,4 @@
-import {OrderResponse, OrderResponseStatusEnum} from "../shared/api";
+import {OrderResponse, OrderResponseStatusEnum} from "@/shared/api";
 
 /**
  * Formats a date string for display.

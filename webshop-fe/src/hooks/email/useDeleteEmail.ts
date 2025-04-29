@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { emailService } from 'src/services/EmailService';
-import { ApiError } from 'src/shared/ApiError';
-import { useAdminGuard } from '../useAdminGuard';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {emailService} from '@/services/EmailService';
+import {ApiError} from '@/shared/ApiError';
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useDeleteEmail = () => {
     const queryClient = useQueryClient();
-    const { assertAdmin } = useAdminGuard();
+    const {assertAdmin} = useAuthGuard();
 
     return useMutation<void, ApiError, string>({
         mutationFn: async (id) => {
@@ -13,7 +13,7 @@ export const useDeleteEmail = () => {
             return emailService.delete(id);
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['emails'] });
+            await queryClient.invalidateQueries({queryKey: ['emails']});
         },
     });
 };

@@ -1,4 +1,4 @@
-import {CategoryServiceApi} from "../shared/api";
+import {CategoryServiceApi} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

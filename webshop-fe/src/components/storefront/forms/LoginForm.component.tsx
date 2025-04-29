@@ -2,14 +2,14 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
 import React from "react";
-import {useAuth} from "../../../hooks/UseAuth";
+import {useAuth} from "@/hooks/useAuth.ts";
 import {Link} from "react-router-dom";
-import {ApiError} from "../../../shared/ApiError";
-import {ResultEntryReasonCodeEnum} from "../../../shared/api";
-import {unexpectedErrorToast} from "../../../hooks/useToast";
+import {ApiError} from "@/shared/ApiError.ts";
+import {ResultEntryReasonCodeEnum} from "@/shared/api";
+import {unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {TextInputField} from "../../ui/fields/InputField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
-import {AppPaths} from "../../../routing/AppPaths";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -34,7 +34,7 @@ const LoginForm: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             await login(data.email, data.password)
-        } catch (error: any) {
+        } catch (error) {
             if (error instanceof ApiError && error.error) {
                 const errorMap = new Map(
                     error.error.map(err => [err.reasonCode, true])

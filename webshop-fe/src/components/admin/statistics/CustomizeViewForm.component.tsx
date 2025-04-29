@@ -1,13 +1,13 @@
 import React, {useEffect} from "react";
 
 import {z} from "zod";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
 import {NumberInputField} from "../../ui/fields/InputField";
 import DatePickerField from "../../ui/fields/DatePickerField";
-import {StatisticsServiceApiGetStatisticsRequest} from "../../../shared/api";
+import {StatisticsServiceApiGetStatisticsRequest} from "@/shared/api";
 
 export const FormSchema = z.object({
     from: z.date({

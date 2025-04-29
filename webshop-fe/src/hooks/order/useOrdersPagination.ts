@@ -1,6 +1,6 @@
 import {useCallback, useState} from "react";
-import {OrderServiceApiGetAll4Request} from "../../shared/api";
-import {countOrdersNeedingAttention} from "../../lib/order.utils";
+import {OrderServiceApiGetAll4Request} from "@/shared/api";
+import {countOrdersNeedingAttention} from "@/lib/order.utils.ts";
 import {useOrders} from "./useOrders";
 
 export const useOrdersPagination = () => {

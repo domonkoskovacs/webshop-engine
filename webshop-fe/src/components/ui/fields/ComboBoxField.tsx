@@ -1,16 +1,16 @@
-import {Button} from "src/components/ui/Button";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "src/components/ui/Form";
-import {Popover, PopoverContent, PopoverTrigger} from "src/components/ui/Popover";
-import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "src/components/ui/Command";
+import {Button} from "@/components/ui/button";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
 import {Check, ChevronsUpDown, Plus} from "lucide-react";
-import {cn} from "src/lib/utils";
-import React, {useState} from "react";
-import {SelectOption} from "../../../types/select";
-import {UseFormReturn} from "react-hook-form";
+import {cn} from "@/lib/utils";
+import {SelectOption} from "@/types/select";
+import {ControllerRenderProps, FieldValues, Path, UseFormReturn} from "react-hook-form";
+import {useState} from "react";
 
-interface FormComboBoxProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface FormComboBoxProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string;
     description?: string;
     options: SelectOption[];
@@ -18,19 +18,19 @@ interface FormComboBoxProps {
     onCreateOption?: (newValue: string) => void;
 }
 
-export const ComboBoxField: React.FC<FormComboBoxProps> = ({
-                                                               form,
-                                                               name,
-                                                               label,
-                                                               description,
-                                                               options,
-                                                               enableCreateOption = false,
-                                                               onCreateOption
-                                                           }) => {
+export function ComboBoxField<T extends FieldValues>({
+                                                         form,
+                                                         name,
+                                                         label,
+                                                         description,
+                                                         options,
+                                                         enableCreateOption = false,
+                                                         onCreateOption
+                                                     }: FormComboBoxProps<T>) {
     const [localOptions, setLocalOptions] = useState<SelectOption[]>(options);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const handleAddOption = (newValue: string, field: any) => {
+    const handleAddOption = (newValue: string, field: ControllerRenderProps<T, Path<T>>) => {
         if (!newValue.trim()) return;
         const newOption = {label: newValue, value: newValue};
         setLocalOptions((prev) => [...prev, newOption]);
@@ -118,4 +118,4 @@ export const ComboBoxField: React.FC<FormComboBoxProps> = ({
             )}
         />
     );
-};
+}

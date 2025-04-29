@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {ApiError} from "../../shared/ApiError";
+import {ApiError} from "@/shared/ApiError.ts";
 import {BellOff, CheckCircle, Loader2, XCircle} from "lucide-react";
-import {Button} from "../../components/ui/Button";
-import {Card, CardContent, CardHeader} from "../../components/ui/Card";
+import {Button} from "../../components/ui/button";
+import {Card, CardContent, CardHeader} from "../../components/ui/card";
 import PageContainer from "../../components/shared/PageContainer.component";
-import {useUnsubscribeById} from "../../hooks/user/useUnsubscribeById";
-import {AppPaths} from "../../routing/AppPaths";
+import {useUnsubscribeById} from "@/hooks/user/useUnsubscribeById.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const UnsubscribeEmailList: React.FC = () => {
     const [searchParams] = useSearchParams();

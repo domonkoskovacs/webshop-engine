@@ -1,4 +1,4 @@
-import {EmailServiceApi, PromotionEmailRequest} from "../shared/api";
+import {EmailServiceApi, PromotionEmailRequest} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

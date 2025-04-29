@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { userService } from "../../services/UserService";
-import { ApiError } from "../../shared/ApiError";
+import { userService } from "@/services/UserService.ts";
+import { ApiError } from "@/shared/ApiError.ts";
 
 export const useNewPassword = () => {
     return useMutation<void, ApiError, { id: string; password: string }>({

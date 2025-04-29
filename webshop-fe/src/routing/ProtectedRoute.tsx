@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAuth} from 'src/hooks/UseAuth';
+import {useAuth} from '@/hooks/useAuth.ts';
 import Forbidden from "../pages/storefront/Forbidden.page";
 import NotFound from "../pages/storefront/NotFound.page";
 import StorefrontLayout from "../layouts/Storefront.layout";

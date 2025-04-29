@@ -1,22 +1,13 @@
-import React, {createContext, useCallback, useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import {toast} from "../hooks/useToast";
+import React, {useCallback, useEffect, useState} from "react";
 import {useCookies} from "react-cookie";
-import {useLogin} from "../hooks/auth/useLogin";
-import {useRefresh} from "../hooks/auth/useRefresh";
-import {setupServiceInterceptors} from "../lib/interceptors.config";
-import axiosInstance from "../lib/axios";
-import {AppPaths} from "../routing/AppPaths";
-
-interface AuthContextType {
-    role: string | null;
-    loggedIn: boolean;
-    login: (email: string, password: string) => Promise<void>;
-    logout: () => void;
-    loading: boolean;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import {useLogin} from "@/hooks/auth/useLogin.ts";
+import {useRefresh} from "@/hooks/auth/useRefresh.ts";
+import {useNavigate} from "react-router-dom";
+import {AppPaths} from "@/routing/AppPaths.ts";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
+import {setupServiceInterceptors} from "@/lib/interceptors.config.ts";
+import axiosInstance from "@/lib/axios.ts";
+import {AuthContext} from "@/contexts/AuthContext.ts";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -31,28 +22,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const navigate = useNavigate();
 
     const login = async (email: string, password: string) => {
-        try {
-            const response = await loginForToken({email, password});
-            const {accessToken, role, refreshToken, refreshTokenTimeout} = response;
-            if (accessToken && role && refreshToken && refreshTokenTimeout) {
-                setAccessToken(accessToken);
-                setRole(role);
-                setLoggedIn(true);
-                setCookie("loggedIn", "true", {path: "/"});
-                setCookie("role", role, {path: "/"});
-                setCookie("refreshToken", refreshToken, {maxAge: refreshTokenTimeout, path: "/"});
-                if (role === "ROLE_ADMIN") {
-                    navigate(AppPaths.DASHBOARD_BASE)
-                } else {
-                    navigate(AppPaths.HOME)
-                }
-                toast.info("You are successfully logged in.");
+        const response = await loginForToken({email, password});
+        const {accessToken, role, refreshToken, refreshTokenTimeout} = response;
+        if (accessToken && role && refreshToken && refreshTokenTimeout) {
+            setAccessToken(accessToken);
+            setRole(role);
+            setLoggedIn(true);
+            setCookie("loggedIn", "true", {path: "/"});
+            setCookie("role", role, {path: "/"});
+            setCookie("refreshToken", refreshToken, {maxAge: refreshTokenTimeout, path: "/"});
+            if (role === "ROLE_ADMIN") {
+                navigate(AppPaths.DASHBOARD_BASE)
             } else {
-                toast.error("Uh oh! Something went wrong.",
-                    "Invalid response from the server while logging you in. Please try again.",);
+                navigate(AppPaths.HOME)
             }
-        } catch (error) {
-            throw error;
+            toast.info("You are successfully logged in.");
+        } else {
+            toast.error("Uh oh! Something went wrong.",
+                "Invalid response from the server while logging you in. Please try again.",);
         }
     }
 
@@ -70,34 +57,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
             });
             toast.info("Sad to see you go!");
         } catch (error) {
-            toast.error("Uh oh! Something went wrong.",
-                "Something went wrong while logging out. Please try again.",);
+            unexpectedErrorToast(error, "Something went wrong while logging out. Please try again.")
         }
     }, [navigate, removeCookie])
 
     useEffect(() => {
-        const tryRefreshAccessToken = async () => {
+        void (async () => {
             if (!accessToken && cookies.refreshToken) {
                 try {
                     const response = await refreshWithToken(cookies.refreshToken);
-                    const {accessToken, role} = response;
-                    if (accessToken && role) {
-                        setAccessToken(accessToken);
+                    const { accessToken: newAccessToken, role } = response;
+                    if (newAccessToken && role) {
+                        setAccessToken(newAccessToken);
                         setRole(role);
                         setLoggedIn(true);
                     } else {
                         logout();
                     }
-                } catch (e) {
+                } catch (error) {
+                    unexpectedErrorToast(error);
                     logout();
                 }
             }
             setLoading(false);
-
-        };
-
-        tryRefreshAccessToken();
+        })();
     }, [accessToken, cookies.refreshToken, refreshWithToken, logout]);
+
 
 
     useEffect(() => {

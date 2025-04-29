@@ -3,7 +3,7 @@ import {
     OrderServiceApiGetAll4Request,
     OrderStatusRequestOrderStatusEnum,
     RefundOrderItemRequest
-} from "../shared/api";
+} from "@/shared/api";
 import {ApiBaseService} from "../shared/ApiBaseService";
 import axiosInstance from "../lib/axios";
 

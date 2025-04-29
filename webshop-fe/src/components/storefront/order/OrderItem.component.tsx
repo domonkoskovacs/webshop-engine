@@ -1,9 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {OrderItemResponse} from "../../../shared/api";
-import {generateProductUrl} from "../../../lib/url.utils";
-import {getProductGender} from "../../../lib/product.utils";
-import {useGender} from "../../../hooks/useGender";
+import {OrderItemResponse} from "@/shared/api";
+import {generateProductUrl} from "@/lib/url.utils.ts";
+import {getProductGender} from "@/lib/product.utils.ts";
+import {useGender} from "@/hooks/useGender.ts";
 
 interface OrderItemCardProps {
     item: OrderItemResponse

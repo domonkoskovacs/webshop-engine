@@ -1,14 +1,14 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {userService} from "../../services/UserService";
-import {CartItemRequest, CartItemResponse, ResultEntryReasonCodeEnum,} from "../../shared/api";
-import {ApiError} from "../../shared/ApiError";
-import {useUserGuard} from "../useUserGuard";
+import {userService} from "@/services/UserService.ts";
+import {CartItemRequest, CartItemResponse, ResultEntryReasonCodeEnum,} from "@/shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
+import {useAuthGuard} from "../useAuthGuard";
 import {useCart} from "./useCart";
 import {toast} from "../useToast";
 
 export const useUpdateCart = () => {
     const queryClient = useQueryClient();
-    const {assertUser} = useUserGuard();
+    const {assertUser} = useAuthGuard();
     const {cart} = useCart();
 
     const mutation = useMutation<CartItemResponse[], ApiError, CartItemRequest>({
@@ -22,18 +22,14 @@ export const useUpdateCart = () => {
     });
 
     const increaseOneInCart = async (productId: string) => {
-        try {
-            const existingItem = cart.find((item) => item.product?.id === productId);
+        const existingItem = cart.find((item) => item.product?.id === productId);
 
-            const updatedCartItem: CartItemRequest = {
-                productId,
-                count: existingItem ? existingItem.count! + 1 : 1,
-            };
+        const updatedCartItem: CartItemRequest = {
+            productId,
+            count: existingItem ? existingItem.count! + 1 : 1,
+        };
 
-            await mutation.mutateAsync(updatedCartItem);
-        } catch (error) {
-            throw error;
-        }
+        await mutation.mutateAsync(updatedCartItem);
     };
 
     const addItemToCart = async (productId: string, loggedIn: boolean) => {

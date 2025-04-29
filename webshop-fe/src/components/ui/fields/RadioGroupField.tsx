@@ -1,16 +1,21 @@
-import {UseFormReturn} from "react-hook-form";
+import {FieldValues, Path, UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../Form";
-import {RadioGroup, RadioGroupItem} from "../RadioGroup";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {RadioGroup, RadioGroupItem} from "../radio-group";
 
-interface RadioGroupFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface RadioGroupFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string | React.ReactNode;
     options: { value: string; label: string }[];
 }
 
-const RadioGroupField: React.FC<RadioGroupFieldProps> = ({form, name, label, options}) => {
+const RadioGroupField = <T extends FieldValues>({
+                                                    form,
+                                                    name,
+                                                    label,
+                                                    options,
+                                                }: RadioGroupFieldProps<T>) => {
     return (
         <FormField
             control={form.control}

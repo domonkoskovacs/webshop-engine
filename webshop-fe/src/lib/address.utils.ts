@@ -1,4 +1,4 @@
-import {AddressRequest, AddressResponse} from "../shared/api";
+import {AddressRequest, AddressResponse} from "@/shared/api";
 
 /**
  * Safely maps an AddressResponse to AddressRequest.

@@ -1,12 +1,12 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {articleService} from 'src/services/ArticleService';
-import {ArticleResponse, ArticleServiceApiCreate4Request} from "../../shared/api";
-import {ApiError} from "../../shared/ApiError";
-import {useAdminGuard} from "../useAdminGuard";
+import {articleService} from '@/services/ArticleService';
+import {ArticleResponse, ArticleServiceApiCreate4Request} from "@/shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
+import {useAuthGuard} from "@/hooks/useAuthGuard.ts";
 
 export const useCreateArticle = () => {
     const queryClient = useQueryClient();
-    const {assertAdmin} = useAdminGuard();
+    const {assertAdmin} = useAuthGuard();
 
     return useMutation<ArticleResponse, ApiError, ArticleServiceApiCreate4Request>({
         mutationFn: async (data) => {

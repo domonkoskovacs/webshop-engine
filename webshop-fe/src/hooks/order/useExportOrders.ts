@@ -1,11 +1,11 @@
-import {useAdminGuard} from "../useAdminGuard";
+import {useAuthGuard} from "../useAuthGuard";
 import {useMutation} from "@tanstack/react-query";
-import {orderService} from "../../services/OrderService";
-import {downloadCSV} from "../../lib/file.utils";
-import {CsvResponse} from "../../shared/api";
+import {orderService} from "@/services/OrderService.ts";
+import {downloadCSV} from "@/lib/file.utils.ts";
+import {CsvResponse} from "@/shared/api";
 
 export const useExportOrders = () => {
-    const {assertAdmin} = useAdminGuard();
+    const {assertAdmin} = useAuthGuard();
 
     return useMutation<CsvResponse, Error, { from: string; to: string }>({
         mutationFn: async ({from, to}: { from: string; to: string }) => {

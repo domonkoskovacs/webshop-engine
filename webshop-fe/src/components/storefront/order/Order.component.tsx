@@ -1,12 +1,12 @@
 import React, {useState} from "react";
-import {OrderResponse} from "../../../shared/api";
-import {Card, CardContent} from "../../ui/Card";
-import {Button} from "../../ui/Button";
-import {formatDate, getOrderActions} from "../../../lib/order.utils";
-import {Separator} from "../../ui/Separator";
+import {OrderResponse} from "@/shared/api";
+import {Card, CardContent} from "../../ui/card";
+import {Button} from "../../ui/button";
+import {formatDate, getOrderActions} from "@/lib/order.utils.ts";
+import {Separator} from "../../ui/separator";
 import {Link, useNavigate} from "react-router-dom";
-import {generateProductUrl} from "../../../lib/url.utils";
-import {useGender} from "../../../hooks/useGender";
+import {generateProductUrl} from "@/lib/url.utils.ts";
+import {useGender} from "@/hooks/useGender.ts";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,8 +17,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger
-} from "../../ui/AlertDialog";
-import {getProductGender} from "../../../lib/product.utils";
+} from "../../ui/alert-dialog";
+import {getProductGender} from "@/lib/product.utils.ts";
 import OrderItem from "./OrderItem.component";
 import {
     Dialog,
@@ -28,11 +28,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from "../../ui/Dialog";
-import {useCancelOrder} from "../../../hooks/order/useCancelOrder";
-import {useReturnOrder} from "../../../hooks/order/useReturnOrder";
-import {handleGenericApiError} from "../../../shared/ApiError";
-import {toast} from "../../../hooks/useToast";
+} from "../../ui/dialog";
+import {useCancelOrder} from "@/hooks/order/useCancelOrder.ts";
+import {useReturnOrder} from "@/hooks/order/useReturnOrder.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 
 interface OrderItemProps {
     order: OrderResponse;
@@ -129,10 +129,7 @@ const Order: React.FC<OrderItemProps> = ({order}) => {
                                                 await cancelOrder(order.id ?? '');
                                                 toast.success("Order cancelled successfully.");
                                             } catch (error) {
-                                                toast.error(
-                                                    "Order cancellation failed.",
-                                                    "Something went wrong while cancelling your order. Please try again."
-                                                );
+                                                unexpectedErrorToast(error, "Something went wrong while cancelling your order. Please try again.")
                                             }
                                         }}
                                     >Finish Order Cancellation</Button>

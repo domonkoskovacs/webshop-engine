@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
-import {Button} from "../../components/ui/Button";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
+import {Button} from "../../components/ui/button";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
 import CustomizeViewForm from "../../components/admin/statistics/CustomizeViewForm.component";
 import ListStatistics from "../../components/admin/statistics/ListStatistics.component";
 import OrderWeekdayChart from "../../components/admin/statistics/OrderWeekdayChart.component";
@@ -12,8 +12,8 @@ import {OrderStatusChart} from "../../components/admin/statistics/OrderStatusDis
 import OrderPriceChart from "../../components/admin/statistics/OrderPriceChart.component";
 import OrderCountChart from "../../components/admin/statistics/OrderCountChart.componenet";
 import SummaryCard from "../../components/admin/statistics/SummaryCard.componenet";
-import {useStatistics} from "../../hooks/statistics/useStatistics";
-import {StatisticsServiceApiGetStatisticsRequest} from "../../shared/api";
+import {useStatistics} from "@/hooks/statistics/useStatistics.ts";
+import {StatisticsServiceApiGetStatisticsRequest} from "@/shared/api";
 
 const StatisticsDashboard: React.FC = () => {
     const now = new Date();
@@ -34,14 +34,14 @@ const StatisticsDashboard: React.FC = () => {
             <PageHeader className="py-2 gap-2">
                 <div className="flex flex-row gap-2">
                     <div
-                        className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-sm">
+                        className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-xs">
                         <span className="hidden sm:block font-medium text-foreground">Period:</span>
                         <span>{request.from}</span>
                         <span className="mx-1">-</span>
                         <span>{request.to}</span>
                     </div>
                     <div
-                        className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-sm">
+                        className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-xs">
                         <span className="font-medium text-foreground">Top:</span>
                         <span>{request.topCount}</span>
                     </div>

@@ -1,8 +1,8 @@
 import React from "react";
-import {Button} from "../../ui/Button";
-import {useGender} from "../../../hooks/useGender";
+import {Button} from "../../ui/button";
+import {useGender} from "@/hooks/useGender.ts";
 import {useNavigate} from "react-router-dom";
-import {Gender} from "../../../types/gender";
+import {Gender} from "@/types/gender";
 
 const GenderSelector: React.FC = () => {
     const {gender, setGender} = useGender()

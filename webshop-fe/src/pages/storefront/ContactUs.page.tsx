@@ -4,8 +4,8 @@ import {Facebook, Instagram, Twitter} from "lucide-react";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
-import PageContent from 'src/components/shared/PageContent';
-import {AppPaths} from "../../routing/AppPaths";
+import PageContent from '@/components/shared/PageContent';
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const ContactUs: React.FC = () => {
     return (

@@ -1,9 +1,9 @@
 import React from "react";
 import {Label, Pie, PieChart} from "recharts";
-import {ChartContainer, ChartTooltip, ChartTooltipContent,} from "../../ui/Chart";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/Card";
-import {cn} from "../../../lib/utils";
-import {CustomerTypeDistributionResponse} from "../../../shared/api";
+import {ChartContainer, ChartTooltip, ChartTooltipContent,} from "../../ui/chart";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/card";
+import {cn} from "@/lib/utils.ts";
+import {CustomerTypeDistributionResponse} from "@/shared/api";
 
 type Props = {
     data: CustomerTypeDistributionResponse;

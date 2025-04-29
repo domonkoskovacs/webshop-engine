@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
-import {GetAll1SortTypeEnum, ProductServiceApiGetAll1Request, UpdateGenderEnum} from "../../../shared/api";
+import {GetAll1SortTypeEnum, ProductServiceApiGetAll1Request, UpdateGenderEnum} from "@/shared/api";
 
 import {z} from "zod";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
@@ -12,14 +12,14 @@ import {
     mapCategoryNamesToOptions,
     mapEnumToOptions,
     mapSubCategoryNamesToOptions
-} from "../../../lib/options.utils";
+} from "@/lib/options.utils.ts";
 import SliderField from "../../ui/fields/SliderField";
 import {NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {SwitchField} from "../../ui/fields/SwitchField";
 import SelectField from "../../ui/fields/SelectField";
-import {useCategories} from "../../../hooks/category/useCategories";
-import {useProductBrands} from "../../../hooks/product/useProductBrands";
-import {useProducts} from "../../../hooks/product/useProducts";
+import {useCategories} from "@/hooks/category/useCategories.ts";
+import {useProductBrands} from "@/hooks/product/useProductBrands.ts";
+import {useProducts} from "@/hooks/product/useProducts.ts";
 
 const FormSchema = z.object({
     brands: z.array(z.string()).optional(),
@@ -97,7 +97,7 @@ const FilterForm: React.FC<FilterFormProps> = ({setIsOpen, updateFilters, filter
                                     options={mapEnumToOptions(UpdateGenderEnum)}/>
         <SliderField form={form} nameMin="minPrice" nameMax="maxPrice" label="Price"
                      range={[priceRange[0], priceRange[1]]}/>
-        <SliderField form={form} nameMin="minDiscountPercentage" nameMax="maxDiscountPercentage" label="Price"
+        <SliderField form={form} nameMin="minDiscountPercentage" nameMax="maxDiscountPercentage" label="Discount"
                      range={[discountRange[0], discountRange[1]]}/>
         <TextInputField form={form} name="itemNumber" placeholder="Item number..."/>
         <SwitchField form={form} name="showOutOfStock" label="Show out of stock products?"/>

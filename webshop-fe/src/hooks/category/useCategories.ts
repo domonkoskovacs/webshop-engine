@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { categoryService } from 'src/services/CategoryService';
-import { CategoryResponse } from 'src/shared/api';
+import { categoryService } from '@/services/CategoryService';
+import { CategoryResponse } from '@/shared/api';
 
 export const useCategories = () => {
     return useQuery<CategoryResponse[], Error>({

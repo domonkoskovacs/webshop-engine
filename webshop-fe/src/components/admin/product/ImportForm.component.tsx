@@ -1,14 +1,14 @@
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-import {toast, unexpectedErrorToast} from "../../../hooks/useToast";
+import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import React from "react";
-import {ApiError} from "../../../shared/ApiError";
-import {ResultEntryReasonCodeEnum} from "../../../shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
+import {ResultEntryReasonCodeEnum} from "@/shared/api";
 import {FileInputField} from "../../ui/fields/InputField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {downloadSampleCSV, fileToBase64, FileToBase64Error} from "../../../lib/file.utils";
-import {useImportProducts} from "../../../hooks/product/useImportProducts";
+import {downloadSampleCSV, fileToBase64, FileToBase64Error} from "@/lib/file.utils.ts";
+import {useImportProducts} from "@/hooks/product/useImportProducts.ts";
 
 export const FormSchema = z.object({
     csv: z

@@ -1,24 +1,24 @@
 import React from 'react';
 import {ColumnDef} from "@tanstack/react-table";
-import {ProductResponse, PromotionEmailRequestDayOfWeekEnum} from "../../shared/api";
+import {ProductResponse, PromotionEmailRequestDayOfWeekEnum} from "@/shared/api";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger
-} from "../../components/ui/DropdownMenu";
-import {Button} from "../../components/ui/Button";
+} from "../../components/ui/dropdown-menu";
+import {Button} from "../../components/ui/button";
 import {MoreHorizontal} from "lucide-react";
-import {DataTable} from "../../components/ui/DataTable";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/Sheet";
+import {DataTable} from "../../components/ui/data-table";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
 import EmailForm from "../../components/admin/email/EmailForm.component";
 import PageContainer from "../../components/shared/PageContainer.component";
-import {useEmails} from "../../hooks/email/useEmails";
-import {useDeleteEmail} from "../../hooks/email/useDeleteEmail";
-import {useTestEmail} from "../../hooks/email/useTestEmail";
-import {handleGenericApiError} from "../../shared/ApiError";
-import {toast} from "../../hooks/useToast";
-import {useUser} from "../../hooks/user/useUser";
+import {useEmails} from "@/hooks/email/useEmails.ts";
+import {useDeleteEmail} from "@/hooks/email/useDeleteEmail.ts";
+import {useTestEmail} from "@/hooks/email/useTestEmail.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {toast} from "@/hooks/useToast.ts";
+import {useUser} from "@/hooks/user/useUser.ts";
 
 const PromotionEmailDashboard: React.FC = () => {
     const {data: emails = [], isLoading} = useEmails();
@@ -79,7 +79,7 @@ const PromotionEmailDashboard: React.FC = () => {
 
                 const handleTest = async () => {
                     try {
-                        await testEmail({id, email: user?.email!});
+                        await testEmail({id, email: user?.email ?? ''});
                         toast.success("Test email sent successfully!");
                     } catch (error) {
                         handleGenericApiError(error);
@@ -131,7 +131,7 @@ const PromotionEmailDashboard: React.FC = () => {
 
     return (
         <PageContainer layout="start">
-            <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false}
+            <DataTable key={emails.length} columns={columns} data={emails} enableSelect={false} isLoading={isLoading}
                        enableDefaultFilter={true} defaultFilterColumn={"name"} customElement={emailForm}/>
         </PageContainer>
     );

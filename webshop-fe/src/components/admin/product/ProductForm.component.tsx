@@ -1,21 +1,21 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {toast} from "../../../hooks/useToast";
+import {toast} from "@/hooks/useToast.ts";
 import React, {useEffect} from "react";
 import {ComboBoxField} from "../../ui/fields/ComboBoxField";
 import {FileListInputField, NumberInputField, TextInputField} from "../../ui/fields/InputField";
 import {TextareaField} from "../../ui/fields/TextareaField";
 import SheetFormContainer from "../../shared/SheetFormContainer.componenet";
-import {UpdateGenderEnum} from "../../../shared/api";
-import {mapBrandsToOptions, mapEnumToOptions, mapSubCategoriesToOptions} from "../../../lib/options.utils";
+import {UpdateGenderEnum} from "@/shared/api";
+import {mapBrandsToOptions, mapEnumToOptions, mapSubCategoriesToOptions} from "@/lib/options.utils.ts";
 import ImageCard from "./ImageCard.component";
-import {useCategories} from "../../../hooks/category/useCategories";
-import {useCreateProduct} from "../../../hooks/product/useCreateProduct";
-import {useUpdateProduct} from "../../../hooks/product/useUpdateProduct";
-import {handleGenericApiError} from "../../../shared/ApiError";
-import {useProductById} from "../../../hooks/product/useProductById";
-import {useProductBrands} from "../../../hooks/product/useProductBrands";
+import {useCategories} from "@/hooks/category/useCategories.ts";
+import {useCreateProduct} from "@/hooks/product/useCreateProduct.ts";
+import {useUpdateProduct} from "@/hooks/product/useUpdateProduct.ts";
+import {handleGenericApiError} from "@/shared/ApiError.ts";
+import {useProductById} from "@/hooks/product/useProductById.ts";
+import {useProductBrands} from "@/hooks/product/useProductBrands.ts";
 
 const MAX_IMAGES = 5;
 

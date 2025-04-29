@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/Tabs";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs";
 import RegistrationForm from "../../components/storefront/forms/RegistrationForm.component";
 import LoginForm from "../../components/storefront/forms/LoginForm.component";
 import {useSearchParams} from "react-router-dom";
@@ -23,7 +23,7 @@ const Authentication: React.FC = () => {
         <PageContainer layout="centered" className="p-6">
             <Tabs value={isLogin ? "login" : "registration"} onValueChange={handleTabChange}
                   className="w-[90vw] sm:w-[60vw]">
-                <TabsList className="flex content-center">
+                <TabsList className="flex items-center w-full">
                     <TabsTrigger value="registration">Registration</TabsTrigger>
                     <TabsTrigger value="login">Login</TabsTrigger>
                 </TabsList>

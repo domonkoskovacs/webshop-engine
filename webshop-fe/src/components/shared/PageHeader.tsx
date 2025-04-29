@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils.ts";
 
 const headerVariants = {
     default: "flex flex-row justify-between items-center mb-6",

@@ -1,16 +1,21 @@
-import {UseFormReturn} from "react-hook-form";
+import {FieldValues, Path, UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
-import {Switch} from "../Switch";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {Switch} from "../switch";
 
-interface SwitchFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface SwitchFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string | React.ReactNode;
     description?: string | React.ReactNode;
 }
 
-const SwitchField: React.FC<SwitchFieldProps> = ({form, name, label, description}) => {
+const SwitchField = <T extends FieldValues>({
+                                                form,
+                                                name,
+                                                label,
+                                                description
+                                            }: SwitchFieldProps<T>) => {
     return <FormField
         control={form.control}
         name={name}

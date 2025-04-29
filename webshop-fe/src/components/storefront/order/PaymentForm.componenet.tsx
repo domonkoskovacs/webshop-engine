@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import {useNavigate} from "react-router-dom";
-import {toast} from "../../../hooks/useToast";
-import {Button} from "../../ui/Button";
-import {OrderResponse} from "../../../shared/api";
-import {AppPaths} from "../../../routing/AppPaths";
+import {toast} from "@/hooks/useToast.ts";
+import {Button} from "../../ui/button";
+import {OrderResponse} from "@/shared/api";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 interface PaymentFormProps {
     order: OrderResponse;

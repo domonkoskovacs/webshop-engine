@@ -1,18 +1,23 @@
-import {Textarea} from "../Textarea";
-import React from "react";
-import {UseFormReturn} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../Form";
+import {Textarea} from "../textarea";
+import {FieldValues, Path, UseFormReturn} from "react-hook-form";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
 
-interface TextareaFieldProps {
-    form: UseFormReturn<any>;
-    name: string;
+interface TextareaFieldProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    name: Path<T>;
     label: string;
     placeholder: string;
     min?: number;
     description?: string;
 }
 
-const TextareaField: React.FC<TextareaFieldProps> = ({form, name, label, placeholder, description}) => {
+const TextareaField = <T extends FieldValues>({
+                                                  form,
+                                                  name,
+                                                  label,
+                                                  placeholder,
+                                                  description,
+                                              }: TextareaFieldProps<T>) => {
     return <FormField
         control={form.control}
         name={name}

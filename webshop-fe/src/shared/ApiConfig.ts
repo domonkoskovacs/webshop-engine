@@ -13,7 +13,7 @@ export class ApiConfig {
     static getConfig(): Configuration {
         if (!this.instance) {
             this.instance = new Configuration({
-                basePath: process.env.REACT_APP_BACKEND_URL,
+                basePath: import.meta.env.VITE_BACKEND_URL,
                 baseOptions: {
                     withCredentials: true,
                     timeout: 10000,

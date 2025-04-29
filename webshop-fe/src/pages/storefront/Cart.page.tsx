@@ -1,20 +1,20 @@
 import React from 'react';
-import {useAuth} from "../../hooks/UseAuth";
+import {useAuth} from "@/hooks/useAuth.ts";
 import EmptyState from "../../components/storefront/shared/EmptyPage.component";
 import PublicEmptyPage from "../../components/storefront/shared/PublicEmptyPage.component";
 import CartItem from "../../components/storefront/cart/CartItem.component";
-import {Button} from "../../components/ui/Button";
-import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/Card";
-import {Separator} from "../../components/ui/Separator";
-import {calculateCartTotals} from "../../lib/price.utils";
+import {Button} from "../../components/ui/button";
+import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/card";
+import {Separator} from "../../components/ui/separator";
+import {calculateCartTotals} from "@/lib/price.utils.ts";
 import {Link} from "react-router-dom";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageTitle from "../../components/shared/PageTitle";
 import PageContent from "../../components/shared/PageContent";
-import {usePublicStore} from "../../hooks/store/usePublicStore";
-import {useCart} from "../../hooks/user/useCart";
-import {AppPaths} from "../../routing/AppPaths";
+import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
+import {useCart} from "@/hooks/user/useCart.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const Cart: React.FC = () => {
     const {loggedIn} = useAuth()

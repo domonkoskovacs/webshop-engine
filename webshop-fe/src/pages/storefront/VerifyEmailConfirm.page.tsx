@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {ApiError} from "../../shared/ApiError";
-import {ResultEntryReasonCodeEnum} from "../../shared/api";
+import {ApiError} from "@/shared/ApiError.ts";
+import {ResultEntryReasonCodeEnum} from "@/shared/api";
 import {CheckCircle, Loader2, MailCheck, XCircle} from "lucide-react";
-import {Button} from "../../components/ui/Button";
-import {Card, CardContent, CardHeader} from "../../components/ui/Card";
-import {toLogin} from "../../lib/url.utils";
+import {Button} from "../../components/ui/button";
+import {Card, CardContent, CardHeader} from "../../components/ui/card";
+import {toLogin} from "@/lib/url.utils.ts";
 import PageContainer from "../../components/shared/PageContainer.component";
-import {useVerifyEmail} from "../../hooks/user/useVerifyEmail";
-import {AppPaths} from "../../routing/AppPaths";
+import {useVerifyEmail} from "@/hooks/user/useVerifyEmail.ts";
+import {AppPaths} from "@/routing/AppPaths.ts";
 
 const VerifyEmailConfirmation: React.FC = () => {
     const [searchParams] = useSearchParams();
