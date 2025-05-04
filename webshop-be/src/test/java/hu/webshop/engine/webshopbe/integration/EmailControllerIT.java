@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import hu.webshop.engine.webshopbe.base.IntegrationTest;
-import hu.webshop.engine.webshopbe.domain.email.repository.PromotionalEmailRepository;
+import hu.webshop.engine.webshopbe.domain.email.repository.PromotionEmailRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import hu.webshop.engine.webshopbe.infrastructure.controller.api.ApiPaths;
 import hu.webshop.engine.webshopbe.infrastructure.model.request.EmailRequest;
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 class EmailControllerIT extends IntegrationTest {
 
     private static final String EMAIL_ID = "b7f86506-8ea8-4908-b8f4-668c5ec6a711";
-    private final PromotionalEmailRepository repository;
+    private final PromotionEmailRepository repository;
 
     @Test
     @DisplayName("promotion email can be created")

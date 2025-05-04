@@ -55,7 +55,7 @@ const AccountHoverContent: React.FC = () => {
                     onClick={() => navigate(AppPaths.DASHBOARD_STORE_FULL)}>
                 <Settings className="mr-2"/>Settings
             </Button>
-            <Separator className="my-4"/>
+            <Separator className="mb-4"/>
             <Button onClick={() => logout()}>
                 Log out
             </Button>

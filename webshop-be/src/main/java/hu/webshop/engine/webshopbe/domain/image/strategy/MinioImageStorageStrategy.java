@@ -52,7 +52,7 @@ public class MinioImageStorageStrategy implements ImageStorageStrategy{
         if (originalFilename == null || !originalFilename.contains(".")) {
             throw new ImageException(ReasonCode.VALIDATION_ERROR, "Invalid file name: missing extension.");
         }
-        String filename = generateFileName(originalFilename);
+        String filename = generateFilename(originalFilename);
 
         minioClient.putObject(
                 PutObjectArgs.builder()
@@ -97,7 +97,7 @@ public class MinioImageStorageStrategy implements ImageStorageStrategy{
         return ImageStorageType.MINIO;
     }
 
-    private String generateFileName(String originalFilename) {
+    private String generateFilename(String originalFilename) {
         return UUID.randomUUID() + "_" + originalFilename;
     }
 }

@@ -5,7 +5,7 @@ export const useAuthGuard = () => {
 
     const isAuthenticated = loggedIn && !loading;
 
-    const isUser = role === 'ROLE_USER' && isAuthenticated;
+    const isUser = (role === 'ROLE_USER' || role === 'ROLE_ADMIN') && isAuthenticated;
     const isAdmin = role === 'ROLE_ADMIN' && isAuthenticated;
 
     const assertAuthenticated = () => {
@@ -15,7 +15,7 @@ export const useAuthGuard = () => {
     };
 
     const assertUser = () => {
-        if (!isUser && !isAdmin) {
+        if (!isUser) {
             throw new Error('You must be a user to perform this action.');
         }
     };

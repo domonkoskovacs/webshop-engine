@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import hu.webshop.engine.webshopbe.domain.email.EmailService;
 import hu.webshop.engine.webshopbe.domain.email.PromotionEmailService;
 import hu.webshop.engine.webshopbe.domain.email.entity.PromotionEmail;
-import hu.webshop.engine.webshopbe.domain.email.repository.PromotionalEmailRepository;
+import hu.webshop.engine.webshopbe.domain.email.repository.PromotionEmailRepository;
 import hu.webshop.engine.webshopbe.domain.image.entity.ImageMetadata;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
@@ -31,7 +31,7 @@ class PromotionEmailServiceTest {
     @InjectMocks
     private PromotionEmailService promotionEmailService;
     @Mock
-    private PromotionalEmailRepository promotionalEmailRepository;
+    private PromotionEmailRepository promotionalEmailRepository;
     @Mock
     private EmailService emailService;
 

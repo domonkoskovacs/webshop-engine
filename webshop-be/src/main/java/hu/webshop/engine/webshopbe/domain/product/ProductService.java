@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductUpdateMapper productUpdateMapper;
+    private final ProductUpdateMapper updateMapper;
     private final BrandService brandService;
     private final CategoryService categoryService;
     private final ImageService imageService;
@@ -114,7 +114,7 @@ public class ProductService {
     public Product update(UUID uuid, ProductUpdate productUpdate) {
         log.info("update > uuid: [{}], productUpdate: [{}]", uuid, productUpdate);
         Product old = getById(uuid);
-        Product updatedProduct = productUpdateMapper.update(old, productUpdate);
+        Product updatedProduct = updateMapper.update(old, productUpdate);
 
         List<UUID> preservedImageIds = productUpdate.existingImageIds() != null
                 ? productUpdate.existingImageIds().stream()
@@ -220,7 +220,7 @@ public class ProductService {
                 .parse();
         List<Product> products = parsedProducts.stream()
                 .map(productCsv -> {
-                    Product fromCsv = productUpdateMapper.fromCsv(productCsv);
+                    Product fromCsv = updateMapper.fromCsv(productCsv);
                     fromCsv.setBrand(brandService.getByName(productCsv.getBrand()));
                     fromCsv.setSubCategory(categoryService.getSubCategoryByName(productCsv.getSubCategoryName()));
                     return fromCsv;

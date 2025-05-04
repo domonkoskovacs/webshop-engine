@@ -185,10 +185,17 @@ public class UserService implements UserDetailsService {
     public List<Product> addSaved(List<UUID> productIds) {
         log.info("addSaved > productIds: [{}]", productIds);
         User currentUser = getCurrentUser();
-        currentUser.addSaved(productService.getAll(productIds));
+        List<Product> existingSaved = currentUser.getSaved();
+        List<Product> productsToAdd = productService.getAll(productIds)
+                .stream()
+                .filter(product -> existingSaved.stream().noneMatch(saved -> saved.getId().equals(product.getId())))
+                .toList();
+
+        currentUser.addSaved(productsToAdd);
         userRepository.save(currentUser);
         return currentUser.getSaved();
     }
+
 
     public List<Product> removeSaved(List<UUID> productIds) {
         log.info("removeSaved > productIds: [{}]", productIds);

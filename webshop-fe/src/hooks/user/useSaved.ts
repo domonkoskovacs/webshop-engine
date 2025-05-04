@@ -11,7 +11,6 @@ export const useSaved = () => {
         queryKey: ["saved"],
         queryFn: async () => userService.getSaved(),
         enabled: isUser,
-        staleTime: 60 * 1000,
     });
 
     const isSaved = (id: string): boolean => {
