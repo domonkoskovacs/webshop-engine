@@ -13,11 +13,11 @@ type Props = {
 const chartConfig = {
     newCustomers: {
         label: "New Customers",
-        color: "hsl(var(--chart-2))",
+        color: "var(--chart-2)",
     },
     returningCustomers: {
         label: "Returning Customers",
-        color: "hsl(var(--chart-4))",
+        color: "var(--chart-4)",
     },
 };
 

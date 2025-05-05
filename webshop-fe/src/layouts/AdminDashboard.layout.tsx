@@ -36,7 +36,7 @@ const AdminDashboardLayout: React.FC<LayoutProps> = ({children}) => {
                                 <Bell className="m-2 p-1"/>
                                 {ordersNeedingAttention > 0 && (
                                     <Badge
-                                        className="absolute top-0 right-0 flex h-4 w-3 items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
+                                        className="absolute top-0.5 right-0.5 flex h-4 w-3 items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
                                         {ordersNeedingAttention}
                                     </Badge>
                                 )}

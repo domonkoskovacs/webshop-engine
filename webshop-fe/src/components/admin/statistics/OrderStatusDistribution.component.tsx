@@ -27,23 +27,23 @@ const chartConfig = {
     },
     pending: {
         label: "Pending",
-        color: "hsl(var(--chart-1))",
+        color: "var(--chart-1)",
     },
     processing: {
         label: "Processing",
-        color: "hsl(var(--chart-2))",
+        color: "var(--chart-2)",
     },
     shipped: {
         label: "Shipped",
-        color: "hsl(var(--chart-3))",
+        color: "var(--chart-3)",
     },
     returned: {
         label: "Returned",
-        color: "hsl(var(--chart-4))",
+        color: "var(--chart-4)",
     },
     cancelled: {
         label: "Cancelled",
-        color: "hsl(var(--chart-5))",
+        color: "var(--chart-5)",
     },
 } satisfies ChartConfig
 

@@ -31,7 +31,7 @@ const StatisticsDashboard: React.FC = () => {
 
     return (
         <PageContainer layout="start">
-            <PageHeader className="py-2 gap-2">
+            <PageHeader className="py-2 gap-2 mb-0">
                 <div className="flex flex-row gap-2">
                     <div
                         className="flex items-center gap-2 text-sm border border-border rounded-lg p-2.5 bg-background shadow-xs">

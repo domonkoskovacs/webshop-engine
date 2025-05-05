@@ -3,7 +3,6 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import ScrollToTop from "./routing/ScrollToTop";
 import {TooltipProvider} from './components/ui/tooltip';
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {Toaster} from "./components/ui/sonner";
 import {CookiesProvider} from "react-cookie";
 import {GenderProvider} from "@/contexts/GenderProvider.tsx";
@@ -36,7 +35,6 @@ function App() {
                     </ThemeProvider>
                 </Router>
             </CookiesProvider>
-            {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false}/>}
         </QueryClientProvider>
     );
 }

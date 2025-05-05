@@ -15,7 +15,7 @@ const ArticleDashboard: React.FC = () => {
 
     return (
         <PageContainer layout="start">
-            <PageHeader variant="full" className="py-2">
+            <PageHeader variant="full" className="py-2 mb-0">
                 <div className="flex items-center space-x-2">
                     <Switch id="autoplay"
                             checked={isAutoplay}
@@ -31,7 +31,7 @@ const ArticleDashboard: React.FC = () => {
                     </SheetContent>
                 </Sheet>
             </PageHeader>
-            <PageContent className="w-full max-w-[70vw] sm:max-w-[90vw] md:max-w-[65vw] lg:max-w-[70vw] mx-auto">
+            <PageContent className="w-full max-w-[70vw] sm:max-w-[90vw] md:max-w-[65vw] lg:max-w-[70vw] mx-auto max-h-[55vh]">
                 <ArticleSlider autoplayEnabled={isAutoplay} variant="admin"/>
             </PageContent>
         </PageContainer>
