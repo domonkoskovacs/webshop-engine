@@ -43,7 +43,7 @@ const UnsubscribeEmailList: React.FC = () => {
     }, [navigate, searchParams, unsubscribe]);
 
     return (
-        <PageContainer className="my-10">
+        <PageContainer className="sm:my-10 p-4">
             <Card className="p-8 max-w-md w-full text-center">
                 <CardHeader className="p-0 m-0">
                     <BellOff className="w-12 h-12 text-blue-500 mx-auto mb-4"/>

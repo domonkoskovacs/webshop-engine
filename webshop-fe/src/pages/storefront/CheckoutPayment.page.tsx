@@ -14,6 +14,7 @@ import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
 import {useCreatePaymentIntent} from "@/hooks/order/useCreatePaymentIntent.ts";
 import {useUserOrders} from "@/hooks/order/useUserOrders.ts";
 import {AppPaths} from "@/routing/AppPaths.ts";
+import {toast} from "sonner";
 
 const CheckoutPayment: React.FC = () => {
     const {data: store} = usePublicStore()
@@ -40,22 +41,26 @@ const CheckoutPayment: React.FC = () => {
         const foundOrder = orders.find(o => o.id === orderId);
         if (!foundOrder) {
             setLoadError("Order not found.");
+            setLoading(false);
+        } else if (foundOrder.status === "PAID") {
+            toast.warning("This order has already been paid.");
+            navigate(AppPaths.MY_ORDERS);
         } else {
             setOrder(foundOrder);
             setLoadError(null);
-        }
 
-        createIntent(orderId)
-            .then(res => {
-                setClientSecret(res.clientSecret);
-            })
-            .catch(() => {
-                setLoadError("Failed to create payment intent.");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [orders, loadingOrders, orderId, createIntent]);
+            createIntent(orderId)
+                .then(res => {
+                    setClientSecret(res.clientSecret);
+                })
+                .catch(() => {
+                    setLoadError("Failed to create payment intent.");
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    }, [orders, loadingOrders, orderId, createIntent, navigate]);
 
     if (loading) {
         return <PageContainer layout="centered">
@@ -65,9 +70,19 @@ const CheckoutPayment: React.FC = () => {
 
     if (loadError || !clientSecret || !order) {
         return <PageContainer layout="centered">
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate(AppPaths.MY_ORDERS)}
+                className="absolute top-2 left-2 cursor-pointer"
+            >
+                <ArrowLeft className="h-5 w-5"/>
+            </Button>
             <div style={{color: 'red'}}>{loadError || "Unexpected error occurred."}</div>
         </PageContainer>;
     }
+
+    const isDemoMode = clientSecret.startsWith("demo_client_secret_");
 
     return (
         <PageContainer layout="centered" className="min-h-screen">
@@ -99,9 +114,23 @@ const CheckoutPayment: React.FC = () => {
                     <Separator orientation="vertical" className="h-full"/>
                 </div>
                 <div className="w-full md:w-1/2">
-                    <Elements stripe={stripePromise} options={{clientSecret}}>
-                        <PaymentForm order={order}/>
-                    </Elements>
+                    {isDemoMode ? (
+                        <div className="flex flex-col items-center justify-center h-full gap-4">
+                            <p className="text-center text-muted-foreground">
+                                This is a demo payment. No real transaction will be made.
+                            </p>
+                            <Button
+                                className="w-full"
+                                onClick={() => navigate(AppPaths.MY_ORDERS)}
+                            >
+                                Finish Order
+                            </Button>
+                        </div>
+                    ) : (
+                        <Elements stripe={stripePromise} options={{clientSecret}}>
+                            <PaymentForm order={order}/>
+                        </Elements>
+                    )}
                 </div>
             </div>
         </PageContainer>

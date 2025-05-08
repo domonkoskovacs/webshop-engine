@@ -9,6 +9,7 @@ import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useNewPassword} from "@/hooks/user/useNewPassword.ts";
 import {handleGenericApiError} from "@/shared/ApiError.ts";
 import {AppPaths} from "@/routing/AppPaths.ts";
+import {toLogin} from "@/lib/url.utils.ts";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -41,6 +42,7 @@ const NewPasswordForm: React.FC = () => {
             if (id) {
                 await newPassword({id, password: data.password});
                 toast.success("Password renewed.")
+                navigate(toLogin)
             } else {
                 navigate(AppPaths.HOME);
             }

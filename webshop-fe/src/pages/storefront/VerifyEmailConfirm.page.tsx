@@ -54,7 +54,7 @@ const VerifyEmailConfirmation: React.FC = () => {
     }, [navigate, searchParams, verify]);
 
     return (
-        <PageContainer className="my-10">
+        <PageContainer className="my-10 p-4">
             <Card className="p-8 max-w-md w-full text-center">
                 <CardHeader className="p-0 m-0">
                     <MailCheck className="w-12 h-12 text-blue-500 mx-auto mb-4"/>

@@ -27,7 +27,7 @@ const MenuBar: React.FC = () => {
                     category.subCategories && category.subCategories.length > 0 ?
                         <NavigationMenuItem key={category.id}>
                             <NavigationMenuTrigger className="flex-shrink-0">{category.name}</NavigationMenuTrigger>
-                            <NavigationMenuContent>
+                            <NavigationMenuContent className="w-full max-w-[calc(100vw-2rem)] overflow-hidden">
                                 <ul className="grid w-[400px] gap-3 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                                     {category.subCategories?.map((subCategory) => (
                                         <ListItem

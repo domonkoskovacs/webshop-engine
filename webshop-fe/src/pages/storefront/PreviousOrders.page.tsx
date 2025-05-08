@@ -11,16 +11,22 @@ import {useUserOrders} from "@/hooks/order/useUserOrders.ts";
 const PreviousOrders: React.FC = () => {
     const {orders} = useUserOrders()
 
-    return orders.length > 0 ? (
+    const sortedOrders = [...orders].sort((a, b) => {
+        const dateA = new Date(a.orderDate ?? 0).getTime();
+        const dateB = new Date(b.orderDate ?? 0).getTime();
+        return dateB - dateA;
+    });
+
+    return sortedOrders.length > 0 ? (
         <PageContainer layout="spacious" className="relative">
             <PageHeader>
                 <PageTitle>Previous Orders</PageTitle>
                 <p className="text-lg font-semibold">
-                    <span className="text-indigo-600">{orders.length}</span> orders made
+                    <span className="text-indigo-600">{sortedOrders.length}</span> orders made
                 </p>
             </PageHeader>
             <PageContent className="flex flex-col gap-4">
-                {orders.map((order: OrderResponse) => {
+                {sortedOrders.map((order: OrderResponse) => {
                     return (
                         <div key={order.id}>
                             <OrderItem order={order}/>

@@ -41,14 +41,20 @@ const CartItem: React.FC<CartHoverItemProps> = ({item, type = "hover", amountMod
     const imageSize = type === "page" ? "w-20 h-20" : "w-14 h-14";
 
     return <div className="flex items-center justify-between gap-3 border-b p-2 px-3">
-        <div className="flex flex-row h-full items-center">
+        <div className="flex flex-col sm:flex-row h-full items-start sm:items-center gap-2 sm:gap-0">
             <img
                 src={item.product?.imageUrls![0]}
                 alt={item.product?.name}
                 className={`${imageSize} object-cover rounded-md`}
             />
-            <h2 className="ml-4 mr-1 text-lg font-bold">{item.product?.name}</h2>
-            {isDiscounted && <Badge className="h-4 bg-red-500">-{discount}%</Badge>}
+            <div className="flex flex-row">
+                <h2 className="ml-0 sm:ml-4 mr-1 text-lg font-bold">{item.product?.name}</h2>
+                {isDiscounted && (
+                    <Badge className="h-4 bg-red-500 mt-1">
+                        -{discount}%
+                    </Badge>
+                )}
+            </div>
         </div>
         <div className="flex flex-col items-end text-right">
             <span className="text-sm text-gray-500">

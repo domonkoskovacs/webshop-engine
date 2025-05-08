@@ -17,7 +17,7 @@ const OrderItem: React.FC<OrderItemCardProps> = ({item}) => {
 
     return (
         <div className="flex flex-row items-center gap-3 py-2 mr-40">
-            <div className="w-16 h-16">
+            <div className="w-20 sm:w-16 aspect-square flex-shrink-0">
                 {item.thumbNailUrl && (
                     <Link
                         to={generateProductUrl(
@@ -31,7 +31,7 @@ const OrderItem: React.FC<OrderItemCardProps> = ({item}) => {
                         <img
                             src={item.thumbNailUrl}
                             alt={item.productName || "No product name available"}
-                            className="w-16 h-16 object-cover rounded-md hover:opacity-80 transition"
+                            className="w-full h-full object-cover rounded-md hover:opacity-80 transition"
                         />
                     </Link>
                 )}

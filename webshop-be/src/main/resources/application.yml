@@ -68,15 +68,15 @@ management:
 
 application:
   jwt:
-    expiration: 1000000000
-    refresh-expiration: 1000000000
+    expiration: 900000
+    refresh-expiration: 1209600000
     accessSecret: ${JWT_ACCESS_SECRET:generate}
     refreshSecret: ${JWT_REFRESH_SECRET:generate}
   email:
-    new-password: http://localhost:3000/new-password?id={id}
-    verify: http://localhost:3000/verify-email/confirm?id={id}
-    more-info: http://localhost:3000/previous-orders
-    unsubscribe: http://localhost:3000/unsubcribe?id={id}
+    new-password: http://localhost:5173/new-password?id={id}
+    verify: http://localhost:5173/verify-email/confirm?id={id}
+    more-info: http://localhost:5173/my-orders
+    unsubscribe: http://localhost:5173/unsubscribe?id={id}
     from: noreply@${WEBSHOP_NAME:webshop}.hu
   image:
     folder-name: images

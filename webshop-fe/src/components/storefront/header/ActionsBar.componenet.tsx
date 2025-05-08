@@ -59,7 +59,7 @@ const ActionsBar: React.FC = () => {
                             )}
                         </div>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-[50vw]" hidden={isCartHoverDisabled}>
+                    <HoverCardContent className="w-full max-w-[90vw] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl p-4 mx-2 overflow-hidden" hidden={isCartHoverDisabled}>
                         <CartHoverContent/>
                     </HoverCardContent>
                 </HoverCard>

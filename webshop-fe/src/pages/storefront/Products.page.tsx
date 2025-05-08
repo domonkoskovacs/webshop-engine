@@ -89,7 +89,7 @@ const Products: React.FC = () => {
                         <PathBreadcrumb segments={breadcrumbSegments}/>
                         <Separator orientation="vertical" className="h-10"/>
                     </div>
-                    <h2 className="flex items-center gap-1">
+                    <h2 className="hidden sm:flex items-center gap-1">
                         {decodeURIComponent(subcategory ?? category ?? gender ?? '')} <Badge
                         className="text-xs h-6">{totalElements}</Badge>
                     </h2>

@@ -4,7 +4,7 @@ import PageContainer from "../../components/shared/PageContainer.component";
 
 const ForgotPassword: React.FC = () => {
     return (
-        <PageContainer>
+        <PageContainer className="p-4">
             <ForgotPasswordForm/>
         </PageContainer>
     );

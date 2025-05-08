@@ -42,7 +42,7 @@ const AccountHoverIcon: React.FC = () => {
                 )}
             </div>
         </HoverCardTrigger>
-        <HoverCardContent>
+        <HoverCardContent className="mx-2">
             <AccountHoverContent/>
         </HoverCardContent>
     </HoverCard>
