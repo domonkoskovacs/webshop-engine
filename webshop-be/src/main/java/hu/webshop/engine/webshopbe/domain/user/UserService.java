@@ -94,9 +94,8 @@ public class UserService implements UserDetailsService {
     public void forgottenPassword(ForgottenPassword forgottenPassword) {
         log.info("forgottenPassword: forgottenPassword: [{}]", forgottenPassword);
         if (isEmailOccupied(forgottenPassword.email())) {
+            log.debug("User found for forgotten password email: [{}]", forgottenPassword.email());
             emailService.sendForgottenPasswordEmail(forgottenPassword.email(), getByEmail(forgottenPassword.email()).getId());
-        } else {
-            throw new EntityNotFoundException("Email not found");
         }
     }
 
