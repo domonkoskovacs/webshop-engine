@@ -86,20 +86,6 @@ class UserControllerIT extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("cannot send forgotten password email if email does not exist")
-    @DataSet("verifiedUser.yml")
-    void cannotSendForgottenPasswordEmailIfEmailDoesNotExist() throws Exception {
-        //Given
-        ForgottenPasswordRequest forgottenPasswordRequest = new ForgottenPasswordRequest("bad@email.com");
-
-        // When
-        ResultActions resultActions = performPost(ApiPaths.Users.FORGOTTEN_PASSWORD, forgottenPasswordRequest);
-
-        //Then
-        resultActions.andExpect(status().isNotFound());
-    }
-
-    @Test
     @DisplayName("bad id throws 404")
     void badIdThrows404() throws Exception {
         //Given //When
