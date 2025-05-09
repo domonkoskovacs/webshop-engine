@@ -30,6 +30,7 @@ const SwitchField = <T extends FieldValues>({
                         <Switch
                             checked={field.value}
                             onCheckedChange={field.onChange}
+                            data-testid={`switch-${name}`}
                         />
                     </FormControl>
                 </div>

@@ -63,4 +63,21 @@ public class TestConfiguration {
         String raw = get("performance.testType");
         return PerformanceTestType.fromString(raw);
     }
+
+    public static String getUiUserEmail() {
+        String email = get("ui.user.email");
+        if (email == null || email.isBlank()) {
+            throw new IllegalStateException("Missing required property: ui.user.email");
+        }
+        return email;
+    }
+
+    public static String getUiUserPassword() {
+        String password = get("ui.user.password");
+        if (password == null || password.isBlank()) {
+            throw new IllegalStateException("Missing required property: ui.user.password");
+        }
+        return password;
+    }
+
 }

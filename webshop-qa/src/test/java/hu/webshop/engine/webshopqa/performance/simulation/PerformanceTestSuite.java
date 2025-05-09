@@ -1,13 +1,13 @@
-package hu.webshop.engine.webshopqa.performance.simulations;
+package hu.webshop.engine.webshopqa.performance.simulation;
 
 import static io.gatling.javaapi.http.HttpDsl.http;
 
 import hu.webshop.engine.webshopqa.configuration.TestConfiguration;
-import hu.webshop.engine.webshopqa.performance.assertions.PerformanceAssertions;
+import hu.webshop.engine.webshopqa.performance.assertion.PerformanceAssertions;
 import hu.webshop.engine.webshopqa.performance.injection.LoadProfileFactory;
-import hu.webshop.engine.webshopqa.performance.scenarios.CategoriesScenario;
-import hu.webshop.engine.webshopqa.performance.scenarios.ProductsScenario;
-import hu.webshop.engine.webshopqa.performance.scenarios.ArticlesScenario;
+import hu.webshop.engine.webshopqa.performance.scenario.CategoriesScenario;
+import hu.webshop.engine.webshopqa.performance.scenario.ProductsScenario;
+import hu.webshop.engine.webshopqa.performance.scenario.ArticlesScenario;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 

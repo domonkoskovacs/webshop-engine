@@ -1,4 +1,4 @@
-package hu.webshop.engine.webshopqa.performance.assertions;
+package hu.webshop.engine.webshopqa.performance.assertion;
 
 import static io.gatling.javaapi.core.CoreDsl.forAll;
 import static io.gatling.javaapi.core.CoreDsl.global;

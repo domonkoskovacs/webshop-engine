@@ -1,11 +1,11 @@
-package hu.webshop.engine.webshopqa.performance.scenarios;
+package hu.webshop.engine.webshopqa.performance.scenario;
 
 import static io.gatling.javaapi.core.CoreDsl.jsonPath;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 
-import hu.webshop.engine.webshopqa.performance.endpoints.CategoryEndpoints;
+import hu.webshop.engine.webshopqa.performance.endpoint.CategoryEndpoints;
 import io.gatling.javaapi.core.ScenarioBuilder;
 
 public class CategoriesScenario {
