@@ -21,6 +21,18 @@ services:
     ports:
       - "5432:5432"
 
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
+    command: server --console-address ":9090" /data
+
   backend:
     build:
       context: ./webshop-be
@@ -32,19 +44,24 @@ services:
       MONITORING_PASSWORD: monitoring
       API_USERNAME: swagger
       API_PASSWORD: swagger
+      CLIENT_ORIGIN: http://localhost:3000 #fe container
       SMTP_HOST: maildev
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
-      #DB_POOL_SIZE: 4
-      #DB_CATALOG: spring_webshop
-      WEBSHOP_NAME: webshop
+      JWT_ACCESS_SECRET: generate
+      JWT_REFRESH_SECRET: generate
+      DEMO_PAY: true
       STRIPE_PUBLIC_KEY: MUST_BE_SPECIFIED
       STRIPE_PRIVATE_KEY: MUST_BE_SPECIFIED
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
     depends_on:
       - postgres
       - maildev
+      - minio
     ports:
       - "8080:8080"
 
@@ -52,11 +69,14 @@ services:
     build:
       context: ./webshop-fe
       dockerfile: Dockerfile
-    environment:
-      REACT_APP_BACKEND_URL: http://localhost:8080
+      args:
+        - VITE_BACKEND_URL=http://backend:8080
     ports:
-      - "3000:80"
+      - "5173:80"
+
 
 volumes:
   postgres-db:
+    driver: local
+  minio-data:
     driver: local
