@@ -29,6 +29,7 @@ import hu.webshop.engine.webshopbe.domain.store.entity.Store;
 import hu.webshop.engine.webshopbe.domain.user.UserService;
 import hu.webshop.engine.webshopbe.domain.user.entity.Address;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
+import hu.webshop.engine.webshopbe.domain.user.value.AddressType;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("OrderCreationService unit tests")
@@ -53,7 +54,9 @@ class OrderCreationServiceTest {
     @DisplayName("validate catches shipping address is null")
     void validateCatchesShippingAddressIsNull() {
         //Given
-        when(userService.getCurrentUser()).thenReturn(User.builder().shippingAddress(null).billingAddress(new Address()).cart(List.of(new Cart())).build());
+        User user = User.builder().cart(List.of(new Cart())).build();
+        user.setBillingAddress(Address.builder().type(AddressType.BILLING).build());
+        when(userService.getCurrentUser()).thenReturn(user);
 
         //When //Then
         assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
@@ -66,7 +69,9 @@ class OrderCreationServiceTest {
     @DisplayName("validate catches billing address is null")
     void validateCatchesBillingAddressIsNull() {
         //Given
-        when(userService.getCurrentUser()).thenReturn(User.builder().shippingAddress(new Address()).billingAddress(null).cart(List.of(new Cart())).build());
+        User user = User.builder().cart(List.of(new Cart())).build();
+        user.setShippingAddress(Address.builder().type(AddressType.SHIPPING).build());
+        when(userService.getCurrentUser()).thenReturn(user);
 
         //When //Then
         assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
@@ -79,7 +84,10 @@ class OrderCreationServiceTest {
     @DisplayName("validate catches cart is empty")
     void validateCatchesCartIsEmpty() {
         //Given
-        when(userService.getCurrentUser()).thenReturn(User.builder().shippingAddress(new Address()).billingAddress(new Address()).cart(List.of()).build());
+        User user = User.builder().cart(List.of()).build();
+        user.setBillingAddress(Address.builder().type(AddressType.BILLING).build());
+        user.setShippingAddress(Address.builder().type(AddressType.SHIPPING).build());
+        when(userService.getCurrentUser()).thenReturn(user);
 
         //When //Then
         assertThatThrownBy(() -> orderCreationService.create(PaymentType.STRIPE))
@@ -94,7 +102,9 @@ class OrderCreationServiceTest {
         //Given
         Product product = Product.builder().count(10).build();
         Cart cart = Cart.builder().product(product).count(11).build();
-        User user = User.builder().shippingAddress(new Address()).billingAddress(new Address()).cart(List.of(cart)).build();
+        User user = User.builder().cart(List.of(cart)).build();
+        user.setBillingAddress(Address.builder().type(AddressType.BILLING).build());
+        user.setShippingAddress(Address.builder().type(AddressType.SHIPPING).build());
         when(userService.getCurrentUser()).thenReturn(user);
 
         //When //Then
@@ -111,7 +121,9 @@ class OrderCreationServiceTest {
         Store store = Store.builder().minOrderPrice(50.0).build();
         Product product = Product.builder().discountPercentage(0.0).subCategory(SubCategory.builder().category(new Category()).build()).count(10).price(10.0).build();
         Cart cart = Cart.builder().product(product).count(1).build();
-        User user = User.builder().shippingAddress(new Address()).billingAddress(new Address()).cart(List.of(cart)).build();
+        User user = User.builder().cart(List.of(cart)).build();
+        user.setBillingAddress(Address.builder().type(AddressType.BILLING).build());
+        user.setShippingAddress(Address.builder().type(AddressType.SHIPPING).build());
         when(userService.getCurrentUser()).thenReturn(user);
         when(storeService.getStore()).thenReturn(store);
         //When //Then

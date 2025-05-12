@@ -9,9 +9,9 @@ create table webshop_category
 create table sub_category
 (
     id                 uuid default uuid_generate_v4() primary key,
-    sub_category_name  varchar(100)                          not null,
-    category_id        uuid references webshop_category (id) not null,
-    creation_time      timestamp                             not null,
+    sub_category_name  varchar(100)                                            not null,
+    category_id        uuid references webshop_category (id) on delete cascade not null,
+    creation_time      timestamp                                               not null,
     last_modified_time timestamp
 );
 

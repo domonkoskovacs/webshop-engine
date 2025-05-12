@@ -16,12 +16,11 @@ public interface UserMapper {
     UserResponse toResponse(User entity);
 
     @Mapping(target = "verified", ignore = true)
-    @Mapping(target = "shippingAddress", ignore = true)
+    @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "saved", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "orders", ignore = true)
     @Mapping(target = "cart", ignore = true)
-    @Mapping(target = "billingAddress", ignore = true)
     User fromRequest(RegistrationRequest request);
 
     UpdateUser fromRequest(UpdateUserRequest request);

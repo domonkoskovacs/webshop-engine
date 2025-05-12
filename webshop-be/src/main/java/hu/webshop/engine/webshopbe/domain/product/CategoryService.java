@@ -69,12 +69,22 @@ public class CategoryService {
 
     public void delete(UUID id) {
         log.info("delete > id: [{}]", id);
+        Category category = getById(id);
+        boolean anySubCategoryUsed = category.getSubCategories().stream()
+                .anyMatch(subCategory -> subCategory.getProducts() != null && !subCategory.getProducts().isEmpty());
+
+        if (anySubCategoryUsed) {
+            throw new IllegalStateException("Cannot delete category: at least one subcategory contains products");
+        }
         categoryRepository.deleteById(id);
     }
 
     public void deleteSubCategory(UUID id) {
         log.info("deleteSubCategory > id: [{}]", id);
         SubCategory subCategory = getSubCategoryById(id);
+        if (subCategory.getProducts() != null && !subCategory.getProducts().isEmpty()) {
+            throw new IllegalStateException("Cannot delete subcategory: it is still used by products");
+        }
         Category category = subCategory.getCategory();
         category.getSubCategories().remove(subCategory);
         categoryRepository.save(category);

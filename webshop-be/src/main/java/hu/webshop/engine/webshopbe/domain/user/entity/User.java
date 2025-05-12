@@ -13,6 +13,7 @@ import hu.webshop.engine.webshopbe.domain.base.entity.BaseEntity;
 import hu.webshop.engine.webshopbe.domain.order.entity.Order;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
+import hu.webshop.engine.webshopbe.domain.user.value.AddressType;
 import hu.webshop.engine.webshopbe.domain.user.value.Gender;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
 import jakarta.persistence.CascadeType;
@@ -25,7 +26,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,13 +73,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "subscribed_to_email", nullable = false)
     private boolean subscribedToEmail = false;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shipping_address_id")
-    private Address shippingAddress;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "billing_address_id")
-    private Address billingAddress;
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "user_id", nullable = false)
+    private List<Address> addresses = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -141,4 +138,31 @@ public class User extends BaseEntity implements UserDetails {
     public Product getMostDiscontedSavedProduct() {
         return this.saved.stream().max(Comparator.comparing(Product::getDiscountPercentage)).orElse(null);
     }
+
+    public Address getShippingAddress() {
+        return addresses.stream()
+                .filter(a -> a.getType() == AddressType.SHIPPING)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Address getBillingAddress() {
+        return addresses.stream()
+                .filter(a -> a.getType() == AddressType.BILLING)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void setShippingAddress(Address newShippingAddress) {
+        addresses.removeIf(a -> a.getType() == AddressType.SHIPPING);
+        newShippingAddress.setType(AddressType.SHIPPING);
+        addresses.add(newShippingAddress);
+    }
+
+    public void setBillingAddress(Address newBillingAddress) {
+        addresses.removeIf(a -> a.getType() == AddressType.BILLING);
+        newBillingAddress.setType(AddressType.BILLING);
+        addresses.add(newBillingAddress);
+    }
+
 }
