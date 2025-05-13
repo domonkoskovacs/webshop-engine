@@ -4,6 +4,8 @@ server:
   ssl:
     enabled: false
 spring:
+  main:
+    log-startup-info: true
   security:
     admin:
       username: ${ADMIN_USERNAME:admin}
