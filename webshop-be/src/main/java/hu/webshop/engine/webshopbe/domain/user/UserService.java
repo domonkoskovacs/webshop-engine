@@ -27,6 +27,7 @@ import hu.webshop.engine.webshopbe.domain.product.ProductService;
 import hu.webshop.engine.webshopbe.domain.product.entity.Cart;
 import hu.webshop.engine.webshopbe.domain.product.entity.Product;
 import hu.webshop.engine.webshopbe.domain.user.entity.User;
+import hu.webshop.engine.webshopbe.domain.user.properties.UserProperties;
 import hu.webshop.engine.webshopbe.domain.user.repository.UserRepository;
 import hu.webshop.engine.webshopbe.domain.user.value.CartItem;
 import hu.webshop.engine.webshopbe.domain.user.value.Role;
@@ -46,6 +47,7 @@ public class UserService implements UserDetailsService {
     private final ProductService productService;
     private final EmailService emailService;
     private final PasswordEncoder encoder;
+    private final UserProperties userProperties;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -80,7 +82,7 @@ public class UserService implements UserDetailsService {
 
     public User create(User registration) {
         log.info("create > registration: [{}]", registration.getId());
-        registration.setVerified(false);
+        registration.setVerified(userProperties.isDemoMode());
         registration.setRole(ROLE_USER);
         registration.setPassword(encoder.encode(registration.getPassword()));
         return userRepository.save(registration);

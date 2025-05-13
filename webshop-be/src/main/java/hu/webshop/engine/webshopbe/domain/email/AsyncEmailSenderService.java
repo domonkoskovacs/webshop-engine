@@ -24,6 +24,11 @@ public class AsyncEmailSenderService {
 
     @Async
     public void sendNoReplyMail(Email email) {
+        if (emailProperties.isDemoMode()) {
+            log.info("DEMO MODE: Skipping email to [{}]", email.to());
+            return;
+        }
+
         log.info("sendNoReplyMail > email to: [{}]", email.to());
         MimeMessage message = mailSender.createMimeMessage();
         try {

@@ -12,6 +12,7 @@ import {RadioGroupField} from "../../ui/fields/RadioGroupField";
 import FormCardContainer from "../../shared/FormCardContainer.component";
 import {useRegister} from "@/hooks/user/useRegister.ts";
 import {AppPaths} from "@/routing/AppPaths.ts";
+import {toLogin} from "@/lib/url.utils.ts";
 
 const FormSchema = z.object({
     email: z.string().email({
@@ -84,7 +85,13 @@ const RegistrationForm: React.FC = () => {
                 },
             });
             toast.success("Successful registration.")
-            navigate(`/verify-email?email=${encodeURIComponent(data.email)}`);
+            const isDemoMode = import.meta.env.VITE_USER_DEMO_MODE === 'true';
+
+            if (isDemoMode) {
+                navigate(toLogin);
+            } else {
+                navigate(`/verify-email?email=${encodeURIComponent(data.email)}`);
+            }
         } catch
             (error) {
             if (error instanceof ApiError && error.error) {

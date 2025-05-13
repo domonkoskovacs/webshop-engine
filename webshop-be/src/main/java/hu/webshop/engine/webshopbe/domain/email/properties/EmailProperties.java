@@ -14,4 +14,5 @@ public class EmailProperties {
     private String moreInfo;
     private String unsubscribe;
     private String from;
+    private boolean demoMode;
 }

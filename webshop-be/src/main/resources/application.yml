@@ -67,6 +67,8 @@ management:
         include: "*"
 
 application:
+  user:
+    demo-mode: ${DEMO_MODE:false}
   jwt:
     expiration: 900000
     refresh-expiration: 1209600000
@@ -78,6 +80,7 @@ application:
     more-info: http://localhost:5173/my-orders
     unsubscribe: http://localhost:5173/unsubscribe?id={id}
     from: noreply@${WEBSHOP_NAME:webshop}.hu
+    demo-mode: ${DEMO_MODE:false}
   image:
     folder-name: images
     server-domain: ${SERVER_HOST:localhost}
@@ -90,7 +93,7 @@ application:
   payment:
     private-key: ${STRIPE_PRIVATE_KEY:MUST_BE_SPECIFIED}
     endpoint-secret: ${ENDPOINT_SECRET:MUST_BE_SPECIFIED}
-    demo-mode: ${DEMO_PAY:true}
+    demo-mode: ${DEMO_MODE:true}
   schedule:
     out-of-stock-product:
       cron: "* 0 0 * * *" #every midnight
