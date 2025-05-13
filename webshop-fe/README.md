@@ -121,7 +121,7 @@ This project reads `VITE_`-prefixed environment variables at build time.
 Example `.env`:
 
 ```dotenv
-VITE_API_URL=http://localhost:8080
+VITE_BACKEND_URL=http://localhost:8080
 ```
  Specify VITE_STRIPE_PUBLISHABLE_KEY for Stripe usage 
 
@@ -141,4 +141,4 @@ npm run lint
 
 - The backend must be running for the API and forms to work.
 - Stripe checkout, image upload, and authenticated actions depend on backend logic.
-- All backend-related URLs are configured via `VITE_API_URL`.
+- All backend-related URLs are configured via `VITE_BACKEND_URL`.
