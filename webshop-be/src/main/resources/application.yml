@@ -6,6 +6,7 @@ server:
 spring:
   main:
     log-startup-info: true
+    register-shutdown-hook: true
   security:
     admin:
       username: ${ADMIN_USERNAME:admin}

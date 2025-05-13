@@ -24,22 +24,27 @@ public class InitDataConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userService.getCountByRole(Role.ROLE_ADMIN) == 0) {
-            User defaultAdmin = User.builder()
-                    .email(adminProperties.getUsername() + "@admin.com")
-                    .firstname(adminProperties.getUsername())
-                    .lastname(adminProperties.getUsername())
-                    .password(adminProperties.getPassword())
-                    .role(Role.ROLE_ADMIN)
-                    .verified(true)
-                    .phoneNumber("123")
-                    .build();
+        log.info("InitDataConfig starting...");
+        try {
+            if (userService.getCountByRole(Role.ROLE_ADMIN) == 0) {
+                User defaultAdmin = User.builder()
+                        .email(adminProperties.getUsername() + "@admin.com")
+                        .firstname(adminProperties.getUsername())
+                        .lastname(adminProperties.getUsername())
+                        .password(adminProperties.getPassword())
+                        .role(Role.ROLE_ADMIN)
+                        .verified(true)
+                        .phoneNumber("123")
+                        .build();
 
-            userService.initUser(defaultAdmin);
-            log.info("admin was created: [{}]", defaultAdmin);
-        }
-        if (!storeService.isStoreInitialized()) {
-            storeService.initStore();
+                userService.initUser(defaultAdmin);
+                log.info("admin was created: [{}]", defaultAdmin);
+            }
+            if (!storeService.isStoreInitialized()) {
+                storeService.initStore();
+            }
+        } catch (Exception e) {
+            log.error("InitDataConfig failed during startup", e);
         }
     }
 
