@@ -38,6 +38,7 @@ services:
       context: ./webshop-be
       dockerfile: Dockerfile
     environment:
+      SPRING_PROFILES_ACTIVE: local
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: admin
       MONITORING_USERNAME: monitoring

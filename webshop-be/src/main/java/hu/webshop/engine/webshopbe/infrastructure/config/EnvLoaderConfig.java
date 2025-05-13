@@ -2,6 +2,7 @@ package hu.webshop.engine.webshopbe.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
@@ -10,6 +11,7 @@ import org.springframework.core.io.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Profile("local")
 @Configuration
 @PropertySource(value = "file:${user.dir}/.env", ignoreResourceNotFound = true)
 public class EnvLoaderConfig {
