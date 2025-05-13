@@ -11,7 +11,6 @@ export class ApiConfig {
      * Returns a singleton instance of the API configuration.
      */
     static getConfig(): Configuration {
-        console.log(import.meta.env.VITE_BACKEND_URL)
         if (!this.instance) {
             this.instance = new Configuration({
                 basePath: import.meta.env.VITE_BACKEND_URL,
