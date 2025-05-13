@@ -10,24 +10,6 @@
             font-family: 'Roboto', sans-serif;
             font-size: 24px;
         }
-
-        a {
-            color: #090909;
-            padding: 0.4em 1.2em;
-            font-size: 20px;
-            border-radius: 0.5em;
-            background: #7CB9E8;
-            border: 1px solid #7CB9E8;
-            transition: all .3s;
-            box-shadow: 6px 6px 12px #c5c5c5,
-            -6px -6px 12px #ffffff;
-        }
-
-        a:active {
-            color: #666;
-            box-shadow: inset 4px 4px 12px #c5c5c5,
-            inset -4px -4px 12px #ffffff;
-        }
     </style>
 </head>
 <body>
@@ -63,7 +45,7 @@
 </p>
 
 <p>
-    To get more information about your order, please visit our <a th:href="${moreInfoUrl}">Order Details Page</a>.
+    To get more information about your order, please visit our <strong><a th:href="${moreInfoUrl}">Order Details Page</a></strong>.
 </p>
 
 <p>

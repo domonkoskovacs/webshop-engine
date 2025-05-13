@@ -86,7 +86,7 @@ application:
       endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
       accessKey: ${MINIO_ACCESS_KEY:minioadmin}
       secretKey: ${MINIO_SECRET_KEY:minioadmin}
-      bucket: images
+      bucket: ${BUCKET_NAME:images}
   payment:
     private-key: ${STRIPE_PRIVATE_KEY:MUST_BE_SPECIFIED}
     endpoint-secret: ${ENDPOINT_SECRET:MUST_BE_SPECIFIED}

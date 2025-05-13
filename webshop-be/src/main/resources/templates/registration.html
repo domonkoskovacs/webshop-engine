@@ -1,44 +1,42 @@
 <!DOCTYPE html>
-<html lang="EN">
+<html lang="en">
 <head>
-    <title>Spring boot email template with Thymeleaf</title>
-
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
-
+    <meta charset="UTF-8" />
+    <title>Verify Your Email</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            font-size: 24px;
+            font-size: 18px;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
 
-        a {
-            color: #090909;
-            padding: 0.4em 1.2em;
-            font-size: 20px;
-            border-radius: 0.5em;
-            background: #7CB9E8;
-            border: 1px solid #7CB9E8;
-            transition: all .3s;
-            box-shadow: 6px 6px 12px #c5c5c5,
-            -6px -6px 12px #ffffff;
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
 
-        a:active {
-            color: #666;
-            box-shadow: inset 4px 4px 12px #c5c5c5,
-            inset -4px -4px 12px #ffffff;
+        .button:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
-<p th:text="${'Dear ' + fullName}"></p>
+<div class="container">
+    <p th:text="${'Dear ' + fullName}"></p>
 
-<p>
-    Thank you for joining our webshop!
-</p>
-<p>To finish your registration please verify your account: <a th:href="${url}">Verify my account!</a></p>
+    <p>Thank you for joining our webshop!</p>
+    <p>To finish your registration, please verify your account:</p>
+    <a class="button" th:href="${url}">Verify My Account</a>
+</div>
 </body>
 </html>
