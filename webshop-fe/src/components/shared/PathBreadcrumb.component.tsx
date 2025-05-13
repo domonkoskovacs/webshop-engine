@@ -6,7 +6,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator
-} from "../ui/breadcrumb";
+} from "../ui/breadcrumb.tsx";
 import React from "react";
 import {generateBreadcrumbSegments} from "@/lib/url.utils.ts";
 

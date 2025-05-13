@@ -7,10 +7,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "../../components/ui/dropdown-menu";
-import {Button} from "../../components/ui/button";
+import {Button} from "../../components/ui/button.tsx";
 import {MoreHorizontal} from "lucide-react";
 import {DataTable} from "../../components/ui/data-table";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet.tsx";
 import EmailForm from "../../components/admin/email/EmailForm.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import {useEmails} from "@/hooks/email/useEmails.ts";

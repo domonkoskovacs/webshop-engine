@@ -1,11 +1,11 @@
 import React from 'react';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/ui/button.tsx';
 import {Heart, ShoppingCart} from 'lucide-react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import DarkModeToggle from "@/components/ui/dark-mode-toggle.tsx";
 import GenderSelector from "./GenderSelector.component";
 import AccountHoverIcon from "./AccountHoverIcon.component";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card";
 import CartHoverContent from "./CartHoverContent.component";
 import {useAuth} from "@/hooks/useAuth.ts";

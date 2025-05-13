@@ -2,7 +2,7 @@ import React from "react";
 import PasswordForm from "./RenewPasswordForm.component";
 import AddressForm from "./AddressForm.component";
 import AccountInfoForm from "./AccountInfoForm.component";
-import {Card, CardContent, CardFooter} from "../../ui/card";
+import {Card, CardContent, CardFooter} from "../../ui/card.tsx";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,7 +14,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/ui/button.tsx";
 import {useDeleteUser} from "@/hooks/user/useDeleteUser.ts";
 import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 

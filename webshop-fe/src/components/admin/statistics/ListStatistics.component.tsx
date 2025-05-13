@@ -1,9 +1,9 @@
 import React from "react";
 import {ProductStatisticsResponse, UserStatisticsResponse} from "@/shared/api";
-import {Card, CardContent, CardHeader} from "../../ui/card";
-import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/tooltip";
+import {Card, CardContent, CardHeader} from "../../ui/card.tsx";
+import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/tooltip.tsx";
 import {cn} from "@/lib/utils.ts";
-import {Separator} from "../../ui/separator";
+import {Separator} from "../../ui/separator.tsx";
 
 type Variant =
     | "spending-users"

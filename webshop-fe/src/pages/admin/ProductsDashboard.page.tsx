@@ -7,18 +7,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "../../components/ui/dropdown-menu";
-import {Button} from "../../components/ui/button";
+import {Button} from "../../components/ui/button.tsx";
 import {ArrowRightFromLine, Import, MoreHorizontal} from "lucide-react";
-import PaginationComponent from "../../components/ui/pagination";
+import PaginationComponent from "../../components/ui/pagination.tsx";
 import FilterForm from "../../components/admin/product/FilterForm.component";
 import {DataTable} from "../../components/ui/data-table";
 import ItemNumberSearch from "../../components/admin/product/ItemNumberSearch.component";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet.tsx";
 import ProductForm from "../../components/admin/product/ProductForm.component";
-import {Checkbox} from "../../components/ui/checkbox";
+import {Checkbox} from "../../components/ui/checkbox.tsx";
 import DiscountForm from "../../components/admin/product/DiscountForm.component";
 import ImportForm from "../../components/admin/product/ImportForm.component";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from '@/components/ui/dialog.tsx';
 import ProductCard from "../../components/storefront/product/ProductCard.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";

@@ -1,9 +1,9 @@
 import AppRouter from "./routing/AppRouter";
 import {BrowserRouter as Router} from 'react-router-dom';
 import ScrollToTop from "./routing/ScrollToTop";
-import {TooltipProvider} from './components/ui/tooltip';
+import {TooltipProvider} from './components/ui/tooltip.tsx';
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {Toaster} from "./components/ui/sonner";
+import {Toaster} from "./components/ui/sonner.tsx";
 import {CookiesProvider} from "react-cookie";
 import {GenderProvider} from "@/contexts/GenderProvider.tsx";
 import {AuthProvider} from "@/contexts/AuthProvider.tsx";

@@ -1,8 +1,8 @@
 import React, {useCallback} from "react";
 
 import {FieldValues, Path, PathValue, UseFormReturn} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
-import {Input} from "../input";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
+import {Input} from "../input.tsx";
 
 interface TextInputFieldProps<T extends FieldValues> {
     form: UseFormReturn<T>;

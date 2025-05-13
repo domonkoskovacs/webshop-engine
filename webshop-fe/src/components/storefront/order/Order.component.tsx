@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {OrderResponse} from "@/shared/api";
-import {Card, CardContent} from "../../ui/card";
-import {Button} from "../../ui/button";
+import {Card, CardContent} from "../../ui/card.tsx";
+import {Button} from "../../ui/button.tsx";
 import {formatDate, getOrderActions} from "@/lib/order.utils.ts";
-import {Separator} from "../../ui/separator";
+import {Separator} from "../../ui/separator.tsx";
 import {Link, useNavigate} from "react-router-dom";
 import {generateProductUrl} from "@/lib/url.utils.ts";
 import {useGender} from "@/hooks/useGender.ts";
@@ -28,7 +28,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from "../../ui/dialog";
+} from "../../ui/dialog.tsx";
 import {useCancelOrder} from "@/hooks/order/useCancelOrder.ts";
 import {useReturnOrder} from "@/hooks/order/useReturnOrder.ts";
 import {handleGenericApiError} from "@/shared/ApiError.ts";

@@ -1,10 +1,10 @@
 import React from "react";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {LayoutDashboard, Settings, ShoppingBag, UserPen} from "lucide-react";
-import {Separator} from "../../ui/separator";
+import {Separator} from "../../ui/separator.tsx";
 import {useAuth} from "@/hooks/useAuth.ts";
 import {useLocation, useNavigate} from "react-router-dom";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {toLogin} from "@/lib/url.utils.ts";
 import {useUser} from "@/hooks/user/useUser.ts";
 import {AppPaths} from "@/routing/AppPaths.ts";

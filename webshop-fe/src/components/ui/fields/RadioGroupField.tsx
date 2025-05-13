@@ -1,6 +1,6 @@
 import {FieldValues, Path, UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
 import {RadioGroup, RadioGroupItem} from "../radio-group";
 
 interface RadioGroupFieldProps<T extends FieldValues> {

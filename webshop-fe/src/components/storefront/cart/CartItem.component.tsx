@@ -1,8 +1,8 @@
 import React from "react";
 import {CartItemResponse, ResultEntryReasonCodeEnum} from "@/shared/api";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {Minus, Plus} from "lucide-react";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/ui/button.tsx";
 import {ApiError} from "@/shared/ApiError.ts";
 import {toast} from "@/hooks/useToast.ts";
 import {useUpdateCart} from "@/hooks/user/useUpdateCart.ts";

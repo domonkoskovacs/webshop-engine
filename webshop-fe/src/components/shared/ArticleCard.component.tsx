@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Card, CardContent} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
+import {Card, CardContent} from "@/components/ui/card.tsx";
+import {Button} from "@/components/ui/button.tsx";
 import {useDeleteArticle} from "@/hooks/article/useDeleteArticle";
 import {Trash} from "lucide-react";
 import {toast} from "@/hooks/useToast.ts";

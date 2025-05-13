@@ -1,4 +1,4 @@
-import {Card, CardContent, CardTitle} from "../../ui/card";
+import {Card, CardContent, CardTitle} from "../../ui/card.tsx";
 import React from "react";
 import {cn} from "@/lib/utils.ts";
 

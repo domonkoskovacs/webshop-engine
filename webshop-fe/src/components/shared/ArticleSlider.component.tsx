@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import { Button } from '../ui/button';
+import { Button } from '../ui/button.tsx';
 import ArticleCard from './ArticleCard.component';
 import { useArticles } from '@/hooks/article/useArticles';
 

@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from "react";
-import {Input} from "../../ui/input";
-import {Button} from "../../ui/button";
+import {Input} from "../../ui/input.tsx";
+import {Button} from "../../ui/button.tsx";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -12,12 +12,12 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import {CategoryResponse} from "@/shared/api";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../../ui/table.tsx";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react";
 import UpdateCategoryForm from "./UpdateCategoryForm.component";
 import SubCategoryRows from "./SubCategoryTable.component";
-import {Sheet, SheetContent, SheetTrigger} from "../../ui/sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../ui/sheet.tsx";
 import CategoryForm from "./CategoryForm.component";
 import {toast} from "@/hooks/useToast.ts";
 import {useCategories} from "@/hooks/category/useCategories.ts";

@@ -11,12 +11,12 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/chart";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/card";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select";
+} from "../../ui/chart.tsx";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/card.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select.tsx";
 import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts";
 import {cn} from "@/lib/utils.ts";
-import {Switch} from "../../ui/switch";
+import {Switch} from "../../ui/switch.tsx";
 
 type Props = {
     data: OrderPriceStatisticsResponse[],

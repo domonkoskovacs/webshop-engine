@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import {useNavigate} from "react-router-dom";
 import {toast} from "@/hooks/useToast.ts";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {OrderResponse} from "@/shared/api";
 import {AppPaths} from "@/routing/AppPaths.ts";
 

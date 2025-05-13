@@ -1,5 +1,5 @@
 import React from "react";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {useNavigate} from "react-router-dom";
 import CartItem from "../cart/CartItem.component";
 import {calculateCartTotals} from "@/lib/price.utils.ts";

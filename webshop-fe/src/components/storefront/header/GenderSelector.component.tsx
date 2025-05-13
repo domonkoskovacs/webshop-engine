@@ -1,5 +1,5 @@
 import React from "react";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {useGender} from "@/hooks/useGender.ts";
 import {useNavigate} from "react-router-dom";
 import {Gender} from "@/types/gender";

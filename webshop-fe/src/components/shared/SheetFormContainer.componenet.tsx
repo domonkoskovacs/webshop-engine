@@ -1,9 +1,9 @@
 import {UseFormReturn} from "react-hook-form";
 import {z} from "zod";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/ui/button.tsx";
 import React from "react";
-import {DialogDescription, DialogTitle} from "../ui/dialog";
-import {Form} from "../ui/form";
+import {DialogDescription, DialogTitle} from "../ui/dialog.tsx";
+import {Form} from "../ui/form.tsx";
 
 interface SheetFormContainerProps<T extends z.ZodTypeAny> {
     title: string;

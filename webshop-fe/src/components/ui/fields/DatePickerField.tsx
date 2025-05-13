@@ -1,11 +1,11 @@
 import {FieldValues, Path, UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
-import {Popover, PopoverContent, PopoverTrigger} from "../popover";
-import {Button} from "../button";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "../popover.tsx";
+import {Button} from "../button.tsx";
 import {cn} from "@/lib/utils.ts";
 import {CalendarIcon} from "lucide-react";
-import {Calendar} from "../calendar";
+import {Calendar} from "../calendar.tsx";
 import {format} from "date-fns";
 
 interface DatePickerFieldProps<T extends FieldValues> {

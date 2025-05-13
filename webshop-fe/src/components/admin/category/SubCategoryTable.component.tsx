@@ -2,12 +2,12 @@ import {Fragment} from "react";
 
 import {ColumnDef, flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table"
 
-import {TableCell, TableRow,} from "@/components/ui/table"
+import {TableCell, TableRow,} from "@/components/ui/table.tsx"
 import {SubCategoryResponse} from "@/shared/api";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "../../ui/dropdown-menu";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {MoreHorizontal} from "lucide-react";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {toast} from "@/hooks/useToast.ts";
 import {useDeleteSubCategory} from "@/hooks/category/useDeleteSubCategory.ts";
 import {handleGenericApiError} from "@/shared/ApiError.ts";

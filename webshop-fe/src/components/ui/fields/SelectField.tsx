@@ -1,6 +1,6 @@
 import {FieldValues, Path, UseFormReturn} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../select";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../select.tsx";
 import {SelectOption} from "@/types/select";
 
 interface SelectFieldProps<T extends FieldValues> {

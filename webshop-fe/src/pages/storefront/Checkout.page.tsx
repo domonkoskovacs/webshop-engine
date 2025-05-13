@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader} from "../../components/ui/card.tsx";
 import CartItem from "../../components/storefront/cart/CartItem.component";
-import {Separator} from "../../components/ui/separator";
+import {Separator} from "../../components/ui/separator.tsx";
 import {calculateCartTotals} from "@/lib/price.utils.ts";
-import {Button} from "../../components/ui/button";
+import {Button} from "../../components/ui/button.tsx";
 import {toast, unexpectedErrorToast} from "@/hooks/useToast.ts";
 import {useNavigate} from "react-router-dom";
 import PageContainer from '@/components/shared/PageContainer.component';

@@ -13,9 +13,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarSeparator,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar.tsx"
 import {useAuth} from "@/hooks/useAuth.ts";
-import {Avatar, AvatarFallback} from "../ui/avatar";
+import {Avatar, AvatarFallback} from "../ui/avatar.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {AppPaths} from "@/routing/AppPaths.ts";
 

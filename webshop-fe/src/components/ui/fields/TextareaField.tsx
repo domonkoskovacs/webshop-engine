@@ -1,6 +1,6 @@
-import {Textarea} from "../textarea";
+import {Textarea} from "../textarea.tsx";
 import {FieldValues, Path, UseFormReturn} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
 
 interface TextareaFieldProps<T extends FieldValues> {
     form: UseFormReturn<T>;

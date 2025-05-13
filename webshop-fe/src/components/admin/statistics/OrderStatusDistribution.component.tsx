@@ -11,9 +11,9 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/chart";
+} from "../../ui/chart.tsx";
 import React from "react";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/card.tsx";
 import {PieSectorDataItem} from "recharts/types/polar/Pie";
 
 type Props = {

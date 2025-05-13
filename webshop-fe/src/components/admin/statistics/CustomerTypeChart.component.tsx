@@ -1,7 +1,7 @@
 import React from "react";
 import {Label, Pie, PieChart} from "recharts";
-import {ChartContainer, ChartTooltip, ChartTooltipContent,} from "../../ui/chart";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/card";
+import {ChartContainer, ChartTooltip, ChartTooltipContent,} from "../../ui/chart.tsx";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../../ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 import {CustomerTypeDistributionResponse} from "@/shared/api";
 

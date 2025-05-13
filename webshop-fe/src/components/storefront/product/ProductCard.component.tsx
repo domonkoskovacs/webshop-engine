@@ -1,7 +1,7 @@
 import React from "react";
 import {Link, useLocation} from "react-router-dom";
-import {Card, CardContent, CardFooter} from "@/components/ui/card";
-import {Button} from "../../ui/button";
+import {Card, CardContent, CardFooter} from "@/components/ui/card.tsx";
+import {Button} from "../../ui/button.tsx";
 import {HeartIcon, PlusIcon, TrashIcon} from "lucide-react";
 import {ProductResponse, ProductResponseGenderEnum} from "@/shared/api";
 import {useGender} from "@/hooks/useGender.ts";
@@ -9,7 +9,7 @@ import {generateProductListUrl, generateProductUrl} from "@/lib/url.utils.ts";
 import {calculateDiscountedPrice} from "@/lib/price.utils.ts";
 import {Swiper, SwiperSlide} from "swiper/react";
 import "swiper/css";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {useUpdateCart} from "@/hooks/user/useUpdateCart.ts";
 import {useAuth} from "@/hooks/useAuth.ts";
 import {useModifySaved} from "@/hooks/user/useModifySaved.ts";

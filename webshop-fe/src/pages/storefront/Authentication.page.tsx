@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../components/ui/tabs.tsx";
 import RegistrationForm from "../../components/storefront/forms/RegistrationForm.component";
 import LoginForm from "../../components/storefront/forms/LoginForm.component";
 import {useSearchParams} from "react-router-dom";

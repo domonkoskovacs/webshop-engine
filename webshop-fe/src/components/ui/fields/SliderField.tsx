@@ -1,7 +1,7 @@
-import {Input} from "@/components/ui/input";
+import {Input} from "@/components/ui/input.tsx";
 import {FieldValues, Path, PathValue, UseFormReturn} from "react-hook-form";
-import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../form";
-import {Slider} from "../slider";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
+import {Slider} from "../slider.tsx";
 
 interface SliderInputFieldProps<T extends FieldValues> {
     form: UseFormReturn<T>;

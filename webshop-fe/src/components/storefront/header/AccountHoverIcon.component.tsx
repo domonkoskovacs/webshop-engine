@@ -1,11 +1,11 @@
 import React from "react";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../../ui/hover-card";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {User} from "lucide-react";
 import AccountHoverContent from "./AccountHoverContent.component";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {useAuth} from "@/hooks/useAuth.ts";
-import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/tooltip";
+import {Tooltip, TooltipContent, TooltipTrigger} from "../../ui/tooltip.tsx";
 import {useLocation} from "react-router-dom";
 import {useUser} from "@/hooks/user/useUser.ts";
 import {AppPaths} from "@/routing/AppPaths.ts";

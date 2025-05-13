@@ -8,12 +8,12 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/chart";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/card";
+} from "../../ui/chart.tsx";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../../ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 import {TrendingUp} from "lucide-react";
-import {Label} from "../../ui/label";
-import {Switch} from "../../ui/switch";
+import {Label} from "../../ui/label.tsx";
+import {Switch} from "../../ui/switch.tsx";
 
 type Props = {
     data: OrderCountStatisticsResponse[]

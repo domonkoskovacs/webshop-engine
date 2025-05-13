@@ -1,7 +1,7 @@
 import React from 'react';
 import EmptyState from "./EmptyPage.component";
 import {Link} from "react-router-dom";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {AppPaths} from "@/routing/AppPaths.ts";
 
 interface EmptyStateWithButtonProps {

@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {TrashIcon} from "lucide-react";
 
 interface ImageCardProps {

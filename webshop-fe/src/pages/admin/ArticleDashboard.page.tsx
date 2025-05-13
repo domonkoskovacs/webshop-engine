@@ -3,10 +3,10 @@ import ArticleSlider from "../../components/shared/ArticleSlider.component";
 import PageContainer from "../../components/shared/PageContainer.component";
 import PageHeader from "../../components/shared/PageHeader";
 import PageContent from "../../components/shared/PageContent";
-import {Switch} from "../../components/ui/switch";
-import {Label} from "../../components/ui/label";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
-import {Button} from "../../components/ui/button";
+import {Switch} from "../../components/ui/switch.tsx";
+import {Label} from "../../components/ui/label.tsx";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet.tsx";
+import {Button} from "../../components/ui/button.tsx";
 import ArticleForm from "../../components/admin/article/ArticleForm.component";
 
 const ArticleDashboard: React.FC = () => {

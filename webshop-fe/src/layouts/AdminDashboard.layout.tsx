@@ -1,11 +1,11 @@
 import React, {ReactNode} from 'react';
-import {SidebarInset, SidebarProvider, SidebarTrigger} from '../components/ui/sidebar';
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '../components/ui/sidebar.tsx';
 import {AppSidebar} from "../components/admin/Sidebar.component";
-import {Separator} from "../components/ui/separator";
+import {Separator} from "../components/ui/separator.tsx";
 import DashboardBreadcrumb from "../components/shared/PathBreadcrumb.component";
 import {Bell} from "lucide-react";
 import DarkModeToggle from "../components/ui/dark-mode-toggle.tsx";
-import {Badge} from "../components/ui/badge";
+import {Badge} from "../components/ui/badge.tsx";
 import {useNavigate} from "react-router-dom";
 import {useOrdersPagination} from "../hooks/order/useOrdersPagination";
 import {AppPaths} from "../routing/AppPaths";

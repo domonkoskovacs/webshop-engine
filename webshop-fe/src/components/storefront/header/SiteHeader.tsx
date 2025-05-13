@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../ui/select.tsx";
 import {AppPaths} from "@/routing/AppPaths.ts";
 
 const SiteHeader: React.FC = () => {

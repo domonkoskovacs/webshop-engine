@@ -1,6 +1,6 @@
-import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Card, CardContent, CardFooter} from "@/components/ui/card.tsx";
 import React from "react";
-import {Skeleton} from "@/components/ui/skeleton";
+import {Skeleton} from "@/components/ui/skeleton.tsx";
 
 const SkeletonProductCard: React.FC = () => {
     return (

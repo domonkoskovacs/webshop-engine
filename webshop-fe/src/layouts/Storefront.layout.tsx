@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import ActionsBar from "../components/storefront/header/ActionsBar.componenet";
 import SiteFooter from "../components/storefront/footer/SiteFooter.component";
 import FooterDetails from "../components/storefront/footer/FooterDetails.component";
-import {Separator} from "../components/ui/separator";
+import {Separator} from "../components/ui/separator.tsx";
 import SiteHeader from "../components/storefront/header/SiteHeader";
 import MenuBar from "../components/storefront/header/MenuBar.component";
 

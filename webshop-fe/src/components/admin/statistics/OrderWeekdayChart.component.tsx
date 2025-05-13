@@ -7,9 +7,9 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent
-} from "../../ui/chart";
+} from "../../ui/chart.tsx";
 import {Bar, BarChart, CartesianGrid, XAxis} from "recharts";
-import {Card, CardContent, CardHeader} from "../../ui/card";
+import {Card, CardContent, CardHeader} from "../../ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 
 type Props = {

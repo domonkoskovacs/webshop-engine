@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import PathBreadcrumb from "../../components/shared/PathBreadcrumb.component";
-import {Button} from "../../components/ui/button";
-import {Separator} from "../../components/ui/separator";
-import {Badge} from "../../components/ui/badge";
+import {Button} from "../../components/ui/button.tsx";
+import {Separator} from "../../components/ui/separator.tsx";
+import {Badge} from "../../components/ui/badge.tsx";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet.tsx";
 import FilterForm from "../../components/storefront/product/FilterForm.component";
 import ProductList from "../../components/storefront/product/ProductList.component";
 import {useGender} from "@/hooks/useGender.ts";
@@ -15,7 +15,7 @@ import ProductDetails from "../../components/storefront/product/ProductDetails.c
 import {generateProductBreadcrumbSegments, generateProductListUrl, parseFiltersFromUrl} from "@/lib/url.utils.ts";
 import {useProductScrollFilters} from "@/hooks/product/useProductScrollFilters.ts";
 import {useProductScroll} from "@/hooks/product/useProductScroll.ts";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../components/ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../../components/ui/select.tsx";
 import {SORT_OPTIONS} from "@/lib/product.utils.ts";
 import {useCategories} from "@/hooks/category/useCategories.ts";
 import {GetAll1SortTypeEnum} from "@/shared/api";

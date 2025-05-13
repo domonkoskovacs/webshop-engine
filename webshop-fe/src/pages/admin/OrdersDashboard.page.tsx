@@ -7,11 +7,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "../../components/ui/dropdown-menu";
-import {Button} from "../../components/ui/button";
+import {Button} from "../../components/ui/button.tsx";
 import {MoreHorizontal} from "lucide-react";
 import {DataTable} from "../../components/ui/data-table";
-import PaginationComponent from "../../components/ui/pagination";
-import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet";
+import PaginationComponent from "../../components/ui/pagination.tsx";
+import {Sheet, SheetContent, SheetTrigger} from "../../components/ui/sheet.tsx";
 import ExportForm from "../../components/admin/order/ExportForm.componenet";
 import FilterForm from "../../components/admin/order/FilterForm.componenet";
 import PageContainer from "../../components/shared/PageContainer.component";

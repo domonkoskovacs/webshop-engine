@@ -3,7 +3,7 @@ import React from "react";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 import {Link} from "react-router-dom";
 import SkeletonProductCard from "./SkeletonCard.component";
 import {useGender} from "@/hooks/useGender.ts";

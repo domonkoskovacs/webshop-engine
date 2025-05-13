@@ -1,6 +1,6 @@
 import React from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {Button} from "../../ui/button";
+import {Button} from "../../ui/button.tsx";
 
 import PageContainer from "../../shared/PageContainer.component";
 import EmptyState from "../shared/EmptyPage.component";
@@ -11,7 +11,7 @@ import {useGender} from "@/hooks/useGender.ts";
 import {ChevronLeft, Container, CornerDownLeft, Heart, PlusIcon} from "lucide-react";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {calculateDiscountedPrice} from "@/lib/price.utils.ts";
-import {Badge} from "../../ui/badge";
+import {Badge} from "../../ui/badge.tsx";
 import {usePublicStore} from "@/hooks/store/usePublicStore.ts";
 import {useProductById} from "@/hooks/product/useProductById.ts";
 import {useUpdateCart} from "@/hooks/user/useUpdateCart.ts";

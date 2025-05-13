@@ -1,7 +1,7 @@
 import {FieldValues, Path, UseFormReturn} from "react-hook-form";
 import React from "react";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form";
-import {Switch} from "../switch";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "../form.tsx";
+import {Switch} from "../switch.tsx";
 
 interface SwitchFieldProps<T extends FieldValues> {
     form: UseFormReturn<T>;

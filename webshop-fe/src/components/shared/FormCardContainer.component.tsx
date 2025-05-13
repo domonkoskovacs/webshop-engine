@@ -2,11 +2,11 @@ import {z} from "zod";
 import {UseFormReturn} from "react-hook-form";
 
 import React from "react";
-import {Card, CardContent, CardFooter, CardHeader} from "../ui/card";
-import {Separator} from "../ui/separator";
-import {Form} from "../ui/form";
-import {Button} from "../ui/button";
-import {Badge} from "../ui/badge";
+import {Card, CardContent, CardFooter, CardHeader} from "../ui/card.tsx";
+import {Separator} from "../ui/separator.tsx";
+import {Form} from "../ui/form.tsx";
+import {Button} from "../ui/button.tsx";
+import {Badge} from "../ui/badge.tsx";
 import {cn} from "@/lib/utils.ts";
 
 interface FormCardContainerProps<T extends z.ZodTypeAny> {
