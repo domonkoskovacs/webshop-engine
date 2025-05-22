@@ -122,8 +122,9 @@ Example `.env`:
 
 ```dotenv
 VITE_BACKEND_URL=http://localhost:8080
+VITE_USER_DEMO_MODE=true
 ```
- Specify VITE_STRIPE_PUBLISHABLE_KEY for Stripe usage 
+ Specify VITE_STRIPE_PUBLISHABLE_KEY for Stripe usage and set the demo mode to false
 
 ---
 

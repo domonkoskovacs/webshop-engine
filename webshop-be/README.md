@@ -38,7 +38,7 @@ Stripe integration, JWT authentication, and support for email, file uploads, and
 You are advised to use the application in demo payment mode (`DEMO_PAY=true`) for development,  
 but you can try full Stripe integration if you add a real secret key.
 
-Create a `.env` file inside the `webshop-be/` folder:
+Create a `.env` file inside the `webshop-be/` folder (or use any environment variable to inject the value):
 
 ```dotenv
 # Stripe
@@ -51,7 +51,7 @@ STRIPE_PRIVATE_KEY=MUST_BE_SPECIFIED
 
 This service is part of the root `docker-compose.yml`.
 
-To start all dependencies:
+Before running the spring boot app start all dependencies:
 
 ```bash
 docker compose up

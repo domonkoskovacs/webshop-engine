@@ -86,3 +86,52 @@ Access points:
 - React 19 + Vite + Tailwind CSS
 - Stripe, JWT, Prometheus, Grafana
 - Docker Compose + Maven 3.9+
+
+## Admin User Manual
+
+After starting the application stack with `docker-compose up --build`, you can manage the webshop engine through the **Admin Dashboard**.
+
+### Initial Login
+
+- **URL**: [http://localhost:5173/dashboard](http://localhost:5173/dashboard)
+- **Admin email**: `admin@admin.com`
+- **Default password**: `admin`
+
+> To change the default password after your first login contact your operator.
+
+---
+
+### Dashboard Overview
+
+Once logged in, you will be redirected to the **Admin Dashboard**, where you can fully configure and operate the Webshop Engine. The sidebar includes the following sections:
+
+#### Storefront Setup
+
+- **Articles**: Manage visual homepage elements like the **Hero Carousel**. Use this to promote highlighted products or seasonal campaigns.
+- **Categories**: Define product categories and subcategories for the storefront menu.
+- **Products**: Add, edit, or remove products.
+- **Store**: Configure basic store information and settings.
+
+#### Sales Operations
+
+- **Promotions**: Manage promotional emails for marketing campaigns.
+- **Orders**: Track and manage customer orders and order statuses.
+- **Statistics**: Access sales data and analytics charts for business intelligence.
+
+---
+
+### Example Configuration Flow
+
+1. **Create Categories** under the “Categories” menu.
+2. **Upload Hero Carousel** visuals in the “Articles” section.
+3. **Add Products** and assign them to the categories.
+4. **Configure Store** basic info under “Store”.
+5. Optionally, set up **Promotions** and test **Orders** via the frontend.
+6. Review performance and order activity in the **Statistics** tab.
+
+---
+
+### Notes
+
+- The admin interface is optimized for quick configuration and real-time content editing.
+- All actions reflect immediately on the public storefront served at [http://localhost:5173](http://localhost:5173).
