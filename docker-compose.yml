@@ -72,6 +72,7 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_BACKEND_URL=http://localhost:8080
+        - VITE_USER_DEMO_MODE=true
     ports:
       - "5173:80"
 
