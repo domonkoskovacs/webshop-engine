@@ -93,7 +93,7 @@ After starting the application stack with `docker-compose up --build`, you can m
 
 ### Initial Login
 
-- **URL**: [http://localhost:5173/dashboard](http://localhost:5173/dashboard)
+- **URL**: [http://localhost:5173/authentication?type=login](http://localhost:5173/authentication?type=login)
 - **Admin email**: `admin@admin.com`
 - **Default password**: `admin`
 
